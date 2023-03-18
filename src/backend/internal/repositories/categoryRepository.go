@@ -70,5 +70,13 @@ func (repo *inMemoryCategoryRepository) Get(id int64) (*entities.Category, error
 }
 
 func (repo *inMemoryCategoryRepository) GetAll() ([]entities.Category, error) {
-	return repo.categories, nil
+	categories := make([]entities.Category, 0)
+
+	for _, category := range repo.categories {
+		if !category.Deleted {
+			categories = append(categories, category)
+		}
+	}
+
+	return categories, nil
 }

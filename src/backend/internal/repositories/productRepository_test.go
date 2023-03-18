@@ -17,14 +17,22 @@ func addTestDataToProductRepo(repo ProductRepository) {
 			Name:        "Product #2",
 			Description: "Description",
 			Price:       decimal.New(15555, -2),
-			Deleted:     false,
+			Category: entities.Category{
+				Id:   1,
+				Name: "Category#1",
+			},
+			Deleted: false,
 		},
 		{
 			Id:          3,
 			Name:        "Product #3",
 			Description: "Description3",
 			Price:       decimal.New(1555555, -4),
-			Deleted:     false,
+			Category: entities.Category{
+				Id:   1,
+				Name: "Category#1",
+			},
+			Deleted: false,
 		},
 	}
 	for _, product := range testProducts {
@@ -107,14 +115,22 @@ func TestProductRepositoryGetAll(t *testing.T) {
 		Name:        "Product #2",
 		Description: "Description",
 		Price:       decimal.New(15555, -2),
-		Deleted:     false,
+		Category: entities.Category{
+			Id:   1,
+			Name: "Category#1",
+		},
+		Deleted: false,
 	})
 	repo.Add(&entities.Product{
 		Id:          2,
 		Name:        "Product #3",
 		Description: "Description3",
 		Price:       decimal.New(1555555, -4),
-		Deleted:     true,
+		Category: entities.Category{
+			Id:   1,
+			Name: "Category#1",
+		},
+		Deleted: true,
 	})
 
 	products, err := repo.GetAll()

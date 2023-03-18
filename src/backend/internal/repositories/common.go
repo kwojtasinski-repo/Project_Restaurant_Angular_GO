@@ -11,6 +11,10 @@ func getTestProduct() entities.Product {
 		Name:        "Product#1",
 		Description: "Description#123456789",
 		Price:       decimal.New(100, 0),
-		Deleted:     false,
+		Category: entities.Category{
+			Id:   1,
+			Name: "Category#1",
+		},
+		Deleted: false,
 	}
 }
