@@ -8,11 +8,11 @@ import (
 )
 
 type UpdateProductDto struct {
-	Id          int64
-	Name        string
-	Description string
-	CategoryId  int64
-	Price       decimal.Decimal
+	Id          int64           `json:"id"`
+	Name        string          `json:"name"`
+	Description string          `json:"description"`
+	CategoryId  int64           `json:"categoryId"`
+	Price       decimal.Decimal `json:"price"`
 }
 
 func (product *UpdateProductDto) Validate() error {

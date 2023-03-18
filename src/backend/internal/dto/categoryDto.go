@@ -6,8 +6,8 @@ import (
 )
 
 type CategoryDto struct {
-	Id   int64
-	Name string
+	Id   int64  `json:"id"`
+	Name string `json:"name"`
 }
 
 func (product *CategoryDto) Validate() error {
