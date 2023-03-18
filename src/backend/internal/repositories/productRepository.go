@@ -1,8 +1,6 @@
 package repositories
 
 import (
-	"fmt"
-
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
 )
 
@@ -45,10 +43,11 @@ func (repo *inMemoryProductRepository) Update(productToUpdate entities.Product) 
 			product.Price = productToUpdate.Price
 			product.Deleted = productToUpdate.Deleted
 			product.Description = productToUpdate.Description
+			product.Category = productToUpdate.Category
 			repo.products[index] = product
 		}
 	}
-	return fmt.Errorf("'Product' with id %v was not found", productToUpdate.Id)
+	return nil
 }
 
 func (repo *inMemoryProductRepository) Delete(productToDelete entities.Product) error {
@@ -59,7 +58,7 @@ func (repo *inMemoryProductRepository) Delete(productToDelete entities.Product) 
 		}
 	}
 
-	return fmt.Errorf("'Product' with id %v was not found", productToDelete.Id)
+	return nil
 }
 
 func (repo *inMemoryProductRepository) Get(id int64) (*entities.Product, error) {
@@ -69,7 +68,7 @@ func (repo *inMemoryProductRepository) Get(id int64) (*entities.Product, error) 
 		}
 	}
 
-	return nil, fmt.Errorf("'Product' with id %v was not found", id)
+	return nil, nil
 }
 
 func (repo *inMemoryProductRepository) GetAll() ([]entities.Product, error) {

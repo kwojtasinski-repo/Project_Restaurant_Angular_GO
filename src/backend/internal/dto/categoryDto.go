@@ -3,6 +3,8 @@ package dto
 import (
 	"errors"
 	"strings"
+
+	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
 )
 
 type CategoryDto struct {
@@ -20,4 +22,11 @@ func (product *CategoryDto) Validate() error {
 
 func (category *CategoryDto) Normalize() {
 	category.Name = strings.TrimSpace(category.Name)
+}
+
+func MapToCategoryDto(category entities.Category) *CategoryDto {
+	return &CategoryDto{
+		Id:   category.Id,
+		Name: category.Name,
+	}
 }

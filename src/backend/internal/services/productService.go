@@ -10,10 +10,10 @@ import (
 )
 
 type ProductService interface {
-	Add(*dto.AddProductDto) (*dto.ProductDto, *applicationerrors.ErrorStatus)
-	Update(*dto.UpdateProductDto) (*dto.ProductDto, *applicationerrors.ErrorStatus)
+	Add(*dto.AddProductDto) (*dto.ProductDetailsDto, *applicationerrors.ErrorStatus)
+	Update(*dto.UpdateProductDto) (*dto.ProductDetailsDto, *applicationerrors.ErrorStatus)
 	Delete(int64) *applicationerrors.ErrorStatus
-	Get(int64) (*dto.ProductDto, *applicationerrors.ErrorStatus)
+	Get(int64) (*dto.ProductDetailsDto, *applicationerrors.ErrorStatus)
 	GetAll() ([]dto.ProductDto, *applicationerrors.ErrorStatus)
 }
 
@@ -29,7 +29,7 @@ func CreateProductService(repo repositories.ProductRepository, categoryRepositor
 	}
 }
 
-func (service *productService) Add(productDto *dto.AddProductDto) (*dto.ProductDto, *applicationerrors.ErrorStatus) {
+func (service *productService) Add(productDto *dto.AddProductDto) (*dto.ProductDetailsDto, *applicationerrors.ErrorStatus) {
 	if productDto == nil {
 		return nil, applicationerrors.BadRequest("invalid Product")
 	}
@@ -59,10 +59,10 @@ func (service *productService) Add(productDto *dto.AddProductDto) (*dto.ProductD
 	if errorRepo := service.repository.Add(product); errorRepo != nil {
 		return nil, applicationerrors.InternalError(errorRepo.Error())
 	}
-	return product.MapToDto(), nil
+	return dto.MapToProductDetailsDto(*product), nil
 }
 
-func (service *productService) Update(productDto *dto.UpdateProductDto) (*dto.ProductDto, *applicationerrors.ErrorStatus) {
+func (service *productService) Update(productDto *dto.UpdateProductDto) (*dto.ProductDetailsDto, *applicationerrors.ErrorStatus) {
 	if productDto == nil {
 		return nil, applicationerrors.BadRequest("invalid Product")
 	}
@@ -100,7 +100,7 @@ func (service *productService) Update(productDto *dto.UpdateProductDto) (*dto.Pr
 		return nil, applicationerrors.InternalError(errorRepo.Error())
 	}
 
-	return product.MapToDto(), nil
+	return dto.MapToProductDetailsDto(*product), nil
 }
 
 func (service *productService) Delete(id int64) *applicationerrors.ErrorStatus {
@@ -121,7 +121,7 @@ func (service *productService) Delete(id int64) *applicationerrors.ErrorStatus {
 	return nil
 }
 
-func (service *productService) Get(id int64) (*dto.ProductDto, *applicationerrors.ErrorStatus) {
+func (service *productService) Get(id int64) (*dto.ProductDetailsDto, *applicationerrors.ErrorStatus) {
 	product, errorRepo := service.repository.Get(id)
 
 	if errorRepo != nil {
@@ -129,10 +129,10 @@ func (service *productService) Get(id int64) (*dto.ProductDto, *applicationerror
 	}
 
 	if product == nil {
-		applicationerrors.NotFound()
+		return nil, applicationerrors.NotFound()
 	}
 
-	return product.MapToDto(), nil
+	return dto.MapToProductDetailsDto(*product), nil
 }
 
 func (service *productService) GetAll() ([]dto.ProductDto, *applicationerrors.ErrorStatus) {
@@ -144,7 +144,7 @@ func (service *productService) GetAll() ([]dto.ProductDto, *applicationerrors.Er
 
 	productsDto := make([]dto.ProductDto, 0)
 	for _, product := range products {
-		productsDto = append(productsDto, *product.MapToDto())
+		productsDto = append(productsDto, *dto.MapToProductDto(product))
 	}
 
 	return productsDto, nil

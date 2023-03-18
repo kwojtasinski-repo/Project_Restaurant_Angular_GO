@@ -1,8 +1,6 @@
 package repositories
 
 import (
-	"fmt"
-
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
 )
 
@@ -45,7 +43,7 @@ func (repo *inMemoryCategoryRepository) Update(categoryToUpdate entities.Categor
 			repo.categories[index] = category
 		}
 	}
-	return fmt.Errorf("'Category' with id %v was not found", categoryToUpdate.Id)
+	return nil
 }
 
 func (repo *inMemoryCategoryRepository) Delete(categoryToDelete entities.Category) error {
@@ -56,7 +54,7 @@ func (repo *inMemoryCategoryRepository) Delete(categoryToDelete entities.Categor
 		}
 	}
 
-	return fmt.Errorf("'Category' with id %v was not found", categoryToDelete)
+	return nil
 }
 
 func (repo *inMemoryCategoryRepository) Get(id int64) (*entities.Category, error) {
@@ -66,7 +64,7 @@ func (repo *inMemoryCategoryRepository) Get(id int64) (*entities.Category, error
 		}
 	}
 
-	return nil, fmt.Errorf("'Category' with id %v was not found", id)
+	return nil, nil
 }
 
 func (repo *inMemoryCategoryRepository) GetAll() ([]entities.Category, error) {

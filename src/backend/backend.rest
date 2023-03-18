@@ -1,0 +1,79 @@
+@path = http://localhost:8080/api
+
+### GET Categories
+GET {{path}}/categories
+
+### Add Category
+POST {{path}}/categories
+Content-Type: application/json
+
+{
+    "name": "Category#1"
+}
+
+### Update Categories
+PUT {{path}}/categories/1
+
+{
+    "name": "CategoryUpdated"
+}
+
+### GET Category
+GET {{path}}/categories/1
+
+### Add Category
+POST {{path}}/categories
+Content-Type: application/json
+
+{
+    "name": "Category#2"
+}
+
+### GET Category
+GET {{path}}/categories/2
+
+### GET Categories
+GET {{path}}/categories
+
+### Add Product
+POST {{path}}/products
+Content-Type: application/json
+
+{
+    "name": "Name#1",
+    "description": "",
+    "categoryId": 1,
+    "price": "1"
+}
+
+### GET Product
+GET {{path}}/products/1
+
+### Update Product
+PUT {{path}}/products/1
+Content-Type: application/json
+
+{
+    "name": "Name#112",
+    "description": "descr",
+    "categoryId": 2,
+    "price": "100"
+}
+
+### GET Product
+GET {{path}}/products/1
+
+### GET Product
+DELETE  {{path}}/products/1
+
+### GET Product
+GET {{path}}/products/1
+
+### GET Product
+DELETE  {{path}}/categories/1
+
+### GET Products
+GET {{path}}/products
+
+### GET Categories
+GET {{path}}/categories

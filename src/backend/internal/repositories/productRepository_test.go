@@ -77,8 +77,8 @@ func TestProductRepositoryDelete(t *testing.T) {
 	if errDelete != nil {
 		t.Fatalf(`'Error' should be null, and text contains %v`, errDelete)
 	}
-	if errGet == nil {
-		t.Fatalf(`'Error' shouldnt be null`)
+	if errGet != nil {
+		t.Fatalf(`'Error' should be null`)
 	}
 	if productDeleted != nil {
 		t.Fatalf(`'Product' with id %v should be null`, product.Id)

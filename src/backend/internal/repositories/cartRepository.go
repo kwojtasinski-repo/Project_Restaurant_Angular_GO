@@ -1,8 +1,6 @@
 package repositories
 
 import (
-	"fmt"
-
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
 )
 
@@ -45,7 +43,7 @@ func (repo *inMemoryCartRepository) Delete(cartToDelete entities.Cart) error {
 		}
 	}
 
-	return fmt.Errorf("'Cart' with id %v was not found", cartToDelete.Id)
+	return nil
 }
 
 func (repo *inMemoryCartRepository) Get(id int64) (*entities.Cart, error) {
@@ -55,7 +53,7 @@ func (repo *inMemoryCartRepository) Get(id int64) (*entities.Cart, error) {
 		}
 	}
 
-	return nil, fmt.Errorf("'Cart' with id %v was not found", id)
+	return nil, nil
 }
 
 func (repo *inMemoryCartRepository) GetByUser(userId int64) ([]entities.Cart, error) {

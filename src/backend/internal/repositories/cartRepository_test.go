@@ -79,8 +79,8 @@ func TestCartRepositoryDelete(t *testing.T) {
 	if errDelete != nil {
 		t.Fatalf(`'Error' should be null, and text contains %v`, errDelete)
 	}
-	if errGet == nil {
-		t.Fatalf(`'Error' shouldnt be null`)
+	if errGet != nil {
+		t.Fatalf(`'Error' should be null`)
 	}
 	if cartDeleted != nil {
 		t.Fatalf(`'Cart' with id %v should be null`, cart.Id)

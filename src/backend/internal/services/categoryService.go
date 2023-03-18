@@ -45,7 +45,7 @@ func (service *categoryService) Add(categoryDto *dto.CategoryDto) (*dto.Category
 	if errorRepo := service.repository.Add(category); errorRepo != nil {
 		return nil, applicationerrors.InternalError(errorRepo.Error())
 	}
-	return category.MapToDto(), nil
+	return dto.MapToCategoryDto(*category), nil
 }
 
 func (service *categoryService) Update(categoryDto *dto.CategoryDto) (*dto.CategoryDto, *applicationerrors.ErrorStatus) {
@@ -74,7 +74,7 @@ func (service *categoryService) Update(categoryDto *dto.CategoryDto) (*dto.Categ
 		return nil, applicationerrors.InternalError(errorRepo.Error())
 	}
 
-	return category.MapToDto(), nil
+	return dto.MapToCategoryDto(*category), nil
 }
 
 func (service *categoryService) Delete(id int64) *applicationerrors.ErrorStatus {
@@ -103,10 +103,10 @@ func (service *categoryService) Get(id int64) (*dto.CategoryDto, *applicationerr
 	}
 
 	if category == nil {
-		applicationerrors.NotFound()
+		return nil, applicationerrors.NotFound()
 	}
 
-	return category.MapToDto(), nil
+	return dto.MapToCategoryDto(*category), nil
 }
 
 func (service *categoryService) GetAll() ([]dto.CategoryDto, *applicationerrors.ErrorStatus) {
@@ -118,7 +118,7 @@ func (service *categoryService) GetAll() ([]dto.CategoryDto, *applicationerrors.
 
 	categoriesDto := make([]dto.CategoryDto, 0)
 	for _, category := range categories {
-		categoriesDto = append(categoriesDto, *category.MapToDto())
+		categoriesDto = append(categoriesDto, *dto.MapToCategoryDto(category))
 	}
 
 	return categoriesDto, nil
