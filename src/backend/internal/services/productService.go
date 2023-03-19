@@ -10,8 +10,8 @@ import (
 )
 
 type ProductService interface {
-	Add(*dto.AddProductDto) (*dto.ProductDetailsDto, *applicationerrors.ErrorStatus)
 	Update(*dto.UpdateProductDto) (*dto.ProductDetailsDto, *applicationerrors.ErrorStatus)
+	Add(*dto.AddProductDto) (*dto.ProductDetailsDto, *applicationerrors.ErrorStatus)
 	Delete(int64) *applicationerrors.ErrorStatus
 	Get(int64) (*dto.ProductDetailsDto, *applicationerrors.ErrorStatus)
 	GetAll() ([]dto.ProductDto, *applicationerrors.ErrorStatus)
@@ -31,7 +31,7 @@ func CreateProductService(repo repositories.ProductRepository, categoryRepositor
 
 func (service *productService) Add(productDto *dto.AddProductDto) (*dto.ProductDetailsDto, *applicationerrors.ErrorStatus) {
 	if productDto == nil {
-		return nil, applicationerrors.BadRequest("invalid Product")
+		return nil, applicationerrors.BadRequest("invalid 'Product'")
 	}
 
 	if err := productDto.Validate(); err != nil {
@@ -64,7 +64,7 @@ func (service *productService) Add(productDto *dto.AddProductDto) (*dto.ProductD
 
 func (service *productService) Update(productDto *dto.UpdateProductDto) (*dto.ProductDetailsDto, *applicationerrors.ErrorStatus) {
 	if productDto == nil {
-		return nil, applicationerrors.BadRequest("invalid Product")
+		return nil, applicationerrors.BadRequest("invalid 'Product'")
 	}
 
 	if err := productDto.Validate(); err != nil {

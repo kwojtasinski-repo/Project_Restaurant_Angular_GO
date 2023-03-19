@@ -15,23 +15,28 @@ type AddProductDto struct {
 }
 
 func (product *AddProductDto) Validate() error {
+	var validationErrors strings.Builder
 	if len(product.Name) < 3 || len(strings.TrimSpace(product.Name)) < 3 {
-		return errors.New("'Name' should have at least 3 characters")
+		validationErrors.WriteString("'Name' should have at least 3 characters. ")
 	}
 
 	if len(strings.TrimSpace(product.Name)) > 200 {
-		return errors.New("'Name' cannot have more than 200 characters")
+		validationErrors.WriteString("'Name' cannot have more than 200 characters. ")
 	}
 
 	if len(strings.TrimSpace(product.Description)) > 5000 {
-		return errors.New("'Description' cannot have more than 5000 characters")
+		validationErrors.WriteString("'Description' cannot have more than 5000 characters. ")
 	}
 
 	if product.Price.LessThan(decimal.Zero) {
-		return errors.New("'Price' cannot be negative")
+		validationErrors.WriteString("'Price' cannot be negative. ")
 	}
 
-	return nil
+	if validationErrors.Len() > 0 {
+		return errors.New(validationErrors.String())
+	} else {
+		return nil
+	}
 }
 
 func (product *AddProductDto) Normalize() {
