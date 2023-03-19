@@ -1,6 +1,7 @@
 package api
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 
@@ -9,6 +10,7 @@ import (
 )
 
 func AddCategoryEndpoints(router *gin.Engine) {
+	log.Println("Setup Category Endpoints")
 	router.GET("/api/categories", getCategories)
 	router.GET("/api/categories/:id", getCategory)
 	router.POST("/api/categories", addCategory)

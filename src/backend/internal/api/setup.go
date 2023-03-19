@@ -1,8 +1,13 @@
 package api
 
-import "github.com/gin-gonic/gin"
+import (
+	"log"
+
+	"github.com/gin-gonic/gin"
+)
 
 func SetupApi(router *gin.Engine) {
+	log.Println("Setup Endpoints")
 	AddProductEndpoints(router)
 	AddCategoryEndpoints(router)
 }

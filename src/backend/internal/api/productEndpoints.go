@@ -1,6 +1,7 @@
 package api
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 
@@ -9,6 +10,7 @@ import (
 )
 
 func AddProductEndpoints(router *gin.Engine) {
+	log.Println("Setup Product Endpoints")
 	router.GET("/api/products", getProducts)
 	router.GET("/api/products/:id", getProduct)
 	router.POST("/api/products", addProduct)
