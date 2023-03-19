@@ -10,12 +10,20 @@ import (
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/repositories"
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/suite"
 )
 
-// TODO refactor and use TestSuite
-var testProductService = CreateProductService(repositories.NewInMemoryProductRepository(), createTestInMemoryCategoryRepository())
+type ProductServiceTestSuite struct {
+	suite.Suite
+	service ProductService
+}
 
-func createTestInMemoryCategoryRepository() repositories.CategoryRepository {
+func (suite *ProductServiceTestSuite) SetupTest() {
+	fmt.Println("---- Setup Before Each Test ----")
+	suite.service = CreateProductService(repositories.NewInMemoryProductRepository(), suite.createTestInMemoryCategoryRepository())
+}
+
+func (suite *ProductServiceTestSuite) createTestInMemoryCategoryRepository() repositories.CategoryRepository {
 	repo := repositories.NewInMemoryCategoryRepository()
 	repo.Add(&entities.Category{
 		Id:   1,
@@ -32,8 +40,8 @@ func createTestInMemoryCategoryRepository() repositories.CategoryRepository {
 	return repo
 }
 
-func addTestProduct(service ProductService) *dto.ProductDetailsDto {
-	dto, _ := service.Add(&dto.AddProductDto{
+func (suite *ProductServiceTestSuite) addTestProduct() *dto.ProductDetailsDto {
+	dto, _ := suite.service.Add(&dto.AddProductDto{
 		Name:        "Name#1",
 		Description: "",
 		CategoryId:  1,
@@ -42,7 +50,7 @@ func addTestProduct(service ProductService) *dto.ProductDetailsDto {
 	return dto
 }
 
-func Test_AddProduct_ValidProduct_ShouldReturnDto(t *testing.T) {
+func (suite *ProductServiceTestSuite) Test_AddProduct_ValidProduct_ShouldReturnDto(t *testing.T) {
 	addProduct := &dto.AddProductDto{
 		Name:        "Name#1",
 		Description: "",
@@ -50,7 +58,7 @@ func Test_AddProduct_ValidProduct_ShouldReturnDto(t *testing.T) {
 		Price:       decimal.New(100, 0),
 	}
 
-	dto, err := testProductService.Add(addProduct)
+	dto, err := suite.service.Add(addProduct)
 
 	assert.Nil(t, err)
 	assert.NotNil(t, dto)
@@ -60,7 +68,7 @@ func Test_AddProduct_ValidProduct_ShouldReturnDto(t *testing.T) {
 	assert.Equal(t, addProduct.CategoryId, dto.Category.Id)
 }
 
-func Test_AddProduct_TooShortProductNameAndNegativePrice_ShouldReturnError(t *testing.T) {
+func (suite *ProductServiceTestSuite) Test_AddProduct_TooShortProductNameAndNegativePrice_ShouldReturnError(t *testing.T) {
 	addProduct := &dto.AddProductDto{
 		Name:        "",
 		Description: "",
@@ -68,7 +76,7 @@ func Test_AddProduct_TooShortProductNameAndNegativePrice_ShouldReturnError(t *te
 		Price:       decimal.New(-100, 0),
 	}
 
-	dto, err := testProductService.Add(addProduct)
+	dto, err := suite.service.Add(addProduct)
 
 	assert.NotNil(t, err)
 	assert.Nil(t, dto)
@@ -78,7 +86,7 @@ func Test_AddProduct_TooShortProductNameAndNegativePrice_ShouldReturnError(t *te
 	assert.Contains(t, err.Message, "'Price' cannot be negative")
 }
 
-func Test_AddProduct_WhiteSpacesOnProductNameAndDescription_ShouldReturnError(t *testing.T) {
+func (suite *ProductServiceTestSuite) Test_AddProduct_WhiteSpacesOnProductNameAndDescription_ShouldReturnError(t *testing.T) {
 	addProduct := &dto.AddProductDto{
 		Name:        "                                                                                                                                                                                                                                                                        ",
 		Description: "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ",
@@ -86,7 +94,7 @@ func Test_AddProduct_WhiteSpacesOnProductNameAndDescription_ShouldReturnError(t 
 		Price:       decimal.New(100, 0),
 	}
 
-	dto, err := testProductService.Add(addProduct)
+	dto, err := suite.service.Add(addProduct)
 
 	assert.NotNil(t, err)
 	assert.Nil(t, dto)
@@ -95,7 +103,7 @@ func Test_AddProduct_WhiteSpacesOnProductNameAndDescription_ShouldReturnError(t 
 	assert.Contains(t, err.Message, "'Name' should have at least 3 characters")
 }
 
-func Test_AddProduct_TooLongProductNameAndDescription_ShouldReturnError(t *testing.T) {
+func (suite *ProductServiceTestSuite) Test_AddProduct_TooLongProductNameAndDescription_ShouldReturnError(t *testing.T) {
 	addProduct := &dto.AddProductDto{
 		Name:        "NameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameName1",
 		Description: "DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescri1",
@@ -103,7 +111,7 @@ func Test_AddProduct_TooLongProductNameAndDescription_ShouldReturnError(t *testi
 		Price:       decimal.New(100, 0),
 	}
 
-	dto, err := testProductService.Add(addProduct)
+	dto, err := suite.service.Add(addProduct)
 
 	assert.NotNil(t, err)
 	assert.Nil(t, dto)
@@ -113,7 +121,7 @@ func Test_AddProduct_TooLongProductNameAndDescription_ShouldReturnError(t *testi
 	assert.Contains(t, err.Message, "'Description' cannot have more than 5000 characters")
 }
 
-func Test_AddProduct_CategoryNotExists_ShouldReturnError(t *testing.T) {
+func (suite *ProductServiceTestSuite) Test_AddProduct_CategoryNotExists_ShouldReturnError(t *testing.T) {
 	addProduct := &dto.AddProductDto{
 		Name:        "Name#1",
 		Description: "",
@@ -121,7 +129,7 @@ func Test_AddProduct_CategoryNotExists_ShouldReturnError(t *testing.T) {
 		Price:       decimal.New(100, 0),
 	}
 
-	dto, err := testProductService.Add(addProduct)
+	dto, err := suite.service.Add(addProduct)
 
 	assert.NotNil(t, err)
 	assert.Nil(t, dto)
@@ -129,8 +137,8 @@ func Test_AddProduct_CategoryNotExists_ShouldReturnError(t *testing.T) {
 	assert.Contains(t, err.Message, fmt.Sprintf("'Category' with id %v was not found", addProduct.CategoryId))
 }
 
-func Test_AddProduct_NilAddProduct_ShouldReturnError(t *testing.T) {
-	dto, err := testProductService.Add(nil)
+func (suite *ProductServiceTestSuite) Test_AddProduct_NilAddProduct_ShouldReturnError(t *testing.T) {
+	dto, err := suite.service.Add(nil)
 
 	assert.NotNil(t, err)
 	assert.Nil(t, dto)
@@ -138,27 +146,27 @@ func Test_AddProduct_NilAddProduct_ShouldReturnError(t *testing.T) {
 	assert.Contains(t, err.Message, "invalid 'Product'")
 }
 
-func Test_GetProduct_ValidId_ShouldReturnDto(t *testing.T) {
-	dtoAdded := addTestProduct(testProductService)
+func (suite *ProductServiceTestSuite) Test_GetProduct_ValidId_ShouldReturnDto(t *testing.T) {
+	dtoAdded := suite.addTestProduct()
 
-	dto, err := testProductService.Get(dtoAdded.Id)
+	dto, err := suite.service.Get(dtoAdded.Id)
 
 	assert.Nil(t, err)
 	assert.NotNil(t, dto)
 }
 
-func Test_GetProduct_InvalidId_ShouldReturnNilProductAndError(t *testing.T) {
-	dto, err := testProductService.Get(2000)
+func (suite *ProductServiceTestSuite) Test_GetProduct_InvalidId_ShouldReturnNilProductAndError(t *testing.T) {
+	dto, err := suite.service.Get(2000)
 
 	assert.NotNil(t, err)
 	assert.Nil(t, dto)
 	assert.Equal(t, http.StatusNotFound, err.Status)
 }
 
-func Test_GetAllProducts_ShouldReturnFilledCollection(t *testing.T) {
-	dtoAdded := addTestProduct(testProductService)
+func (suite *ProductServiceTestSuite) Test_GetAllProducts_ShouldReturnFilledCollection(t *testing.T) {
+	dtoAdded := suite.addTestProduct()
 
-	dtos, err := testProductService.GetAll()
+	dtos, err := suite.service.GetAll()
 
 	assert.NotNil(t, dtoAdded)
 	assert.Nil(t, err)
@@ -173,8 +181,8 @@ func Test_GetAllProducts_ShouldReturnFilledCollection(t *testing.T) {
 	assert.True(t, exists)
 }
 
-func Test_UpdateProduct_ValidProduct_ShouldReturnDto(t *testing.T) {
-	dtoAdded := addTestProduct(testProductService)
+func (suite *ProductServiceTestSuite) Test_UpdateProduct_ValidProduct_ShouldReturnDto(t *testing.T) {
+	dtoAdded := suite.addTestProduct()
 	updateDto := &dto.UpdateProductDto{
 		Id:          dtoAdded.Id,
 		Name:        "Abc1235467436",
@@ -183,7 +191,7 @@ func Test_UpdateProduct_ValidProduct_ShouldReturnDto(t *testing.T) {
 		Price:       decimal.New(22025, -2),
 	}
 
-	dtoUpdate, err := testProductService.Update(updateDto)
+	dtoUpdate, err := suite.service.Update(updateDto)
 
 	assert.Nil(t, err)
 	assert.NotNil(t, dtoUpdate)
@@ -193,8 +201,8 @@ func Test_UpdateProduct_ValidProduct_ShouldReturnDto(t *testing.T) {
 	assert.Equal(t, updateDto.CategoryId, dtoUpdate.Category.Id)
 }
 
-func Test_UpdateAndGetProduct_ValidProduct_ShouldReturnDto(t *testing.T) {
-	dtoAdded := addTestProduct(testProductService)
+func (suite *ProductServiceTestSuite) Test_UpdateAndGetProduct_ValidProduct_ShouldReturnDto(t *testing.T) {
+	dtoAdded := suite.addTestProduct()
 	updateDto := &dto.UpdateProductDto{
 		Id:          dtoAdded.Id,
 		Name:        "Abc1235467436",
@@ -203,8 +211,8 @@ func Test_UpdateAndGetProduct_ValidProduct_ShouldReturnDto(t *testing.T) {
 		Price:       decimal.New(22025, -2),
 	}
 
-	dtoUpdate, err := testProductService.Update(updateDto)
-	dtoAfterUpdate, errGet := testProductService.Get(dtoUpdate.Id)
+	dtoUpdate, err := suite.service.Update(updateDto)
+	dtoAfterUpdate, errGet := suite.service.Get(dtoUpdate.Id)
 
 	assert.Nil(t, err)
 	assert.NotNil(t, dtoUpdate)
@@ -220,7 +228,7 @@ func Test_UpdateAndGetProduct_ValidProduct_ShouldReturnDto(t *testing.T) {
 	assert.Equal(t, dtoAfterUpdate.Category.Id, dtoUpdate.Category.Id)
 }
 
-func Test_UpdateProduct_TooShortProductNameAndNegativePrice_ShouldReturnError(t *testing.T) {
+func (suite *ProductServiceTestSuite) Test_UpdateProduct_TooShortProductNameAndNegativePrice_ShouldReturnError(t *testing.T) {
 	updateProduct := &dto.UpdateProductDto{
 		Name:        "",
 		Description: "",
@@ -228,7 +236,7 @@ func Test_UpdateProduct_TooShortProductNameAndNegativePrice_ShouldReturnError(t 
 		Price:       decimal.New(-100, 0),
 	}
 
-	dto, err := testProductService.Update(updateProduct)
+	dto, err := suite.service.Update(updateProduct)
 
 	assert.NotNil(t, err)
 	assert.Nil(t, dto)
@@ -238,7 +246,7 @@ func Test_UpdateProduct_TooShortProductNameAndNegativePrice_ShouldReturnError(t 
 	assert.Contains(t, err.Message, "'Price' cannot be negative")
 }
 
-func Test_UpdateProduct_WhiteSpacesOnProductNameAndDescription_ShouldReturnError(t *testing.T) {
+func (suite *ProductServiceTestSuite) Test_UpdateProduct_WhiteSpacesOnProductNameAndDescription_ShouldReturnError(t *testing.T) {
 	updateProduct := &dto.UpdateProductDto{
 		Name:        "                                                                                                                                                                                                                                                                        ",
 		Description: "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ",
@@ -246,7 +254,7 @@ func Test_UpdateProduct_WhiteSpacesOnProductNameAndDescription_ShouldReturnError
 		Price:       decimal.New(100, 0),
 	}
 
-	dto, err := testProductService.Update(updateProduct)
+	dto, err := suite.service.Update(updateProduct)
 
 	assert.NotNil(t, err)
 	assert.Nil(t, dto)
@@ -255,7 +263,7 @@ func Test_UpdateProduct_WhiteSpacesOnProductNameAndDescription_ShouldReturnError
 	assert.Contains(t, err.Message, "'Name' should have at least 3 characters")
 }
 
-func Test_UpdateProduct_TooLongProductNameAndDescription_ShouldReturnError(t *testing.T) {
+func (suite *ProductServiceTestSuite) Test_UpdateProduct_TooLongProductNameAndDescription_ShouldReturnError(t *testing.T) {
 	updateProduct := &dto.UpdateProductDto{
 		Name:        "NameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameName1",
 		Description: "DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescri1",
@@ -263,7 +271,7 @@ func Test_UpdateProduct_TooLongProductNameAndDescription_ShouldReturnError(t *te
 		Price:       decimal.New(100, 0),
 	}
 
-	dto, err := testProductService.Update(updateProduct)
+	dto, err := suite.service.Update(updateProduct)
 
 	assert.NotNil(t, err)
 	assert.Nil(t, dto)
@@ -273,7 +281,7 @@ func Test_UpdateProduct_TooLongProductNameAndDescription_ShouldReturnError(t *te
 	assert.Contains(t, err.Message, "'Description' cannot have more than 5000 characters")
 }
 
-func Test_UpdateProduct_CategoryNotExists_ShouldReturnError(t *testing.T) {
+func (suite *ProductServiceTestSuite) Test_UpdateProduct_CategoryNotExists_ShouldReturnError(t *testing.T) {
 	updateProduct := &dto.UpdateProductDto{
 		Name:        "Name#1",
 		Description: "",
@@ -281,7 +289,7 @@ func Test_UpdateProduct_CategoryNotExists_ShouldReturnError(t *testing.T) {
 		Price:       decimal.New(100, 0),
 	}
 
-	dto, err := testProductService.Update(updateProduct)
+	dto, err := suite.service.Update(updateProduct)
 
 	assert.NotNil(t, err)
 	assert.Nil(t, dto)
@@ -289,7 +297,7 @@ func Test_UpdateProduct_CategoryNotExists_ShouldReturnError(t *testing.T) {
 	assert.Contains(t, err.Message, fmt.Sprintf("'Category' with id %v was not found", updateProduct.CategoryId))
 }
 
-func Test_UpdateProduct_ProductNotExists_ShouldReturnError(t *testing.T) {
+func (suite *ProductServiceTestSuite) Test_UpdateProduct_ProductNotExists_ShouldReturnError(t *testing.T) {
 	updateProduct := &dto.UpdateProductDto{
 		Id:          1000,
 		Name:        "Name#1",
@@ -298,7 +306,7 @@ func Test_UpdateProduct_ProductNotExists_ShouldReturnError(t *testing.T) {
 		Price:       decimal.New(100, 0),
 	}
 
-	dto, err := testProductService.Update(updateProduct)
+	dto, err := suite.service.Update(updateProduct)
 
 	assert.NotNil(t, err)
 	assert.Nil(t, dto)
@@ -306,8 +314,8 @@ func Test_UpdateProduct_ProductNotExists_ShouldReturnError(t *testing.T) {
 	assert.Contains(t, err.Message, fmt.Sprintf("'Product' with id %v was not found", updateProduct.Id))
 }
 
-func Test_UpdateProduct_NilUpdateProduct_ShouldReturnError(t *testing.T) {
-	dto, err := testProductService.Update(nil)
+func (suite *ProductServiceTestSuite) Test_UpdateProduct_NilUpdateProduct_ShouldReturnError(t *testing.T) {
+	dto, err := suite.service.Update(nil)
 
 	assert.NotNil(t, err)
 	assert.Nil(t, dto)
@@ -315,22 +323,22 @@ func Test_UpdateProduct_NilUpdateProduct_ShouldReturnError(t *testing.T) {
 	assert.Contains(t, err.Message, "invalid 'Product'")
 }
 
-func Test_DeleteProduct_ValidId_ShouldDelete(t *testing.T) {
-	dtoAdded := addTestProduct(testProductService)
+func (suite *ProductServiceTestSuite) Test_DeleteProduct_ValidId_ShouldDelete(t *testing.T) {
+	dtoAdded := suite.addTestProduct()
 
-	err := testProductService.Delete(dtoAdded.Id)
+	err := suite.service.Delete(dtoAdded.Id)
 
-	dtoAfterDelete, errGet := testProductService.Get(dtoAdded.Id)
+	dtoAfterDelete, errGet := suite.service.Get(dtoAdded.Id)
 	assert.Nil(t, err)
 	assert.Nil(t, dtoAfterDelete)
 	assert.NotNil(t, errGet)
 	assert.Equal(t, http.StatusNotFound, errGet.Status)
 }
 
-func Test_DeleteProduct_InvalidId_ShouldDelete(t *testing.T) {
+func (suite *ProductServiceTestSuite) Test_DeleteProduct_InvalidId_ShouldDelete(t *testing.T) {
 	var id int64 = 255
 
-	err := testProductService.Delete(id)
+	err := suite.service.Delete(id)
 
 	assert.NotNil(t, err)
 	assert.Equal(t, http.StatusBadRequest, err.Status)
