@@ -71,8 +71,11 @@ func TestCategoryRepositoryDelete(t *testing.T) {
 	if errGet != nil {
 		t.Fatalf(`'Error' should be null`)
 	}
-	if categoryDeleted != nil {
-		t.Fatalf(`'Category' with id %v should be null`, category.Id)
+	if categoryDeleted == nil {
+		t.Fatalf(`'Category' with id %v should not be null`, category.Id)
+	}
+	if !categoryDeleted.Deleted {
+		t.Fatalf(`'Category' with id %v should be deleted`, category.Id)
 	}
 }
 

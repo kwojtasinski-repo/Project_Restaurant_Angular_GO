@@ -49,7 +49,8 @@ func (repo *inMemoryCategoryRepository) Update(categoryToUpdate entities.Categor
 func (repo *inMemoryCategoryRepository) Delete(categoryToDelete entities.Category) error {
 	for index, category := range repo.categories {
 		if category.Id == categoryToDelete.Id {
-			repo.categories = append(repo.categories[:index], repo.categories[index+1:]...)
+			category.Deleted = true
+			repo.categories[index] = category
 			return nil
 		}
 	}

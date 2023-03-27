@@ -80,8 +80,11 @@ func TestProductRepositoryDelete(t *testing.T) {
 	if errGet != nil {
 		t.Fatalf(`'Error' should be null`)
 	}
-	if productDeleted != nil {
-		t.Fatalf(`'Product' with id %v should be null`, product.Id)
+	if productDeleted == nil {
+		t.Fatalf(`'Product' with id %v should not be null`, product.Id)
+	}
+	if !productDeleted.Deleted {
+		t.Fatalf(`'Product' with id %v should be deleted`, product.Id)
 	}
 }
 

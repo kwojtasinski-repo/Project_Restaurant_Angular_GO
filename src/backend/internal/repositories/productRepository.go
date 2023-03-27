@@ -53,7 +53,8 @@ func (repo *inMemoryProductRepository) Update(productToUpdate entities.Product) 
 func (repo *inMemoryProductRepository) Delete(productToDelete entities.Product) error {
 	for index, product := range repo.products {
 		if product.Id == productToDelete.Id {
-			repo.products = append(repo.products[:index], repo.products[index+1:]...)
+			product.Deleted = true
+			repo.products[index] = product
 			return nil
 		}
 	}
