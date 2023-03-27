@@ -8,7 +8,7 @@ type CartRepository interface {
 	Add(*entities.Cart) error
 	Delete(entities.Cart) error
 	Get(int64) (*entities.Cart, error)
-	GetByUser(int64) ([]entities.Cart, error)
+	GetAllByUser(int64) ([]entities.Cart, error)
 }
 
 type inMemoryCartRepository struct {
@@ -56,7 +56,7 @@ func (repo *inMemoryCartRepository) Get(id int64) (*entities.Cart, error) {
 	return nil, nil
 }
 
-func (repo *inMemoryCartRepository) GetByUser(userId int64) ([]entities.Cart, error) {
+func (repo *inMemoryCartRepository) GetAllByUser(userId int64) ([]entities.Cart, error) {
 	carts := make([]entities.Cart, 0)
 
 	for _, cart := range repo.carts {

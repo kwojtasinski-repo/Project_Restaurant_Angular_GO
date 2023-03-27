@@ -8,7 +8,7 @@ import (
 
 type Order struct {
 	Id            int64
-	Number        string
+	OrderNumber   string
 	Price         decimal.Decimal
 	Created       time.Time
 	Modified      time.Time

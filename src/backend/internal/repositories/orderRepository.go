@@ -16,7 +16,7 @@ type inMemoryOrderRepository struct {
 	orders []entities.Order
 }
 
-func CreateInMemoryOrderRepository() OderRepository {
+func NewInMemoryOrderRepository() OderRepository {
 	return &inMemoryOrderRepository{
 		orders: make([]entities.Order, 0),
 	}
@@ -50,7 +50,7 @@ func (repo *inMemoryOrderRepository) Delete(orderToDelete entities.Order) error 
 func (repo *inMemoryOrderRepository) Update(orderToUpdate *entities.Order) error {
 	for index, order := range repo.orders {
 		if order.Id == orderToUpdate.Id {
-			order.Number = orderToUpdate.Number
+			order.OrderNumber = orderToUpdate.OrderNumber
 			order.Modified = orderToUpdate.Modified
 			order.UserId = orderToUpdate.UserId
 			order.Price = orderToUpdate.Price

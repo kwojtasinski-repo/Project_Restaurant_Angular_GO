@@ -7,6 +7,8 @@ import (
 
 var inMemoryCategoryRepository = repositories.NewInMemoryCategoryRepository()
 var inMemoryProductRepository = repositories.NewInMemoryProductRepository()
+var inMemoryCartRepository = repositories.NewInMemoryCartRepository()
+var inMemoryOrderRepository = repositories.NewInMemoryOrderRepository()
 
 func createProductService() services.ProductService {
 	return services.CreateProductService(inMemoryProductRepository, inMemoryCategoryRepository)
@@ -14,4 +16,8 @@ func createProductService() services.ProductService {
 
 func createCategoryService() services.CategoryService {
 	return services.CreateCategoryService(inMemoryCategoryRepository)
+}
+
+func createOrderService() services.OrderService {
+	return services.CreateOrderService(inMemoryOrderRepository, inMemoryCartRepository, inMemoryProductRepository)
 }
