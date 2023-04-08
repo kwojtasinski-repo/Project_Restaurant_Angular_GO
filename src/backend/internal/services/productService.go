@@ -2,9 +2,11 @@ package services
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
+	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
 	applicationerrors "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/errors"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/repositories"
 )
@@ -85,18 +87,27 @@ func (service *productService) Update(productDto *dto.UpdateProductDto) (*dto.Pr
 		return nil, applicationerrors.BadRequest(fmt.Sprintf("'Product' with id %v was not found", productDto.Id))
 	}
 
-	if err := product.SetName(productDto.Name); err != nil {
-		return nil, applicationerrors.BadRequest(err.Error())
+	var err error
+	var name *valueobjects.Name
+	var description *valueobjects.Description
+	var price *valueobjects.Price
+	var validationErrors strings.Builder
+	if name, err = valueobjects.NewName(productDto.Name); err != nil {
+		validationErrors.WriteString(err.Error())
 	}
-	if err := product.SetDescription(productDto.Description); err != nil {
-		return nil, applicationerrors.BadRequest(err.Error())
+	if description, err = valueobjects.NewDescription(productDto.Description); err != nil {
+		validationErrors.WriteString(err.Error())
 	}
-	if err := product.SetPrice(productDto.Price); err != nil {
-		return nil, applicationerrors.BadRequest(err.Error())
+	if price, err = valueobjects.NewPrice(productDto.Price); err != nil {
+		validationErrors.WriteString(err.Error())
 	}
-	if err := product.SetCategory(category); err != nil {
-		return nil, applicationerrors.BadRequest(err.Error())
+	if validationErrors.Len() > 0 {
+		return nil, applicationerrors.BadRequest(validationErrors.String())
 	}
+	product.Name = *name
+	product.Description = *description
+	product.Price = *price
+	product.Category = *category
 
 	if errorRepo = service.repository.Update(*product); errorRepo != nil {
 		return nil, applicationerrors.InternalError(errorRepo.Error())

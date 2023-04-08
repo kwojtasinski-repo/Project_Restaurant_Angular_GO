@@ -13,19 +13,19 @@ func addTestDataToCartRepo(repo CartRepository) {
 	var testCarts = [3]entities.Cart{
 		{
 			Id:        1,
-			ProductId: testProduct.Id(),
+			ProductId: testProduct.Id.Value(),
 			Product:   testProduct,
 			UserId:    1,
 		},
 		{
 			Id:        2,
-			ProductId: testProduct.Id(),
+			ProductId: testProduct.Id.Value(),
 			Product:   testProduct,
 			UserId:    1,
 		},
 		{
 			Id:        3,
-			ProductId: testProduct.Id(),
+			ProductId: testProduct.Id.Value(),
 			Product:   testProduct,
 			UserId:    1,
 		},
@@ -39,7 +39,7 @@ func TestCartRepositoryAdd(t *testing.T) {
 	var testProduct = getTestProduct()
 	cart := &entities.Cart{
 		Id:        0,
-		ProductId: testProduct.Id(),
+		ProductId: testProduct.Id.Value(),
 		Product:   testProduct,
 		UserId:    1,
 	}

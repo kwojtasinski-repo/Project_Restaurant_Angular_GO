@@ -61,11 +61,11 @@ func (service *orderService) Add(addOrderDto dto.AddOrderDto) (*dto.OrderDetails
 		}
 
 		order.OrderProducts = append(order.OrderProducts, entities.OrderProduct{
-			Name:      product.Name(),
-			Price:     product.Price(),
-			ProductId: product.Id(),
+			Name:      product.Name.Value(),
+			Price:     product.Price.Value(),
+			ProductId: product.Id.Value(),
 		})
-		totalCost = totalCost.Add(product.Price())
+		totalCost = totalCost.Add(product.Price.Value())
 	}
 
 	if errors.Len() > 0 {
@@ -102,16 +102,16 @@ func (service *orderService) AddFromCart(userId int64) (*dto.OrderDetailsDto, *a
 		}
 
 		if product == nil {
-			fmt.Fprintf(&errors, "'Product' with id was not found %v ", product.Id())
+			fmt.Fprintf(&errors, "'Product' with id was not found %v ", product.Id.Value())
 			continue
 		}
 
 		order.OrderProducts = append(order.OrderProducts, entities.OrderProduct{
-			Name:      product.Name(),
-			Price:     product.Price(),
-			ProductId: product.Id(),
+			Name:      product.Name.Value(),
+			Price:     product.Price.Value(),
+			ProductId: product.Id.Value(),
 		})
-		totalCost = totalCost.Add(product.Price())
+		totalCost = totalCost.Add(product.Price.Value())
 	}
 
 	if errors.Len() > 0 {
