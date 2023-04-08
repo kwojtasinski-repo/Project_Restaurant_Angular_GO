@@ -85,10 +85,18 @@ func (service *productService) Update(productDto *dto.UpdateProductDto) (*dto.Pr
 		return nil, applicationerrors.BadRequest(fmt.Sprintf("'Product' with id %v was not found", productDto.Id))
 	}
 
-	product.SetName(productDto.Name)
-	product.SetDescription(productDto.Description)
-	product.SetPrice(productDto.Price)
-	product.SetCategory(category)
+	if err := product.SetName(productDto.Name); err != nil {
+		return nil, applicationerrors.BadRequest(err.Error())
+	}
+	if err := product.SetDescription(productDto.Description); err != nil {
+		return nil, applicationerrors.BadRequest(err.Error())
+	}
+	if err := product.SetPrice(productDto.Price); err != nil {
+		return nil, applicationerrors.BadRequest(err.Error())
+	}
+	if err := product.SetCategory(category); err != nil {
+		return nil, applicationerrors.BadRequest(err.Error())
+	}
 
 	if errorRepo = service.repository.Update(*product); errorRepo != nil {
 		return nil, applicationerrors.InternalError(errorRepo.Error())
