@@ -20,7 +20,7 @@ func addTestDataToProductRepo(repo ProductRepository) {
 	}
 }
 
-func TestProductRepositoryAdd(t *testing.T) {
+func Test_ProductRepository_Add(t *testing.T) {
 	var testProduct = getTestProduct()
 	productRepository.Add(&testProduct)
 
@@ -33,7 +33,7 @@ func TestProductRepositoryAdd(t *testing.T) {
 	}
 }
 
-func TestProductRepositoryGet(t *testing.T) {
+func Test_ProductRepository_Get(t *testing.T) {
 	addTestDataToProductRepo(productRepository)
 	var id int64 = 2
 
@@ -47,7 +47,7 @@ func TestProductRepositoryGet(t *testing.T) {
 	}
 }
 
-func TestProductRepositoryDelete(t *testing.T) {
+func Test_ProductRepository_Delete(t *testing.T) {
 	addTestDataToProductRepo(productRepository)
 	var product, _ = productRepository.Get(1)
 
@@ -68,7 +68,7 @@ func TestProductRepositoryDelete(t *testing.T) {
 	}
 }
 
-func TestProductRepositoryUpdate(t *testing.T) {
+func Test_ProductRepository_Update(t *testing.T) {
 	addTestDataToProductRepo(productRepository)
 	var product, _ = productRepository.Get(2)
 	product.Deleted = true
@@ -93,7 +93,7 @@ func TestProductRepositoryUpdate(t *testing.T) {
 	}
 }
 
-func TestProductRepositoryGetAll(t *testing.T) {
+func Test_ProductRepository_GetAll(t *testing.T) {
 	repo := NewInMemoryProductRepository()
 	product1 := getTestProduct()
 	product2 := getTestProduct()

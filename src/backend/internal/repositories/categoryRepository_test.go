@@ -28,7 +28,7 @@ func addTestDataToCategoryRepo(repo CategoryRepository) {
 	}
 }
 
-func TestCategoryRepositoryAdd(t *testing.T) {
+func Test_CategoryRepository_Add(t *testing.T) {
 	var category = entities.Category{
 		Id:   0,
 		Name: "Category #1",
@@ -44,7 +44,7 @@ func TestCategoryRepositoryAdd(t *testing.T) {
 	}
 }
 
-func TestCategoryRepositoryGet(t *testing.T) {
+func Test_CategoryRepository_Get(t *testing.T) {
 	addTestDataToCategoryRepo(categoryRepository)
 	var id int64 = 2
 
@@ -58,7 +58,7 @@ func TestCategoryRepositoryGet(t *testing.T) {
 	}
 }
 
-func TestCategoryRepositoryDelete(t *testing.T) {
+func Test_CategoryRepository_Delete(t *testing.T) {
 	addTestDataToCategoryRepo(categoryRepository)
 	var category, _ = categoryRepository.Get(1)
 
@@ -79,7 +79,7 @@ func TestCategoryRepositoryDelete(t *testing.T) {
 	}
 }
 
-func TestCategoryRepositoryUpdate(t *testing.T) {
+func Test_CategoryRepository_Update(t *testing.T) {
 	addTestDataToCategoryRepo(categoryRepository)
 	var category, _ = categoryRepository.Get(2)
 	category.Name = "Abc1234Guid"
@@ -98,7 +98,7 @@ func TestCategoryRepositoryUpdate(t *testing.T) {
 	}
 }
 
-func TestCategoryRepositoryGetAll(t *testing.T) {
+func Test_CategoryRepository_GetAll(t *testing.T) {
 	repo := NewInMemoryCategoryRepository()
 	repo.Add(&entities.Category{
 		Id:   1,

@@ -35,7 +35,7 @@ func addTestDataToCartRepo(repo CartRepository) {
 	}
 }
 
-func TestCartRepositoryAdd(t *testing.T) {
+func Test_CartRepository_Add(t *testing.T) {
 	var testProduct = getTestProduct()
 	cart := &entities.Cart{
 		Id:        0,
@@ -55,7 +55,7 @@ func TestCartRepositoryAdd(t *testing.T) {
 	}
 }
 
-func TestCartRepositoryGet(t *testing.T) {
+func Test_CartRepository_Get(t *testing.T) {
 	addTestDataToCartRepo(cartRepository)
 	var id int64 = 2
 
@@ -69,7 +69,7 @@ func TestCartRepositoryGet(t *testing.T) {
 	}
 }
 
-func TestCartRepositoryDelete(t *testing.T) {
+func Test_CartRepository_Delete(t *testing.T) {
 	addTestDataToCartRepo(cartRepository)
 	var cart, _ = cartRepository.Get(1)
 
