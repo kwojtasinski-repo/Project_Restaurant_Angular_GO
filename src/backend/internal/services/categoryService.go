@@ -13,7 +13,7 @@ type CategoryService interface {
 	Add(*dto.CategoryDto) (*dto.CategoryDto, *applicationerrors.ErrorStatus)
 	Update(*dto.CategoryDto) (*dto.CategoryDto, *applicationerrors.ErrorStatus)
 	Delete(int64) *applicationerrors.ErrorStatus
-	Get(int64) (*dto.CategoryDto, *applicationerrors.ErrorStatus)
+	Get(int64) (*dto.CategoryDetailsDto, *applicationerrors.ErrorStatus)
 	GetAll() ([]dto.CategoryDto, *applicationerrors.ErrorStatus)
 }
 
@@ -68,6 +68,10 @@ func (service *categoryService) Update(categoryDto *dto.CategoryDto) (*dto.Categ
 		return nil, applicationerrors.BadRequest(fmt.Sprintf("'Category' with id %v was not found", categoryDto.Id))
 	}
 
+	if category.Deleted {
+		return nil, applicationerrors.BadRequest(fmt.Sprintf("'Category' with id %v was deleted", categoryDto.Id))
+	}
+
 	category.Name = categoryDto.Name
 
 	if errorRepo = service.repository.Update(*category); errorRepo != nil {
@@ -95,7 +99,7 @@ func (service *categoryService) Delete(id int64) *applicationerrors.ErrorStatus 
 	return nil
 }
 
-func (service *categoryService) Get(id int64) (*dto.CategoryDto, *applicationerrors.ErrorStatus) {
+func (service *categoryService) Get(id int64) (*dto.CategoryDetailsDto, *applicationerrors.ErrorStatus) {
 	category, errorRepo := service.repository.Get(id)
 
 	if errorRepo != nil {
@@ -106,7 +110,7 @@ func (service *categoryService) Get(id int64) (*dto.CategoryDto, *applicationerr
 		return nil, applicationerrors.NotFound()
 	}
 
-	return dto.MapToCategoryDto(*category), nil
+	return dto.MapToCategoryDetailsDto(*category), nil
 }
 
 func (service *categoryService) GetAll() ([]dto.CategoryDto, *applicationerrors.ErrorStatus) {

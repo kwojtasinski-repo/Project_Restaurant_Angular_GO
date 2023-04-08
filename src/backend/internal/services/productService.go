@@ -87,6 +87,10 @@ func (service *productService) Update(productDto *dto.UpdateProductDto) (*dto.Pr
 		return nil, applicationerrors.BadRequest(fmt.Sprintf("'Product' with id %v was not found", productDto.Id))
 	}
 
+	if product.Deleted {
+		return nil, applicationerrors.BadRequest(fmt.Sprintf("'Product' with id %v was deleted", productDto.Id))
+	}
+
 	var err error
 	var name *valueobjects.Name
 	var description *valueobjects.Description

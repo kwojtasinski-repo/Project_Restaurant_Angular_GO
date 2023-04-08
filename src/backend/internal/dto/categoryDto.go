@@ -33,9 +33,23 @@ func (category *CategoryDto) Normalize() {
 	category.Name = strings.TrimSpace(category.Name)
 }
 
+type CategoryDetailsDto struct {
+	Id      int64
+	Name    string
+	Deleted bool
+}
+
 func MapToCategoryDto(category entities.Category) *CategoryDto {
 	return &CategoryDto{
 		Id:   category.Id,
 		Name: category.Name,
+	}
+}
+
+func MapToCategoryDetailsDto(category entities.Category) *CategoryDetailsDto {
+	return &CategoryDetailsDto{
+		Id:      category.Id,
+		Name:    category.Name,
+		Deleted: category.Deleted,
 	}
 }

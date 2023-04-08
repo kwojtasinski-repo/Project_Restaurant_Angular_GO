@@ -18,6 +18,7 @@ type ProductDetailsDto struct {
 	Description string
 	Price       decimal.Decimal
 	Category    CategoryDto
+	Deleted     bool
 }
 
 func MapToProductDto(product entities.Product) *ProductDto {
@@ -35,6 +36,7 @@ func MapToProductDetailsDto(product entities.Product) *ProductDetailsDto {
 		Name:        product.Name.Value(),
 		Description: product.Description.Value(),
 		Price:       product.Price.Value(),
+		Deleted:     product.Deleted,
 		Category: CategoryDto{
 			Id:   product.Category.Id,
 			Name: product.Category.Name,
