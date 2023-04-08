@@ -22,22 +22,22 @@ type ProductDetailsDto struct {
 
 func MapToProductDto(product entities.Product) *ProductDto {
 	return &ProductDto{
-		Id:          product.Id,
-		Name:        product.Name,
-		Description: product.Description,
-		Price:       product.Price,
+		Id:          product.Id(),
+		Name:        product.Name(),
+		Description: product.Description(),
+		Price:       product.Price(),
 	}
 }
 
 func MapToProductDetailsDto(product entities.Product) *ProductDetailsDto {
 	return &ProductDetailsDto{
-		Id:          product.Id,
-		Name:        product.Name,
-		Description: product.Description,
-		Price:       product.Price,
+		Id:          product.Id(),
+		Name:        product.Name(),
+		Description: product.Description(),
+		Price:       product.Price(),
 		Category: CategoryDto{
-			Id:   product.Category.Id,
-			Name: product.Category.Name,
+			Id:   product.Category().Id,
+			Name: product.Category().Name,
 		},
 	}
 }

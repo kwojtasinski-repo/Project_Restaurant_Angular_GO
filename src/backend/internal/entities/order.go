@@ -11,7 +11,7 @@ type Order struct {
 	OrderNumber   string
 	Price         decimal.Decimal
 	Created       time.Time
-	Modified      time.Time
+	Modified      *time.Time
 	User          User
 	UserId        int64
 	OrderProducts []OrderProduct

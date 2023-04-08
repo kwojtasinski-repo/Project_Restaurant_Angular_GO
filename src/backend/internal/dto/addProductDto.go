@@ -38,8 +38,3 @@ func (product *AddProductDto) Validate() error {
 		return nil
 	}
 }
-
-func (product *AddProductDto) Normalize() {
-	product.Name = strings.TrimSpace(product.Name)
-	product.Description = strings.TrimSpace(product.Description)
-}

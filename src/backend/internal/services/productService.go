@@ -38,8 +38,6 @@ func (service *productService) Add(productDto *dto.AddProductDto) (*dto.ProductD
 		return nil, applicationerrors.BadRequest(err.Error())
 	}
 
-	productDto.Normalize()
-
 	category, errorRepo := service.categoryRepository.Get(productDto.CategoryId)
 	if errorRepo != nil {
 		return nil, applicationerrors.InternalError(errorRepo.Error())
@@ -49,11 +47,9 @@ func (service *productService) Add(productDto *dto.AddProductDto) (*dto.ProductD
 		return nil, applicationerrors.BadRequest(fmt.Sprintf("'Category' with id %v was not found", productDto.CategoryId))
 	}
 
-	product := &entities.Product{
-		Name:        productDto.Name,
-		Price:       productDto.Price,
-		Category:    *category,
-		Description: productDto.Description,
+	product, err := entities.NewProduct(0, productDto.Name, productDto.Price, productDto.Description, category)
+	if err != nil {
+		return nil, applicationerrors.BadRequest(err.Error())
 	}
 
 	if errorRepo := service.repository.Add(product); errorRepo != nil {
@@ -70,8 +66,6 @@ func (service *productService) Update(productDto *dto.UpdateProductDto) (*dto.Pr
 	if err := productDto.Validate(); err != nil {
 		return nil, applicationerrors.BadRequest(err.Error())
 	}
-
-	productDto.Normalize()
 
 	category, errorRepo := service.categoryRepository.Get(productDto.CategoryId)
 	if errorRepo != nil {
@@ -91,10 +85,10 @@ func (service *productService) Update(productDto *dto.UpdateProductDto) (*dto.Pr
 		return nil, applicationerrors.BadRequest(fmt.Sprintf("'Product' with id %v was not found", productDto.Id))
 	}
 
-	product.Name = productDto.Name
-	product.Description = productDto.Description
-	product.Price = productDto.Price
-	product.Category = *category
+	product.SetName(productDto.Name)
+	product.SetDescription(productDto.Description)
+	product.SetPrice(productDto.Price)
+	product.SetCategory(category)
 
 	if errorRepo = service.repository.Update(*product); errorRepo != nil {
 		return nil, applicationerrors.InternalError(errorRepo.Error())

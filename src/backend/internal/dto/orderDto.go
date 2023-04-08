@@ -12,7 +12,7 @@ type OrderDetailsDto struct {
 	OrderNumber   string
 	Price         decimal.Decimal
 	Created       time.Time
-	Modified      time.Time
+	Modified      *time.Time
 	OrderProducts []OrderProductDto
 }
 

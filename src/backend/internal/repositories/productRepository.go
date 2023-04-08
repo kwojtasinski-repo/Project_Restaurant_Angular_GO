@@ -1,6 +1,9 @@
 package repositories
 
 import (
+	"errors"
+	"strings"
+
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
 )
 
@@ -25,25 +28,38 @@ func NewInMemoryProductRepository() ProductRepository {
 func (repo *inMemoryProductRepository) Add(product *entities.Product) error {
 	var length int = len(repo.products)
 	if length == 0 {
-		product.Id = 1
+		product.SetId(1)
 		repo.products = append(repo.products, *product)
 		return nil
 	}
 
 	lastElement := repo.products[length-1]
-	product.Id = lastElement.Id + 1
+	product.SetId(lastElement.Id() + 1)
 	repo.products = append(repo.products, *product)
 	return nil
 }
 
 func (repo *inMemoryProductRepository) Update(productToUpdate entities.Product) error {
 	for index, product := range repo.products {
-		if product.Id == productToUpdate.Id {
-			product.Name = productToUpdate.Name
-			product.Price = productToUpdate.Price
-			product.Deleted = productToUpdate.Deleted
-			product.Description = productToUpdate.Description
-			product.Category = productToUpdate.Category
+		if product.Id() == productToUpdate.Id() {
+			var validationErrors strings.Builder
+			if err := product.SetName(productToUpdate.Name()); err != nil {
+				validationErrors.WriteString(err.Error())
+			}
+			if err := product.SetPrice(productToUpdate.Price()); err != nil {
+				validationErrors.WriteString(err.Error())
+			}
+			product.SetDeleted(productToUpdate.Deleted())
+			if err := product.SetDescription(productToUpdate.Description()); err != nil {
+				validationErrors.WriteString(err.Error())
+			}
+			category := productToUpdate.Category()
+			if err := product.SetCategory(&category); err != nil {
+				validationErrors.WriteString(err.Error())
+			}
+			if len(validationErrors.String()) > 0 {
+				return errors.New(validationErrors.String())
+			}
 			repo.products[index] = product
 		}
 	}
@@ -52,8 +68,8 @@ func (repo *inMemoryProductRepository) Update(productToUpdate entities.Product) 
 
 func (repo *inMemoryProductRepository) Delete(productToDelete entities.Product) error {
 	for index, product := range repo.products {
-		if product.Id == productToDelete.Id {
-			product.Deleted = true
+		if product.Id() == productToDelete.Id() {
+			product.SetDeleted(true)
 			repo.products[index] = product
 			return nil
 		}
@@ -64,7 +80,7 @@ func (repo *inMemoryProductRepository) Delete(productToDelete entities.Product) 
 
 func (repo *inMemoryProductRepository) Get(id int64) (*entities.Product, error) {
 	for _, product := range repo.products {
-		if product.Id == id {
+		if product.Id() == id {
 			return &product, nil
 		}
 	}
@@ -76,7 +92,7 @@ func (repo *inMemoryProductRepository) GetAll() ([]entities.Product, error) {
 	products := make([]entities.Product, 0)
 
 	for _, product := range repo.products {
-		if !product.Deleted {
+		if !product.Deleted() {
 			products = append(products, product)
 		}
 	}
