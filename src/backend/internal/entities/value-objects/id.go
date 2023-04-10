@@ -1,6 +1,9 @@
 package valueobjects
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 type Id struct {
 	value int64
@@ -18,6 +21,10 @@ func NewId(id int64) (*Id, error) {
 
 func (id *Id) Value() int64 {
 	return id.value
+}
+
+func (id *Id) String() string {
+	return fmt.Sprintf("%v", id.value)
 }
 
 func validateId(id int64) error {

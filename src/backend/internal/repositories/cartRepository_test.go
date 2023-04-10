@@ -4,30 +4,34 @@ import (
 	"testing"
 
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
+	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
 )
 
 var cartRepository CartRepository = NewInMemoryCartRepository()
 
 func addTestDataToCartRepo(repo CartRepository) {
 	var testProduct = getTestProduct()
+	id1, _ := valueobjects.NewId(1)
+	id2, _ := valueobjects.NewId(2)
+	id3, _ := valueobjects.NewId(3)
 	var testCarts = [3]entities.Cart{
 		{
-			Id:        1,
-			ProductId: testProduct.Id.Value(),
+			Id:        *id1,
+			ProductId: testProduct.Id,
 			Product:   testProduct,
-			UserId:    1,
+			UserId:    *id1,
 		},
 		{
-			Id:        2,
-			ProductId: testProduct.Id.Value(),
+			Id:        *id2,
+			ProductId: testProduct.Id,
 			Product:   testProduct,
-			UserId:    1,
+			UserId:    *id1,
 		},
 		{
-			Id:        3,
-			ProductId: testProduct.Id.Value(),
+			Id:        *id3,
+			ProductId: testProduct.Id,
 			Product:   testProduct,
-			UserId:    1,
+			UserId:    *id1,
 		},
 	}
 	for _, cart := range testCarts {
@@ -37,18 +41,19 @@ func addTestDataToCartRepo(repo CartRepository) {
 
 func Test_CartRepository_Add(t *testing.T) {
 	var testProduct = getTestProduct()
+	id, _ := valueobjects.NewId(1)
 	cart := &entities.Cart{
-		Id:        0,
-		ProductId: testProduct.Id.Value(),
+		Id:        *id,
+		ProductId: testProduct.Id,
 		Product:   testProduct,
-		UserId:    1,
+		UserId:    *id,
 	}
 
 	cartRepository.Add(cart)
 
-	cartAdded, err := cartRepository.Get(cart.Id)
+	cartAdded, err := cartRepository.Get(cart.Id.Value())
 	if cartAdded == nil {
-		t.Fatalf(`'Cart' with id %v shouldnt be null`, cart.Id)
+		t.Fatalf(`'Cart' with id %v shouldnt be null`, cart.Id.Value())
 	}
 	if err != nil {
 		t.Fatalf(`'Error' should be null, and text contains %v`, err)
@@ -75,7 +80,7 @@ func Test_CartRepository_Delete(t *testing.T) {
 
 	errDelete := cartRepository.Delete(*cart)
 
-	cartDeleted, errGet := cartRepository.Get(cart.Id)
+	cartDeleted, errGet := cartRepository.Get(cart.Id.Value())
 	if errDelete != nil {
 		t.Fatalf(`'Error' should be null, and text contains %v`, errDelete)
 	}

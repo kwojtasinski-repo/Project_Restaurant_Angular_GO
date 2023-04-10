@@ -18,11 +18,11 @@ type OrderDetailsDto struct {
 
 func MapToOrderDetailsDto(order entities.Order) *OrderDetailsDto {
 	return &OrderDetailsDto{
-		Id:            order.Id,
-		OrderNumber:   order.OrderNumber,
+		Id:            order.Id.Value(),
+		OrderNumber:   order.OrderNumber.Value(),
 		Created:       order.Created,
 		Modified:      order.Modified,
-		Price:         order.Price,
+		Price:         order.Price.Value(),
 		OrderProducts: mapToOrderProductsDto(order.OrderProducts),
 	}
 }

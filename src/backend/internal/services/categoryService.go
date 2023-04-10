@@ -5,6 +5,7 @@ import (
 
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
+	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
 	applicationerrors "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/errors"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/repositories"
 )
@@ -36,10 +37,13 @@ func (service *categoryService) Add(categoryDto *dto.CategoryDto) (*dto.Category
 		return nil, applicationerrors.BadRequest(err.Error())
 	}
 
-	categoryDto.Normalize()
+	name, err := valueobjects.NewName(categoryDto.Name)
+	if err != nil {
+		return nil, applicationerrors.BadRequest(err.Error())
+	}
 
 	category := &entities.Category{
-		Name: categoryDto.Name,
+		Name: *name,
 	}
 
 	if errorRepo := service.repository.Add(category); errorRepo != nil {
@@ -57,7 +61,10 @@ func (service *categoryService) Update(categoryDto *dto.CategoryDto) (*dto.Categ
 		return nil, applicationerrors.BadRequest(err.Error())
 	}
 
-	categoryDto.Normalize()
+	name, err := valueobjects.NewName(categoryDto.Name)
+	if err != nil {
+		return nil, applicationerrors.BadRequest(err.Error())
+	}
 
 	category, errorRepo := service.repository.Get(categoryDto.Id)
 	if errorRepo != nil {
@@ -72,7 +79,7 @@ func (service *categoryService) Update(categoryDto *dto.CategoryDto) (*dto.Categ
 		return nil, applicationerrors.BadRequest(fmt.Sprintf("'Category' with id %v was deleted", categoryDto.Id))
 	}
 
-	category.Name = categoryDto.Name
+	category.Name = *name
 
 	if errorRepo = service.repository.Update(*category); errorRepo != nil {
 		return nil, applicationerrors.InternalError(errorRepo.Error())

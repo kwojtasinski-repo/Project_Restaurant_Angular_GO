@@ -3,12 +3,10 @@ package services
 import (
 	"fmt"
 	"strings"
-	"time"
-
-	"github.com/google/uuid"
 
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
+	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
 	applicationerrors "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/errors"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/repositories"
 	"github.com/shopspring/decimal"
@@ -35,20 +33,26 @@ func CreateOrderService(orderRepository repositories.OderRepository, cartReposit
 }
 
 func (service *orderService) Add(addOrderDto dto.AddOrderDto) (*dto.OrderDetailsDto, *applicationerrors.ErrorStatus) {
-	order := &entities.Order{
-		OrderNumber:   uuid.New().String(),
-		Price:         decimal.Zero,
-		Created:       time.Now(),
-		UserId:        addOrderDto.UserId,
-		OrderProducts: make([]entities.OrderProduct, 0),
+	userId, err := valueobjects.NewId(addOrderDto.UserId)
+	if err != nil {
+		return nil, applicationerrors.BadRequest(err.Error())
 	}
+
+	var order *entities.Order
+	order, err = entities.NewOrder(0, entities.User{
+		Id: *userId,
+	}, make([]entities.OrderProduct, 0))
+
+	if err != nil {
+		return nil, applicationerrors.BadRequest(err.Error())
+	}
+
 	if len(addOrderDto.ProductIds) == 0 {
 		service.repo.Add(order)
 		return dto.MapToOrderDetailsDto(*order), nil
 	}
 
 	var errors strings.Builder
-	totalCost := decimal.Zero
 	for _, productId := range addOrderDto.ProductIds {
 		product, err := service.productRepo.Get(productId)
 		if err != nil {
@@ -60,18 +64,16 @@ func (service *orderService) Add(addOrderDto dto.AddOrderDto) (*dto.OrderDetails
 			continue
 		}
 
-		order.OrderProducts = append(order.OrderProducts, entities.OrderProduct{
-			Name:      product.Name.Value(),
-			Price:     product.Price.Value(),
-			ProductId: product.Id.Value(),
+		order.AddProduct(entities.OrderProduct{
+			Name:      product.Name,
+			Price:     product.Price,
+			ProductId: product.Id,
 		})
-		totalCost = totalCost.Add(product.Price.Value())
 	}
 
 	if errors.Len() > 0 {
 		return nil, applicationerrors.BadRequest(errors.String())
 	}
-	order.Price = totalCost
 
 	return dto.MapToOrderDetailsDto(*order), nil
 }
@@ -82,12 +84,18 @@ func (service *orderService) AddFromCart(userId int64) (*dto.OrderDetailsDto, *a
 		return nil, applicationerrors.InternalError(err.Error())
 	}
 
-	order := &entities.Order{
-		OrderNumber:   uuid.New().String(),
-		Price:         decimal.Zero,
-		Created:       time.Now(),
-		UserId:        userId,
-		OrderProducts: make([]entities.OrderProduct, 0),
+	userIdValue, err := valueobjects.NewId(userId)
+	if err != nil {
+		return nil, applicationerrors.BadRequest(err.Error())
+	}
+
+	var order *entities.Order
+	order, err = entities.NewOrder(0, entities.User{
+		Id: *userIdValue,
+	}, make([]entities.OrderProduct, 0))
+
+	if err != nil {
+		return nil, applicationerrors.BadRequest(err.Error())
 	}
 	if len(productsInCart) == 0 {
 		return nil, applicationerrors.BadRequest("'Cart' is empty, add something before create an 'Order'")
@@ -96,7 +104,7 @@ func (service *orderService) AddFromCart(userId int64) (*dto.OrderDetailsDto, *a
 	var errors strings.Builder
 	totalCost := decimal.Zero
 	for _, productInCart := range productsInCart {
-		product, err := service.productRepo.Get(productInCart.ProductId)
+		product, err := service.productRepo.Get(productInCart.ProductId.Value())
 		if err != nil {
 			return nil, applicationerrors.InternalError(err.Error())
 		}
@@ -106,10 +114,10 @@ func (service *orderService) AddFromCart(userId int64) (*dto.OrderDetailsDto, *a
 			continue
 		}
 
-		order.OrderProducts = append(order.OrderProducts, entities.OrderProduct{
-			Name:      product.Name.Value(),
-			Price:     product.Price.Value(),
-			ProductId: product.Id.Value(),
+		order.AddProduct(entities.OrderProduct{
+			Name:      product.Name,
+			Price:     product.Price,
+			ProductId: product.Id,
 		})
 		totalCost = totalCost.Add(product.Price.Value())
 	}
@@ -117,7 +125,6 @@ func (service *orderService) AddFromCart(userId int64) (*dto.OrderDetailsDto, *a
 	if errors.Len() > 0 {
 		return nil, applicationerrors.BadRequest(errors.String())
 	}
-	order.Price = totalCost
 
 	return dto.MapToOrderDetailsDto(*order), nil
 }

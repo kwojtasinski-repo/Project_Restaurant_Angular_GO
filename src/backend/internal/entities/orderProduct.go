@@ -1,11 +1,13 @@
 package entities
 
-import "github.com/shopspring/decimal"
+import (
+	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
+)
 
 type OrderProduct struct {
-	Id        int64
-	Name      string
-	Price     decimal.Decimal
-	ProductId int64
+	Id        valueobjects.Id
+	Name      valueobjects.Name
+	Price     valueobjects.Price
+	ProductId valueobjects.Id
 	Product   Product
 }

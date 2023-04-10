@@ -7,6 +7,7 @@ import (
 
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
+	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/repositories"
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
@@ -25,17 +26,23 @@ func (suite *ProductServiceTestSuite) SetupTest() {
 
 func (suite *ProductServiceTestSuite) createTestInMemoryCategoryRepository() repositories.CategoryRepository {
 	repo := repositories.NewInMemoryCategoryRepository()
+	id1, _ := valueobjects.NewId(1)
+	id2, _ := valueobjects.NewId(2)
+	id3, _ := valueobjects.NewId(3)
+	category1, _ := valueobjects.NewName("Category#1")
+	category2, _ := valueobjects.NewName("Category#2")
+	category3, _ := valueobjects.NewName("Category#3")
 	repo.Add(&entities.Category{
-		Id:   1,
-		Name: "Category#1",
+		Id:   *id1,
+		Name: *category1,
 	})
 	repo.Add(&entities.Category{
-		Id:   2,
-		Name: "Category#2",
+		Id:   *id2,
+		Name: *category2,
 	})
 	repo.Add(&entities.Category{
-		Id:   3,
-		Name: "Category#3",
+		Id:   *id3,
+		Name: *category3,
 	})
 	return repo
 }

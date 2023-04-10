@@ -1,9 +1,11 @@
 package entities
 
+import valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
+
 type Cart struct {
-	Id        int64
-	UserId    int64
+	Id        valueobjects.Id
+	UserId    valueobjects.Id
 	User      User
-	ProductId int64
+	ProductId valueobjects.Id
 	Product   Product
 }

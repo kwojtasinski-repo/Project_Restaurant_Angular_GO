@@ -14,9 +14,9 @@ type OrderProductDto struct {
 
 func mapToOrderProductDto(orderProduct entities.OrderProduct) *OrderProductDto {
 	return &OrderProductDto{
-		Id:        orderProduct.Id,
-		Name:      orderProduct.Name,
-		Price:     orderProduct.Price,
-		ProductId: orderProduct.ProductId,
+		Id:        orderProduct.Id.Value(),
+		Name:      orderProduct.Name.Value(),
+		Price:     orderProduct.Price.Value(),
+		ProductId: orderProduct.ProductId.Value(),
 	}
 }

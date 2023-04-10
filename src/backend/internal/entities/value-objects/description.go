@@ -24,6 +24,10 @@ func (description *Description) Value() string {
 	return description.value
 }
 
+func (description *Description) String() string {
+	return description.value
+}
+
 func validateDescription(description string) error {
 	var validationErrors strings.Builder
 	if len(description) > 5000 {

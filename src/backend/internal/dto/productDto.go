@@ -38,8 +38,8 @@ func MapToProductDetailsDto(product entities.Product) *ProductDetailsDto {
 		Price:       product.Price.Value(),
 		Deleted:     product.Deleted,
 		Category: CategoryDto{
-			Id:   product.Category.Id,
-			Name: product.Category.Name,
+			Id:   product.Category.Id.Value(),
+			Name: product.Category.Name.Value(),
 		},
 	}
 }

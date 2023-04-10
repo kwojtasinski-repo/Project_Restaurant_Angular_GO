@@ -23,6 +23,10 @@ func (name *Name) Value() string {
 	return name.value
 }
 
+func (name *Name) String() string {
+	return name.value
+}
+
 func validateName(name string) error {
 	var validationErrors strings.Builder
 	if len(name) < 3 {

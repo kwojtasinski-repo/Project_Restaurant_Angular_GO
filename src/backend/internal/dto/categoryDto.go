@@ -29,10 +29,6 @@ func (product *CategoryDto) Validate() error {
 	}
 }
 
-func (category *CategoryDto) Normalize() {
-	category.Name = strings.TrimSpace(category.Name)
-}
-
 type CategoryDetailsDto struct {
 	Id      int64
 	Name    string
@@ -41,15 +37,15 @@ type CategoryDetailsDto struct {
 
 func MapToCategoryDto(category entities.Category) *CategoryDto {
 	return &CategoryDto{
-		Id:   category.Id,
-		Name: category.Name,
+		Id:   category.Id.Value(),
+		Name: category.Name.Value(),
 	}
 }
 
 func MapToCategoryDetailsDto(category entities.Category) *CategoryDetailsDto {
 	return &CategoryDetailsDto{
-		Id:      category.Id,
-		Name:    category.Name,
+		Id:      category.Id.Value(),
+		Name:    category.Name.Value(),
 		Deleted: category.Deleted,
 	}
 }

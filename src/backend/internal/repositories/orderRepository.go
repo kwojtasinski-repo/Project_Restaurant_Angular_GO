@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
+	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
 )
 
 type OderRepository interface {
@@ -25,13 +26,15 @@ func NewInMemoryOrderRepository() OderRepository {
 func (repo *inMemoryOrderRepository) Add(order *entities.Order) error {
 	var length int = len(repo.orders)
 	if length == 0 {
-		order.Id = 1
+		id, _ := valueobjects.NewId(1)
+		order.Id = *id
 		repo.orders = append(repo.orders, *order)
 		return nil
 	}
 
 	lastElement := repo.orders[length-1]
-	order.Id = lastElement.Id + 1
+	id, _ := valueobjects.NewId(lastElement.Id.Value() + 1)
+	order.Id = *id
 	repo.orders = append(repo.orders, *order)
 	return nil
 }
@@ -64,7 +67,7 @@ func (repo *inMemoryOrderRepository) Update(orderToUpdate *entities.Order) error
 
 func (repo *inMemoryOrderRepository) Get(id int64) (*entities.Order, error) {
 	for _, order := range repo.orders {
-		if order.Id == id {
+		if order.Id.Value() == id {
 			return &order, nil
 		}
 	}
@@ -75,7 +78,7 @@ func (repo *inMemoryOrderRepository) GetAllByUser(userId int64) ([]entities.Orde
 	orders := make([]entities.Order, 0)
 
 	for _, order := range repo.orders {
-		if order.UserId == userId {
+		if order.UserId.Value() == userId {
 			orders = append(orders, order)
 		}
 	}

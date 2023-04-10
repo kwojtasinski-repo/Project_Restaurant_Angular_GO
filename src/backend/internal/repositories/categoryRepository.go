@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
+	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
 )
 
 type CategoryRepository interface {
@@ -25,20 +26,22 @@ func NewInMemoryCategoryRepository() CategoryRepository {
 func (repo *inMemoryCategoryRepository) Add(category *entities.Category) error {
 	var length int = len(repo.categories)
 	if length == 0 {
-		category.Id = 1
+		id, _ := valueobjects.NewId(1)
+		category.Id = *id
 		repo.categories = append(repo.categories, *category)
 		return nil
 	}
 
 	lastElement := repo.categories[length-1]
-	category.Id = lastElement.Id + 1
+	id, _ := valueobjects.NewId(lastElement.Id.Value() + 1)
+	category.Id = *id
 	repo.categories = append(repo.categories, *category)
 	return nil
 }
 
 func (repo *inMemoryCategoryRepository) Update(categoryToUpdate entities.Category) error {
 	for index, category := range repo.categories {
-		if category.Id == categoryToUpdate.Id {
+		if category.Id.Value() == categoryToUpdate.Id.Value() {
 			category.Name = categoryToUpdate.Name
 			repo.categories[index] = category
 		}
@@ -48,7 +51,7 @@ func (repo *inMemoryCategoryRepository) Update(categoryToUpdate entities.Categor
 
 func (repo *inMemoryCategoryRepository) Delete(categoryToDelete entities.Category) error {
 	for index, category := range repo.categories {
-		if category.Id == categoryToDelete.Id {
+		if category.Id.Value() == categoryToDelete.Id.Value() {
 			category.Deleted = true
 			repo.categories[index] = category
 			return nil
@@ -60,7 +63,7 @@ func (repo *inMemoryCategoryRepository) Delete(categoryToDelete entities.Categor
 
 func (repo *inMemoryCategoryRepository) Get(id int64) (*entities.Category, error) {
 	for _, category := range repo.categories {
-		if category.Id == id {
+		if category.Id.Value() == id {
 			return &category, nil
 		}
 	}
