@@ -12,6 +12,7 @@ type UserRepository interface {
 	Get(int64) (*entities.User, error)
 	GetAll() ([]entities.User, error)
 	GetByEmail(string) (*entities.User, error)
+	ExistsByEmail(string) (bool, error)
 }
 
 type inMemoryUserRepository struct {
@@ -85,4 +86,14 @@ func (repo *inMemoryUserRepository) GetByEmail(email string) (*entities.User, er
 	}
 
 	return nil, nil
+}
+
+func (repo *inMemoryUserRepository) ExistsByEmail(email string) (bool, error) {
+	for _, user := range repo.users {
+		if user.Email.Value() == email {
+			return true, nil
+		}
+	}
+
+	return false, nil
 }

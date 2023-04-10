@@ -15,7 +15,7 @@ func CreatePassworHasherService() PasswordHasherService {
 }
 
 func (hasher *passwordHasherService) HashPassword(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 64)
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 12)
 	return string(bytes), err
 }
 

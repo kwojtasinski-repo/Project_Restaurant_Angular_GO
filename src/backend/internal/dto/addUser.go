@@ -19,7 +19,7 @@ func (user *AddUserDto) Validate() error {
 		validationErrors.WriteString(fmt.Sprintf("'Email' '%v' is invalid", user.Email))
 	}
 
-	if len(user.Password) > 12 {
+	if len(user.Password) < 12 {
 		validationErrors.WriteString("'Password' should contain at least 12 characters")
 	}
 

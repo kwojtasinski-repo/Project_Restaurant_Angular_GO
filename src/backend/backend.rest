@@ -77,3 +77,21 @@ GET {{path}}/products
 
 ### GET Categories
 GET {{path}}/categories
+
+### Create User
+POST {{path}}/sign-up
+Content-Type: application/json
+
+{
+    "email": "email@email.com",
+    "password": "PAsW0RD121414623"
+}
+
+### Login User
+POST {{path}}/sign-in
+Content-Type: application/json
+
+{
+    "email": "email@email.com",
+    "password": "PAsW0RD121414623"
+}

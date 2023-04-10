@@ -11,4 +11,5 @@ func SetupApi(router *gin.Engine) {
 	AddProductEndpoints(router)
 	AddCategoryEndpoints(router)
 	AddOrderEndpoints(router)
+	AddUserEndpoints(router)
 }

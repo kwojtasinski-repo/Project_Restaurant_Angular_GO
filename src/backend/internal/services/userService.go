@@ -10,7 +10,7 @@ import (
 )
 
 type UserService interface {
-	Add(*dto.AddUserDto) (*dto.UserDto, *applicationerrors.ErrorStatus)
+	Register(*dto.AddUserDto) (*dto.UserDto, *applicationerrors.ErrorStatus)
 	Delete(int64) *applicationerrors.ErrorStatus
 	Get(int64) (*dto.UserDto, *applicationerrors.ErrorStatus)
 	GetAll() ([]dto.UserDto, *applicationerrors.ErrorStatus)
@@ -22,13 +22,14 @@ type userService struct {
 	passwordHasher PasswordHasherService
 }
 
-func CreateUserService(repo repositories.UserRepository) UserService {
+func CreateUserService(repo repositories.UserRepository, passwordHasher PasswordHasherService) UserService {
 	return &userService{
-		repository: repo,
+		repository:     repo,
+		passwordHasher: passwordHasher,
 	}
 }
 
-func (service *userService) Add(addUser *dto.AddUserDto) (*dto.UserDto, *applicationerrors.ErrorStatus) {
+func (service *userService) Register(addUser *dto.AddUserDto) (*dto.UserDto, *applicationerrors.ErrorStatus) {
 	if addUser == nil {
 		return nil, applicationerrors.BadRequest("Invalid User")
 	}
@@ -37,9 +38,18 @@ func (service *userService) Add(addUser *dto.AddUserDto) (*dto.UserDto, *applica
 		return nil, applicationerrors.BadRequest(err.Error())
 	}
 
+	exists, errRepo := service.repository.ExistsByEmail(addUser.Email)
+	if errRepo != nil {
+		return nil, applicationerrors.InternalError(errRepo.Error())
+	}
+
+	if exists {
+		return nil, applicationerrors.BadRequest("Invalid Email or Password")
+	}
+
 	hashedPassword, err := service.passwordHasher.HashPassword(addUser.Password)
 	if err != nil {
-		return nil, applicationerrors.BadRequest(err.Error())
+		return nil, applicationerrors.InternalError(err.Error())
 	}
 
 	user, err := entities.NewUser(0, addUser.Email, hashedPassword, "user")
@@ -116,6 +126,10 @@ func (service *userService) Login(signInDto dto.SignInDto) (*dto.UserDto, *appli
 	user, err := service.repository.GetByEmail(signInDto.Email)
 	if err != nil {
 		return nil, applicationerrors.InternalError(err.Error())
+	}
+
+	if user == nil {
+		return nil, applicationerrors.BadRequest("Invalid Credentials")
 	}
 
 	matched := service.passwordHasher.CheckPasswordHash(signInDto.Password, user.Password)
