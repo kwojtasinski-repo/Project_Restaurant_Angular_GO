@@ -48,7 +48,10 @@ func (service *orderService) Add(addOrderDto dto.AddOrderDto) (*dto.OrderDetails
 	}
 
 	if len(addOrderDto.ProductIds) == 0 {
-		service.repo.Add(order)
+		err = service.repo.Add(order)
+		if err != nil {
+			return nil, applicationerrors.InternalError(err.Error())
+		}
 		return dto.MapToOrderDetailsDto(*order), nil
 	}
 
@@ -73,6 +76,11 @@ func (service *orderService) Add(addOrderDto dto.AddOrderDto) (*dto.OrderDetails
 
 	if errors.Len() > 0 {
 		return nil, applicationerrors.BadRequest(errors.String())
+	}
+
+	err = service.repo.Add(order)
+	if err != nil {
+		return nil, applicationerrors.InternalError(err.Error())
 	}
 
 	return dto.MapToOrderDetailsDto(*order), nil
@@ -124,6 +132,11 @@ func (service *orderService) AddFromCart(userId int64) (*dto.OrderDetailsDto, *a
 
 	if errors.Len() > 0 {
 		return nil, applicationerrors.BadRequest(errors.String())
+	}
+
+	err = service.repo.Add(order)
+	if err != nil {
+		return nil, applicationerrors.InternalError(err.Error())
 	}
 
 	return dto.MapToOrderDetailsDto(*order), nil
