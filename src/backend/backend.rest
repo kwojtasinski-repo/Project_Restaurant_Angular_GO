@@ -1,4 +1,5 @@
 @path = http://localhost:8080/api
+@cookie = session_cookie=AV0IQjViQzV8hnGnGKQoqhNMkbwxxE0-LA6wPBMhaDInOBryGU8ouyAbVJWG-pLZE-QqEgZBEzpZ0W7eHX3lMfuAc3X_2xJRCKOT4HmrTvNym6hC39XvufueH0AL1T2mQ5AFff4-kAq0lskd-p38-Ak3irGJiPgg4HOPc6qXcEqztio43NntIstNWmwBFrDg9XfRLS3oKMNGndVH6uInOIchLGoD85BNwCJAdoWqSC3cuG94
 
 ### GET Categories
 GET {{path}}/categories
@@ -6,6 +7,7 @@ GET {{path}}/categories
 ### Add Category
 POST {{path}}/categories
 Content-Type: application/json
+Cookie: {{cookie}}
 
 {
     "name": "Category#1"

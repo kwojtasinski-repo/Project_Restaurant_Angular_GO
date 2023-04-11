@@ -24,3 +24,13 @@ func MapToSessionDto(session entities.Session) SessionDto {
 		Role:      session.Role(),
 	}
 }
+
+func (session *SessionDto) AsMap() map[string]interface{} {
+	sessionMap := make(map[string]interface{})
+	sessionMap["sessionId"] = session.SessionId
+	sessionMap["email"] = session.Email
+	sessionMap["userId"] = session.UserId
+	sessionMap["expiry"] = session.Expiry
+	sessionMap["role"] = session.Role
+	return sessionMap
+}

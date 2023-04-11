@@ -9,13 +9,13 @@ import (
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
 )
 
-func AddProductEndpoints(router *gin.Engine) {
+func AddProductEndpoints(router *gin.RouterGroup) {
 	log.Println("Setup Product Endpoints")
-	router.GET("/api/products", getProducts)
-	router.GET("/api/products/:id", getProduct)
-	router.POST("/api/products", addProduct)
-	router.PUT("/api/products/:id", updateProduct)
-	router.DELETE("/api/products/:id", deleteProduct)
+	router.GET("/products", getProducts)
+	router.GET("/products/:id", getProduct)
+	router.POST("/products", addProduct)
+	router.PUT("/products/:id", updateProduct)
+	router.DELETE("/products/:id", deleteProduct)
 }
 
 func getProducts(context *gin.Context) {

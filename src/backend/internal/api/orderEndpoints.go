@@ -9,10 +9,10 @@ import (
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
 )
 
-func AddOrderEndpoints(router *gin.Engine) {
+func AddOrderEndpoints(router *gin.RouterGroup) {
 	log.Println("Setup Order Endpoints")
-	router.POST("/api/orders/from-cart", addOrdersFromCart)
-	router.POST("/api/orders", addOrders)
+	router.POST("/orders/from-cart", addOrdersFromCart)
+	router.POST("/orders", addOrders)
 }
 
 func addOrdersFromCart(context *gin.Context) {

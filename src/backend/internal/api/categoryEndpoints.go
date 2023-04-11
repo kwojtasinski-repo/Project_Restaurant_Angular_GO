@@ -9,13 +9,13 @@ import (
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
 )
 
-func AddCategoryEndpoints(router *gin.Engine) {
+func AddCategoryEndpoints(router *gin.RouterGroup) {
 	log.Println("Setup Category Endpoints")
-	router.GET("/api/categories", getCategories)
-	router.GET("/api/categories/:id", getCategory)
-	router.POST("/api/categories", addCategory)
-	router.PUT("/api/categories/:id", updateCategory)
-	router.DELETE("/api/categories/:id", deleteCategory)
+	router.GET("/categories", getCategories)
+	router.GET("/categories/:id", getCategory)
+	router.POST("/categories", addCategory)
+	router.PUT("/categories/:id", updateCategory)
+	router.DELETE("/categories/:id", deleteCategory)
 }
 
 func getCategories(context *gin.Context) {
@@ -46,6 +46,11 @@ func getCategory(context *gin.Context) {
 }
 
 func addCategory(context *gin.Context) {
+	log.Println("UserId ", context.Keys["userId"])
+	log.Println("Email ", context.Keys["email"])
+	log.Println("Role ", context.Keys["role"])
+	log.Println("SessionId ", context.Keys["sessionId"])
+	log.Println("Expiry ", context.Keys["expiry"])
 	var newCategory dto.CategoryDto
 
 	if err := context.BindJSON(&newCategory); err != nil {

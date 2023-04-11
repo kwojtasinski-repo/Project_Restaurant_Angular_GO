@@ -1,12 +1,14 @@
 package api
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
+	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/errors"
 )
 
 func AddUserEndpoints(router *gin.Engine) {
@@ -26,9 +28,15 @@ func signIn(context *gin.Context) {
 	if user, session, err := userService.Login(signInDto); err != nil {
 		writeErrorResponse(context, *err)
 	} else {
-		//context.Cookie(CookieSessionName)
 		fmt.Print("TODO: Add Session Cookie")
 		fmt.Println(session)
+		jsonBytes, err := json.Marshal(session)
+		if err != nil {
+			writeErrorResponse(context, *errors.InternalError(err.Error()))
+			return
+		}
+
+		CookieIssued.SetValue(context.Writer, jsonBytes)
 		context.IndentedJSON(http.StatusOK, user)
 	}
 }
