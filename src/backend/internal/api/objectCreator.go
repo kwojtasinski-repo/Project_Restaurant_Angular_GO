@@ -11,6 +11,7 @@ var inMemoryCartRepository = repositories.NewInMemoryCartRepository()
 var inMemoryOrderRepository = repositories.NewInMemoryOrderRepository()
 var inMemoryUserRepository = repositories.NewInMemoryUserRepository()
 var passwordHasher = services.CreatePassworHasherService()
+var inMemorySessionRepository = repositories.NewInMemorySessionRepository()
 
 func createProductService() services.ProductService {
 	return services.CreateProductService(inMemoryProductRepository, inMemoryCategoryRepository)
@@ -25,9 +26,13 @@ func createOrderService() services.OrderService {
 }
 
 func createUserService() services.UserService {
-	return services.CreateUserService(inMemoryUserRepository, passwordHasher)
+	return services.CreateUserService(inMemoryUserRepository, passwordHasher, CreateSessionService())
 }
 
 func createCartService() services.CartService {
 	return services.CreateCartService(inMemoryCartRepository, inMemoryProductRepository, inMemoryUserRepository)
+}
+
+func CreateSessionService() services.SessionService {
+	return services.CreateSessionService(inMemorySessionRepository, inMemoryUserRepository)
 }

@@ -12,6 +12,12 @@ func BadRequest(message string) *ErrorStatus {
 	}
 }
 
+func UnAuthorized() *ErrorStatus {
+	return &ErrorStatus{
+		Status: 401,
+	}
+}
+
 func Forbidden() *ErrorStatus {
 	return &ErrorStatus{
 		Status: 403,

@@ -14,18 +14,20 @@ type UserService interface {
 	Delete(int64) *applicationerrors.ErrorStatus
 	Get(int64) (*dto.UserDto, *applicationerrors.ErrorStatus)
 	GetAll() ([]dto.UserDto, *applicationerrors.ErrorStatus)
-	Login(dto.SignInDto) (*dto.UserDto, *applicationerrors.ErrorStatus)
+	Login(dto.SignInDto) (*dto.UserDto, *dto.SessionDto, *applicationerrors.ErrorStatus)
 }
 
 type userService struct {
 	repository     repositories.UserRepository
 	passwordHasher PasswordHasherService
+	sessionService SessionService
 }
 
-func CreateUserService(repo repositories.UserRepository, passwordHasher PasswordHasherService) UserService {
+func CreateUserService(repo repositories.UserRepository, passwordHasher PasswordHasherService, sessionService SessionService) UserService {
 	return &userService{
 		repository:     repo,
 		passwordHasher: passwordHasher,
+		sessionService: sessionService,
 	}
 }
 
@@ -75,6 +77,10 @@ func (service *userService) Delete(id int64) *applicationerrors.ErrorStatus {
 		return applicationerrors.BadRequest(fmt.Sprintf("'User' with id %v was not found", id))
 	}
 
+	if errService := deleteLastSession(service.sessionService, user.Id.Value()); errService != nil {
+		return errService
+	}
+
 	err = service.repository.Delete(*user)
 	if err != nil {
 		return applicationerrors.InternalError(err.Error())
@@ -114,20 +120,45 @@ func (service *userService) GetAll() ([]dto.UserDto, *applicationerrors.ErrorSta
 	return usersDto, nil
 }
 
-func (service *userService) Login(signInDto dto.SignInDto) (*dto.UserDto, *applicationerrors.ErrorStatus) {
+func (service *userService) Login(signInDto dto.SignInDto) (*dto.UserDto, *dto.SessionDto, *applicationerrors.ErrorStatus) {
 	user, err := service.repository.GetByEmail(signInDto.Email)
 	if err != nil {
-		return nil, applicationerrors.InternalError(err.Error())
+		return nil, nil, applicationerrors.InternalError(err.Error())
 	}
 
 	if user == nil {
-		return nil, applicationerrors.BadRequest("Invalid Credentials")
+		return nil, nil, applicationerrors.BadRequest("Invalid Credentials")
 	}
 
 	matched := service.passwordHasher.CheckPasswordHash(signInDto.Password, user.Password)
 	if !matched {
-		return nil, applicationerrors.BadRequest("Invalid Credentials")
+		return nil, nil, applicationerrors.BadRequest("Invalid Credentials")
 	}
 
-	return dto.MapToUserDto(*user), nil
+	if errService := deleteLastSession(service.sessionService, user.Id.Value()); errService != nil {
+		return nil, nil, errService
+	}
+
+	session, errSession := service.sessionService.CreateSession(*user)
+	if errSession != nil {
+		return nil, nil, errSession
+	}
+
+	return dto.MapToUserDto(*user), session, nil
+}
+
+func deleteLastSession(sessionService SessionService, userId int64) *applicationerrors.ErrorStatus {
+	session, errService := sessionService.GetSession(userId)
+	if errService != nil {
+		return errService
+	}
+
+	if session != nil {
+		errService = sessionService.RevokeSession(userId)
+		if errService != nil {
+			return errService
+		}
+	}
+
+	return nil
 }

@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -12,6 +13,7 @@ func AddUserEndpoints(router *gin.Engine) {
 	log.Println("Setup User Endpoints")
 	router.POST("/api/sign-in", signIn)
 	router.POST("/api/sign-up", signUp)
+	//router.GET("/api/users/me", getMyProfile)
 }
 
 func signIn(context *gin.Context) {
@@ -21,9 +23,12 @@ func signIn(context *gin.Context) {
 	}
 
 	userService := createUserService()
-	if user, err := userService.Login(signInDto); err != nil {
+	if user, session, err := userService.Login(signInDto); err != nil {
 		writeErrorResponse(context, *err)
 	} else {
+		//context.Cookie(CookieSessionName)
+		fmt.Print("TODO: Add Session Cookie")
+		fmt.Println(session)
 		context.IndentedJSON(http.StatusOK, user)
 	}
 }
