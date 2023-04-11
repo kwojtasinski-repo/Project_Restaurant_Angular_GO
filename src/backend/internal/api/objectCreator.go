@@ -27,3 +27,7 @@ func createOrderService() services.OrderService {
 func createUserService() services.UserService {
 	return services.CreateUserService(inMemoryUserRepository, passwordHasher)
 }
+
+func createCartService() services.CartService {
+	return services.CreateCartService(inMemoryCartRepository, inMemoryProductRepository, inMemoryUserRepository)
+}

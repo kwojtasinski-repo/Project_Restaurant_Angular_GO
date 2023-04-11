@@ -62,11 +62,7 @@ func (service *userService) Register(addUser *dto.AddUserDto) (*dto.UserDto, *ap
 		return nil, applicationerrors.InternalError(err.Error())
 	}
 
-	return &dto.UserDto{
-		Id:    user.Id.Value(),
-		Email: user.Email.String(),
-		Role:  user.Role,
-	}, nil
+	return dto.MapToUserDto(*user), nil
 }
 
 func (service *userService) Delete(id int64) *applicationerrors.ErrorStatus {
@@ -97,11 +93,7 @@ func (service *userService) Get(id int64) (*dto.UserDto, *applicationerrors.Erro
 		return nil, nil
 	}
 
-	return &dto.UserDto{
-		Id:    user.Id.Value(),
-		Email: user.Email.Value(),
-		Role:  user.Role,
-	}, nil
+	return dto.MapToUserDto(*user), nil
 }
 
 func (service *userService) GetAll() ([]dto.UserDto, *applicationerrors.ErrorStatus) {
@@ -137,9 +129,5 @@ func (service *userService) Login(signInDto dto.SignInDto) (*dto.UserDto, *appli
 		return nil, applicationerrors.BadRequest("Invalid Credentials")
 	}
 
-	return &dto.UserDto{
-		Id:    user.Id.Value(),
-		Email: user.Email.Value(),
-		Role:  user.Role,
-	}, nil
+	return dto.MapToUserDto(*user), nil
 }

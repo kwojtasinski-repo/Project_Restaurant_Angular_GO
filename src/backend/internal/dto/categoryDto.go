@@ -15,7 +15,7 @@ type CategoryDto struct {
 func (product *CategoryDto) Validate() error {
 	var validationErrors strings.Builder
 	if len(product.Name) < 3 || len(strings.TrimSpace(product.Name)) < 3 {
-		validationErrors.WriteString("'Name' should have at least 3 characters")
+		validationErrors.WriteString("'Name' should have at least 3 characters. ")
 	}
 
 	if len(strings.TrimSpace(product.Name)) > 200 {

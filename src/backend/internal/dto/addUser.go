@@ -20,15 +20,15 @@ func (user *AddUserDto) Validate() error {
 	}
 
 	if len(user.Password) < 12 {
-		validationErrors.WriteString("'Password' should contain at least 12 characters")
+		validationErrors.WriteString("'Password' should contain at least 12 characters. ")
 	}
 
 	if len(user.Password) > 64 {
-		validationErrors.WriteString("'Password' cannot contain more than 64 characters")
+		validationErrors.WriteString("'Password' cannot contain more than 64 characters. ")
 	}
 
-	if match, _ := regexp.MatchString("^(.{12,64}|[^a-z]{1,}|[^A-Z]{1,}|[^\\d]{1,}|[^\\W]{1,})$|[\\s]", user.Password); !match {
-		validationErrors.WriteString("'Password' should contain upper case letters, lower case letters and numbers")
+	if match, _ := regexp.MatchString("^(.[^a-z]{1,}|[^A-Z]{1,}|[^\\d]{1,}|[^\\W]{1,})$|[\\s]", user.Password); match {
+		validationErrors.WriteString("'Password' should contain upper case letters, lower case letters and numbers. ")
 	}
 
 	if validationErrors.Len() > 0 {

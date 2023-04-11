@@ -63,7 +63,7 @@ Content-Type: application/json
 ### GET Product
 GET {{path}}/products/1
 
-### GET Product
+### DELET Product
 DELETE  {{path}}/products/1
 
 ### GET Product
@@ -84,7 +84,7 @@ Content-Type: application/json
 
 {
     "email": "email@email.com",
-    "password": "PAsW0RD121414623"
+    "password": "PAsW0RD121414623!"
 }
 
 ### Login User
@@ -93,5 +93,20 @@ Content-Type: application/json
 
 {
     "email": "email@email.com",
-    "password": "PAsW0RD121414623"
+    "password": "PAsW0RD121414623!"
 }
+
+### Add To Cart
+POST {{path}}/carts
+Content-Type: application/json
+
+{
+    "productId": 1,
+    "userId": 1
+}
+
+### GET My Cart
+GET {{path}}/carts/1
+
+### DELETE Item from cart
+DELETE {{path}}/carts?id=1&userId=1
