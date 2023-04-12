@@ -1,5 +1,5 @@
 @path = http://localhost:8080/api
-@cookie = session_cookie=AV0IQjViQzV8hnGnGKQoqhNMkbwxxE0-LA6wPBMhaDInOBryGU8ouyAbVJWG-pLZE-QqEgZBEzpZ0W7eHX3lMfuAc3X_2xJRCKOT4HmrTvNym6hC39XvufueH0AL1T2mQ5AFff4-kAq0lskd-p38-Ak3irGJiPgg4HOPc6qXcEqztio43NntIstNWmwBFrDg9XfRLS3oKMNGndVH6uInOIchLGoD85BNwCJAdoWqSC3cuG94
+@cookie = session_cookie=AYcoIVwerI7TrsaeG-jrBlf-ZyIZGm9N3DJrYdM-7VBq2hsDDPSXnwQUpgnjjTOXSpRAcGVbukczNXVri4jUpu7fLBfBtsX3tSI1z3OcRCbzYRdtTe4gsN7WjvKS8UTMohiP2HiUHLAatTAAmi3J_E3gS3UiSggt0hU9bhZonLeD23n8n6l11lYIB_hb7T4Rh-n3gzkVcePpqTKm87G0GDSM1F2WOzx8Q58LosKVrJnratGl
 
 ### GET Categories
 GET {{path}}/categories

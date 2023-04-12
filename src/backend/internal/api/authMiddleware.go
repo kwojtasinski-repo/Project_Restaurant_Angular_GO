@@ -10,15 +10,30 @@ import (
 
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		// check if session exist in db and then if cookie expired refresh it if cannot logout 401
+		// think that not only one user will be in your app just think about it
 		cookieValue, err := CookieIssued.GetValue([]byte{}, c.Request)
 		if err != nil {
-			c.AbortWithStatusJSON(401, "Cookie is required")
+			c.AbortWithStatusJSON(401, gin.H{"errors": "Cookie is required"})
 			return
 		}
 		var session dto.SessionDto
 		json.Unmarshal(cookieValue, &session)
-		log.Println("Session: ", session)
-		c.Keys = session.AsMap()
+		if err := session.Validate(); err != nil {
+			log.Println("ERROR: AuthMiddleware() ", err)
+			c.AbortWithStatusJSON(401, gin.H{"errors": "Invalid cookie"})
+			return
+		}
+
+		sessionService := CreateSessionService()
+		refreshedSession, errStatus := sessionService.ManageSession(session)
+		if errStatus != nil {
+			c.Abort()
+			writeErrorResponse(c, *errStatus)
+			return
+		}
+
+		c.Keys = refreshedSession.AsMap()
 		c.Next()
 	}
 }

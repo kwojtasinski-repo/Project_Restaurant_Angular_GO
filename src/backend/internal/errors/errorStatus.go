@@ -18,6 +18,13 @@ func UnAuthorized() *ErrorStatus {
 	}
 }
 
+func UnAuthorizedWithMessage(message string) *ErrorStatus {
+	return &ErrorStatus{
+		Status:  401,
+		Message: message,
+	}
+}
+
 func Forbidden() *ErrorStatus {
 	return &ErrorStatus{
 		Status: 403,

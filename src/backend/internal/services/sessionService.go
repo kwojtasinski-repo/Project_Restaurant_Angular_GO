@@ -16,6 +16,7 @@ type SessionService interface {
 	RevokeSession(userId int64) *applicationerrors.ErrorStatus
 	RefreshSession(sessionId uuid.UUID) (*dto.SessionDto, *applicationerrors.ErrorStatus)
 	GetSession(userId int64) (*dto.SessionDto, *applicationerrors.ErrorStatus)
+	ManageSession(sessionDto dto.SessionDto) (*dto.SessionDto, *applicationerrors.ErrorStatus)
 }
 
 type sessionService struct {
@@ -111,6 +112,43 @@ func (service *sessionService) GetSession(userId int64) (*dto.SessionDto, *appli
 
 	sessionDto := dto.MapToSessionDto(*session)
 	return &sessionDto, nil
+}
+
+func (service *sessionService) ManageSession(sessionDto dto.SessionDto) (*dto.SessionDto, *applicationerrors.ErrorStatus) {
+	session, err := service.repo.GetSession(sessionDto.SessionId)
+	if err != nil {
+		return nil, applicationerrors.InternalError(err.Error())
+	}
+	if session == nil {
+		return nil, applicationerrors.UnAuthorizedWithMessage("Invalid Cookie")
+	}
+
+	userId := session.UserId()
+	if userId.Value() != sessionDto.UserId {
+		return nil, applicationerrors.UnAuthorized()
+	}
+
+	exists, errRepo := service.userRepo.ExistsByEmail(sessionDto.Email)
+	if errRepo != nil {
+		return nil, applicationerrors.InternalError(err.Error())
+	}
+
+	if !exists {
+		return nil, applicationerrors.UnAuthorized()
+	}
+
+	sessionTime := time.UnixMilli(sessionDto.Expiry)
+	if sessionTime.After(time.Now().UTC()) {
+		sessionDto := dto.MapToSessionDto(*session)
+		return &sessionDto, nil
+	}
+
+	refreshedSessionDto, errStatus := service.RefreshSession(sessionDto.SessionId)
+	if errStatus != nil {
+		return nil, errStatus
+	}
+
+	return refreshedSessionDto, nil
 }
 
 func createTokenLifetime() time.Time {
