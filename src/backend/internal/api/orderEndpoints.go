@@ -3,7 +3,6 @@ package api
 import (
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
@@ -16,14 +15,7 @@ func AddOrderEndpoints(router *gin.RouterGroup) {
 }
 
 func addOrdersFromCart(context *gin.Context) {
-	id := context.Param("id")
-	userId, errorConvert := strconv.ParseInt(id, 10, 64)
-
-	if errorConvert != nil {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
-		return
-	}
-
+	userId := context.Keys["userId"].(int64)
 	orderService := createOrderService()
 	dto, err := orderService.AddFromCart(userId)
 
@@ -41,6 +33,8 @@ func addOrders(context *gin.Context) {
 	if err := context.BindJSON(&newOrder); err != nil {
 		return
 	}
+	userId := context.Keys["userId"].(int64)
+	newOrder.UserId = userId
 
 	orderService := createOrderService()
 	dto, err := orderService.Add(newOrder)

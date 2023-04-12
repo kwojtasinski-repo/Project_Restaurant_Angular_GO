@@ -10,8 +10,6 @@ import (
 
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// check if session exist in db and then if cookie expired refresh it if cannot logout 401
-		// think that not only one user will be in your app just think about it
 		cookieValue, err := CookieIssued.GetValue([]byte{}, c.Request)
 		if err != nil {
 			c.AbortWithStatusJSON(401, gin.H{"errors": "Cookie is required"})

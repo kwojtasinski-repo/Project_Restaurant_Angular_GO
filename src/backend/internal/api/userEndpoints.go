@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -11,11 +10,15 @@ import (
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/errors"
 )
 
-func AddUserEndpoints(router *gin.Engine) {
-	log.Println("Setup User Endpoints")
+func AddIdentityEndpoints(router *gin.Engine) {
+	log.Println("Setup Identity Endpoints")
 	router.POST("/api/sign-in", signIn)
 	router.POST("/api/sign-up", signUp)
-	//router.GET("/api/users/me", getMyProfile)
+}
+
+func AddUserEndpoints(router *gin.RouterGroup) {
+	log.Println("Setup User Endpoints")
+	router.GET("/api/users/me", getMyProfile)
 }
 
 func signIn(context *gin.Context) {
@@ -25,11 +28,9 @@ func signIn(context *gin.Context) {
 	}
 
 	userService := createUserService()
-	if user, session, err := userService.Login(signInDto); err != nil {
+	if session, err := userService.Login(signInDto); err != nil {
 		writeErrorResponse(context, *err)
 	} else {
-		fmt.Print("TODO: Add Session Cookie")
-		fmt.Println(session)
 		jsonBytes, err := json.Marshal(session)
 		if err != nil {
 			writeErrorResponse(context, *errors.InternalError(err.Error()))
@@ -37,7 +38,6 @@ func signIn(context *gin.Context) {
 		}
 
 		CookieIssued.SetValue(context.Writer, jsonBytes)
-		context.IndentedJSON(http.StatusOK, user)
 	}
 }
 
@@ -52,5 +52,17 @@ func signUp(context *gin.Context) {
 		writeErrorResponse(context, *err)
 	} else {
 		context.IndentedJSON(http.StatusCreated, user)
+	}
+}
+
+func getMyProfile(context *gin.Context) {
+	userId := context.Keys["userId"].(int64)
+	userService := createUserService()
+	user, err := userService.Get(userId)
+
+	if err != nil {
+		writeErrorResponse(context, *err)
+	} else {
+		context.IndentedJSON(http.StatusOK, user)
 	}
 }

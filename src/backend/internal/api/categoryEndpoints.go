@@ -46,11 +46,6 @@ func getCategory(context *gin.Context) {
 }
 
 func addCategory(context *gin.Context) {
-	log.Println("UserId ", context.Keys["userId"])
-	log.Println("Email ", context.Keys["email"])
-	log.Println("Role ", context.Keys["role"])
-	log.Println("SessionId ", context.Keys["sessionId"])
-	log.Println("Expiry ", context.Keys["expiry"])
 	var newCategory dto.CategoryDto
 
 	if err := context.BindJSON(&newCategory); err != nil {

@@ -11,20 +11,13 @@ import (
 
 func AddCartEndpoints(router *gin.RouterGroup) {
 	log.Println("Setup Cart Endpoints")
-	router.GET("/carts/:id", getMyCart)
+	router.GET("/carts/my", getMyCart)
 	router.POST("/carts", addCart)
-	router.DELETE("/carts", deleteCart)
+	router.DELETE("/carts/:id", deleteCart)
 }
 
 func getMyCart(context *gin.Context) {
-	id := context.Param("id")
-	userId, errorConvert := strconv.ParseInt(id, 10, 64)
-
-	if errorConvert != nil {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
-		return
-	}
-
+	userId := context.Keys["userId"].(int64)
 	cartService := createCartService()
 	if categories, err := cartService.GetMyCart(userId); err != nil {
 		writeErrorResponse(context, *err)
@@ -53,12 +46,10 @@ func addCart(context *gin.Context) {
 }
 
 func deleteCart(context *gin.Context) {
-	id, errId := context.GetQuery("id")
-	userIdString, errUserId := context.GetQuery("userId")
+	id := context.Param("id")
 	cartId, errorConvertCart := strconv.ParseInt(id, 10, 64)
-	userId, errorConvertUser := strconv.ParseInt(userIdString, 10, 64)
-
-	if !errId || !errUserId || errorConvertCart != nil || errorConvertUser != nil {
+	userId := context.Keys["userId"].(int64)
+	if errorConvertCart != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
 		return
 	}

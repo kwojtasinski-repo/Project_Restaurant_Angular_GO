@@ -28,6 +28,7 @@ func SetupApi(router *gin.Engine) {
 		AddCategoryEndpoints(group)
 		AddOrderEndpoints(group)
 		AddCartEndpoints(group)
+		AddUserEndpoints(group)
 	}
-	AddUserEndpoints(router)
+	AddIdentityEndpoints(router)
 }

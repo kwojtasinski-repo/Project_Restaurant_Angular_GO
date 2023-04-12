@@ -14,7 +14,7 @@ type UserService interface {
 	Delete(int64) *applicationerrors.ErrorStatus
 	Get(int64) (*dto.UserDto, *applicationerrors.ErrorStatus)
 	GetAll() ([]dto.UserDto, *applicationerrors.ErrorStatus)
-	Login(dto.SignInDto) (*dto.UserDto, *dto.SessionDto, *applicationerrors.ErrorStatus)
+	Login(dto.SignInDto) (*dto.SessionDto, *applicationerrors.ErrorStatus)
 }
 
 type userService struct {
@@ -120,31 +120,31 @@ func (service *userService) GetAll() ([]dto.UserDto, *applicationerrors.ErrorSta
 	return usersDto, nil
 }
 
-func (service *userService) Login(signInDto dto.SignInDto) (*dto.UserDto, *dto.SessionDto, *applicationerrors.ErrorStatus) {
+func (service *userService) Login(signInDto dto.SignInDto) (*dto.SessionDto, *applicationerrors.ErrorStatus) {
 	user, err := service.repository.GetByEmail(signInDto.Email)
 	if err != nil {
-		return nil, nil, applicationerrors.InternalError(err.Error())
+		return nil, applicationerrors.InternalError(err.Error())
 	}
 
 	if user == nil {
-		return nil, nil, applicationerrors.BadRequest("Invalid Credentials")
+		return nil, applicationerrors.BadRequest("Invalid Credentials")
 	}
 
 	matched := service.passwordHasher.CheckPasswordHash(signInDto.Password, user.Password)
 	if !matched {
-		return nil, nil, applicationerrors.BadRequest("Invalid Credentials")
+		return nil, applicationerrors.BadRequest("Invalid Credentials")
 	}
 
 	if errService := deleteLastSession(service.sessionService, user.Id.Value()); errService != nil {
-		return nil, nil, errService
+		return nil, errService
 	}
 
 	session, errSession := service.sessionService.CreateSession(*user)
 	if errSession != nil {
-		return nil, nil, errSession
+		return nil, errSession
 	}
 
-	return dto.MapToUserDto(*user), session, nil
+	return session, nil
 }
 
 func deleteLastSession(sessionService SessionService, userId int64) *applicationerrors.ErrorStatus {
