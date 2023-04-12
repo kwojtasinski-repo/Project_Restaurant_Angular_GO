@@ -6,10 +6,11 @@ import (
 )
 
 type CartRepository interface {
-	Add(*entities.Cart) error
-	Delete(entities.Cart) error
-	Get(int64) (*entities.Cart, error)
-	GetAllByUser(int64) ([]entities.Cart, error)
+	Add(cart *entities.Cart) error
+	Delete(cart entities.Cart) error
+	Get(cartId int64) (*entities.Cart, error)
+	GetAllByUser(userId int64) ([]entities.Cart, error)
+	DeleteCartByUserId(userId int64) error
 }
 
 type inMemoryCartRepository struct {
@@ -69,4 +70,16 @@ func (repo *inMemoryCartRepository) GetAllByUser(userId int64) ([]entities.Cart,
 	}
 
 	return carts, nil
+}
+
+func (repo *inMemoryCartRepository) DeleteCartByUserId(userId int64) error {
+	cartsToDelete := make([]entities.Cart, len(repo.carts))
+	copy(cartsToDelete, repo.carts)
+	for _, cart := range cartsToDelete {
+		if cart.UserId.Value() == userId {
+			repo.Delete(cart)
+		}
+	}
+
+	return nil
 }

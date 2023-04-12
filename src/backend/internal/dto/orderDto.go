@@ -4,13 +4,12 @@ import (
 	"time"
 
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
-	"github.com/shopspring/decimal"
 )
 
 type OrderDetailsDto struct {
 	Id            int64
 	OrderNumber   string
-	Price         decimal.Decimal
+	Price         string
 	Created       time.Time
 	Modified      *time.Time
 	OrderProducts []OrderProductDto
@@ -22,7 +21,7 @@ func MapToOrderDetailsDto(order entities.Order) *OrderDetailsDto {
 		OrderNumber:   order.OrderNumber.Value(),
 		Created:       order.Created,
 		Modified:      order.Modified,
-		Price:         order.Price.Value(),
+		Price:         order.Price.Value().StringFixedBank(2),
 		OrderProducts: mapToOrderProductsDto(order.OrderProducts),
 	}
 }

@@ -1,84 +1,5 @@
 @path = http://localhost:8080/api
-@cookie = session_cookie=AYcoIVwerI7TrsaeG-jrBlf-ZyIZGm9N3DJrYdM-7VBq2hsDDPSXnwQUpgnjjTOXSpRAcGVbukczNXVri4jUpu7fLBfBtsX3tSI1z3OcRCbzYRdtTe4gsN7WjvKS8UTMohiP2HiUHLAatTAAmi3J_E3gS3UiSggt0hU9bhZonLeD23n8n6l11lYIB_hb7T4Rh-n3gzkVcePpqTKm87G0GDSM1F2WOzx8Q58LosKVrJnratGl
-
-### GET Categories
-GET {{path}}/categories
-
-### Add Category
-POST {{path}}/categories
-Content-Type: application/json
-Cookie: {{cookie}}
-
-{
-    "name": "Category#1"
-}
-
-### Update Categories
-PUT {{path}}/categories/1
-
-{
-    "name": "CategoryUpdated"
-}
-
-### GET Category
-GET {{path}}/categories/1
-
-### Add Category
-POST {{path}}/categories
-Content-Type: application/json
-
-{
-    "name": "Category#2"
-}
-
-### GET Category
-GET {{path}}/categories/2
-
-### GET Categories
-GET {{path}}/categories
-
-### Add Product
-POST {{path}}/products
-Content-Type: application/json
-
-{
-    "name": "Name#1",
-    "description": "",
-    "categoryId": 1,
-    "price": "1"
-}
-
-### GET Product
-GET {{path}}/products/1
-
-### Update Product
-PUT {{path}}/products/1
-Content-Type: application/json
-
-{
-    "name": "Name#112",
-    "description": "descr",
-    "categoryId": 2,
-    "price": "100"
-}
-
-### GET Product
-GET {{path}}/products/1
-
-### DELET Product
-DELETE  {{path}}/products/1
-
-### GET Product
-GET {{path}}/products/1
-
-### GET Product
-DELETE  {{path}}/categories/1
-
-### GET Products
-GET {{path}}/products
-
-### GET Categories
-GET {{path}}/categories
+@cookie = session_cookie=AdkGLDUOZjomUcASxw38s7L2CNJPrhnAvMrye6DWlfH4VW5iXnC8iy1q4wjSfUru9otty60qOkvDqpmlQ3FPZcka0Cfk8C7BgBfEzdMZYtTVJIHcIXu4ncXYv4R6wdR9sdDZGUAQ8N11XOBld7M0nvdC1vRPZewX0wZggJ8oz1aIDH1e9z6nrQE7zQutBD1rdgH0GKVBalxU9fRa4aQrpSwbT8BbIRZwfLGBUX3_y2GjGGmE
 
 ### Create User
 POST {{path}}/sign-up
@@ -98,17 +19,133 @@ Content-Type: application/json
     "password": "PAsW0RD121414623!"
 }
 
+### GET User Profile
+GET {{path}}/users/me
+Cookie: {{cookie}}
+
+### GET Categories
+GET {{path}}/categories
+Cookie: {{cookie}}
+
+### Add Category
+POST {{path}}/categories
+Content-Type: application/json
+Cookie: {{cookie}}
+
+{
+    "name": "Category#1"
+}
+
+### Update Categories
+PUT {{path}}/categories/1
+Cookie: {{cookie}}
+
+{
+    "name": "CategoryUpdated"
+}
+
+### GET Category
+GET {{path}}/categories/1
+Cookie: {{cookie}}
+
+### Add Category
+POST {{path}}/categories
+Content-Type: application/json
+Cookie: {{cookie}}
+
+{
+    "name": "Category#2"
+}
+
+### GET Category
+GET {{path}}/categories/2
+Cookie: {{cookie}}
+
+### GET Categories
+GET {{path}}/categories
+Cookie: {{cookie}}
+
+### Add Product
+POST {{path}}/products
+Content-Type: application/json
+Cookie: {{cookie}}
+
+{
+    "name": "Name#1",
+    "description": "",
+    "categoryId": 1,
+    "price": "1"
+}
+
+### GET Product
+GET {{path}}/products/1
+Cookie: {{cookie}}
+
+### Update Product
+PUT {{path}}/products/1
+Content-Type: application/json
+Cookie: {{cookie}}
+
+{
+    "name": "Name#112",
+    "description": "descr",
+    "categoryId": 2,
+    "price": "100"
+}
+
+### GET Product
+GET {{path}}/products/1
+Cookie: {{cookie}}
+
+### DELET Product
+DELETE  {{path}}/products/1
+Cookie: {{cookie}}
+
+### GET Product
+GET {{path}}/products/1
+Cookie: {{cookie}}
+
+### GET Product
+DELETE  {{path}}/categories/1
+Cookie: {{cookie}}
+
+### GET Products
+GET {{path}}/products
+Cookie: {{cookie}}
+
+### GET Categories
+GET {{path}}/categories
+Cookie: {{cookie}}
+
 ### Add To Cart
 POST {{path}}/carts
 Content-Type: application/json
+Cookie: {{cookie}}
 
 {
-    "productId": 1,
-    "userId": 1
+    "productId": 1
 }
 
 ### GET My Cart
-GET {{path}}/carts/1
+GET {{path}}/carts/my
+Cookie: {{cookie}}
 
 ### DELETE Item from cart
-DELETE {{path}}/carts?id=1&userId=1
+DELETE {{path}}/carts/1
+Cookie: {{cookie}}
+
+### Add Order from cart
+POST {{path}}/orders/from-cart
+Content-Type: application/json
+Cookie: {{cookie}}
+
+### Add Order
+POST {{path}}/orders
+Content-Type: application/json
+Cookie: {{cookie}}
+
+{
+    "productIds": [
+        1, 2, 1
+    ]
+}

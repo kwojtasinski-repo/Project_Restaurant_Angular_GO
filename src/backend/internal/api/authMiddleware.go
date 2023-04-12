@@ -12,6 +12,7 @@ func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		cookieValue, err := CookieIssued.GetValue([]byte{}, c.Request)
 		if err != nil {
+			log.Println("ERROR: AuthMiddleware() ", err)
 			c.AbortWithStatusJSON(401, gin.H{"errors": "Cookie is required"})
 			return
 		}

@@ -29,27 +29,19 @@ func (price *Price) String() string {
 }
 
 func (price *Price) Add(priceSecond Price) {
-	price = &Price{
-		value: price.value.Add(priceSecond.value),
-	}
+	price.value = price.value.Add(priceSecond.value)
 }
 
 func (price *Price) Sub(priceSecond Price) {
-	price = &Price{
-		value: price.value.Sub(priceSecond.value),
-	}
+	price.value = price.value.Sub(priceSecond.value)
 }
 
 func (price *Price) Div(priceSecond Price) {
-	price = &Price{
-		value: price.value.Div(priceSecond.value),
-	}
+	price.value = price.value.Div(priceSecond.value)
 }
 
 func (price *Price) Mul(priceSecond Price) {
-	price = &Price{
-		value: price.value.Mul(priceSecond.value),
-	}
+	price.value = price.value.Mul(priceSecond.value)
 }
 
 func validatePrice(price decimal.Decimal) error {

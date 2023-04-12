@@ -9,7 +9,6 @@ import (
 	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
 	applicationerrors "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/errors"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/repositories"
-	"github.com/shopspring/decimal"
 )
 
 type OrderService interface {
@@ -67,11 +66,14 @@ func (service *orderService) Add(addOrderDto dto.AddOrderDto) (*dto.OrderDetails
 			continue
 		}
 
-		order.AddProduct(entities.OrderProduct{
+		err = order.AddProduct(entities.OrderProduct{
 			Name:      product.Name,
 			Price:     product.Price,
 			ProductId: product.Id,
 		})
+		if err != nil {
+			errors.WriteString(err.Error())
+		}
 	}
 
 	if errors.Len() > 0 {
@@ -110,7 +112,6 @@ func (service *orderService) AddFromCart(userId int64) (*dto.OrderDetailsDto, *a
 	}
 
 	var errors strings.Builder
-	totalCost := decimal.Zero
 	for _, productInCart := range productsInCart {
 		product, err := service.productRepo.Get(productInCart.ProductId.Value())
 		if err != nil {
@@ -127,7 +128,6 @@ func (service *orderService) AddFromCart(userId int64) (*dto.OrderDetailsDto, *a
 			Price:     product.Price,
 			ProductId: product.Id,
 		})
-		totalCost = totalCost.Add(product.Price.Value())
 	}
 
 	if errors.Len() > 0 {
@@ -135,6 +135,10 @@ func (service *orderService) AddFromCart(userId int64) (*dto.OrderDetailsDto, *a
 	}
 
 	err = service.repo.Add(order)
+	if err != nil {
+		return nil, applicationerrors.InternalError(err.Error())
+	}
+	err = service.cartRepo.DeleteCartByUserId(userId)
 	if err != nil {
 		return nil, applicationerrors.InternalError(err.Error())
 	}

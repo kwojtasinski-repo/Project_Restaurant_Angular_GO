@@ -75,12 +75,6 @@ func NewOrderWithNumber(id int64, orderNumber string, user User, orderProducts [
 }
 
 func (order *Order) AddProduct(orderProduct OrderProduct) error {
-	for _, orderProductFromCollection := range order.OrderProducts {
-		if orderProductFromCollection.Id.Value() == orderProduct.Id.Value() {
-			return fmt.Errorf("'Product' with id %v already exists", orderProduct.Id.Value())
-		}
-	}
-
 	order.OrderProducts = append(order.OrderProducts, orderProduct)
 	order.Price.Add(orderProduct.Price)
 	return nil

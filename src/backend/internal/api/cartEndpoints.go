@@ -31,9 +31,12 @@ func addCart(context *gin.Context) {
 	var newCart dto.AddCart
 
 	if err := context.BindJSON(&newCart); err != nil {
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid Cart"})
 		return
 	}
 
+	userId := context.Keys["userId"].(int64)
+	newCart.UserId = userId
 	cartService := createCartService()
 	err := cartService.AddToCart(newCart)
 
