@@ -1,0 +1,15 @@
+# Server configurations
+server:
+  host: "localhost"
+  port: 8000
+
+# Database migration credentials
+databaseMigration:
+  user: "root"
+  pass: ""
+
+# Database credentials
+database:
+  name: "restaurant_db"
+  user: "dbuser"
+  pass: "PasW0RD!Abvase1234!@Ax.?"
