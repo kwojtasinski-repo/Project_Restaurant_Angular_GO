@@ -13,9 +13,10 @@ import (
 
 type SessionService interface {
 	CreateSession(user entities.User) (*dto.SessionDto, *applicationerrors.ErrorStatus)
-	RevokeSession(userId int64) *applicationerrors.ErrorStatus
+	RevokeSession(sessionId uuid.UUID) *applicationerrors.ErrorStatus
+	RevokeAllUsersSessions(userId int64) *applicationerrors.ErrorStatus
 	RefreshSession(sessionId uuid.UUID) (*dto.SessionDto, *applicationerrors.ErrorStatus)
-	GetSession(userId int64) (*dto.SessionDto, *applicationerrors.ErrorStatus)
+	GetUserSessions(userId int64) ([]dto.SessionDto, *applicationerrors.ErrorStatus)
 	ManageSession(sessionDto dto.SessionDto) (*dto.SessionDto, *applicationerrors.ErrorStatus)
 }
 
@@ -44,18 +45,13 @@ func (service *sessionService) CreateSession(user entities.User) (*dto.SessionDt
 	return &sessionDto, nil
 }
 
-func (service *sessionService) RevokeSession(userId int64) *applicationerrors.ErrorStatus {
+func (service *sessionService) RevokeSession(sessionId uuid.UUID) *applicationerrors.ErrorStatus {
 	var session *entities.Session
-	var errRepo error
-	newUserId, err := valueobjects.NewId(userId)
+	var err error
+
+	session, err = service.repo.GetSession(sessionId)
 
 	if err != nil {
-		return applicationerrors.BadRequest("Invalid UserId")
-	}
-
-	session, errRepo = service.repo.GetSessionByUserId(*newUserId)
-
-	if errRepo != nil {
 		return applicationerrors.InternalError(err.Error())
 	}
 
@@ -91,27 +87,27 @@ func (service *sessionService) RefreshSession(sessionId uuid.UUID) (*dto.Session
 	return &sessionDto, nil
 }
 
-func (service *sessionService) GetSession(userId int64) (*dto.SessionDto, *applicationerrors.ErrorStatus) {
+func (service *sessionService) GetUserSessions(userId int64) ([]dto.SessionDto, *applicationerrors.ErrorStatus) {
 	var newUserId *valueobjects.Id
 	var err error
-	var session *entities.Session
+	var sessions []entities.Session
 	newUserId, err = valueobjects.NewId(userId)
 
 	if err != nil {
 		return nil, applicationerrors.BadRequest("Invalid UserId")
 	}
 
-	session, err = service.repo.GetSessionByUserId(*newUserId)
+	sessions, err = service.repo.GetSessionsByUserId(*newUserId)
 	if err != nil {
 		return nil, applicationerrors.InternalError(err.Error())
 	}
 
-	if session == nil {
-		return nil, nil
+	sessionsDto := make([]dto.SessionDto, 0)
+	for _, session := range sessions {
+		sessionsDto = append(sessionsDto, dto.MapToSessionDto(session))
 	}
 
-	sessionDto := dto.MapToSessionDto(*session)
-	return &sessionDto, nil
+	return sessionsDto, nil
 }
 
 func (service *sessionService) ManageSession(sessionDto dto.SessionDto) (*dto.SessionDto, *applicationerrors.ErrorStatus) {
@@ -149,6 +145,10 @@ func (service *sessionService) ManageSession(sessionDto dto.SessionDto) (*dto.Se
 	}
 
 	return refreshedSessionDto, nil
+}
+
+func (service *sessionService) RevokeAllUsersSessions(userId int64) *applicationerrors.ErrorStatus {
+	return nil
 }
 
 func createTokenLifetime() time.Time {

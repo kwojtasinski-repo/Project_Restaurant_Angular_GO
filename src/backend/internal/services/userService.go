@@ -77,7 +77,7 @@ func (service *userService) Delete(id int64) *applicationerrors.ErrorStatus {
 		return applicationerrors.BadRequest(fmt.Sprintf("'User' with id %v was not found", id))
 	}
 
-	if errService := deleteLastSession(service.sessionService, user.Id.Value()); errService != nil {
+	if errService := service.sessionService.RevokeAllUsersSessions(user.Id.Value()); errService != nil {
 		return errService
 	}
 
@@ -135,30 +135,10 @@ func (service *userService) Login(signInDto dto.SignInDto) (*dto.SessionDto, *ap
 		return nil, applicationerrors.BadRequest("Invalid Credentials")
 	}
 
-	if errService := deleteLastSession(service.sessionService, user.Id.Value()); errService != nil {
-		return nil, errService
-	}
-
 	session, errSession := service.sessionService.CreateSession(*user)
 	if errSession != nil {
 		return nil, errSession
 	}
 
 	return session, nil
-}
-
-func deleteLastSession(sessionService SessionService, userId int64) *applicationerrors.ErrorStatus {
-	session, errService := sessionService.GetSession(userId)
-	if errService != nil {
-		return errService
-	}
-
-	if session != nil {
-		errService = sessionService.RevokeSession(userId)
-		if errService != nil {
-			return errService
-		}
-	}
-
-	return nil
 }

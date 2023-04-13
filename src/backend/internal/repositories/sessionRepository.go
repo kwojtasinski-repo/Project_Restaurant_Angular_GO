@@ -11,7 +11,7 @@ type SessionRepository interface {
 	DeleteSession(session entities.Session) error
 	UpdateSession(session entities.Session) error
 	GetSession(sessionId uuid.UUID) (*entities.Session, error)
-	GetSessionByUserId(userId valueobjects.Id) (*entities.Session, error)
+	GetSessionsByUserId(userId valueobjects.Id) ([]entities.Session, error)
 }
 
 type inMemorySessionRepository struct {
@@ -66,13 +66,14 @@ func (repo *inMemorySessionRepository) GetSession(sessionId uuid.UUID) (*entitie
 	return nil, nil
 }
 
-func (repo *inMemorySessionRepository) GetSessionByUserId(userId valueobjects.Id) (*entities.Session, error) {
+func (repo *inMemorySessionRepository) GetSessionsByUserId(userId valueobjects.Id) ([]entities.Session, error) {
+	sessions := make([]entities.Session, 0)
 	for _, session := range repo.sessions {
 		repoUserId := session.UserId()
 		if repoUserId.Value() == userId.Value() {
-			return &session, nil
+			sessions = append(sessions, session)
 		}
 	}
 
-	return nil, nil
+	return sessions, nil
 }
