@@ -1,4 +1,4 @@
-@path = http://localhost:8080/api
+@path = http://localhost:8000/api
 
 ### Create User
 POST {{path}}/sign-up

@@ -1,4 +1,4 @@
-package main
+package migrations
 
 import (
 	"database/sql"
@@ -15,7 +15,7 @@ import (
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/config"
 )
 
-func runMigrations(config config.Config, migrationsToApply string) {
+func RunMigrations(config config.Config, migrationsToApply string) {
 	log.Println("Prepare up migrations...")
 
 	migrationsApply := 0
@@ -59,7 +59,7 @@ func runMigrations(config config.Config, migrationsToApply string) {
 	}
 }
 
-func downMigrations(config config.Config, migrationsToApply string) {
+func DownMigrations(config config.Config, migrationsToApply string) {
 	log.Println("Prepare down migrations...")
 
 	migrationsApply := 0
