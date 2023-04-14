@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/kamasjdev/Project_Restaurant_Angular_GO/config"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/api"
 )
 
@@ -14,7 +15,7 @@ const (
 )
 
 func main() {
-	config := loadConfig("config.yml")
+	config := config.LoadConfig("config.yml")
 	for index, cmd := range os.Args {
 		if cmd == migrationsUp {
 			countMigrations := ""

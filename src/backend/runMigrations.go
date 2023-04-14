@@ -12,9 +12,10 @@ import (
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/mysql"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+	"github.com/kamasjdev/Project_Restaurant_Angular_GO/config"
 )
 
-func runMigrations(config Config, migrationsToApply string) {
+func runMigrations(config config.Config, migrationsToApply string) {
 	log.Println("Prepare up migrations...")
 
 	migrationsApply := 0
@@ -58,7 +59,7 @@ func runMigrations(config Config, migrationsToApply string) {
 	}
 }
 
-func downMigrations(config Config, migrationsToApply string) {
+func downMigrations(config config.Config, migrationsToApply string) {
 	log.Println("Prepare down migrations...")
 
 	migrationsApply := 0
@@ -94,7 +95,7 @@ func downMigrations(config Config, migrationsToApply string) {
 	}
 }
 
-func createDatabaseIfNotExists(config Config) error {
+func createDatabaseIfNotExists(config config.Config) error {
 	log.Println("CREATE DATABASE IF NOT EXISTS " + config.Database.Name)
 	db, err := sql.Open("mysql", config.DatabaseMigration.Username+":"+config.DatabaseMigration.Password+"@tcp(localhost:3306)/")
 	if err != nil {
@@ -110,7 +111,7 @@ func createDatabaseIfNotExists(config Config) error {
 	return nil
 }
 
-func createMigrationObject(config Config) (*migrate.Migrate, error) {
+func createMigrationObject(config config.Config) (*migrate.Migrate, error) {
 	db, err := sql.Open("mysql", config.DatabaseMigration.Username+":"+config.DatabaseMigration.Password+"@tcp(localhost:3306)/"+config.Database.Name)
 	if err != nil {
 		return nil, err

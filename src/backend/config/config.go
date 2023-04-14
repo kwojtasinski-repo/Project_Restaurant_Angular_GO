@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"os"
@@ -22,7 +22,7 @@ type Config struct {
 	} `yaml:"database"`
 }
 
-func loadConfig(path string) Config {
+func LoadConfig(path string) Config {
 	f, err := os.Open(path)
 	if err != nil {
 		panic(err)
