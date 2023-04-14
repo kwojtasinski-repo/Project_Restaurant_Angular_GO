@@ -13,8 +13,9 @@ import (
 )
 
 const (
-	migrationsUp   = "--migrations=up"
-	migrationsDown = "--migrations=down"
+	MigrationsUp   = "--migrations=up"
+	MigrationsDown = "--migrations=down"
+	GinMode        = "GIN_MODE"
 )
 
 func main() {
@@ -38,14 +39,14 @@ func containsString(strArr []string, containStr string) bool {
 
 func runMigrations(config config.Config) {
 	for index, cmd := range os.Args {
-		if cmd == migrationsUp {
+		if cmd == MigrationsUp {
 			countMigrations := ""
 			if len(os.Args) > index+1 {
 				countMigrations = os.Args[index+1]
 			}
 			migrations.RunMigrations(config, countMigrations)
 			return
-		} else if cmd == migrationsDown {
+		} else if cmd == MigrationsDown {
 			countMigrations := ""
 			if len(os.Args) > index+1 {
 				countMigrations = os.Args[index+1]
@@ -59,7 +60,8 @@ func runMigrations(config config.Config) {
 func startServer(config config.Config) {
 	log.Println("Creating Gin Engine...")
 	router := gin.Default()
-	api.SetupApi(router)
+	gin.SetMode(os.Getenv(GinMode))
+	api.SetupApi(config, router)
 	log.Println("Running API...")
 	router.Run(fmt.Sprintf("%v:%v", config.Server.Host, config.Server.Port))
 }

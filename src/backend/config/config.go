@@ -8,8 +8,9 @@ import (
 
 type Config struct {
 	Server struct {
-		Port string `yaml:"port"`
-		Host string `yaml:"host"`
+		Port          string `yaml:"port"`
+		Host          string `yaml:"host"`
+		CookieHashKey string `yaml:"cookieHashKey"`
 	} `yaml:"server"`
 	DatabaseMigration struct {
 		Username string `yaml:"user"`

@@ -5,21 +5,11 @@ import (
 
 	"github.com/chmike/securecookie"
 	"github.com/gin-gonic/gin"
+	"github.com/kamasjdev/Project_Restaurant_Angular_GO/config"
 )
 
-func SetupApi(router *gin.Engine) {
-	log.Println("Creating Auth Cookie")
-	var cookieErr error
-	CookieIssued, cookieErr = securecookie.New(CookieSessionName, CookieHashKey, securecookie.Params{
-		Path:     Location,
-		Domain:   Location,
-		MaxAge:   CookieLifeTime,
-		HTTPOnly: true,
-		Secure:   true,
-	})
-	if cookieErr != nil {
-		log.Fatal("ERROR: Cookie cannot be issued", cookieErr.Error())
-	}
+func SetupApi(config config.Config, router *gin.Engine) {
+	configOptions(config)
 	log.Println("Setup Endpoints")
 	group := router.Group("/api")
 	group.Use(AuthMiddleware())
@@ -32,4 +22,21 @@ func SetupApi(router *gin.Engine) {
 		AddSessionEndpoints(group)
 	}
 	AddIdentityEndpoints(router)
+}
+
+func configOptions(config config.Config) {
+	log.Println("Creating Auth Cookie")
+	Location = config.Server.Host
+	CookieHashKey = []byte(config.Server.CookieHashKey)
+	var cookieErr error
+	CookieIssued, cookieErr = securecookie.New(CookieSessionName, CookieHashKey, securecookie.Params{
+		Path:     Location,
+		Domain:   Location,
+		MaxAge:   CookieLifeTime,
+		HTTPOnly: true,
+		Secure:   true,
+	})
+	if cookieErr != nil {
+		log.Fatal("ERROR: Cookie cannot be issued ", cookieErr.Error())
+	}
 }
