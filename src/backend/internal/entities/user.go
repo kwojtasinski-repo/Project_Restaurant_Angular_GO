@@ -12,6 +12,7 @@ type User struct {
 	Email    valueobjects.EmailAddress
 	Password string
 	Role     string
+	Deleted  bool // soft delete
 }
 
 func NewUser(id int64, email, password, role string) (*User, error) {
