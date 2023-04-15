@@ -111,8 +111,8 @@ func createDatabaseIfNotExists(config config.Config) error {
 	return nil
 }
 
-func createMigrationObject(config config.Config) (*migrate.Migrate, error) {
-	db, err := sql.Open("mysql", config.DatabaseMigration.Username+":"+config.DatabaseMigration.Password+"@tcp(localhost:3306)/"+config.Database.Name)
+func createMigrationObject(configFile config.Config) (*migrate.Migrate, error) {
+	db, err := sql.Open("mysql", configFile.DatabaseMigration.Username+":"+configFile.DatabaseMigration.Password+"@tcp(localhost:3306)/"+configFile.Database.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -122,11 +122,7 @@ func createMigrationObject(config config.Config) (*migrate.Migrate, error) {
 	if err != nil {
 		return nil, err
 	}
-	pwd, err := os.Getwd()
-	if err != nil {
-		return nil, err
-	}
-	path := filepath.Join(pwd, "migrations")
+	path := filepath.Join(config.GetRootPath(), "migrations")
 	splited := strings.Split(path, ":"+string(os.PathSeparator))
 	pathSplited := splited[1]
 	migrate, err := migrate.NewWithDatabaseInstance(

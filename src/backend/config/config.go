@@ -1,7 +1,10 @@
 package config
 
 import (
+	"io/ioutil"
+	"log"
 	"os"
+	"path/filepath"
 
 	"gopkg.in/yaml.v3"
 )
@@ -38,4 +41,40 @@ func LoadConfig(path string) Config {
 	}
 
 	return cfg
+}
+
+var rootPath string = ""
+
+func GetRootPath() string {
+	if len(rootPath) == 0 {
+		rootPath = findModuleRootPath()
+		return rootPath
+	}
+
+	return rootPath
+}
+
+func findModuleRootPath() (roots string) {
+	path, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+
+	// Look for enclosing go.mod.
+	for {
+		files, _ := ioutil.ReadDir(path)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+		for _, f := range files {
+			if f.Name() == "go.mod" {
+				return path
+			}
+		}
+
+		path = filepath.Dir(path)
+	}
+
+	panic("ERROR Not found root path")
 }

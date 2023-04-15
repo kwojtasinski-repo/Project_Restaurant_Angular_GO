@@ -49,6 +49,10 @@ func (s *Session) IsExpired() bool {
 	return s.expiry.Before(time.Now().In(time.UTC))
 }
 
+func (s *Session) SetSessionId(sessionId uuid.UUID) {
+	s.sessionId = sessionId
+}
+
 func (s *Session) SetUser(user User) {
 	s.userId = user.Id
 	s.email = user.Email

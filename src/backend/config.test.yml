@@ -1,0 +1,16 @@
+# Server configurations
+server:
+  host: "localhost"
+  port: 8123
+  cookieHashKey: "ABcAsdfawe1241!1q2142@fgsv.,h/@!"
+
+# Database migration credentials
+databaseMigration:
+  user: "root"
+  pass: ""
+
+# Database credentials
+database:
+  name: "restaurant_db_test"
+  user: "testowy12345"
+  pass: "testowe12345"
