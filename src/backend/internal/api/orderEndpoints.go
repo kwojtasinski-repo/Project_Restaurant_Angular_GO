@@ -21,10 +21,12 @@ func addOrdersFromCart(context *gin.Context) {
 
 	if err != nil {
 		writeErrorResponse(context, *err)
+		ResetObjectCreator()
 		return
 	}
 
 	context.IndentedJSON(http.StatusCreated, dto)
+	ResetObjectCreator()
 }
 
 func addOrders(context *gin.Context) {
@@ -32,6 +34,7 @@ func addOrders(context *gin.Context) {
 
 	if err := context.BindJSON(&newOrder); err != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid Order"})
+		ResetObjectCreator()
 		return
 	}
 	userId := context.Keys["userId"].(int64)
@@ -42,8 +45,10 @@ func addOrders(context *gin.Context) {
 
 	if err != nil {
 		writeErrorResponse(context, *err)
+		ResetObjectCreator()
 		return
 	}
 
 	context.IndentedJSON(http.StatusCreated, dto)
+	ResetObjectCreator()
 }

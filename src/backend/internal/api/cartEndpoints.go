@@ -25,6 +25,7 @@ func getMyCart(context *gin.Context) {
 		context.IndentedJSON(http.StatusOK, categories)
 	}
 
+	ResetObjectCreator()
 }
 
 func addCart(context *gin.Context) {
@@ -32,6 +33,7 @@ func addCart(context *gin.Context) {
 
 	if err := context.BindJSON(&newCart); err != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid Cart"})
+		ResetObjectCreator()
 		return
 	}
 
@@ -42,10 +44,12 @@ func addCart(context *gin.Context) {
 
 	if err != nil {
 		writeErrorResponse(context, *err)
+		ResetObjectCreator()
 		return
 	}
 
 	context.Writer.WriteHeader(http.StatusCreated)
+	ResetObjectCreator()
 }
 
 func deleteCart(context *gin.Context) {
@@ -54,14 +58,17 @@ func deleteCart(context *gin.Context) {
 	userId := context.Keys["userId"].(int64)
 	if errorConvertCart != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
+		ResetObjectCreator()
 		return
 	}
 
 	cartService := createCartService()
 	if err := cartService.RemoveFromCart(cartId, userId); err != nil {
 		writeErrorResponse(context, *err)
+		ResetObjectCreator()
 		return
 	}
 
 	context.Writer.WriteHeader(http.StatusNoContent)
+	ResetObjectCreator()
 }

@@ -22,4 +22,5 @@ func getMyProfile(context *gin.Context) {
 	} else {
 		context.IndentedJSON(http.StatusOK, user)
 	}
+	ResetObjectCreator()
 }

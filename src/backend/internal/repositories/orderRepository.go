@@ -5,7 +5,7 @@ import (
 	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
 )
 
-type OderRepository interface {
+type OrderRepository interface {
 	Add(*entities.Order) error
 	Delete(entities.Order) error
 	Get(int64) (*entities.Order, error)
@@ -17,7 +17,7 @@ type inMemoryOrderRepository struct {
 	orders []entities.Order
 }
 
-func NewInMemoryOrderRepository() OderRepository {
+func NewInMemoryOrderRepository() OrderRepository {
 	return &inMemoryOrderRepository{
 		orders: make([]entities.Order, 0),
 	}

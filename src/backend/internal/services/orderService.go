@@ -17,12 +17,12 @@ type OrderService interface {
 }
 
 type orderService struct {
-	repo        repositories.OderRepository
+	repo        repositories.OrderRepository
 	cartRepo    repositories.CartRepository
 	productRepo repositories.ProductRepository
 }
 
-func CreateOrderService(orderRepository repositories.OderRepository, cartRepository repositories.CartRepository,
+func CreateOrderService(orderRepository repositories.OrderRepository, cartRepository repositories.CartRepository,
 	productRepository repositories.ProductRepository) OrderService {
 	return &orderService{
 		repo:        orderRepository,

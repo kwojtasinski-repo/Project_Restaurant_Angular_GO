@@ -11,6 +11,7 @@ import (
 	"path/filepath"
 
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/config"
+	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/api"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/migrations"
 	"github.com/stretchr/testify/suite"
 )
@@ -30,10 +31,11 @@ func (suite *IntegrationTestSuite) SetupSuite() {
 	log.Println("Loading  config file ", TestConfigFile)
 	configFile := config.LoadConfig(filepath.Join(config.GetRootPath(), TestConfigFile))
 	suite.config = configFile
+	api.InitObjectCreator(configFile)
 	log.Println("Running migrations...")
 	migrations.RunMigrations(configFile, "")
 	log.Println("Open connection...")
-	database, err := sql.Open("mysql", configFile.DatabaseMigration.Username+":"+configFile.DatabaseMigration.Password+"@tcp(localhost:3306)/"+configFile.Database.Name+"?parseTime=true")
+	database, err := sql.Open("mysql", suite.config.DatabaseMigration.Username+":"+suite.config.DatabaseMigration.Password+"@tcp(localhost:3306)/"+suite.config.Database.Name+"?parseTime=true")
 	if err != nil {
 		log.Fatal("Cannot open database ", configFile.Database.Name)
 	}
@@ -53,4 +55,11 @@ func (suite *IntegrationTestSuite) TearDownSuite() {
 
 func (suite *IntegrationTestSuite) SetupTest() {
 	log.Println("---- Setup Before Each Test ----")
+	// add test data?
+}
+
+// this function executes after each test case
+func (suite *IntegrationTestSuite) TearDownTest() {
+	log.Println("---- Setup After Each Test ----")
+	// clear all tables?
 }

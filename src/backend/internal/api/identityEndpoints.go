@@ -19,6 +19,8 @@ func AddIdentityEndpoints(router *gin.Engine) {
 func signIn(context *gin.Context) {
 	var signInDto dto.SignInDto
 	if err := context.BindJSON(&signInDto); err != nil {
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid payload"})
+		ResetObjectCreator()
 		return
 	}
 
@@ -29,16 +31,20 @@ func signIn(context *gin.Context) {
 		jsonBytes, err := json.Marshal(session)
 		if err != nil {
 			writeErrorResponse(context, *errors.InternalError(err.Error()))
+			ResetObjectCreator()
 			return
 		}
 
 		CookieIssued.SetValue(context.Writer, jsonBytes)
+		ResetObjectCreator()
 	}
 }
 
 func signUp(context *gin.Context) {
 	var addUserDto dto.AddUserDto
 	if err := context.BindJSON(&addUserDto); err != nil {
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid payload"})
+		ResetObjectCreator()
 		return
 	}
 
@@ -48,4 +54,5 @@ func signUp(context *gin.Context) {
 	} else {
 		context.Writer.WriteHeader(http.StatusCreated)
 	}
+	ResetObjectCreator()
 }

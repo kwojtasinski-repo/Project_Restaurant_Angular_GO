@@ -26,6 +26,7 @@ func getCategories(context *gin.Context) {
 		context.IndentedJSON(http.StatusOK, categories)
 	}
 
+	ResetObjectCreator()
 }
 
 func getCategory(context *gin.Context) {
@@ -34,6 +35,7 @@ func getCategory(context *gin.Context) {
 
 	if errorConvert != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
+		ResetObjectCreator()
 		return
 	}
 
@@ -43,12 +45,15 @@ func getCategory(context *gin.Context) {
 	} else {
 		context.IndentedJSON(http.StatusOK, category)
 	}
+	ResetObjectCreator()
 }
 
 func addCategory(context *gin.Context) {
 	var newCategory dto.CategoryDto
 
 	if err := context.BindJSON(&newCategory); err != nil {
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid Category"})
+		ResetObjectCreator()
 		return
 	}
 
@@ -57,10 +62,12 @@ func addCategory(context *gin.Context) {
 
 	if err != nil {
 		writeErrorResponse(context, *err)
+		ResetObjectCreator()
 		return
 	}
 
 	context.IndentedJSON(http.StatusCreated, dto)
+	ResetObjectCreator()
 }
 
 func updateCategory(context *gin.Context) {
@@ -69,12 +76,15 @@ func updateCategory(context *gin.Context) {
 
 	if errorConvert != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
+		ResetObjectCreator()
 		return
 	}
 
 	var updateCategory dto.CategoryDto
 
 	if err := context.BindJSON(&updateCategory); err != nil {
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid Category"})
+		ResetObjectCreator()
 		return
 	}
 
@@ -84,10 +94,12 @@ func updateCategory(context *gin.Context) {
 
 	if errUpdate != nil {
 		writeErrorResponse(context, *errUpdate)
+		ResetObjectCreator()
 		return
 	}
 
 	context.IndentedJSON(http.StatusOK, dto)
+	ResetObjectCreator()
 }
 
 func deleteCategory(context *gin.Context) {
@@ -96,13 +108,16 @@ func deleteCategory(context *gin.Context) {
 
 	if errorConvert != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
+		ResetObjectCreator()
 		return
 	}
 
 	categoryService := createCategoryService()
 	if err := categoryService.Delete(categoryId); err != nil {
 		writeErrorResponse(context, *err)
+		ResetObjectCreator()
 	}
 
 	context.Writer.WriteHeader(http.StatusNoContent)
+	ResetObjectCreator()
 }

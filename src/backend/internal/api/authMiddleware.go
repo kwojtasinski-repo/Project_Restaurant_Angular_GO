@@ -24,7 +24,7 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		sessionService := CreateSessionService()
+		sessionService := createSessionService()
 		refreshedSession, errStatus := sessionService.ManageSession(session)
 		if errStatus != nil {
 			c.Abort()

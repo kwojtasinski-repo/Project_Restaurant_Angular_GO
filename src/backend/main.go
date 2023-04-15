@@ -19,11 +19,12 @@ const (
 )
 
 func main() {
-	config := config.LoadConfig("config.yml")
+	configFile := config.LoadConfig("config.yml")
+	api.InitObjectCreator(configFile)
 	if containsString(os.Args, "migrations") {
-		runMigrations(config)
+		runMigrations(configFile)
 	} else {
-		startServer(config)
+		startServer(configFile)
 	}
 }
 
