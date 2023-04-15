@@ -127,7 +127,7 @@ func createMigrationObject(configFile config.Config) (*migrate.Migrate, error) {
 	pathSplited := splited[1]
 	migrate, err := migrate.NewWithDatabaseInstance(
 		fmt.Sprintf("file:///"+pathSplited),
-		"restaurant_db", driver)
+		configFile.Database.Name, driver)
 
 	if err != nil {
 		return nil, err

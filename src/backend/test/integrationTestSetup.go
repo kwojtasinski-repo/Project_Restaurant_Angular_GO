@@ -1,3 +1,8 @@
+//go:build integration
+// +build integration
+
+// run integration tests command
+// go test ./test -v -tags=integration
 package test
 
 import (

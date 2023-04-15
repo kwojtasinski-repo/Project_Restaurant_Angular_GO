@@ -1,7 +1,6 @@
 package config
 
 import (
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -60,9 +59,10 @@ func findModuleRootPath() (roots string) {
 		panic(err)
 	}
 
+	pathBefore := ""
 	// Look for enclosing go.mod.
 	for {
-		files, _ := ioutil.ReadDir(path)
+		files, _ := os.ReadDir(path)
 
 		if err != nil {
 			log.Fatal(err)
@@ -73,8 +73,11 @@ func findModuleRootPath() (roots string) {
 			}
 		}
 
+		pathBefore = path
 		path = filepath.Dir(path)
-	}
 
-	panic("ERROR Not found root path")
+		if path == pathBefore {
+			panic("ERROR Not found root path")
+		}
+	}
 }
