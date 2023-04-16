@@ -2,10 +2,11 @@ package repositories
 
 import (
 	"database/sql"
-	"time"
+	"fmt"
 
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
 	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
+	"github.com/patrickmn/go-cache"
 )
 
 type categoryRepository struct {
@@ -13,7 +14,7 @@ type categoryRepository struct {
 }
 
 var categoryWithCachedRepo = &cachedCategoryRepository{
-	categories: map[int64]*categoryCached{},
+	cacheStore: cache.New(timeStoreInCache, timeStoreInCache),
 }
 
 func CreateCategoryRepository(database sql.DB) CategoryRepository {
@@ -108,13 +109,8 @@ func (repo *categoryRepository) GetAll() ([]entities.Category, error) {
 }
 
 type cachedCategoryRepository struct {
-	categories map[int64]*categoryCached
+	cacheStore *cache.Cache
 	innerRepo  CategoryRepository
-}
-
-type categoryCached struct {
-	Category entities.Category
-	Created  time.Time
 }
 
 func (repo *cachedCategoryRepository) Add(category *entities.Category) error {
@@ -123,10 +119,7 @@ func (repo *cachedCategoryRepository) Add(category *entities.Category) error {
 		return err
 	}
 
-	repo.categories[category.Id.Value()] = &categoryCached{
-		Category: *category,
-		Created:  time.Now().UTC(),
-	}
+	repo.cacheStore.Set(fmt.Sprintf("%v", category.Id.Value()), category, timeStoreInCache)
 	return nil
 }
 
@@ -136,10 +129,7 @@ func (repo *cachedCategoryRepository) Update(categoryToUpdate entities.Category)
 		return err
 	}
 
-	repo.categories[categoryToUpdate.Id.Value()] = &categoryCached{
-		Category: categoryToUpdate,
-		Created:  time.Now().UTC(),
-	}
+	repo.cacheStore.Set(fmt.Sprintf("%v", categoryToUpdate.Id.Value()), &categoryToUpdate, timeStoreInCache)
 	return nil
 }
 
@@ -149,19 +139,14 @@ func (repo *cachedCategoryRepository) Delete(categoryToDelete entities.Category)
 		return err
 	}
 
-	repo.categories[categoryToDelete.Id.Value()] = &categoryCached{
-		Category: categoryToDelete,
-		Created:  time.Now().UTC(),
-	}
+	repo.cacheStore.Set(fmt.Sprintf("%v", categoryToDelete.Id.Value()), &categoryToDelete, timeStoreInCache)
 	return nil
 }
 
 func (repo *cachedCategoryRepository) Get(id int64) (*entities.Category, error) {
-	categoryInCache := repo.categories[id]
-	if categoryInCache != nil {
-		if categoryInCache.Created.Add(timeStoreInCache).After(time.Now().UTC()) {
-			return &categoryInCache.Category, nil
-		}
+	categoryInCache, exists := repo.cacheStore.Get(fmt.Sprintf("%v", id))
+	if exists {
+		return categoryInCache.(*entities.Category), nil
 	}
 
 	category, err := repo.innerRepo.Get(id)
@@ -170,14 +155,10 @@ func (repo *cachedCategoryRepository) Get(id int64) (*entities.Category, error) 
 	}
 
 	if category == nil {
-		repo.categories[id] = nil
 		return nil, nil
 	}
 
-	repo.categories[id] = &categoryCached{
-		Category: *category,
-		Created:  time.Now().UTC(),
-	}
+	repo.cacheStore.Set(fmt.Sprintf("%v", category.Id.Value()), category, timeStoreInCache)
 	return category, nil
 }
 

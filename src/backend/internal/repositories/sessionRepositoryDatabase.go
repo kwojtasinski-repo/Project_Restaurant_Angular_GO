@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
 	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
+	"github.com/patrickmn/go-cache"
 )
 
 type sessionRepository struct {
@@ -14,7 +15,7 @@ type sessionRepository struct {
 }
 
 var sessionRepositoryCached = &cachedSessionRepository{
-	sessions: make(map[uuid.UUID]*sessionCached),
+	cacheStore: cache.New(timeStoreInCache, timeStoreInCache),
 }
 
 func CreateSessionRepository(database sql.DB) SessionRepository {
@@ -125,13 +126,8 @@ func (repo *sessionRepository) GetSessionsByUserId(userId valueobjects.Id) ([]en
 }
 
 type cachedSessionRepository struct {
-	sessions  map[uuid.UUID]*sessionCached
-	innerRepo SessionRepository
-}
-
-type sessionCached struct {
-	Session entities.Session
-	Created time.Time
+	cacheStore *cache.Cache
+	innerRepo  SessionRepository
 }
 
 func (repo *cachedSessionRepository) AddSession(session entities.Session) (entities.Session, error) {
@@ -140,10 +136,7 @@ func (repo *cachedSessionRepository) AddSession(session entities.Session) (entit
 		return sessionAdded, err
 	}
 
-	repo.sessions[sessionAdded.SessionId()] = &sessionCached{
-		Session: sessionAdded,
-		Created: time.Now().UTC(),
-	}
+	repo.cacheStore.Set(sessionAdded.SessionId().String(), &sessionAdded, timeStoreInCache)
 	return sessionAdded, nil
 }
 
@@ -153,7 +146,7 @@ func (repo *cachedSessionRepository) DeleteSession(session entities.Session) err
 		return err
 	}
 
-	repo.sessions[session.SessionId()] = nil
+	repo.cacheStore.Delete(session.SessionId().String())
 	return nil
 }
 
@@ -163,19 +156,14 @@ func (repo *cachedSessionRepository) UpdateSession(session entities.Session) err
 		return err
 	}
 
-	repo.sessions[session.SessionId()] = &sessionCached{
-		Session: session,
-		Created: time.Now().UTC(),
-	}
+	repo.cacheStore.Set(session.SessionId().String(), &session, timeStoreInCache)
 	return nil
 }
 
 func (repo *cachedSessionRepository) GetSession(sessionId uuid.UUID) (*entities.Session, error) {
-	sessionInCache := repo.sessions[sessionId]
-	if sessionInCache != nil {
-		if sessionInCache.Created.Add(timeStoreInCache).After(time.Now().UTC()) {
-			return &sessionInCache.Session, nil
-		}
+	sessionInCache, exists := repo.cacheStore.Get(sessionId.String())
+	if exists {
+		return sessionInCache.(*entities.Session), nil
 	}
 
 	session, err := repo.innerRepo.GetSession(sessionId)
@@ -184,14 +172,10 @@ func (repo *cachedSessionRepository) GetSession(sessionId uuid.UUID) (*entities.
 	}
 
 	if session == nil {
-		repo.sessions[sessionId] = nil
 		return nil, nil
 	}
 
-	repo.sessions[sessionId] = &sessionCached{
-		Session: *session,
-		Created: time.Now().UTC(),
-	}
+	repo.cacheStore.Set(sessionId.String(), session, timeStoreInCache)
 	return session, nil
 }
 

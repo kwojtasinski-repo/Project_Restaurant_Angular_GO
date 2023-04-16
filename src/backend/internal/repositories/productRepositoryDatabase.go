@@ -2,10 +2,11 @@ package repositories
 
 import (
 	"database/sql"
-	"time"
+	"fmt"
 
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
 	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
+	"github.com/patrickmn/go-cache"
 	"github.com/shopspring/decimal"
 )
 
@@ -14,7 +15,7 @@ type productRepository struct {
 }
 
 var productRepositoryCached = &cachedProductRepository{
-	products: map[int64]*productCached{},
+	cacheStore: cache.New(timeStoreInCache, timeStoreInCache),
 }
 
 func CreateProductRepository(database sql.DB) ProductRepository {
@@ -139,13 +140,8 @@ func (repo *productRepository) GetAll() ([]entities.Product, error) {
 }
 
 type cachedProductRepository struct {
-	products  map[int64]*productCached
-	innerRepo ProductRepository
-}
-
-type productCached struct {
-	Product entities.Product
-	Created time.Time
+	cacheStore *cache.Cache
+	innerRepo  ProductRepository
 }
 
 func (repo *cachedProductRepository) Add(product *entities.Product) error {
@@ -154,10 +150,7 @@ func (repo *cachedProductRepository) Add(product *entities.Product) error {
 		return err
 	}
 
-	repo.products[product.Id.Value()] = &productCached{
-		Product: *product,
-		Created: time.Now().UTC(),
-	}
+	repo.cacheStore.Set(fmt.Sprintf("%v", product.Id.Value()), product, timeStoreInCache)
 	return nil
 }
 
@@ -167,10 +160,7 @@ func (repo *cachedProductRepository) Update(productToUpdate entities.Product) er
 		return err
 	}
 
-	repo.products[productToUpdate.Id.Value()] = &productCached{
-		Product: productToUpdate,
-		Created: time.Now().UTC(),
-	}
+	repo.cacheStore.Set(fmt.Sprintf("%v", productToUpdate.Id.Value()), &productToUpdate, timeStoreInCache)
 	return nil
 }
 
@@ -180,19 +170,14 @@ func (repo *cachedProductRepository) Delete(productToDelete entities.Product) er
 		return err
 	}
 
-	repo.products[productToDelete.Id.Value()] = &productCached{
-		Product: productToDelete,
-		Created: time.Now().UTC(),
-	}
+	repo.cacheStore.Set(fmt.Sprintf("%v", productToDelete.Id.Value()), &productToDelete, timeStoreInCache)
 	return nil
 }
 
 func (repo *cachedProductRepository) Get(id int64) (*entities.Product, error) {
-	productInCache := repo.products[id]
-	if productInCache != nil {
-		if productInCache.Created.Add(timeStoreInCache).After(time.Now().UTC()) {
-			return &productInCache.Product, nil
-		}
+	productInCache, exists := repo.cacheStore.Get(fmt.Sprintf("%v", id))
+	if exists {
+		return productInCache.(*entities.Product), nil
 	}
 
 	product, err := repo.innerRepo.Get(id)
@@ -201,14 +186,10 @@ func (repo *cachedProductRepository) Get(id int64) (*entities.Product, error) {
 	}
 
 	if product == nil {
-		repo.products[id] = nil
 		return nil, nil
 	}
 
-	repo.products[id] = &productCached{
-		Product: *product,
-		Created: time.Now().UTC(),
-	}
+	repo.cacheStore.Set(fmt.Sprintf("%v", product.Id.Value()), &product, timeStoreInCache)
 	return product, nil
 }
 
