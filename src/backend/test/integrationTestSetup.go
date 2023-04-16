@@ -1,8 +1,3 @@
-//go:build integration
-// +build integration
-
-// run integration tests command
-// go test ./test -v -tags=integration
 package test
 
 import (
@@ -33,7 +28,7 @@ func (suite *IntegrationTestSuite) SetupSuite() {
 	suite.config = configFile
 	api.InitObjectCreator(configFile)
 	log.Println("Running migrations...")
-	migrations.RunMigrations(configFile, "")
+	migrations.UpMigrations(configFile, "")
 	log.Println("Open connection...")
 	database, err := sql.Open("mysql", suite.config.DatabaseMigration.Username+":"+suite.config.DatabaseMigration.Password+"@tcp(localhost:3306)/"+suite.config.Database.Name+"?parseTime=true")
 	if err != nil {

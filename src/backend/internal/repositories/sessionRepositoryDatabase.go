@@ -30,7 +30,7 @@ func (repo *sessionRepository) AddSession(session entities.Session) (entities.Se
 	query := `INSERT INTO sessions (session_id, user_id, email, role, expiry) VALUES(UNHEX(REPLACE(?,'-','')), ?, ?, ?, ?);`
 	userId := session.UserId()
 	email := session.Email()
-	_, err := repo.database.Query(query, sessionId, userId.Value(), email.Value(), session.Role(), session.Expiry())
+	_, err := repo.database.Exec(query, sessionId, userId.Value(), email.Value(), session.Role(), session.Expiry())
 	if err != nil {
 		return entities.Session{}, err
 	}
@@ -91,9 +91,9 @@ func (repo *sessionRepository) GetSession(sessionId uuid.UUID) (*entities.Sessio
 func (repo *sessionRepository) GetSessionsByUserId(userId valueobjects.Id) ([]entities.Session, error) {
 	sessions := make([]entities.Session, 0)
 	query := "SELECT session_id, user_id, email, role, expiry FROM sessions WHERE user_id = ?"
-	rows, err := repo.database.Query(query, userId)
+	rows, err := repo.database.Query(query, userId.Value())
 	if err != nil {
-		return sessions, nil
+		return sessions, err
 	}
 	defer rows.Close()
 

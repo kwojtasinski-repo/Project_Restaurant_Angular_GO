@@ -7,7 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/errors"
+	applicationerrors "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/errors"
 )
 
 func AddIdentityEndpoints(router *gin.Engine) {
@@ -24,13 +24,17 @@ func signIn(context *gin.Context) {
 		return
 	}
 
-	userService := createUserService()
+	userService, errCreateObject := createUserService()
+	if errCreateObject != nil {
+		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
+	}
+
 	if session, err := userService.Login(signInDto); err != nil {
 		writeErrorResponse(context, *err)
 	} else {
 		jsonBytes, err := json.Marshal(session)
 		if err != nil {
-			writeErrorResponse(context, *errors.InternalError(err.Error()))
+			writeErrorResponse(context, *applicationerrors.InternalError(err.Error()))
 			ResetObjectCreator()
 			return
 		}
@@ -48,7 +52,11 @@ func signUp(context *gin.Context) {
 		return
 	}
 
-	userService := createUserService()
+	userService, errCreateObject := createUserService()
+	if errCreateObject != nil {
+		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
+	}
+
 	if _, err := userService.Register(&addUserDto); err != nil {
 		writeErrorResponse(context, *err)
 	} else {

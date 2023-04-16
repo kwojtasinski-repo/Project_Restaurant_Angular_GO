@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	applicationerrors "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/errors"
 )
 
 func AddSessionEndpoints(router *gin.RouterGroup) {
@@ -25,7 +26,11 @@ func getAllUserSessions(context *gin.Context) {
 		return
 	}
 
-	sessionService := createSessionService()
+	sessionService, err := createSessionService()
+	if err != nil {
+		writeErrorResponse(context, *applicationerrors.InternalError(err.Error()))
+	}
+
 	if sessions, err := sessionService.GetUserSessions(userId); err != nil {
 		writeErrorResponse(context, *err)
 	} else {
@@ -44,7 +49,11 @@ func revokeAllUserSessions(context *gin.Context) {
 		return
 	}
 
-	sessionService := createSessionService()
+	sessionService, err := createSessionService()
+	if err != nil {
+		writeErrorResponse(context, *applicationerrors.InternalError(err.Error()))
+	}
+
 	if err := sessionService.RevokeAllUsersSessions(userId); err != nil {
 		writeErrorResponse(context, *err)
 	} else {

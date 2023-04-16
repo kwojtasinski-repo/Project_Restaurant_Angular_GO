@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
+	applicationerrors "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/errors"
 )
 
 func AuthMiddleware() gin.HandlerFunc {
@@ -24,7 +25,11 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		sessionService := createSessionService()
+		sessionService, errCreateObject := createSessionService()
+		if errCreateObject != nil {
+			writeErrorResponse(c, *applicationerrors.InternalError(errCreateObject.Error()))
+		}
+
 		refreshedSession, errStatus := sessionService.ManageSession(session)
 		if errStatus != nil {
 			c.Abort()

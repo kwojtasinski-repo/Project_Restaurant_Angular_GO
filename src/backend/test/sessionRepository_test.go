@@ -1,21 +1,12 @@
-//go:build integration
-// +build integration
-
 package test
 
 import (
-	"testing"
 	"time"
 
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/repositories"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/suite"
 )
-
-func TestIntegrationTestSuite(t *testing.T) {
-	suite.Run(t, new(IntegrationTestSuite))
-}
 
 func (suite *IntegrationTestSuite) Test_AddSession_ShouldReturnSession() {
 	user, _ := entities.NewUser(1, "email@email.com", "1234", "user")

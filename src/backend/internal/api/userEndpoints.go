@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	applicationerrors "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/errors"
 )
 
 func AddUserEndpoints(router *gin.RouterGroup) {
@@ -14,7 +15,11 @@ func AddUserEndpoints(router *gin.RouterGroup) {
 
 func getMyProfile(context *gin.Context) {
 	userId := context.Keys["userId"].(int64)
-	userService := createUserService()
+	userService, errCreateObject := createUserService()
+	if errCreateObject != nil {
+		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
+	}
+
 	user, err := userService.Get(userId)
 
 	if err != nil {

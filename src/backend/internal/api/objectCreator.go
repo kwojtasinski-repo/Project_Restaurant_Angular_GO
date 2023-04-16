@@ -24,7 +24,7 @@ func InitObjectCreator(configFile config.Config) {
 	configuration = configFile
 }
 
-func CreateDatabase() (*sql.DB, error) {
+func CreateDatabaseConnection() (*sql.DB, error) {
 	service := objectsPerRequest["database"]
 
 	if service != nil {
@@ -44,16 +44,21 @@ func ResetObjectCreator() {
 	objectsPerRequest = make(map[string]interface{})
 }
 
-func createSessionService() services.SessionService {
+func createSessionService() (services.SessionService, error) {
 	service := objectsPerRequest["services.SessionService"]
 
 	if service != nil {
-		return service.(services.SessionService)
+		return service.(services.SessionService), nil
 	}
 
-	sessionService := services.CreateSessionService(inMemorySessionRepository, inMemoryUserRepository)
+	sessionRepository, err := createSessionRepository()
+	if err != nil {
+		return nil, err
+	}
+
+	sessionService := services.CreateSessionService(sessionRepository, inMemoryUserRepository)
 	objectsPerRequest["services.SessionService"] = sessionService
-	return sessionService
+	return sessionService, nil
 }
 
 func createProductService() services.ProductService {
@@ -92,16 +97,26 @@ func createOrderService() services.OrderService {
 	return orderService
 }
 
-func createUserService() services.UserService {
+func createUserService() (services.UserService, error) {
 	service := objectsPerRequest["services.UserService"]
 
 	if service != nil {
-		return service.(services.UserService)
+		return service.(services.UserService), nil
 	}
 
-	userService := services.CreateUserService(inMemoryUserRepository, passwordHasher, createSessionService())
+	sessionService, err := createSessionService()
+	if err != nil {
+		return nil, err
+	}
+
+	userRepository, err := createUserRepository()
+	if err != nil {
+		return nil, err
+	}
+
+	userService := services.CreateUserService(userRepository, passwordHasher, sessionService)
 	objectsPerRequest["services.UserService"] = userService
-	return userService
+	return userService, nil
 }
 
 func createCartService() services.CartService {
@@ -168,7 +183,7 @@ func createSessionRepository() (repositories.SessionRepository, error) {
 		return repo.(repositories.SessionRepository), nil
 	}
 
-	database, err := CreateDatabase()
+	database, err := CreateDatabaseConnection()
 	if err != nil {
 		return nil, err
 	}
@@ -189,15 +204,21 @@ func createOrderRepository() repositories.OrderRepository {
 	return nil
 }
 
-func createInUserRepository() repositories.UserRepository {
+func createUserRepository() (repositories.UserRepository, error) {
 	repo := objectsPerRequest["repositories.UserRepository"]
 
 	if repo != nil {
-		return repo.(repositories.UserRepository)
+		return repo.(repositories.UserRepository), nil
 	}
 
-	objectsPerRequest["repositories.UserRepository"] = nil
-	return nil
+	databaseConnection, err := CreateDatabaseConnection()
+	if err != nil {
+		return nil, err
+	}
+
+	userRepository := repositories.CreateUserRepository(*databaseConnection)
+	objectsPerRequest["repositories.UserRepository"] = userRepository
+	return userRepository, nil
 }
 
 func createInMemoryUserRepo() repositories.UserRepository {
