@@ -4,18 +4,10 @@ import (
 	"database/sql"
 
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/config"
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
-	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/repositories"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/services"
 )
 
-var inMemoryCategoryRepository = repositories.NewInMemoryCategoryRepository()
-var inMemoryProductRepository = repositories.NewInMemoryProductRepository()
-var inMemoryCartRepository = repositories.NewInMemoryCartRepository()
-var inMemoryOrderRepository = repositories.NewInMemoryOrderRepository()
-var inMemoryUserRepository = createInMemoryUserRepo()
-var inMemorySessionRepository = repositories.NewInMemorySessionRepository()
 var passwordHasher = services.CreatePassworHasherService()
 var configuration config.Config
 var objectsPerRequest = make(map[string]interface{})
@@ -56,45 +48,80 @@ func createSessionService() (services.SessionService, error) {
 		return nil, err
 	}
 
-	sessionService := services.CreateSessionService(sessionRepository, inMemoryUserRepository)
+	userRepository, err := createUserRepository()
+	if err != nil {
+		return nil, err
+	}
+
+	sessionService := services.CreateSessionService(sessionRepository, userRepository)
 	objectsPerRequest["services.SessionService"] = sessionService
 	return sessionService, nil
 }
 
-func createProductService() services.ProductService {
+func createProductService() (services.ProductService, error) {
 	service := objectsPerRequest["services.ProductService"]
 
 	if service != nil {
-		return service.(services.ProductService)
+		return service.(services.ProductService), nil
 	}
 
-	productService := services.CreateProductService(inMemoryProductRepository, inMemoryCategoryRepository)
+	productRepository, err := createProductRepository()
+	if err != nil {
+		return nil, err
+	}
+
+	categoryRepository, err := createCategoryRepository()
+	if err != nil {
+		return nil, err
+	}
+
+	productService := services.CreateProductService(productRepository, categoryRepository)
 	objectsPerRequest["services.ProductService"] = productService
-	return productService
+	return productService, nil
 }
 
-func createCategoryService() services.CategoryService {
+func createCategoryService() (services.CategoryService, error) {
 	service := objectsPerRequest["services.CategoryService"]
 
 	if service != nil {
-		return service.(services.CategoryService)
+		return service.(services.CategoryService), nil
 	}
 
-	categoryService := services.CreateCategoryService(inMemoryCategoryRepository)
+	categoryRepository, err := createCategoryRepository()
+	if err != nil {
+		return nil, err
+	}
+
+	categoryService := services.CreateCategoryService(categoryRepository)
 	objectsPerRequest["services.CategoryService"] = categoryService
-	return categoryService
+	return categoryService, nil
 }
 
-func createOrderService() services.OrderService {
+func createOrderService() (services.OrderService, error) {
 	service := objectsPerRequest["services.OrderService"]
 
 	if service != nil {
-		return service.(services.OrderService)
+		return service.(services.OrderService), nil
 	}
 
-	orderService := services.CreateOrderService(inMemoryOrderRepository, inMemoryCartRepository, inMemoryProductRepository)
+	orderRepository, err := createOrderRepository()
+	if err != nil {
+		return nil, err
+	}
+
+	cartRepository, err := createCartRepository()
+	if err != nil {
+		return nil, err
+	}
+
+	productRepository, err := createProductRepository()
+	if err != nil {
+		return nil, err
+	}
+
+	orderService := services.CreateOrderService(orderRepository, cartRepository, productRepository)
 	objectsPerRequest["services.OrderService"] = orderService
-	return orderService
+	return orderService, nil
 }
 
 func createUserService() (services.UserService, error) {
@@ -119,61 +146,82 @@ func createUserService() (services.UserService, error) {
 	return userService, nil
 }
 
-func createCartService() services.CartService {
+func createCartService() (services.CartService, error) {
 	service := objectsPerRequest["services.CartService"]
 
 	if service != nil {
-		return service.(services.CartService)
+		return service.(services.CartService), nil
 	}
 
-	cartService := services.CreateCartService(inMemoryCartRepository, inMemoryProductRepository, inMemoryUserRepository)
+	cartRepository, err := createCartRepository()
+	if err != nil {
+		return nil, err
+	}
+
+	productRepository, err := createProductRepository()
+	if err != nil {
+		return nil, err
+	}
+
+	userRepository, err := createUserRepository()
+	if err != nil {
+		return nil, err
+	}
+
+	cartService := services.CreateCartService(cartRepository, productRepository, userRepository)
 	objectsPerRequest["services.CartService"] = cartService
-	return cartService
+	return cartService, nil
 }
 
-func createPassworHasherService() services.PasswordHasherService {
-	service := objectsPerRequest["services.PasswordHasherService"]
-
-	if service != nil {
-		return service.(services.PasswordHasherService)
-	}
-
-	passwordHasherService := services.CreatePassworHasherService()
-	objectsPerRequest["services.PasswordHasherService"] = passwordHasherService
-	return passwordHasherService
-}
-
-func createCategoryRepository() repositories.CategoryRepository {
+func createCategoryRepository() (repositories.CategoryRepository, error) {
 	repo := objectsPerRequest["repositories.CategoryRepository"]
 
 	if repo != nil {
-		return repo.(repositories.CategoryRepository)
+		return repo.(repositories.CategoryRepository), nil
 	}
 
-	objectsPerRequest["repositories.CategoryRepository"] = nil
-	return nil
+	databaseConnection, err := CreateDatabaseConnection()
+	if err != nil {
+		return nil, err
+	}
+
+	categoryRepository := repositories.CreateCategoryRepository(*databaseConnection)
+	objectsPerRequest["repositories.CategoryRepository"] = categoryRepository
+	return categoryRepository, nil
 }
 
-func createProductRepository() repositories.ProductRepository {
+func createProductRepository() (repositories.ProductRepository, error) {
 	repo := objectsPerRequest["repositories.ProductRepository"]
 
 	if repo != nil {
-		return repo.(repositories.ProductRepository)
+		return repo.(repositories.ProductRepository), nil
 	}
 
-	objectsPerRequest["repositories.ProductRepository"] = nil
-	return nil
+	databaseConnection, err := CreateDatabaseConnection()
+	if err != nil {
+		return nil, err
+	}
+
+	productRepository := repositories.CreateProductRepository(*databaseConnection)
+	objectsPerRequest["repositories.ProductRepository"] = productRepository
+	return productRepository, nil
 }
 
-func createCartRepository() repositories.CartRepository {
+func createCartRepository() (repositories.CartRepository, error) {
 	repo := objectsPerRequest["repositories.CartRepository"]
 
 	if repo != nil {
-		return repo.(repositories.CartRepository)
+		return repo.(repositories.CartRepository), nil
 	}
 
-	objectsPerRequest["repositories.CartRepository"] = nil
-	return nil
+	databaseConnection, err := CreateDatabaseConnection()
+	if err != nil {
+		return nil, err
+	}
+
+	cartRepository := repositories.CreateCartRepository(*databaseConnection)
+	objectsPerRequest["repositories.CartRepository"] = cartRepository
+	return cartRepository, nil
 }
 
 func createSessionRepository() (repositories.SessionRepository, error) {
@@ -193,15 +241,21 @@ func createSessionRepository() (repositories.SessionRepository, error) {
 	return sessionRepository, nil
 }
 
-func createOrderRepository() repositories.OrderRepository {
+func createOrderRepository() (repositories.OrderRepository, error) {
 	repo := objectsPerRequest["repositories.OrderRepository"]
 
 	if repo != nil {
-		return repo.(repositories.OrderRepository)
+		return repo.(repositories.OrderRepository), nil
 	}
 
-	objectsPerRequest["repositories.OrderRepository"] = nil
-	return nil
+	databaseConnection, err := CreateDatabaseConnection()
+	if err != nil {
+		return nil, err
+	}
+
+	orderRepository := repositories.CreateOrderRepository(*databaseConnection)
+	objectsPerRequest["repositories.OrderRepository"] = orderRepository
+	return orderRepository, nil
 }
 
 func createUserRepository() (repositories.UserRepository, error) {
@@ -219,27 +273,4 @@ func createUserRepository() (repositories.UserRepository, error) {
 	userRepository := repositories.CreateUserRepository(*databaseConnection)
 	objectsPerRequest["repositories.UserRepository"] = userRepository
 	return userRepository, nil
-}
-
-func createInMemoryUserRepo() repositories.UserRepository {
-	repo := objectsPerRequest["repositories.UserRepository"]
-
-	if repo != nil {
-		return repo.(repositories.UserRepository)
-	}
-
-	passwordHasher := services.CreatePassworHasherService()
-	password, _ := passwordHasher.HashPassword("Pas0WotRhD9!6&aPL")
-	id, _ := valueobjects.NewId(1)
-	email, _ := valueobjects.NewEmailAddress("admin@admin.com")
-	user := &entities.User{
-		Id:       *id,
-		Email:    *email,
-		Password: password,
-		Role:     "admin",
-	}
-	userRepo := repositories.NewInMemoryUserRepository()
-	userRepo.Add(user)
-	objectsPerRequest["repositories.UserRepository"] = userRepo
-	return userRepo
 }

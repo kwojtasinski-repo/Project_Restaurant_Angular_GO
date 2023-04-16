@@ -29,7 +29,7 @@ func (id *Id) String() string {
 
 func validateId(id int64) error {
 	if id < 0 {
-		return errors.New("'Id' cannot be negative")
+		return errors.New("'Id' cannot be negative. ")
 	}
 
 	return nil

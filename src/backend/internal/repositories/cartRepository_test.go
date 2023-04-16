@@ -7,7 +7,7 @@ import (
 	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
 )
 
-var cartRepository CartRepository = NewInMemoryCartRepository()
+var newCartRepository CartRepository = NewInMemoryCartRepository()
 
 func addTestDataToCartRepo(repo CartRepository) {
 	var testProduct = getTestProduct()
@@ -49,9 +49,9 @@ func Test_CartRepository_Add(t *testing.T) {
 		UserId:    *id,
 	}
 
-	cartRepository.Add(cart)
+	newCartRepository.Add(cart)
 
-	cartAdded, err := cartRepository.Get(cart.Id.Value())
+	cartAdded, err := newCartRepository.Get(cart.Id.Value())
 	if cartAdded == nil {
 		t.Fatalf(`'Cart' with id %v shouldnt be null`, cart.Id.Value())
 	}
@@ -61,10 +61,10 @@ func Test_CartRepository_Add(t *testing.T) {
 }
 
 func Test_CartRepository_Get(t *testing.T) {
-	addTestDataToCartRepo(cartRepository)
+	addTestDataToCartRepo(newCartRepository)
 	var id int64 = 2
 
-	cart, err := cartRepository.Get(id)
+	cart, err := newCartRepository.Get(id)
 
 	if cart == nil {
 		t.Fatalf(`'Cart' with id %v shouldnt be null`, cart.Id)
@@ -75,12 +75,12 @@ func Test_CartRepository_Get(t *testing.T) {
 }
 
 func Test_CartRepository_Delete(t *testing.T) {
-	addTestDataToCartRepo(cartRepository)
-	var cart, _ = cartRepository.Get(1)
+	addTestDataToCartRepo(newCartRepository)
+	var cart, _ = newCartRepository.Get(1)
 
-	errDelete := cartRepository.Delete(*cart)
+	errDelete := newCartRepository.Delete(*cart)
 
-	cartDeleted, errGet := cartRepository.Get(cart.Id.Value())
+	cartDeleted, errGet := newCartRepository.Get(cart.Id.Value())
 	if errDelete != nil {
 		t.Fatalf(`'Error' should be null, and text contains %v`, errDelete)
 	}

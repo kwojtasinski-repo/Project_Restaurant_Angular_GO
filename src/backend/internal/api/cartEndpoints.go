@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
+	applicationerrors "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/errors"
 )
 
 func AddCartEndpoints(router *gin.RouterGroup) {
@@ -18,7 +19,11 @@ func AddCartEndpoints(router *gin.RouterGroup) {
 
 func getMyCart(context *gin.Context) {
 	userId := context.Keys["userId"].(int64)
-	cartService := createCartService()
+	cartService, errCreateObject := createCartService()
+	if errCreateObject != nil {
+		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
+	}
+
 	if categories, err := cartService.GetMyCart(userId); err != nil {
 		writeErrorResponse(context, *err)
 	} else {
@@ -39,7 +44,11 @@ func addCart(context *gin.Context) {
 
 	userId := context.Keys["userId"].(int64)
 	newCart.UserId = userId
-	cartService := createCartService()
+	cartService, errCreateObject := createCartService()
+	if errCreateObject != nil {
+		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
+	}
+
 	err := cartService.AddToCart(newCart)
 
 	if err != nil {
@@ -62,7 +71,11 @@ func deleteCart(context *gin.Context) {
 		return
 	}
 
-	cartService := createCartService()
+	cartService, errCreateObject := createCartService()
+	if errCreateObject != nil {
+		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
+	}
+
 	if err := cartService.RemoveFromCart(cartId, userId); err != nil {
 		writeErrorResponse(context, *err)
 		ResetObjectCreator()

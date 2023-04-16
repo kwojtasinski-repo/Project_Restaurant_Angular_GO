@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
+	applicationerrors "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/errors"
 )
 
 func AddCategoryEndpoints(router *gin.RouterGroup) {
@@ -19,7 +20,11 @@ func AddCategoryEndpoints(router *gin.RouterGroup) {
 }
 
 func getCategories(context *gin.Context) {
-	categoryService := createCategoryService()
+	categoryService, errCreateObject := createCategoryService()
+	if errCreateObject != nil {
+		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
+	}
+
 	if categories, err := categoryService.GetAll(); err != nil {
 		writeErrorResponse(context, *err)
 	} else {
@@ -39,7 +44,11 @@ func getCategory(context *gin.Context) {
 		return
 	}
 
-	categoryService := createCategoryService()
+	categoryService, errCreateObject := createCategoryService()
+	if errCreateObject != nil {
+		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
+	}
+
 	if category, err := categoryService.Get(categoryId); err != nil {
 		writeErrorResponse(context, *err)
 	} else {
@@ -57,7 +66,11 @@ func addCategory(context *gin.Context) {
 		return
 	}
 
-	categoryService := createCategoryService()
+	categoryService, errCreateObject := createCategoryService()
+	if errCreateObject != nil {
+		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
+	}
+
 	dto, err := categoryService.Add(&newCategory)
 
 	if err != nil {
@@ -89,7 +102,11 @@ func updateCategory(context *gin.Context) {
 	}
 
 	updateCategory.Id = categoryId
-	productService := createCategoryService()
+	productService, errCreateObject := createCategoryService()
+	if errCreateObject != nil {
+		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
+	}
+
 	dto, errUpdate := productService.Update(&updateCategory)
 
 	if errUpdate != nil {
@@ -112,7 +129,11 @@ func deleteCategory(context *gin.Context) {
 		return
 	}
 
-	categoryService := createCategoryService()
+	categoryService, errCreateObject := createCategoryService()
+	if errCreateObject != nil {
+		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
+	}
+
 	if err := categoryService.Delete(categoryId); err != nil {
 		writeErrorResponse(context, *err)
 		ResetObjectCreator()

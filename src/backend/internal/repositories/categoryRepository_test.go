@@ -7,7 +7,7 @@ import (
 	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
 )
 
-var categoryRepository CategoryRepository = NewInMemoryCategoryRepository()
+var newCategoryRepository CategoryRepository = NewInMemoryCategoryRepository()
 
 func addTestDataToCategoryRepo(repo CategoryRepository) {
 	id1, _ := valueobjects.NewId(1)
@@ -43,9 +43,9 @@ func Test_CategoryRepository_Add(t *testing.T) {
 		Name: *categoryName,
 	}
 
-	categoryRepository.Add(&category)
+	newCategoryRepository.Add(&category)
 
-	categoryAdded, err := categoryRepository.Get(category.Id.Value())
+	categoryAdded, err := newCategoryRepository.Get(category.Id.Value())
 	if categoryAdded == nil {
 		t.Fatalf(`'Category' with id %v shouldnt be null`, category.Id.Value())
 	}
@@ -55,10 +55,10 @@ func Test_CategoryRepository_Add(t *testing.T) {
 }
 
 func Test_CategoryRepository_Get(t *testing.T) {
-	addTestDataToCategoryRepo(categoryRepository)
+	addTestDataToCategoryRepo(newCategoryRepository)
 	var id int64 = 2
 
-	category, err := categoryRepository.Get(id)
+	category, err := newCategoryRepository.Get(id)
 
 	if category == nil {
 		t.Fatalf(`'Category' with id %v shouldnt be null`, category.Id.Value())
@@ -69,12 +69,12 @@ func Test_CategoryRepository_Get(t *testing.T) {
 }
 
 func Test_CategoryRepository_Delete(t *testing.T) {
-	addTestDataToCategoryRepo(categoryRepository)
-	var category, _ = categoryRepository.Get(1)
+	addTestDataToCategoryRepo(newCategoryRepository)
+	var category, _ = newCategoryRepository.Get(1)
 
-	errDelete := categoryRepository.Delete(*category)
+	errDelete := newCategoryRepository.Delete(*category)
 
-	categoryDeleted, errGet := categoryRepository.Get(category.Id.Value())
+	categoryDeleted, errGet := newCategoryRepository.Get(category.Id.Value())
 	if errDelete != nil {
 		t.Fatalf(`'Error' should be null, and text contains %v`, errDelete)
 	}
@@ -90,14 +90,14 @@ func Test_CategoryRepository_Delete(t *testing.T) {
 }
 
 func Test_CategoryRepository_Update(t *testing.T) {
-	addTestDataToCategoryRepo(categoryRepository)
-	var category, _ = categoryRepository.Get(2)
+	addTestDataToCategoryRepo(newCategoryRepository)
+	var category, _ = newCategoryRepository.Get(2)
 	categoryName, _ := valueobjects.NewName("Abc1234Guid")
 	category.Name = *categoryName
 
-	categoryRepository.Update(*category)
+	newCategoryRepository.Update(*category)
 
-	var productUpdated, err = categoryRepository.Get(category.Id.Value())
+	var productUpdated, err = newCategoryRepository.Get(category.Id.Value())
 	if err != nil {
 		t.Fatalf(`'Error' should be null, and text contains %v`, err)
 	}

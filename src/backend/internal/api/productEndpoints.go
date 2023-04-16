@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
+	applicationerrors "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/errors"
 )
 
 func AddProductEndpoints(router *gin.RouterGroup) {
@@ -19,7 +20,11 @@ func AddProductEndpoints(router *gin.RouterGroup) {
 }
 
 func getProducts(context *gin.Context) {
-	productService := createProductService()
+	productService, errCreateObject := createProductService()
+	if errCreateObject != nil {
+		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
+	}
+
 	if products, err := productService.GetAll(); err != nil {
 		writeErrorResponse(context, *err)
 	} else {
@@ -38,7 +43,11 @@ func getProduct(context *gin.Context) {
 		return
 	}
 
-	productService := createProductService()
+	productService, errCreateObject := createProductService()
+	if errCreateObject != nil {
+		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
+	}
+
 	if products, err := productService.Get(productId); err != nil {
 		writeErrorResponse(context, *err)
 	} else {
@@ -56,7 +65,11 @@ func addProduct(context *gin.Context) {
 		return
 	}
 
-	productService := createProductService()
+	productService, errCreateObject := createProductService()
+	if errCreateObject != nil {
+		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
+	}
+
 	dto, err := productService.Add(&newProduct)
 
 	if err != nil {
@@ -88,7 +101,11 @@ func updateProduct(context *gin.Context) {
 	}
 
 	updateProduct.Id = productId
-	productService := createProductService()
+	productService, errCreateObject := createProductService()
+	if errCreateObject != nil {
+		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
+	}
+
 	dto, errUpdate := productService.Update(&updateProduct)
 
 	if errUpdate != nil {
@@ -111,7 +128,11 @@ func deleteProduct(context *gin.Context) {
 		return
 	}
 
-	productService := createProductService()
+	productService, errCreateObject := createProductService()
+	if errCreateObject != nil {
+		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
+	}
+
 	if err := productService.Delete(productId); err != nil {
 		writeErrorResponse(context, *err)
 		ResetObjectCreator()

@@ -7,7 +7,7 @@ import (
 	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
 )
 
-var productRepository ProductRepository = NewInMemoryProductRepository()
+var newProductRepository ProductRepository = NewInMemoryProductRepository()
 
 func addTestDataToProductRepo(repo ProductRepository) {
 	var testProducts = [3]entities.Product{
@@ -22,9 +22,9 @@ func addTestDataToProductRepo(repo ProductRepository) {
 
 func Test_ProductRepository_Add(t *testing.T) {
 	var testProduct = getTestProduct()
-	productRepository.Add(&testProduct)
+	newProductRepository.Add(&testProduct)
 
-	productAdded, err := productRepository.Get(testProduct.Id.Value())
+	productAdded, err := newProductRepository.Get(testProduct.Id.Value())
 	if productAdded == nil {
 		t.Fatalf(`'Product' with id %v shouldnt be null`, testProduct.Id.Value())
 	}
@@ -34,10 +34,10 @@ func Test_ProductRepository_Add(t *testing.T) {
 }
 
 func Test_ProductRepository_Get(t *testing.T) {
-	addTestDataToProductRepo(productRepository)
+	addTestDataToProductRepo(newProductRepository)
 	var id int64 = 2
 
-	product, err := productRepository.Get(id)
+	product, err := newProductRepository.Get(id)
 
 	if product == nil {
 		t.Fatalf(`'Product' with id %v shouldnt be null`, product.Id.Value())
@@ -48,12 +48,12 @@ func Test_ProductRepository_Get(t *testing.T) {
 }
 
 func Test_ProductRepository_Delete(t *testing.T) {
-	addTestDataToProductRepo(productRepository)
-	var product, _ = productRepository.Get(1)
+	addTestDataToProductRepo(newProductRepository)
+	var product, _ = newProductRepository.Get(1)
 
-	errDelete := productRepository.Delete(*product)
+	errDelete := newProductRepository.Delete(*product)
 
-	productDeleted, errGet := productRepository.Get(product.Id.Value())
+	productDeleted, errGet := newProductRepository.Get(product.Id.Value())
 	if errDelete != nil {
 		t.Fatalf(`'Error' should be null, and text contains %v`, errDelete)
 	}
@@ -69,16 +69,16 @@ func Test_ProductRepository_Delete(t *testing.T) {
 }
 
 func Test_ProductRepository_Update(t *testing.T) {
-	addTestDataToProductRepo(productRepository)
-	var product, _ = productRepository.Get(2)
+	addTestDataToProductRepo(newProductRepository)
+	var product, _ = newProductRepository.Get(2)
 	product.Deleted = true
 	var description *valueobjects.Description
 	description, _ = valueobjects.NewDescription("Test123456789")
 	product.Description = *description
 
-	productRepository.Update(*product)
+	newProductRepository.Update(*product)
 
-	var productUpdated, err = productRepository.Get(product.Id.Value())
+	var productUpdated, err = newProductRepository.Get(product.Id.Value())
 	if err != nil {
 		t.Fatalf(`'Error' should be null, and text contains %v`, err)
 	}

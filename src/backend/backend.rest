@@ -107,7 +107,7 @@ Cookie: {{cookie}}
 GET {{path}}/products/1
 Cookie: {{cookie}}
 
-### GET Product
+### DELETE Category
 DELETE  {{path}}/categories/1
 Cookie: {{cookie}}
 

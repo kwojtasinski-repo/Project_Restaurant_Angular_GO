@@ -20,10 +20,17 @@ func CreateUserRepository(database sql.DB) UserRepository {
 
 func (repo *userRepository) Add(user *entities.User) error {
 	query := "INSERT INTO `users` (email, password, role, deleted) VALUES (?, ?, ?, ?);"
-	_, err := repo.database.Exec(query, user.Email.Value(), user.Password, user.Role, user.Deleted)
+	result, err := repo.database.Exec(query, user.Email.Value(), user.Password, user.Role, user.Deleted)
 	if err != nil {
 		return err
 	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		return err
+	}
+	newId, _ := valueobjects.NewId(id)
+	user.Id = *newId
 	return nil
 }
 
@@ -37,8 +44,8 @@ func (repo *userRepository) Update(userToUpdate entities.User) error {
 }
 
 func (repo *userRepository) Delete(userToDelete entities.User) error {
-	query := "DELETE FROM `users` WHERE id = ?;"
-	_, err := repo.database.Exec(query, userToDelete.Id.Value())
+	query := "UPDATE `users` SET deleted = ? WHERE id = ?;"
+	_, err := repo.database.Exec(query, true, userToDelete.Id.Value())
 	if err != nil {
 		return err
 	}

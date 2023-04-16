@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
+	applicationerrors "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/errors"
 )
 
 func AddOrderEndpoints(router *gin.RouterGroup) {
@@ -16,7 +17,11 @@ func AddOrderEndpoints(router *gin.RouterGroup) {
 
 func addOrdersFromCart(context *gin.Context) {
 	userId := context.Keys["userId"].(int64)
-	orderService := createOrderService()
+	orderService, errCreateObject := createOrderService()
+	if errCreateObject != nil {
+		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
+	}
+
 	dto, err := orderService.AddFromCart(userId)
 
 	if err != nil {
@@ -40,7 +45,11 @@ func addOrders(context *gin.Context) {
 	userId := context.Keys["userId"].(int64)
 	newOrder.UserId = userId
 
-	orderService := createOrderService()
+	orderService, errCreateObject := createOrderService()
+	if errCreateObject != nil {
+		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
+	}
+
 	dto, err := orderService.Add(newOrder)
 
 	if err != nil {
