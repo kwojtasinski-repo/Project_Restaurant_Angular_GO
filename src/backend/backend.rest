@@ -160,7 +160,7 @@ Content-Type: application/json
 
 {
     "email": "admin@admin.com",
-    "password": "admin"
+    "password": "Pas0WotRhD9!6&aPL"
 }
 
 @cookieAdmin = {{loginAdmin.response.headers.Set-Cookie}}

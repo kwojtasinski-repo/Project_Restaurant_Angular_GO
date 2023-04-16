@@ -208,7 +208,7 @@ func createInMemoryUserRepo() repositories.UserRepository {
 	}
 
 	passwordHasher := services.CreatePassworHasherService()
-	password, _ := passwordHasher.HashPassword("admin")
+	password, _ := passwordHasher.HashPassword("Pas0WotRhD9!6&aPL")
 	id, _ := valueobjects.NewId(1)
 	email, _ := valueobjects.NewEmailAddress("admin@admin.com")
 	user := &entities.User{

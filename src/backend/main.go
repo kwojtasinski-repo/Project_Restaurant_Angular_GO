@@ -45,7 +45,7 @@ func runMigrations(config config.Config) {
 			if len(os.Args) > index+1 {
 				countMigrations = os.Args[index+1]
 			}
-			migrations.RunMigrations(config, countMigrations)
+			migrations.UpMigrations(config, countMigrations)
 			return
 		} else if cmd == MigrationsDown {
 			countMigrations := ""

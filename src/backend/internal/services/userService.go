@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
@@ -53,6 +54,7 @@ func (service *userService) Register(addUser *dto.AddUserDto) (*dto.UserDto, *ap
 	if err != nil {
 		return nil, applicationerrors.InternalError(err.Error())
 	}
+	log.Println("HashedPasssword: ", hashedPassword)
 
 	user, err := entities.NewUser(0, addUser.Email, hashedPassword, "user")
 	if err != nil {

@@ -1,5 +1,5 @@
 CREATE TABLE `orders`(
-    id int PRIMARY KEY,
+    id int PRIMARY KEY AUTO_INCREMENT,
     order_number varchar(300) NOT NULl,
     price decimal(14,4) NOT NULL,
     created DATETIME NOT NULL,

@@ -15,7 +15,9 @@ import (
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/config"
 )
 
-func RunMigrations(config config.Config, migrationsToApply string) {
+var currentMigrationVersion uint
+
+func UpMigrations(config config.Config, migrationsToApply string) {
 	log.Println("Prepare up migrations...")
 
 	migrationsApply := 0
@@ -45,7 +47,8 @@ func RunMigrations(config config.Config, migrationsToApply string) {
 		panic(err)
 	}
 
-	log.Println("Migrating up database schema")
+	checkVersion(*migrate)
+	log.Println("Migrating up database schema. Current version ", currentMigrationVersion)
 	if migrationsApply == 0 {
 		log.Println("Migrating up all versions")
 		err = migrate.Up()
@@ -53,6 +56,7 @@ func RunMigrations(config config.Config, migrationsToApply string) {
 		log.Println(getScriptMigrationText(migrationsApply))
 		err = migrate.Steps(migrationsApply)
 	}
+	err = handleErrors(err)
 
 	if err != nil {
 		panic(err)
@@ -81,7 +85,8 @@ func DownMigrations(config config.Config, migrationsToApply string) {
 	}
 	defer migrate.Close()
 
-	log.Println("Migrating down database schema")
+	checkVersion(*migrate)
+	log.Println("Migrating down database schema. Current version ", currentMigrationVersion)
 	if migrationsApply == 0 {
 		log.Println("Migrating down all versions")
 		err = migrate.Down()
@@ -89,6 +94,7 @@ func DownMigrations(config config.Config, migrationsToApply string) {
 		log.Println(getScriptMigrationText(migrationsApply))
 		err = migrate.Steps(migrationsApply)
 	}
+	err = handleErrors(err)
 
 	if err != nil {
 		panic(err)
@@ -134,6 +140,38 @@ func createMigrationObject(configFile config.Config) (*migrate.Migrate, error) {
 	}
 
 	return migrate, nil
+}
+
+func checkVersion(migration migrate.Migrate) {
+	var isDirty bool
+	var err error
+	currentMigrationVersion, isDirty, err = migration.Version()
+	if err == migrate.ErrNilVersion {
+		log.Print("Migrations: There is no migrations applied")
+		return
+	}
+
+	if err != nil {
+		panic(err)
+	}
+	if isDirty {
+		log.Print("Current migration ", currentMigrationVersion, " version is dirty check if database need clean up and change flag in schema_migrations to false")
+		os.Exit(0)
+	}
+}
+
+func handleErrors(err error) error {
+	if err == migrate.ErrNoChange {
+		log.Println("Migrations: ", err.Error())
+		return nil
+	}
+
+	if err == migrate.ErrNilVersion {
+		log.Println("Migrations: ", err.Error())
+		return nil
+	}
+
+	return err
 }
 
 func getScriptMigrationText(migrationsApply int) string {
