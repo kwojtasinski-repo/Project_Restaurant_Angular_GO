@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"database/sql"
+	"time"
 
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
 	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
@@ -11,10 +12,16 @@ type categoryRepository struct {
 	database sql.DB
 }
 
+var categoryWithCachedRepo = &cachedCategoryRepository{
+	categories: map[int64]*categoryCached{},
+}
+
 func CreateCategoryRepository(database sql.DB) CategoryRepository {
-	return &categoryRepository{
+	categoryRepository := &categoryRepository{
 		database: database,
 	}
+	categoryWithCachedRepo.innerRepo = categoryRepository
+	return categoryWithCachedRepo
 }
 
 func (repo *categoryRepository) Add(category *entities.Category) error {
@@ -43,8 +50,9 @@ func (repo *categoryRepository) Update(categoryToUpdate entities.Category) error
 }
 
 func (repo *categoryRepository) Delete(categoryToDelete entities.Category) error {
+	categoryToDelete.Deleted = true
 	query := "UPDATE `categories` SET deleted = ? WHERE id = ?;"
-	_, err := repo.database.Exec(query, true, categoryToDelete.Id.Value())
+	_, err := repo.database.Exec(query, categoryToDelete.Deleted, categoryToDelete.Id.Value())
 	if err != nil {
 		return err
 	}
@@ -94,6 +102,89 @@ func (repo *categoryRepository) GetAll() ([]entities.Category, error) {
 
 		category, _ := entities.NewCategory(categoryId, name)
 		categories = append(categories, *category)
+	}
+
+	return categories, nil
+}
+
+type cachedCategoryRepository struct {
+	categories map[int64]*categoryCached
+	innerRepo  CategoryRepository
+}
+
+type categoryCached struct {
+	Category entities.Category
+	Created  time.Time
+}
+
+func (repo *cachedCategoryRepository) Add(category *entities.Category) error {
+	err := repo.innerRepo.Add(category)
+	if err != nil {
+		return err
+	}
+
+	repo.categories[category.Id.Value()] = &categoryCached{
+		Category: *category,
+		Created:  time.Now().UTC(),
+	}
+	return nil
+}
+
+func (repo *cachedCategoryRepository) Update(categoryToUpdate entities.Category) error {
+	err := repo.innerRepo.Update(categoryToUpdate)
+	if err != nil {
+		return err
+	}
+
+	repo.categories[categoryToUpdate.Id.Value()] = &categoryCached{
+		Category: categoryToUpdate,
+		Created:  time.Now().UTC(),
+	}
+	return nil
+}
+
+func (repo *cachedCategoryRepository) Delete(categoryToDelete entities.Category) error {
+	err := repo.innerRepo.Delete(categoryToDelete)
+	if err != nil {
+		return err
+	}
+
+	repo.categories[categoryToDelete.Id.Value()] = &categoryCached{
+		Category: categoryToDelete,
+		Created:  time.Now().UTC(),
+	}
+	return nil
+}
+
+func (repo *cachedCategoryRepository) Get(id int64) (*entities.Category, error) {
+	categoryInCache := repo.categories[id]
+	if categoryInCache != nil {
+		if categoryInCache.Created.Add(timeStoreInCache).After(time.Now().UTC()) {
+			return &categoryInCache.Category, nil
+		}
+	}
+
+	category, err := repo.innerRepo.Get(id)
+	if err != nil {
+		return nil, err
+	}
+
+	if category == nil {
+		repo.categories[id] = nil
+		return nil, nil
+	}
+
+	repo.categories[id] = &categoryCached{
+		Category: *category,
+		Created:  time.Now().UTC(),
+	}
+	return category, nil
+}
+
+func (repo *cachedCategoryRepository) GetAll() ([]entities.Category, error) {
+	categories, err := repo.innerRepo.GetAll()
+	if err != nil {
+		return categories, err
 	}
 
 	return categories, nil

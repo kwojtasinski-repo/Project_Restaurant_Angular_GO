@@ -13,10 +13,16 @@ type sessionRepository struct {
 	database sql.DB
 }
 
+var sessionRepositoryCached = &cachedSessionRepository{
+	sessions: make(map[uuid.UUID]*sessionCached),
+}
+
 func CreateSessionRepository(database sql.DB) SessionRepository {
-	return &sessionRepository{
+	sessionRepository := &sessionRepository{
 		database: database,
 	}
+	sessionRepositoryCached.innerRepo = sessionRepository
+	return sessionRepositoryCached
 }
 
 func (repo *sessionRepository) AddSession(session entities.Session) (entities.Session, error) {
@@ -113,6 +119,86 @@ func (repo *sessionRepository) GetSessionsByUserId(userId valueobjects.Id) ([]en
 		session.SetUser(*user)
 		session.SetExpiry(expiry)
 		sessions = append(sessions, *session)
+	}
+
+	return sessions, nil
+}
+
+type cachedSessionRepository struct {
+	sessions  map[uuid.UUID]*sessionCached
+	innerRepo SessionRepository
+}
+
+type sessionCached struct {
+	Session entities.Session
+	Created time.Time
+}
+
+func (repo *cachedSessionRepository) AddSession(session entities.Session) (entities.Session, error) {
+	sessionAdded, err := repo.innerRepo.AddSession(session)
+	if err != nil {
+		return sessionAdded, err
+	}
+
+	repo.sessions[sessionAdded.SessionId()] = &sessionCached{
+		Session: sessionAdded,
+		Created: time.Now().UTC(),
+	}
+	return sessionAdded, nil
+}
+
+func (repo *cachedSessionRepository) DeleteSession(session entities.Session) error {
+	err := repo.innerRepo.DeleteSession(session)
+	if err != nil {
+		return err
+	}
+
+	repo.sessions[session.SessionId()] = nil
+	return nil
+}
+
+func (repo *cachedSessionRepository) UpdateSession(session entities.Session) error {
+	err := repo.innerRepo.UpdateSession(session)
+	if err != nil {
+		return err
+	}
+
+	repo.sessions[session.SessionId()] = &sessionCached{
+		Session: session,
+		Created: time.Now().UTC(),
+	}
+	return nil
+}
+
+func (repo *cachedSessionRepository) GetSession(sessionId uuid.UUID) (*entities.Session, error) {
+	sessionInCache := repo.sessions[sessionId]
+	if sessionInCache != nil {
+		if sessionInCache.Created.Add(timeStoreInCache).After(time.Now().UTC()) {
+			return &sessionInCache.Session, nil
+		}
+	}
+
+	session, err := repo.innerRepo.GetSession(sessionId)
+	if err != nil {
+		return nil, err
+	}
+
+	if session == nil {
+		repo.sessions[sessionId] = nil
+		return nil, nil
+	}
+
+	repo.sessions[sessionId] = &sessionCached{
+		Session: *session,
+		Created: time.Now().UTC(),
+	}
+	return session, nil
+}
+
+func (repo *cachedSessionRepository) GetSessionsByUserId(userId valueobjects.Id) ([]entities.Session, error) {
+	sessions, err := repo.innerRepo.GetSessionsByUserId(userId)
+	if err != nil {
+		return sessions, err
 	}
 
 	return sessions, nil

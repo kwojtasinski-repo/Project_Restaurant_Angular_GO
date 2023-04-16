@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"database/sql"
+	"time"
 
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
 	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
@@ -12,10 +13,16 @@ type productRepository struct {
 	database sql.DB
 }
 
+var productRepositoryCached = &cachedProductRepository{
+	products: map[int64]*productCached{},
+}
+
 func CreateProductRepository(database sql.DB) ProductRepository {
-	return &productRepository{
+	productRepository := &productRepository{
 		database: database,
 	}
+	productRepositoryCached.innerRepo = productRepository
+	return productRepositoryCached
 }
 
 func (repo *productRepository) Add(product *entities.Product) error {
@@ -44,6 +51,7 @@ func (repo *productRepository) Update(productToUpdate entities.Product) error {
 }
 
 func (repo *productRepository) Delete(productToDelete entities.Product) error {
+	productToDelete.Deleted = true
 	query := "UPDATE `products` SET deleted = ? WHERE id = ?;"
 	_, err := repo.database.Exec(query, true, productToDelete.Id.Value())
 	if err != nil {
@@ -125,6 +133,89 @@ func (repo *productRepository) GetAll() ([]entities.Product, error) {
 		}
 		product, _ := entities.NewProduct(id, name, price, description, category)
 		products = append(products, *product)
+	}
+
+	return products, nil
+}
+
+type cachedProductRepository struct {
+	products  map[int64]*productCached
+	innerRepo ProductRepository
+}
+
+type productCached struct {
+	Product entities.Product
+	Created time.Time
+}
+
+func (repo *cachedProductRepository) Add(product *entities.Product) error {
+	err := repo.innerRepo.Add(product)
+	if err != nil {
+		return err
+	}
+
+	repo.products[product.Id.Value()] = &productCached{
+		Product: *product,
+		Created: time.Now().UTC(),
+	}
+	return nil
+}
+
+func (repo *cachedProductRepository) Update(productToUpdate entities.Product) error {
+	err := repo.innerRepo.Update(productToUpdate)
+	if err != nil {
+		return err
+	}
+
+	repo.products[productToUpdate.Id.Value()] = &productCached{
+		Product: productToUpdate,
+		Created: time.Now().UTC(),
+	}
+	return nil
+}
+
+func (repo *cachedProductRepository) Delete(productToDelete entities.Product) error {
+	err := repo.innerRepo.Delete(productToDelete)
+	if err != nil {
+		return err
+	}
+
+	repo.products[productToDelete.Id.Value()] = &productCached{
+		Product: productToDelete,
+		Created: time.Now().UTC(),
+	}
+	return nil
+}
+
+func (repo *cachedProductRepository) Get(id int64) (*entities.Product, error) {
+	productInCache := repo.products[id]
+	if productInCache != nil {
+		if productInCache.Created.Add(timeStoreInCache).After(time.Now().UTC()) {
+			return &productInCache.Product, nil
+		}
+	}
+
+	product, err := repo.innerRepo.Get(id)
+	if err != nil {
+		return nil, err
+	}
+
+	if product == nil {
+		repo.products[id] = nil
+		return nil, nil
+	}
+
+	repo.products[id] = &productCached{
+		Product: *product,
+		Created: time.Now().UTC(),
+	}
+	return product, nil
+}
+
+func (repo *cachedProductRepository) GetAll() ([]entities.Product, error) {
+	products, err := repo.innerRepo.GetAll()
+	if err != nil {
+		return products, err
 	}
 
 	return products, nil
