@@ -9,6 +9,7 @@ import (
 	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
 	applicationerrors "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/errors"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/repositories"
+	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/settings"
 )
 
 type SessionService interface {
@@ -18,6 +19,7 @@ type SessionService interface {
 	RefreshSession(sessionId uuid.UUID) (*dto.SessionDto, *applicationerrors.ErrorStatus)
 	GetUserSessions(userId int64) ([]dto.SessionDto, *applicationerrors.ErrorStatus)
 	ManageSession(sessionDto dto.SessionDto) (*dto.SessionDto, *applicationerrors.ErrorStatus)
+	ClearExpiredSessions() *applicationerrors.ErrorStatus
 }
 
 type sessionService struct {
@@ -155,6 +157,14 @@ func (service *sessionService) RevokeAllUsersSessions(userId int64) *application
 
 	err = service.repo.DeleteAllUsersSessions(*newUserId)
 	if err != nil {
+		return applicationerrors.InternalError(err.Error())
+	}
+
+	return nil
+}
+
+func (service *sessionService) ClearExpiredSessions() *applicationerrors.ErrorStatus {
+	if err := service.repo.DeleteSessionsExpiredAfter(time.Duration(settings.CookieLifeTime)); err != nil {
 		return applicationerrors.InternalError(err.Error())
 	}
 

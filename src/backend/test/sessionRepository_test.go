@@ -63,3 +63,35 @@ func (suite *IntegrationTestSuite) Test_AddMultipleUserSessions_DeleteAllUserSes
 	assert.NotNil(suite.T(), sessions)
 	assert.Equal(suite.T(), 0, len(sessions))
 }
+
+func (suite *IntegrationTestSuite) Test_AddMultipleUsersSessions_CleanAllSessions() {
+	user, _ := entities.NewUser(1, "email@email.com", "1234", "user")
+	user2, _ := entities.NewUser(2, "email@email.com", "1234", "user")
+	expiry := time.Now().UTC().Add(time.Hour * 2 * -1)
+	session := entities.CreateSession(*user, expiry)
+	session2 := entities.CreateSession(*user2, expiry)
+	sessionRepository := repositories.CreateSessionRepository(suite.database)
+	sessionRepository.AddSession(session)
+	sessionRepository.AddSession(session)
+	sessionRepository.AddSession(session)
+	sessionRepository.AddSession(session)
+	sessionRepository.AddSession(session)
+	sessionRepository.AddSession(session2)
+	sessionRepository.AddSession(session2)
+	sessionRepository.AddSession(session2)
+	sessionRepository.AddSession(session2)
+	sessionRepository.AddSession(session2)
+	sessionRepository.AddSession(entities.CreateSession(*user, time.Now().UTC().Add(time.Hour*2)))
+	sessionRepository.AddSession(entities.CreateSession(*user2, time.Now().UTC().Add(time.Hour*2)))
+
+	sessionRepository.DeleteSessionsExpiredAfter(time.Hour)
+
+	sessionsUser, errUser := sessionRepository.GetSessionsByUserId(user.Id)
+	sessionsUser2, errUser2 := sessionRepository.GetSessionsByUserId(user2.Id)
+	assert.Nil(suite.T(), errUser)
+	assert.NotNil(suite.T(), sessionsUser)
+	assert.Nil(suite.T(), errUser2)
+	assert.NotNil(suite.T(), sessionsUser2)
+	assert.Equal(suite.T(), 1, len(sessionsUser))
+	assert.Equal(suite.T(), 1, len(sessionsUser2))
+}

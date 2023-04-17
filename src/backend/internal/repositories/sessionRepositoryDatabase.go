@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
 	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
+	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/settings"
 	"github.com/patrickmn/go-cache"
 )
 
@@ -15,7 +16,7 @@ type sessionRepository struct {
 }
 
 var sessionRepositoryCached = &cachedSessionRepository{
-	cacheStore: cache.New(timeStoreInCache, timeStoreInCache),
+	cacheStore: cache.New(settings.TimeStoreInCache, settings.TimeStoreInCache),
 }
 
 func CreateSessionRepository(database sql.DB) SessionRepository {
@@ -135,6 +136,17 @@ func (repo *sessionRepository) DeleteAllUsersSessions(userId valueobjects.Id) er
 	return nil
 }
 
+func (repo *sessionRepository) DeleteSessionsExpiredAfter(timeDuration time.Duration) error {
+	query := `DELETE FROM sessions WHERE expiry < ?;`
+	expiryTime := time.Now().UTC().Add(timeDuration * -1)
+	_, err := repo.database.Exec(query, expiryTime)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 type cachedSessionRepository struct {
 	cacheStore *cache.Cache
 	innerRepo  SessionRepository
@@ -146,7 +158,7 @@ func (repo *cachedSessionRepository) AddSession(session entities.Session) (entit
 		return sessionAdded, err
 	}
 
-	repo.cacheStore.Set(sessionAdded.SessionId().String(), &sessionAdded, timeStoreInCache)
+	repo.cacheStore.Set(sessionAdded.SessionId().String(), &sessionAdded, settings.TimeStoreInCache)
 	return sessionAdded, nil
 }
 
@@ -166,7 +178,7 @@ func (repo *cachedSessionRepository) UpdateSession(session entities.Session) err
 		return err
 	}
 
-	repo.cacheStore.Set(session.SessionId().String(), &session, timeStoreInCache)
+	repo.cacheStore.Set(session.SessionId().String(), &session, settings.TimeStoreInCache)
 	return nil
 }
 
@@ -185,7 +197,7 @@ func (repo *cachedSessionRepository) GetSession(sessionId uuid.UUID) (*entities.
 		return nil, nil
 	}
 
-	repo.cacheStore.Set(sessionId.String(), session, timeStoreInCache)
+	repo.cacheStore.Set(sessionId.String(), session, settings.TimeStoreInCache)
 	return session, nil
 }
 
@@ -210,6 +222,14 @@ func (repo *cachedSessionRepository) DeleteAllUsersSessions(userId valueobjects.
 		if userIdCached.Value() == userId.Value() {
 			repo.cacheStore.Delete(key)
 		}
+	}
+
+	return nil
+}
+
+func (repo *cachedSessionRepository) DeleteSessionsExpiredAfter(timeDuration time.Duration) error {
+	if err := repo.innerRepo.DeleteSessionsExpiredAfter(timeDuration); err != nil {
+		return err
 	}
 
 	return nil

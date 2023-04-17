@@ -1,4 +1,4 @@
-package api
+package settings
 
 import (
 	"time"
@@ -6,9 +6,11 @@ import (
 	"github.com/chmike/securecookie"
 )
 
-const CookieSessionName = "session_cookie"
 const CookieLifeTime = int(time.Hour) * 24 * 7
+const CookieSessionName = "session_cookie"
 
 var Location string
 var CookieHashKey []byte
 var CookieIssued *securecookie.Obj
+
+const TimeStoreInCache = time.Minute * 5

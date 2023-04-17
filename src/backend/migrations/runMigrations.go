@@ -129,16 +129,15 @@ func createDbUser(configFile config.Config) error {
 	}
 	defer db.Close()
 
+	log.Println("Creating user if not exists " + configFile.Database.Username)
 	queryCreateUser := "CREATE USER IF NOT EXISTS " + configFile.Database.Username + " IDENTIFIED BY '" + configFile.Database.Password + "';"
-	log.Println("Running query", queryCreateUser)
 	_, err = db.Exec(queryCreateUser)
 	if err != nil {
 		return err
 	}
 
-	log.Println("Added grants for user " + configFile.Database.Username)
+	log.Println("Adding grants for user " + configFile.Database.Username)
 	queryGrant := "GRANT select, update, insert, delete ON " + configFile.Database.Name + ".* to " + configFile.Database.Username + ";"
-	log.Println("Running query", queryGrant)
 	_, err = db.Exec(queryGrant)
 	if err != nil {
 		return err

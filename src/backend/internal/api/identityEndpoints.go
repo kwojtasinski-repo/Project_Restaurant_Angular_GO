@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
 	applicationerrors "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/errors"
+	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/settings"
 )
 
 func AddIdentityEndpoints(router *gin.Engine) {
@@ -39,7 +40,7 @@ func signIn(context *gin.Context) {
 			return
 		}
 
-		CookieIssued.SetValue(context.Writer, jsonBytes)
+		settings.CookieIssued.SetValue(context.Writer, jsonBytes)
 		ResetObjectCreator()
 	}
 }

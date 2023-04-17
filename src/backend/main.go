@@ -6,16 +6,15 @@ import (
 	"os"
 	"strings"
 
-	"github.com/gin-gonic/gin"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/config"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/api"
+	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/schedulers"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/migrations"
 )
 
 const (
 	MigrationsUp   = "--migrations=up"
 	MigrationsDown = "--migrations=down"
-	GinMode        = "GIN_MODE"
 )
 
 func main() {
@@ -59,10 +58,9 @@ func runMigrations(config config.Config) {
 }
 
 func startServer(config config.Config) {
-	log.Println("Creating Gin Engine...")
-	router := gin.Default()
-	gin.SetMode(os.Getenv(GinMode))
-	api.SetupApi(config, router)
+	router := api.SetupApi(config)
+	scheduler := schedulers.RegisterSessionCleaner()
+	scheduler.StartAsync()
 	log.Println("Running API...")
 	router.Run(fmt.Sprintf("%v:%v", config.Server.Host, config.Server.Port))
 }

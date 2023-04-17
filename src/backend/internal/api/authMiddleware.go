@@ -7,11 +7,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
 	applicationerrors "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/errors"
+	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/settings"
 )
 
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		cookieValue, err := CookieIssued.GetValue([]byte{}, c.Request)
+		cookieValue, err := settings.CookieIssued.GetValue([]byte{}, c.Request)
 		if err != nil {
 			log.Println("ERROR: AuthMiddleware() ", err)
 			c.AbortWithStatusJSON(401, gin.H{"errors": "Cookie is required"})

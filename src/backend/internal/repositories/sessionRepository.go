@@ -1,6 +1,8 @@
 package repositories
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
 	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
@@ -13,6 +15,7 @@ type SessionRepository interface {
 	UpdateSession(session entities.Session) error
 	GetSession(sessionId uuid.UUID) (*entities.Session, error)
 	GetSessionsByUserId(userId valueobjects.Id) ([]entities.Session, error)
+	DeleteSessionsExpiredAfter(timeDuration time.Duration) error
 }
 
 type inMemorySessionRepository struct {
@@ -85,6 +88,16 @@ func (repo *inMemorySessionRepository) DeleteAllUsersSessions(userId valueobject
 		if sessionUserId.Value() == userId.Value() {
 			repo.sessions = append(repo.sessions[:index], repo.sessions[index+1:]...)
 			return nil
+		}
+	}
+	return nil
+}
+
+func (repo *inMemorySessionRepository) DeleteSessionsExpiredAfter(timeDuration time.Duration) error {
+	currentTime := time.Now().UTC()
+	for index, session := range repo.sessions {
+		if session.Expiry().Before(currentTime.Add(timeDuration * -1)) {
+			repo.sessions = append(repo.sessions[:index], repo.sessions[index+1:]...)
 		}
 	}
 	return nil

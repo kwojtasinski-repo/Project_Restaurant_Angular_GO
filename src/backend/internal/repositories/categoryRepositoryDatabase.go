@@ -6,6 +6,7 @@ import (
 
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
 	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
+	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/settings"
 	"github.com/patrickmn/go-cache"
 )
 
@@ -14,7 +15,7 @@ type categoryRepository struct {
 }
 
 var categoryWithCachedRepo = &cachedCategoryRepository{
-	cacheStore: cache.New(timeStoreInCache, timeStoreInCache),
+	cacheStore: cache.New(settings.TimeStoreInCache, settings.TimeStoreInCache),
 }
 
 func CreateCategoryRepository(database sql.DB) CategoryRepository {
@@ -119,7 +120,7 @@ func (repo *cachedCategoryRepository) Add(category *entities.Category) error {
 		return err
 	}
 
-	repo.cacheStore.Set(fmt.Sprintf("%v", category.Id.Value()), category, timeStoreInCache)
+	repo.cacheStore.Set(fmt.Sprintf("%v", category.Id.Value()), category, settings.TimeStoreInCache)
 	return nil
 }
 
@@ -129,7 +130,7 @@ func (repo *cachedCategoryRepository) Update(categoryToUpdate entities.Category)
 		return err
 	}
 
-	repo.cacheStore.Set(fmt.Sprintf("%v", categoryToUpdate.Id.Value()), &categoryToUpdate, timeStoreInCache)
+	repo.cacheStore.Set(fmt.Sprintf("%v", categoryToUpdate.Id.Value()), &categoryToUpdate, settings.TimeStoreInCache)
 	return nil
 }
 
@@ -139,7 +140,7 @@ func (repo *cachedCategoryRepository) Delete(categoryToDelete entities.Category)
 		return err
 	}
 
-	repo.cacheStore.Set(fmt.Sprintf("%v", categoryToDelete.Id.Value()), &categoryToDelete, timeStoreInCache)
+	repo.cacheStore.Set(fmt.Sprintf("%v", categoryToDelete.Id.Value()), &categoryToDelete, settings.TimeStoreInCache)
 	return nil
 }
 
@@ -158,7 +159,7 @@ func (repo *cachedCategoryRepository) Get(id int64) (*entities.Category, error) 
 		return nil, nil
 	}
 
-	repo.cacheStore.Set(fmt.Sprintf("%v", category.Id.Value()), category, timeStoreInCache)
+	repo.cacheStore.Set(fmt.Sprintf("%v", category.Id.Value()), category, settings.TimeStoreInCache)
 	return category, nil
 }
 

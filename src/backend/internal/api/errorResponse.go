@@ -8,7 +8,7 @@ import (
 )
 
 func writeErrorResponse(context *gin.Context, errorStatus errors.ErrorStatus) {
-	log.Println("ERROR: ", errorStatus.Message)
+	log.Println("ERROR: ", errorStatus.Status, ": ", errorStatus.Message)
 
 	if errorStatus.Status >= 400 && errorStatus.Status <= 499 {
 		if len(errorStatus.Message) > 0 {

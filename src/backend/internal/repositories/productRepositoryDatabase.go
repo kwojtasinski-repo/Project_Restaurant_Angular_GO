@@ -6,6 +6,7 @@ import (
 
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
 	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
+	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/settings"
 	"github.com/patrickmn/go-cache"
 	"github.com/shopspring/decimal"
 )
@@ -15,7 +16,7 @@ type productRepository struct {
 }
 
 var productRepositoryCached = &cachedProductRepository{
-	cacheStore: cache.New(timeStoreInCache, timeStoreInCache),
+	cacheStore: cache.New(settings.TimeStoreInCache, settings.TimeStoreInCache),
 }
 
 func CreateProductRepository(database sql.DB) ProductRepository {
@@ -150,7 +151,7 @@ func (repo *cachedProductRepository) Add(product *entities.Product) error {
 		return err
 	}
 
-	repo.cacheStore.Set(fmt.Sprintf("%v", product.Id.Value()), product, timeStoreInCache)
+	repo.cacheStore.Set(fmt.Sprintf("%v", product.Id.Value()), product, settings.TimeStoreInCache)
 	return nil
 }
 
@@ -160,7 +161,7 @@ func (repo *cachedProductRepository) Update(productToUpdate entities.Product) er
 		return err
 	}
 
-	repo.cacheStore.Set(fmt.Sprintf("%v", productToUpdate.Id.Value()), &productToUpdate, timeStoreInCache)
+	repo.cacheStore.Set(fmt.Sprintf("%v", productToUpdate.Id.Value()), &productToUpdate, settings.TimeStoreInCache)
 	return nil
 }
 
@@ -170,7 +171,7 @@ func (repo *cachedProductRepository) Delete(productToDelete entities.Product) er
 		return err
 	}
 
-	repo.cacheStore.Set(fmt.Sprintf("%v", productToDelete.Id.Value()), &productToDelete, timeStoreInCache)
+	repo.cacheStore.Set(fmt.Sprintf("%v", productToDelete.Id.Value()), &productToDelete, settings.TimeStoreInCache)
 	return nil
 }
 
@@ -189,7 +190,7 @@ func (repo *cachedProductRepository) Get(id int64) (*entities.Product, error) {
 		return nil, nil
 	}
 
-	repo.cacheStore.Set(fmt.Sprintf("%v", product.Id.Value()), &product, timeStoreInCache)
+	repo.cacheStore.Set(fmt.Sprintf("%v", product.Id.Value()), &product, settings.TimeStoreInCache)
 	return product, nil
 }
 
