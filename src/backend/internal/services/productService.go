@@ -84,7 +84,7 @@ func (service *productService) Update(productDto *dto.UpdateProductDto) (*dto.Pr
 	}
 
 	if product == nil {
-		return nil, applicationerrors.BadRequest(fmt.Sprintf("'Product' with id %v was not found", productDto.Id))
+		return nil, applicationerrors.NotFoundWithMessage(fmt.Sprintf("'Product' with id %v was not found", productDto.Id))
 	}
 
 	if product.Deleted {
@@ -128,7 +128,7 @@ func (service *productService) Delete(id int64) *applicationerrors.ErrorStatus {
 	}
 
 	if product == nil {
-		return applicationerrors.BadRequest(fmt.Sprintf("'Product' with id %v was not found", id))
+		return applicationerrors.NotFoundWithMessage(fmt.Sprintf("'Product' with id %v was not found", id))
 	}
 
 	if errorRepo = service.repository.Delete(*product); errorRepo != nil {

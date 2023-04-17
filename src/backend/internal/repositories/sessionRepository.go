@@ -9,6 +9,7 @@ import (
 type SessionRepository interface {
 	AddSession(entities.Session) (entities.Session, error)
 	DeleteSession(session entities.Session) error
+	DeleteAllUsersSessions(userId valueobjects.Id) error
 	UpdateSession(session entities.Session) error
 	GetSession(sessionId uuid.UUID) (*entities.Session, error)
 	GetSessionsByUserId(userId valueobjects.Id) ([]entities.Session, error)
@@ -76,4 +77,15 @@ func (repo *inMemorySessionRepository) GetSessionsByUserId(userId valueobjects.I
 	}
 
 	return sessions, nil
+}
+
+func (repo *inMemorySessionRepository) DeleteAllUsersSessions(userId valueobjects.Id) error {
+	for index, session := range repo.sessions {
+		sessionUserId := session.UserId()
+		if sessionUserId.Value() == userId.Value() {
+			repo.sessions = append(repo.sessions[:index], repo.sessions[index+1:]...)
+			return nil
+		}
+	}
+	return nil
 }

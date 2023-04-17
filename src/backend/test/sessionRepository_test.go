@@ -43,3 +43,23 @@ func (suite *IntegrationTestSuite) Test_AddSession_ShouldGetSessionFromDatabase(
 	assert.Equal(suite.T(), session.Role(), sessionFromDatabase.Role())
 	assert.Equal(suite.T(), session.UserId(), sessionFromDatabase.UserId())
 }
+
+func (suite *IntegrationTestSuite) Test_AddMultipleUserSessions_DeleteAllUserSessions() {
+	user, _ := entities.NewUser(1, "email@email.com", "1234", "user")
+	expiry := time.Now().UTC().Add(time.Hour * 2)
+	session := entities.CreateSession(*user, expiry)
+	sessionRepository := repositories.CreateSessionRepository(suite.database)
+	sessionRepository.AddSession(session)
+	sessionRepository.AddSession(session)
+	sessionRepository.AddSession(session)
+	sessionRepository.AddSession(session)
+	sessionRepository.AddSession(session)
+
+	err := sessionRepository.DeleteAllUsersSessions(user.Id)
+
+	sessions, errRepo := sessionRepository.GetSessionsByUserId(user.Id)
+	assert.Nil(suite.T(), err)
+	assert.Nil(suite.T(), errRepo)
+	assert.NotNil(suite.T(), sessions)
+	assert.Equal(suite.T(), 0, len(sessions))
+}

@@ -148,6 +148,16 @@ func (service *sessionService) ManageSession(sessionDto dto.SessionDto) (*dto.Se
 }
 
 func (service *sessionService) RevokeAllUsersSessions(userId int64) *applicationerrors.ErrorStatus {
+	newUserId, err := valueobjects.NewId(userId)
+	if err != nil {
+		applicationerrors.BadRequest("Invalid UserId")
+	}
+
+	err = service.repo.DeleteAllUsersSessions(*newUserId)
+	if err != nil {
+		return applicationerrors.InternalError(err.Error())
+	}
+
 	return nil
 }
 

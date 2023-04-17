@@ -76,7 +76,7 @@ func (service *userService) Delete(id int64) *applicationerrors.ErrorStatus {
 	}
 
 	if user == nil {
-		return applicationerrors.BadRequest(fmt.Sprintf("'User' with id %v was not found", id))
+		return applicationerrors.NotFoundWithMessage(fmt.Sprintf("'User' with id %v was not found", id))
 	}
 
 	if errService := service.sessionService.RevokeAllUsersSessions(user.Id.Value()); errService != nil {
@@ -98,7 +98,7 @@ func (service *userService) Get(id int64) (*dto.UserDto, *applicationerrors.Erro
 	}
 
 	if user == nil {
-		return nil, nil
+		return nil, applicationerrors.NotFound()
 	}
 
 	return dto.MapToUserDto(*user), nil

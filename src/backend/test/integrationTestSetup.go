@@ -40,6 +40,12 @@ func (suite *IntegrationTestSuite) SetupSuite() {
 // this function executes after all tests executed
 func (suite *IntegrationTestSuite) TearDownSuite() {
 	log.Println("---- Clean up after all tests ----")
+	log.Println("Dropping user ", suite.config.Database.Username)
+	if _, err := suite.database.Exec("DROP USER " + suite.config.Database.Username); err != nil {
+		log.Fatal("ERROR: ", err)
+	}
+
+	log.Println("Dropping database ", suite.config.Database.Name)
 	if _, err := suite.database.Exec("DROP DATABASE " + suite.config.Database.Name); err != nil {
 		log.Fatal("ERROR: ", err)
 	}

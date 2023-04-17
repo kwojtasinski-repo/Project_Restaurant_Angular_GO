@@ -7,7 +7,7 @@ import (
 )
 
 const CookieSessionName = "session_cookie"
-const CookieLifeTime = int(time.Hour) * 24
+const CookieLifeTime = int(time.Hour) * 24 * 7
 
 var Location string
 var CookieHashKey []byte

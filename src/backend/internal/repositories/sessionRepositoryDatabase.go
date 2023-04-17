@@ -47,7 +47,7 @@ func (repo *sessionRepository) AddSession(session entities.Session) (entities.Se
 }
 
 func (repo *sessionRepository) DeleteSession(session entities.Session) error {
-	query := "DELETE FROM sessions WHERE session_id = ?"
+	query := "DELETE FROM sessions WHERE session_id = UNHEX(REPLACE(?,'-',''))"
 	if _, err := repo.database.Exec(query, session.SessionId()); err != nil {
 		return nil
 	}
@@ -125,6 +125,16 @@ func (repo *sessionRepository) GetSessionsByUserId(userId valueobjects.Id) ([]en
 	return sessions, nil
 }
 
+func (repo *sessionRepository) DeleteAllUsersSessions(userId valueobjects.Id) error {
+	query := `DELETE FROM sessions WHERE user_id = ?;`
+	_, err := repo.database.Exec(query, userId.Value())
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 type cachedSessionRepository struct {
 	cacheStore *cache.Cache
 	innerRepo  SessionRepository
@@ -186,4 +196,21 @@ func (repo *cachedSessionRepository) GetSessionsByUserId(userId valueobjects.Id)
 	}
 
 	return sessions, nil
+}
+
+func (repo *cachedSessionRepository) DeleteAllUsersSessions(userId valueobjects.Id) error {
+	if err := repo.innerRepo.DeleteAllUsersSessions(userId); err != nil {
+		return err
+	}
+
+	sessions := repo.cacheStore.Items()
+	for key, value := range sessions {
+		session := value.Object.(*entities.Session)
+		userIdCached := session.UserId()
+		if userIdCached.Value() == userId.Value() {
+			repo.cacheStore.Delete(key)
+		}
+	}
+
+	return nil
 }

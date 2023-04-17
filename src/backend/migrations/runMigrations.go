@@ -37,6 +37,10 @@ func UpMigrations(config config.Config, migrationsToApply string) {
 		panic(err)
 	}
 
+	if err := createDbUser(config); err != nil {
+		panic(err)
+	}
+
 	migrate, err := createMigrationObject(config)
 	if err != nil {
 		panic(err)
@@ -110,6 +114,32 @@ func createDatabaseIfNotExists(config config.Config) error {
 	defer db.Close()
 
 	_, err = db.Exec("CREATE DATABASE IF NOT EXISTS " + config.Database.Name)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func createDbUser(configFile config.Config) error {
+	log.Println("CREATE USER IF NOT EXISTS ", configFile.Database.Username)
+	db, err := sql.Open("mysql", configFile.DatabaseMigration.Username+":"+configFile.DatabaseMigration.Password+"@tcp(localhost:3306)/")
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+
+	queryCreateUser := "CREATE USER IF NOT EXISTS " + configFile.Database.Username + " IDENTIFIED BY '" + configFile.Database.Password + "';"
+	log.Println("Running query", queryCreateUser)
+	_, err = db.Exec(queryCreateUser)
+	if err != nil {
+		return err
+	}
+
+	log.Println("Added grants for user " + configFile.Database.Username)
+	queryGrant := "GRANT select, update, insert, delete ON " + configFile.Database.Name + ".* to " + configFile.Database.Username + ";"
+	log.Println("Running query", queryGrant)
+	_, err = db.Exec(queryGrant)
 	if err != nil {
 		return err
 	}

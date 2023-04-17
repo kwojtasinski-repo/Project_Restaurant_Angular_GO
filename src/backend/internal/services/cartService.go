@@ -141,7 +141,7 @@ func getCart(cartRepo repositories.CartRepository, cartId int64) (*entities.Cart
 	}
 
 	if cart == nil {
-		return cart, applicationerrors.BadRequest(fmt.Sprintf("'Cart' with id '%v' was not found", cartId))
+		return cart, applicationerrors.NotFoundWithMessage(fmt.Sprintf("'Cart' with id '%v' was not found", cartId))
 	}
 
 	return cart, nil
