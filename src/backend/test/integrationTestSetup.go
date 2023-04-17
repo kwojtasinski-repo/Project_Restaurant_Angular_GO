@@ -5,6 +5,7 @@ import (
 	"log"
 	"path/filepath"
 
+	"github.com/gin-gonic/gin"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/config"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/api"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/migrations"
@@ -17,6 +18,7 @@ type IntegrationTestSuite struct {
 	suite.Suite
 	config   config.Config
 	database sql.DB
+	router   *gin.Engine
 }
 
 // this function executes before the test suite begins execution
@@ -35,6 +37,7 @@ func (suite *IntegrationTestSuite) SetupSuite() {
 		log.Fatal("Cannot open database ", configFile.Database.Name)
 	}
 	suite.database = *database
+	suite.router = api.SetupApi(suite.config)
 }
 
 // this function executes after all tests executed

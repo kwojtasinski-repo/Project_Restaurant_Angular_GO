@@ -2,6 +2,7 @@ package api
 
 import (
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/chmike/securecookie"
@@ -29,6 +30,7 @@ func SetupApi(config config.Config) *gin.Engine {
 		AddSessionEndpoints(group)
 	}
 	AddIdentityEndpoints(router)
+	addHealthCheck(router)
 	return router
 }
 
@@ -47,4 +49,12 @@ func configOptions(config config.Config) {
 	if cookieErr != nil {
 		log.Fatal("ERROR: Cookie cannot be issued ", cookieErr.Error())
 	}
+}
+
+func addHealthCheck(router *gin.Engine) {
+	router.GET("/api", healthCheck)
+}
+
+func healthCheck(context *gin.Context) {
+	context.IndentedJSON(http.StatusOK, "Welcome to Restaurant API!")
 }
