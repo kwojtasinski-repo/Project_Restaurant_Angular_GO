@@ -21,7 +21,7 @@ type ProductServiceTestSuite struct {
 }
 
 func (suite *ProductServiceTestSuite) SetupTest() {
-	log.Println("---- Setup Before Each Test ----")
+	log.Println("---- Setup ProductServiceTestSuite Before Each Test ----")
 	suite.service = CreateProductService(repositories.NewInMemoryProductRepository(), suite.createTestInMemoryCategoryRepository())
 }
 
@@ -322,7 +322,7 @@ func (suite *ProductServiceTestSuite) Test_UpdateProduct_ProductNotExists_Should
 
 	assert.NotNil(suite.T(), err)
 	assert.Nil(suite.T(), dto)
-	assert.Equal(suite.T(), http.StatusBadRequest, err.Status)
+	assert.Equal(suite.T(), http.StatusNotFound, err.Status)
 	assert.Contains(suite.T(), err.Message, fmt.Sprintf("'Product' with id %v was not found", updateProduct.Id))
 }
 
@@ -353,6 +353,6 @@ func (suite *ProductServiceTestSuite) Test_DeleteProduct_InvalidId_ShouldDelete(
 	err := suite.service.Delete(id)
 
 	assert.NotNil(suite.T(), err)
-	assert.Equal(suite.T(), http.StatusBadRequest, err.Status)
+	assert.Equal(suite.T(), http.StatusNotFound, err.Status)
 	assert.Contains(suite.T(), err.Message, fmt.Sprintf("'Product' with id %v was not found", id))
 }

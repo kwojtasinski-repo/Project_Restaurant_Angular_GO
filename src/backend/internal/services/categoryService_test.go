@@ -18,7 +18,7 @@ type CategoryServiceTestSuite struct {
 }
 
 func (suite *CategoryServiceTestSuite) SetupTest() {
-	log.Println("---- Setup Before Each Test ----")
+	log.Println("---- Setup CategoryServiceTestSuite Before Each Test ----")
 	suite.service = CreateCategoryService(repositories.NewInMemoryCategoryRepository())
 }
 
@@ -215,7 +215,7 @@ func (suite *CategoryServiceTestSuite) Test_UpdateCategory_CategoryNotExists_Sho
 
 	assert.NotNil(suite.T(), err)
 	assert.Nil(suite.T(), dto)
-	assert.Equal(suite.T(), http.StatusBadRequest, err.Status)
+	assert.Equal(suite.T(), http.StatusNotFound, err.Status)
 	assert.Contains(suite.T(), err.Message, fmt.Sprintf("'Category' with id %v was not found", updateCategory.Id))
 }
 
@@ -246,6 +246,6 @@ func (suite *CategoryServiceTestSuite) Test_DeleteCategory_InvalidId_ShouldDelet
 	err := suite.service.Delete(id)
 
 	assert.NotNil(suite.T(), err)
-	assert.Equal(suite.T(), http.StatusBadRequest, err.Status)
+	assert.Equal(suite.T(), http.StatusNotFound, err.Status)
 	assert.Contains(suite.T(), err.Message, fmt.Sprintf("'Category' with id %v was not found", id))
 }

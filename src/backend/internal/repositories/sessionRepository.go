@@ -83,11 +83,12 @@ func (repo *inMemorySessionRepository) GetSessionsByUserId(userId valueobjects.I
 }
 
 func (repo *inMemorySessionRepository) DeleteAllUsersSessions(userId valueobjects.Id) error {
-	for index, session := range repo.sessions {
+	sessionsToDelete := make([]entities.Session, len(repo.sessions))
+	copy(sessionsToDelete, repo.sessions)
+	for _, session := range sessionsToDelete {
 		sessionUserId := session.UserId()
 		if sessionUserId.Value() == userId.Value() {
-			repo.sessions = append(repo.sessions[:index], repo.sessions[index+1:]...)
-			return nil
+			repo.DeleteSession(session)
 		}
 	}
 	return nil
@@ -95,9 +96,11 @@ func (repo *inMemorySessionRepository) DeleteAllUsersSessions(userId valueobject
 
 func (repo *inMemorySessionRepository) DeleteSessionsExpiredAfter(timeDuration time.Duration) error {
 	currentTime := time.Now().UTC()
-	for index, session := range repo.sessions {
+	sessionsToDelete := make([]entities.Session, len(repo.sessions))
+	copy(sessionsToDelete, repo.sessions)
+	for _, session := range sessionsToDelete {
 		if session.Expiry().Before(currentTime.Add(timeDuration * -1)) {
-			repo.sessions = append(repo.sessions[:index], repo.sessions[index+1:]...)
+			repo.DeleteSession(session)
 		}
 	}
 	return nil
