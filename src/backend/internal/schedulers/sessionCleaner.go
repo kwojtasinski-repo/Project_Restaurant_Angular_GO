@@ -1,6 +1,7 @@
 package schedulers
 
 import (
+	"database/sql"
 	"log"
 	"time"
 
@@ -16,15 +17,23 @@ func RegisterSessionCleaner() gocron.Scheduler {
 	return *scheduler
 }
 
+var createDatabase func() (*sql.DB, error) = func() (*sql.DB, error) {
+	return api.CreateDatabaseConnection()
+}
+
+var createSessionRepository func(database *sql.DB) repositories.SessionRepository = func(database *sql.DB) repositories.SessionRepository {
+	return repositories.CreateSessionRepository(*database)
+}
+
 func cleanPermanentlyExpiredSessions() {
 	log.Println("Running cleanPermanentlyExpiredSessions()")
-	db, err := api.CreateDatabaseConnection()
+	db, err := createDatabase()
 	if err != nil {
 		log.Println("ERROR cleanPermanentlyExpiredSessions() ", err)
 		return
 	}
 
-	sessionRepository := repositories.CreateSessionRepository(*db)
+	sessionRepository := createSessionRepository(db)
 	expiryDuration := time.Duration(settings.CookieLifeTime)
 	log.Println("Cleaning permanently expired sessions after ", expiryDuration)
 	if err := sessionRepository.DeleteSessionsExpiredAfter(expiryDuration); err != nil {
