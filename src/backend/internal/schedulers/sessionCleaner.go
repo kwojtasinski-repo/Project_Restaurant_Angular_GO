@@ -12,23 +12,23 @@ import (
 
 func RegisterSessionCleaner() gocron.Scheduler {
 	scheduler := gocron.NewScheduler(time.UTC)
-	scheduler.Every(2).Hour().Do(cleanExpiredSessions) // every 2 hours
+	scheduler.Every(2).Hour().Do(cleanPermanentlyExpiredSessions) // every 2 hours
 	return *scheduler
 }
 
-func cleanExpiredSessions() {
-	log.Println("Running cleanExpiredSessions()")
+func cleanPermanentlyExpiredSessions() {
+	log.Println("Running cleanPermanentlyExpiredSessions()")
 	db, err := api.CreateDatabaseConnection()
 	if err != nil {
-		log.Println("ERROR cleanExpiredSessions() ", err)
+		log.Println("ERROR cleanPermanentlyExpiredSessions() ", err)
 		return
 	}
 
 	sessionRepository := repositories.CreateSessionRepository(*db)
 	expiryDuration := time.Duration(settings.CookieLifeTime)
-	log.Println("Cleaning expired sessions after ", expiryDuration)
+	log.Println("Cleaning permanently expired sessions after ", expiryDuration)
 	if err := sessionRepository.DeleteSessionsExpiredAfter(expiryDuration); err != nil {
-		log.Println("ERROR cleanExpiredSessions() ", err)
+		log.Println("ERROR cleanPermanentlyExpiredSessions() ", err)
 		return
 	}
 }

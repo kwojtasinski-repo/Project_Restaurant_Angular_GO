@@ -19,7 +19,7 @@ type SessionService interface {
 	RefreshSession(sessionId uuid.UUID) (*dto.SessionDto, *applicationerrors.ErrorStatus)
 	GetUserSessions(userId int64) ([]dto.SessionDto, *applicationerrors.ErrorStatus)
 	ManageSession(sessionDto dto.SessionDto) (*dto.SessionDto, *applicationerrors.ErrorStatus)
-	ClearExpiredSessions() *applicationerrors.ErrorStatus
+	ClearPermanentlyExpiredSessions() *applicationerrors.ErrorStatus
 }
 
 type sessionService struct {
@@ -58,7 +58,7 @@ func (service *sessionService) RevokeSession(sessionId uuid.UUID) *applicationer
 	}
 
 	if session == nil {
-		return applicationerrors.UnAuthorized()
+		return applicationerrors.Unauthorized()
 	}
 
 	service.repo.DeleteSession(*session)
@@ -72,7 +72,7 @@ func (service *sessionService) RefreshSession(sessionId uuid.UUID) (*dto.Session
 	}
 
 	if session == nil {
-		return nil, applicationerrors.UnAuthorized()
+		return nil, applicationerrors.Unauthorized()
 	}
 
 	userId := session.UserId()
@@ -120,19 +120,26 @@ func (service *sessionService) ManageSession(sessionDto dto.SessionDto) (*dto.Se
 	if session == nil {
 		return nil, applicationerrors.UnAuthorizedWithMessage("Invalid Cookie")
 	}
+	if session.Expiry().Before(time.Now().UTC().Add(time.Duration(settings.CookieLifeTime * -1))) {
+		return nil, applicationerrors.UnAuthorizedWithMessage("Invalid Cookie")
+	}
 
 	userId := session.UserId()
 	if userId.Value() != sessionDto.UserId {
-		return nil, applicationerrors.UnAuthorized()
+		return nil, applicationerrors.Unauthorized()
 	}
 
-	exists, errRepo := service.userRepo.ExistsByEmail(sessionDto.Email)
+	user, errRepo := service.userRepo.Get(sessionDto.UserId)
 	if errRepo != nil {
-		return nil, applicationerrors.InternalError(err.Error())
+		return nil, applicationerrors.InternalError(errRepo.Error())
 	}
 
-	if !exists {
-		return nil, applicationerrors.UnAuthorized()
+	if user == nil {
+		return nil, applicationerrors.Unauthorized()
+	}
+
+	if user.Email.Value() != sessionDto.Email {
+		return nil, applicationerrors.Unauthorized()
 	}
 
 	sessionTime := time.UnixMilli(sessionDto.Expiry)
@@ -152,7 +159,7 @@ func (service *sessionService) ManageSession(sessionDto dto.SessionDto) (*dto.Se
 func (service *sessionService) RevokeAllUsersSessions(userId int64) *applicationerrors.ErrorStatus {
 	newUserId, err := valueobjects.NewId(userId)
 	if err != nil {
-		applicationerrors.BadRequest("Invalid UserId")
+		return applicationerrors.BadRequest("Invalid UserId")
 	}
 
 	err = service.repo.DeleteAllUsersSessions(*newUserId)
@@ -163,7 +170,7 @@ func (service *sessionService) RevokeAllUsersSessions(userId int64) *application
 	return nil
 }
 
-func (service *sessionService) ClearExpiredSessions() *applicationerrors.ErrorStatus {
+func (service *sessionService) ClearPermanentlyExpiredSessions() *applicationerrors.ErrorStatus {
 	if err := service.repo.DeleteSessionsExpiredAfter(time.Duration(settings.CookieLifeTime)); err != nil {
 		return applicationerrors.InternalError(err.Error())
 	}

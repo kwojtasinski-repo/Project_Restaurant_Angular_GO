@@ -12,7 +12,7 @@ func BadRequest(message string) *ErrorStatus {
 	}
 }
 
-func UnAuthorized() *ErrorStatus {
+func Unauthorized() *ErrorStatus {
 	return &ErrorStatus{
 		Status: 401,
 	}

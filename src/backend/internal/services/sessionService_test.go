@@ -3,11 +3,14 @@ package services
 import (
 	"log"
 	"math/rand"
+	"net/http"
 	"testing"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
+	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/repositories"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/settings"
 	"github.com/stretchr/testify/suite"
@@ -15,10 +18,11 @@ import (
 
 type SessionServiceTestSuite struct {
 	suite.Suite
-	service        SessionService
-	passwordHasher PasswordHasherService
-	testUsers      []entities.User
-	testSessions   []entities.Session
+	service           SessionService
+	passwordHasher    PasswordHasherService
+	testUsers         []entities.User
+	testSessions      []entities.Session
+	sessinoRepository repositories.SessionRepository
 }
 
 func (suite *SessionServiceTestSuite) SetupTest() {
@@ -28,6 +32,7 @@ func (suite *SessionServiceTestSuite) SetupTest() {
 	suite.passwordHasher = CreatePassworHasherService()
 	userRepository := suite.createTestInMemoryUserRepository()
 	sessinoRepository := suite.createTestInMemorySessionRepository()
+	suite.sessinoRepository = sessinoRepository
 	suite.service = CreateSessionService(sessinoRepository, userRepository)
 }
 
@@ -132,6 +137,17 @@ func (suite *SessionServiceTestSuite) Test_CreateSession_ValidUser_ShouldCreateA
 	suite.Assertions.Nil(err)
 }
 
+func (suite *SessionServiceTestSuite) Test_CreateSession_AnErrorOccuredInRepository_ShouldReturnInternalServerError() {
+	user := suite.testUsers[0]
+	service := CreateSessionService(repositories.NewErrorSessionRepository(), repositories.NewInMemoryUserRepository())
+
+	session, err := service.CreateSession(user)
+
+	suite.Assertions.Nil(session)
+	suite.Assertions.NotNil(err)
+	suite.Assertions.Equal(err.Status, http.StatusInternalServerError)
+}
+
 func (suite *SessionServiceTestSuite) Test_GetUserSessions_WithCreatedSessions_ShouldReturnDtos() {
 	user := suite.findAdminUser()
 	suite.service.CreateSession(*user)
@@ -145,6 +161,24 @@ func (suite *SessionServiceTestSuite) Test_GetUserSessions_WithCreatedSessions_S
 	suite.Assertions.NotEmpty(sessions)
 	suite.Assertions.Equal(8, len(sessions))
 	suite.Assertions.Equal(suite.containsSession(sessions, *sessionDto), true)
+}
+
+func (suite *SessionServiceTestSuite) Test_GetUserSessions_WithInvalidId_ShouldReturnBadRequest() {
+	sessions, err := suite.service.GetUserSessions(-1)
+
+	suite.Assertions.NotNil(err)
+	suite.Assertions.Empty(sessions)
+	suite.Assertions.Equal(err.Status == http.StatusBadRequest, true)
+}
+
+func (suite *SessionServiceTestSuite) Test_GetUserSessions_AnErrorOccuredInRepository_ShouldReturnInternalServerError() {
+	service := CreateSessionService(repositories.NewErrorSessionRepository(), repositories.NewInMemoryUserRepository())
+
+	sessions, err := service.GetUserSessions(1)
+
+	suite.Assertions.NotNil(err)
+	suite.Assertions.Empty(sessions)
+	suite.Assertions.Equal(err.Status == http.StatusInternalServerError, true)
 }
 
 func (suite *SessionServiceTestSuite) Test_RevokeSession_ValidSessionId_ShouldRevokeSession() {
@@ -162,6 +196,25 @@ func (suite *SessionServiceTestSuite) Test_RevokeSession_ValidSessionId_ShouldRe
 	suite.Assertions.NotEmpty(sessions)
 	suite.Assertions.Equal(suite.containsSession(sessions, *sessionCreated), true)
 	suite.Assertions.Equal(suite.containsSession(sessions, dto.MapToSessionDto(session)), false)
+}
+
+func (suite *SessionServiceTestSuite) Test_RevokeSession_InvalidSessionId_ShouldReturnUnauthorized() {
+	sessionId := uuid.New()
+
+	err := suite.service.RevokeSession(sessionId)
+
+	suite.Assertions.NotNil(err)
+	suite.Assertions.Equal(err.Status == http.StatusUnauthorized, true)
+}
+
+func (suite *SessionServiceTestSuite) Test_RevokeSession_AnErrorOccuredInRepository_ShouldReturnInternalServerError() {
+	sessionId := uuid.New()
+	service := CreateSessionService(repositories.NewErrorSessionRepository(), repositories.NewInMemoryUserRepository())
+
+	err := service.RevokeSession(sessionId)
+
+	suite.Assertions.NotNil(err)
+	suite.Assertions.Equal(err.Status == http.StatusInternalServerError, true)
 }
 
 func (suite *SessionServiceTestSuite) Test_RevokeAllUserSessions_ValidSessionId_ShouldRevokeSessions() {
@@ -183,7 +236,23 @@ func (suite *SessionServiceTestSuite) Test_RevokeAllUserSessions_ValidSessionId_
 	suite.Assertions.NotEqual(len(sessions) == len(sessionsBefore), true)
 }
 
-func (suite *SessionServiceTestSuite) Test_ClearExpiredSessions_ShouldRevokeExpiredSessions() {
+func (suite *SessionServiceTestSuite) Test_RevokeAllUserSessions_InvalidId_ShouldReturnBadRequest() {
+	err := suite.service.RevokeAllUsersSessions(-1)
+
+	suite.Assertions.NotNil(err)
+	suite.Assertions.Equal(err.Status == http.StatusBadRequest, true)
+}
+
+func (suite *SessionServiceTestSuite) Test_RevokeAllUserSessions_AnErrorOccuredInRepository_ShouldReturnInternalServerError() {
+	service := CreateSessionService(repositories.NewErrorSessionRepository(), repositories.NewInMemoryUserRepository())
+
+	err := service.RevokeAllUsersSessions(10)
+
+	suite.Assertions.NotNil(err)
+	suite.Assertions.Equal(err.Status == http.StatusInternalServerError, true)
+}
+
+func (suite *SessionServiceTestSuite) Test_ClearPermanentlyExpiredSessions_ShouldRevokeExpiredSessions() {
 	sessionsExpiredBefore := suite.getPermanentlyExpiredSessions()
 	suite.Assertions.NotNil(sessionsExpiredBefore)
 	suite.Assertions.NotEmpty(sessionsExpiredBefore)
@@ -192,12 +261,21 @@ func (suite *SessionServiceTestSuite) Test_ClearExpiredSessions_ShouldRevokeExpi
 	suite.Assertions.Nil(err)
 	suite.Assertions.NotEmpty(userSessionsBefore)
 
-	suite.service.ClearExpiredSessions()
+	suite.service.ClearPermanentlyExpiredSessions()
 
 	userSessionsAfter, err := suite.service.GetUserSessions(userId.Value())
 	suite.Assertions.Nil(err)
 	suite.Assertions.NotNil(userSessionsAfter)
 	suite.Assertions.Equal(len(userSessionsBefore) == len(userSessionsAfter), false)
+}
+
+func (suite *SessionServiceTestSuite) Test_ClearPermanentlyExpiredSessions_AnErrorOccuredInRepository_ShouldReturnInternalServerError() {
+	service := CreateSessionService(repositories.NewErrorSessionRepository(), repositories.NewInMemoryUserRepository())
+
+	err := service.ClearPermanentlyExpiredSessions()
+
+	suite.Assertions.NotNil(err)
+	suite.Assertions.Equal(err.Status == http.StatusInternalServerError, true)
 }
 
 func (suite *SessionServiceTestSuite) Test_RefreshSession_ValidSessionId_ShouldRevokeExpiredSessions() {
@@ -208,6 +286,27 @@ func (suite *SessionServiceTestSuite) Test_RefreshSession_ValidSessionId_ShouldR
 	suite.Assertions.Nil(err)
 	suite.Assertions.NotNil(sessionRefreshed)
 	suite.Assertions.Equal(sessionRefreshed.Expiry > session.Expiry().UnixMilli(), true)
+}
+
+func (suite *SessionServiceTestSuite) Test_RefreshSession_InvalidSessionId_ShouldReturnUnauthorized() {
+	sessionId := uuid.New()
+
+	sessionRefreshed, err := suite.service.RefreshSession(sessionId)
+
+	suite.Assertions.NotNil(err)
+	suite.Assertions.Nil(sessionRefreshed)
+	suite.Assertions.Equal(err.Status == http.StatusUnauthorized, true)
+}
+
+func (suite *SessionServiceTestSuite) Test_RefreshSession_AnErrorOccuredInRepository_ShouldReturnInternalServerError() {
+	service := CreateSessionService(repositories.NewErrorSessionRepository(), repositories.NewInMemoryUserRepository())
+	sessionId := uuid.New()
+
+	sessionRefreshed, err := service.RefreshSession(sessionId)
+
+	suite.Assertions.NotNil(err)
+	suite.Assertions.Nil(sessionRefreshed)
+	suite.Assertions.Equal(err.Status == http.StatusInternalServerError, true)
 }
 
 func (suite *SessionServiceTestSuite) Test_ManageSession_ExpiredSession_ShouldRefreshSession() {
@@ -226,4 +325,118 @@ func (suite *SessionServiceTestSuite) Test_ManageSession_ExpiredSession_ShouldRe
 		}
 	}
 	suite.Assertions.Equal(sessionRefreshed.Expiry > sessionDto.Expiry, true)
+}
+
+func (suite *SessionServiceTestSuite) Test_ManageSession_NotFoundSession_ShouldReturnUnathorized() {
+	session := suite.testSessions[0]
+	session.SetSessionId(uuid.New())
+	sessionDto := dto.MapToSessionDto(session)
+
+	newSession, err := suite.service.ManageSession(sessionDto)
+
+	suite.Assertions.Nil(newSession)
+	suite.Assertions.NotNil(err)
+	suite.Assertions.Equal(err.Status, http.StatusUnauthorized)
+}
+
+func (suite *SessionServiceTestSuite) Test_ManageSession_AnErrorOccuredInRepository_ShouldReturnInternalServerError() {
+	session := suite.testSessions[0]
+	session.SetSessionId(uuid.New())
+	sessionDto := dto.MapToSessionDto(session)
+	service := CreateSessionService(repositories.NewErrorSessionRepository(), repositories.NewInMemoryUserRepository())
+
+	newSession, err := service.ManageSession(sessionDto)
+
+	suite.Assertions.Nil(newSession)
+	suite.Assertions.NotNil(err)
+	suite.Assertions.Equal(err.Status, http.StatusInternalServerError)
+}
+
+func (suite *SessionServiceTestSuite) Test_ManageSession_InvalidUserId_ShouldReturnUnathorized() {
+	session := suite.testSessions[0]
+	userId := session.UserId()
+	id, _ := valueobjects.NewId(userId.Value() + 1)
+	session.SetUser(entities.User{Id: *id})
+	sessionDto := dto.MapToSessionDto(session)
+
+	newSession, err := suite.service.ManageSession(sessionDto)
+
+	suite.Assertions.Nil(newSession)
+	suite.Assertions.NotNil(err)
+	suite.Assertions.Equal(err.Status, http.StatusUnauthorized)
+}
+
+func (suite *SessionServiceTestSuite) Test_ManageSession_UserNotFound_ShouldReturnUnathorized() {
+	user, _ := entities.NewUser(3000000, "email@email.com", "", "user")
+	session := entities.CreateSession(*user, time.Now().UTC().Add(time.Hour*2))
+	suite.sessinoRepository.AddSession(session)
+	sessionDto := dto.MapToSessionDto(session)
+
+	newSession, err := suite.service.ManageSession(sessionDto)
+
+	suite.Assertions.Nil(newSession)
+	suite.Assertions.NotNil(err)
+	suite.Assertions.Equal(err.Status, http.StatusUnauthorized)
+}
+
+func (suite *SessionServiceTestSuite) Test_ManageSession_InvalidEmail_ShouldReturnUnathorized() {
+	session := suite.testSessions[0]
+	userId := session.UserId()
+	email, _ := valueobjects.NewEmailAddress("123@123.123")
+	session.SetUser(entities.User{Id: userId, Email: *email})
+	sessionDto := dto.MapToSessionDto(session)
+
+	newSession, err := suite.service.ManageSession(sessionDto)
+
+	suite.Assertions.Nil(newSession)
+	suite.Assertions.NotNil(err)
+	suite.Assertions.Equal(err.Status, http.StatusUnauthorized)
+}
+
+func (suite *SessionServiceTestSuite) Test_ManageSession_AnErrorOccuredInSessionRepository_ShouldReturnInternalServerError() {
+	service := CreateSessionService(repositories.NewErrorSessionRepository(), repositories.NewInMemoryUserRepository())
+	session := suite.testSessions[0]
+	sessionDto := dto.MapToSessionDto(session)
+
+	newSession, err := service.ManageSession(sessionDto)
+
+	suite.Assertions.Nil(newSession)
+	suite.Assertions.NotNil(err)
+	suite.Assertions.Equal(err.Status, http.StatusInternalServerError)
+}
+
+func (suite *SessionServiceTestSuite) Test_ManageSession_AnErrorOccuredInUserRepository_ShouldReturnInternalServerError() {
+	repo := repositories.NewInMemorySessionRepository()
+	session := suite.testSessions[0]
+	repo.AddSession(session)
+	service := CreateSessionService(repo, repositories.NewErrorUserRepository())
+	sessionDto := dto.MapToSessionDto(session)
+
+	newSession, err := service.ManageSession(sessionDto)
+
+	suite.Assertions.Nil(newSession)
+	suite.Assertions.NotNil(err)
+	suite.Assertions.Equal(err.Status, http.StatusInternalServerError)
+}
+
+func (suite *SessionServiceTestSuite) Test_ManageSession_SessionPermanentlyExpired_ShouldReturnUnauthorized() {
+	session, _ := suite.sessinoRepository.AddSession(entities.CreateSession(suite.testUsers[0], time.Now().Add(time.Duration((settings.CookieLifeTime+1)*-1))))
+	sessionDto := dto.MapToSessionDto(session)
+
+	newSession, err := suite.service.ManageSession(sessionDto)
+
+	suite.Assertions.Nil(newSession)
+	suite.Assertions.NotNil(err)
+	suite.Assertions.Equal(err.Status, http.StatusUnauthorized)
+}
+
+func (suite *SessionServiceTestSuite) Test_ManageSession_ValidSession_ShouldReturnSameSession() {
+	session, _ := suite.sessinoRepository.AddSession(entities.CreateSession(suite.testUsers[0], time.Now().Add(time.Duration(time.Hour)*3)))
+	sessionDto := dto.MapToSessionDto(session)
+
+	newSession, err := suite.service.ManageSession(sessionDto)
+
+	suite.Assertions.NotNil(newSession)
+	suite.Assertions.Nil(err)
+	suite.Assertions.Equal(sessionDto.Expiry, newSession.Expiry)
 }
