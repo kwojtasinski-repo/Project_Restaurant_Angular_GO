@@ -85,3 +85,99 @@ func (eur *errorUserRepository) GetByEmail(string) (*entities.User, error) {
 func (eur *errorUserRepository) ExistsByEmail(string) (bool, error) {
 	return false, errors.New("some error")
 }
+
+type errorOrderRepository struct {
+}
+
+func NewErrorOrderRepository() OrderRepository {
+	return &errorOrderRepository{}
+}
+
+func (eor *errorOrderRepository) Add(*entities.Order) error {
+	return errors.New("some error")
+}
+func (eor *errorOrderRepository) Delete(entities.Order) error {
+	return errors.New("some error")
+}
+func (eor *errorOrderRepository) Get(int64) (*entities.Order, error) {
+	return nil, errors.New("some error")
+}
+func (eor *errorOrderRepository) GetAllByUser(int64) ([]entities.Order, error) {
+	return make([]entities.Order, 0), errors.New("some error")
+}
+func (eor *errorOrderRepository) Update(*entities.Order) error {
+	return errors.New("some error")
+}
+
+type errorProductRepository struct {
+}
+
+func NewErrorProductRepository() ProductRepository {
+	return &errorProductRepository{}
+}
+
+func (epr *errorProductRepository) Add(*entities.Product) error {
+	return errors.New("some error")
+}
+func (epr *errorProductRepository) Update(entities.Product) error {
+	return errors.New("some error")
+}
+func (epr *errorProductRepository) Delete(entities.Product) error {
+	return errors.New("some error")
+}
+func (epr *errorProductRepository) Get(int64) (*entities.Product, error) {
+	return nil, errors.New("some error")
+}
+func (epr *errorProductRepository) GetAll() ([]entities.Product, error) {
+	return make([]entities.Product, 0), errors.New("some error")
+}
+
+type errorCartRepository struct {
+}
+
+func NewErrorCartRepository() CartRepository {
+	return &errorCartRepository{}
+}
+
+func (ecr *errorCartRepository) Add(cart *entities.Cart) error {
+	return errors.New("some error")
+}
+
+func (ecr *errorCartRepository) Delete(cart entities.Cart) error {
+	return errors.New("some error")
+}
+
+func (ecr *errorCartRepository) Get(cartId int64) (*entities.Cart, error) {
+	return nil, errors.New("some error")
+}
+
+func (ecr *errorCartRepository) GetAllByUser(userId int64) ([]entities.Cart, error) {
+	return make([]entities.Cart, 0), errors.New("some error")
+}
+
+func (ecr *errorCartRepository) DeleteCartByUserId(userId int64) error {
+	return errors.New("some error")
+}
+
+type errorCategoryRepository struct {
+}
+
+func NewErrorCategoryRepository() CategoryRepository {
+	return &errorCategoryRepository{}
+}
+
+func (ecr *errorCategoryRepository) Add(*entities.Category) error {
+	return errors.New("some error")
+}
+func (ecr *errorCategoryRepository) Update(entities.Category) error {
+	return errors.New("some error")
+}
+func (ecr *errorCategoryRepository) Delete(entities.Category) error {
+	return errors.New("some error")
+}
+func (ecr *errorCategoryRepository) Get(int64) (*entities.Category, error) {
+	return nil, errors.New("some error")
+}
+func (ecr *errorCategoryRepository) GetAll() ([]entities.Category, error) {
+	return make([]entities.Category, 0), errors.New("some error")
+}

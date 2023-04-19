@@ -163,12 +163,7 @@ func createCartService() (services.CartService, error) {
 		return nil, err
 	}
 
-	userRepository, err := createUserRepository()
-	if err != nil {
-		return nil, err
-	}
-
-	cartService := services.CreateCartService(cartRepository, productRepository, userRepository)
+	cartService := services.CreateCartService(cartRepository, productRepository)
 	objectsPerRequest["services.CartService"] = cartService
 	return cartService, nil
 }

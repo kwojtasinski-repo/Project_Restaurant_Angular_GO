@@ -56,7 +56,8 @@ func (repo *inMemoryUserRepository) Update(userToUpdate entities.User) error {
 func (repo *inMemoryUserRepository) Delete(userToDelete entities.User) error {
 	for index, user := range repo.users {
 		if user.Id.Value() == userToDelete.Id.Value() {
-			repo.users = append(repo.users[:index], repo.users[index+1:]...)
+			user.Deleted = true
+			repo.users[index] = user
 			return nil
 		}
 	}

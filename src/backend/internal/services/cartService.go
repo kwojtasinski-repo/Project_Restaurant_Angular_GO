@@ -6,6 +6,7 @@ import (
 
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
+	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
 	applicationerrors "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/errors"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/repositories"
 )
@@ -19,34 +20,32 @@ type CartService interface {
 type cartService struct {
 	repo              repositories.CartRepository
 	productRepository repositories.ProductRepository
-	userRepository    repositories.UserRepository
 }
 
-func CreateCartService(cartRepository repositories.CartRepository, productRepository repositories.ProductRepository, userRepository repositories.UserRepository) CartService {
+func CreateCartService(cartRepository repositories.CartRepository, productRepository repositories.ProductRepository) CartService {
 	return &cartService{
 		repo:              cartRepository,
 		productRepository: productRepository,
-		userRepository:    userRepository,
 	}
 }
 
 func (service *cartService) AddToCart(addCart dto.AddCart) *applicationerrors.ErrorStatus {
-	user, errorStatus := getUser(service.userRepository, addCart.UserId)
-	if errorStatus != nil {
-		return errorStatus
-	}
-
 	product, errorStatus := getProduct(service.productRepository, addCart.ProductId)
 	if errorStatus != nil {
 		return errorStatus
 	}
 
-	cart, err := entities.NewCart(0, *user, *product)
+	userId, err := valueobjects.NewId(addCart.UserId)
+	if err != nil {
+		return applicationerrors.BadRequest("Invalid UserId")
+	}
+
+	cart, err := entities.NewCart(0, entities.User{Id: *userId}, *product)
 	if err != nil {
 		return applicationerrors.BadRequest(err.Error())
 	}
 
-	log.Printf("'User' with id '%v' add 'Product' with id '%v'", user.Id, product.Id)
+	log.Printf("'User' with id '%v' add 'Product' with id '%v'\n", userId.Value(), product.Id)
 	err = service.repo.Add(cart)
 	if err != nil {
 		return applicationerrors.InternalError(err.Error())
@@ -56,17 +55,12 @@ func (service *cartService) AddToCart(addCart dto.AddCart) *applicationerrors.Er
 }
 
 func (service *cartService) RemoveFromCart(cartId, userId int64) *applicationerrors.ErrorStatus {
-	user, errorStatus := getUser(service.userRepository, userId)
-	if errorStatus != nil {
-		return errorStatus
-	}
-
 	cart, errorStatus := getCart(service.repo, cartId)
 	if errorStatus != nil {
 		return errorStatus
 	}
 
-	log.Printf("'User' with id '%v' removes 'ItemCart' with id '%v'", user.Id, cart.Id)
+	log.Printf("'User' with id '%v' removes 'ItemCart' with id '%v'\n", userId, cart.Id)
 	err := service.repo.Delete(*cart)
 	if err != nil {
 		return applicationerrors.InternalError(err.Error())
@@ -77,12 +71,7 @@ func (service *cartService) RemoveFromCart(cartId, userId int64) *applicationerr
 
 func (service *cartService) GetMyCart(userId int64) ([]dto.CartDto, *applicationerrors.ErrorStatus) {
 	carts := make([]dto.CartDto, 0)
-	user, errorStatus := getUser(service.userRepository, userId)
-	if errorStatus != nil {
-		return carts, errorStatus
-	}
-
-	log.Printf("'User' with id '%v' get all items from cart", user.Id)
+	log.Printf("'User' with id '%v' get all items from cart\n", userId)
 	cartsInRepo, err := service.repo.GetAllByUser(userId)
 	if err != nil {
 		return carts, applicationerrors.InternalError(err.Error())
@@ -97,22 +86,6 @@ func (service *cartService) GetMyCart(userId int64) ([]dto.CartDto, *application
 	}
 
 	return carts, nil
-}
-
-func getUser(userRepo repositories.UserRepository, userId int64) (*entities.User, *applicationerrors.ErrorStatus) {
-	var user *entities.User
-	var err error
-	user, err = userRepo.Get(userId)
-
-	if err != nil {
-		return nil, applicationerrors.InternalError(err.Error())
-	}
-
-	if user == nil {
-		return user, applicationerrors.BadRequest(fmt.Sprintf("'User' with id '%v' was not found", userId))
-	}
-
-	return user, nil
 }
 
 func getProduct(productRepo repositories.ProductRepository, productId int64) (*entities.Product, *applicationerrors.ErrorStatus) {

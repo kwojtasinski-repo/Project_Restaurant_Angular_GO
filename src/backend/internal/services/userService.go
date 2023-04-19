@@ -2,7 +2,6 @@ package services
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
@@ -12,8 +11,8 @@ import (
 
 type UserService interface {
 	Register(*dto.AddUserDto) (*dto.UserDto, *applicationerrors.ErrorStatus)
-	Delete(int64) *applicationerrors.ErrorStatus
-	Get(int64) (*dto.UserDto, *applicationerrors.ErrorStatus)
+	Delete(userId int64) *applicationerrors.ErrorStatus
+	Get(userId int64) (*dto.UserDto, *applicationerrors.ErrorStatus)
 	GetAll() ([]dto.UserDto, *applicationerrors.ErrorStatus)
 	Login(dto.SignInDto) (*dto.SessionDto, *applicationerrors.ErrorStatus)
 }
@@ -54,7 +53,6 @@ func (service *userService) Register(addUser *dto.AddUserDto) (*dto.UserDto, *ap
 	if err != nil {
 		return nil, applicationerrors.InternalError(err.Error())
 	}
-	log.Println("HashedPasssword: ", hashedPassword)
 
 	user, err := entities.NewUser(0, addUser.Email, hashedPassword, "user")
 	if err != nil {

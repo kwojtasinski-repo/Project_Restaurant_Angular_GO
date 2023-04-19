@@ -13,7 +13,7 @@ import (
 
 type OrderService interface {
 	Add(dto.AddOrderDto) (*dto.OrderDetailsDto, *applicationerrors.ErrorStatus)
-	AddFromCart(int64) (*dto.OrderDetailsDto, *applicationerrors.ErrorStatus)
+	AddFromCart(userId int64) (*dto.OrderDetailsDto, *applicationerrors.ErrorStatus)
 }
 
 type orderService struct {
@@ -89,14 +89,17 @@ func (service *orderService) Add(addOrderDto dto.AddOrderDto) (*dto.OrderDetails
 }
 
 func (service *orderService) AddFromCart(userId int64) (*dto.OrderDetailsDto, *applicationerrors.ErrorStatus) {
+	userIdValue, err := valueobjects.NewId(userId)
+	if err != nil {
+		return nil, applicationerrors.BadRequest(err.Error())
+	}
+
 	productsInCart, err := service.cartRepo.GetAllByUser(userId)
 	if err != nil {
 		return nil, applicationerrors.InternalError(err.Error())
 	}
-
-	userIdValue, err := valueobjects.NewId(userId)
-	if err != nil {
-		return nil, applicationerrors.BadRequest(err.Error())
+	if len(productsInCart) == 0 {
+		return nil, applicationerrors.BadRequest("'Cart' is empty, add something before create an 'Order'")
 	}
 
 	var order *entities.Order
@@ -107,9 +110,6 @@ func (service *orderService) AddFromCart(userId int64) (*dto.OrderDetailsDto, *a
 	if err != nil {
 		return nil, applicationerrors.BadRequest(err.Error())
 	}
-	if len(productsInCart) == 0 {
-		return nil, applicationerrors.BadRequest("'Cart' is empty, add something before create an 'Order'")
-	}
 
 	var errors strings.Builder
 	for _, productInCart := range productsInCart {
@@ -119,7 +119,7 @@ func (service *orderService) AddFromCart(userId int64) (*dto.OrderDetailsDto, *a
 		}
 
 		if product == nil {
-			fmt.Fprintf(&errors, "'Product' with id was not found %v ", product.Id.Value())
+			fmt.Fprintf(&errors, "'Product' with id was not found %v ", productInCart.ProductId.Value())
 			continue
 		}
 

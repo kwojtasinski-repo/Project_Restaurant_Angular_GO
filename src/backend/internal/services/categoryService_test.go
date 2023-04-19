@@ -249,3 +249,12 @@ func (suite *CategoryServiceTestSuite) Test_DeleteCategory_InvalidId_ShouldDelet
 	assert.Equal(suite.T(), http.StatusNotFound, err.Status)
 	assert.Contains(suite.T(), err.Message, fmt.Sprintf("'Category' with id %v was not found", id))
 }
+
+func (suite *CategoryServiceTestSuite) Test_DeleteCategory_AnErrorOccuredInCategoryRepository_ShouldReturnInternalServerError() {
+	service := CreateCategoryService(repositories.NewErrorCategoryRepository())
+
+	err := service.Delete(1)
+
+	suite.Assertions.NotNil(err)
+	suite.Assertions.Equal(err.Status, http.StatusInternalServerError)
+}
