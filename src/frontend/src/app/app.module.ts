@@ -9,6 +9,8 @@ import { ViewCategoryComponent } from './components/category/view-category/view-
 import { ProductsComponent } from './components/product/products/products.component';
 import { AddProductsComponent } from './components/product/add-products/add-products.component';
 import { ViewProductsComponent } from './components/product/view-products/view-products.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AlertModule } from 'ngx-bootstrap/alert';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,9 @@ import { ViewProductsComponent } from './components/product/view-products/view-p
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    AlertModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
