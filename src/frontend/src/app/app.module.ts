@@ -11,6 +11,7 @@ import { AddProductsComponent } from './components/product/add-products/add-prod
 import { ViewProductsComponent } from './components/product/view-products/view-products.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AlertModule } from 'ngx-bootstrap/alert';
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { AlertModule } from 'ngx-bootstrap/alert';
     ViewCategoryComponent,
     ProductsComponent,
     AddProductsComponent,
-    ViewProductsComponent
+    ViewProductsComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,

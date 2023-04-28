@@ -1,0 +1,18 @@
+.imgbackground {
+    background-repeat: no-repeat;
+    background-image: url("../../../assets/background.jpg");
+    background-size: cover;
+    height:100vh;
+    width: 100%;
+}
+
+.login-form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.label-login-form {
+    padding: 1px .25rem 1px 0.25rem
+}
