@@ -1,14 +1,37 @@
 <div class="imgbackground">
-    <div class="login-form">
-        <form>
-            <div class="form-group mt-2 mb-2">
-                <label for="email-input" class="text-white bg-dark label-login-form">Email</label>
-                <input id="email-input" type="email" class="form-control" />
-            </div>
-            <div class="form-group mt-2 mb-2">
-                <label for="password-input" class="text-white bg-dark label-login-form">Hasło</label>
-                <input id="password-input" type="password" class="form-control" />
-            </div>
-        </form>
-    </div>
+</div>
+<div class="login-form">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" >
+        <div class="form-group mt-2 mb-2">
+            <label for="email-input" class="text-white bg-dark label-login-form">Email</label>
+            <input id="email-input" type="email" class="form-control" formControlName="emailAddress" placeholder="Wpisz adres email" />
+            <ng-container *ngIf="loginForm.dirty">
+                <ng-container *ngFor="let error of loginForm.get('emailAddress')?.errors | keyvalue">
+                    <ng-container *ngIf="error.value && this.loginForm.get('emailAddress')?.dirty">
+                        <div class="invalid-feedback d-block bg-dark label-login-form text-break">
+                            {{ getErrorMessage(error.key) }}
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </ng-container>
+        </div>
+        <div class="form-group mt-2 mb-2">
+            <label for="password-input" class="text-white bg-dark label-login-form">Hasło</label>
+            <input id="password-input" type="password" class="form-control" formControlName="password" placeholder="Wpisz hasło" />
+            <ng-container *ngIf="loginForm.dirty">
+                <ng-container *ngFor="let error of loginForm.get('password')?.errors | keyvalue">
+                    <ng-container *ngIf="error.value && this.loginForm.get('password')?.dirty">
+                        <div class="invalid-feedback d-block bg-dark label-login-form text-break">
+                            {{ getErrorMessage(error.key) }}
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </ng-container>
+        </div>
+        <div>
+            <button class="btn btn-primary" (click)="onSubmit(); $event.preventDefault()">
+                Zaloguj
+            </button>
+        </div>
+    </form>
 </div>
