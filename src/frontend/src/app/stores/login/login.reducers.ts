@@ -5,7 +5,12 @@ import { loginRequestFailed, loginRequestSuccess } from "./login.actions";
 export const initialState: LoginState = {
     user: null,
     authenticated: false,
-    error: null
+    error: null,
+    credentials: {
+        email: '',
+        password: ''
+    },
+    path: 'menu'
 }
 
 export const loginReducer = createReducer(
@@ -15,7 +20,11 @@ export const loginReducer = createReducer(
             ...state,
             user: action.user,
             error: null,
-            authenticated: true
+            authenticated: true,
+            credentials: {
+                email: '',
+                password: ''
+            }
         }
     }),
     on(loginRequestFailed, (state, action) => {
@@ -23,7 +32,11 @@ export const loginReducer = createReducer(
             ...state,
             user: null,
             error: action.error,
-            authenticated: false
+            authenticated: false,
+            credentials: {
+                email: '',
+                password: ''
+            }
         }
     })
 );

@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { loginRequest, loginRequestFailed, loginRequestSuccess } from './login.actions';
-import { catchError, mergeMap, of } from 'rxjs';
+import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
+import { loginRequest, loginRequestFailed, loginRequestSuccess, loginSuccess } from './login.actions';
+import { catchError, mergeMap, of, tap, withLatestFrom } from 'rxjs';
+import { Router } from '@angular/router';
+import { Store, select } from '@ngrx/store';
+import { LoginState } from './login.state';
+import { getLoginPath } from './login.selectors';
 
 @Injectable()
 export class LoginEffects {
@@ -23,5 +27,20 @@ export class LoginEffects {
     )
   )
 
-  constructor(private actions$: Actions) {}
+  loginRequestSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loginRequestSuccess),
+      mergeMap(() => of(loginSuccess()))
+    )
+  )
+
+  loginSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loginSuccess),
+      concatLatestFrom(() => this.store.pipe(select(getLoginPath))),
+      tap(([_, path]) => this.router.navigate([path]))
+    ), { dispatch: false }
+  )
+
+  constructor(private actions$: Actions, private router: Router, private store: Store<LoginState>) {}
 }
