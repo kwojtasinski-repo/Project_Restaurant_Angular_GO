@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LoginComponent } from './login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { provideMockStore } from '@ngrx/store/testing';
+import { initialState } from 'src/app/stores/login/login.reducers';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -13,6 +15,9 @@ describe('LoginComponent', () => {
       imports: [
         FormsModule,
         ReactiveFormsModule
+      ],
+      providers: [
+        provideMockStore({ initialState })
       ]
     })
     .compileComponents();

@@ -1,8 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
+import { provideMockStore } from '@ngrx/store/testing';
 import { Observable } from 'rxjs';
 
 import { LoginEffects } from './login.effects';
+import { initialState } from './login.reducers';
 
 describe('LoginEffects', () => {
   let actions$: Observable<any>;
@@ -12,7 +14,8 @@ describe('LoginEffects', () => {
     TestBed.configureTestingModule({
       providers: [
         LoginEffects,
-        provideMockActions(() => actions$)
+        provideMockActions(() => actions$),
+        provideMockStore({ initialState })
       ]
     });
 
