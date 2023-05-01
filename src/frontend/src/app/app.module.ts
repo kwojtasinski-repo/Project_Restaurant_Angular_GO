@@ -14,6 +14,11 @@ import { AlertModule } from 'ngx-bootstrap/alert';
 import { LoginComponent } from './components/login/login.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { loginStoreName } from './stores/login/login.store.names';
+import { loginReducer } from './stores/login/login.reducers';
+import { LoginEffects } from './stores/login/login.effects';
 
 @NgModule({
   declarations: [
@@ -33,7 +38,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     BrowserAnimationsModule,
     AlertModule.forRoot(),
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    StoreModule.forRoot({ [loginStoreName]: loginReducer }),
+    EffectsModule.forRoot([ LoginEffects ])
   ],
   providers: [],
   bootstrap: [AppComponent]
