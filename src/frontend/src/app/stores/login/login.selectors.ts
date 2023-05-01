@@ -4,4 +4,5 @@ import { loginStoreName } from "./login.store.names";
 
 export const selectLoginState = createFeatureSelector<LoginState>(loginStoreName);
 export const getLoginPath = createSelector(selectLoginState, (state): string => state.path);
-export const authenticated = createSelector(selectLoginState, (state): boolean => state.authenticated);
+export const getAuthenticated = createSelector(selectLoginState, (state): boolean => state.authenticated);
+export const getError = createSelector(selectLoginState, (state): any => state.error);

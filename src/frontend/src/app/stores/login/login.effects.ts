@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
 import { loginRequest, loginRequestFailed, loginRequestSuccess, loginSuccess } from './login.actions';
-import { catchError, mergeMap, of, tap, withLatestFrom } from 'rxjs';
+import { catchError, mergeMap, of, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { LoginState } from './login.state';
@@ -14,7 +14,6 @@ export class LoginEffects {
       ofType(loginRequest),
       concatLatestFrom(() => this.store.select(selectLoginState)),
       mergeMap(([_, state]) => {
-        debugger
         if (state.credentials.email.length == 0 || state.credentials.password.length == 0) {
           return of(loginRequestFailed({ error: 'invalid credentials' }));
         }
@@ -25,7 +24,7 @@ export class LoginEffects {
           }})
         ).pipe(
           catchError(
-            (err) => of(loginRequestFailed({ error: err }))
+            (err) => of(loginRequestFailed({ error: err.message }))
           )
         )
       })

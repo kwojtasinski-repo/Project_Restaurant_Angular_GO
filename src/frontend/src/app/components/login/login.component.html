@@ -1,6 +1,11 @@
 <div class="imgbackground">
 </div>
 <div class="login-form">
+    <div class="mt-2 mb-2" *ngIf="error$ | async">
+        <div class="alert alert-danger">
+            {{ error$ | async }}
+        </div>
+    </div>
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" loginForm="loginForm" >
         <div class="form-group mt-2 mb-2">
             <label for="email-input" class="text-white bg-dark label-login-form">Email</label>
