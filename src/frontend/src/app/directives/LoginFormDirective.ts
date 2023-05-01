@@ -27,7 +27,7 @@ export class LoginFormDirective implements OnInit {
             .pipe(debounceTime(this.debounce))
             .subscribe(value => {
                 this.store.dispatch(loginFormUpdate({ credentials: {
-                    email: value.email,
+                    email: value.emailAddress,
                     password: value.password
                 }}));
             });

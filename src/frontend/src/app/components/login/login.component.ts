@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Store } from "@ngrx/store";
+import { loginRequest } from 'src/app/stores/login/login.actions';
+import { LoginState } from 'src/app/stores/login/login.state';
 import { getValidationMessage } from 'src/app/validations/validations';
 
 @Component({
@@ -11,7 +13,7 @@ import { getValidationMessage } from 'src/app/validations/validations';
 export class LoginComponent implements OnInit {
   public loginForm: FormGroup;
 
-  constructor(private router: Router) { 
+  constructor(private store: Store<LoginState>) { 
     this.loginForm = new FormGroup({
       emailAddress: new FormControl('', Validators.compose([Validators.required, Validators.email])),
       password: new FormControl('', Validators.required)
@@ -32,6 +34,6 @@ export class LoginComponent implements OnInit {
       });
       return;
     }
-    this.router.navigate(['/menu']);
+    this.store.dispatch(loginRequest())
   }
 }

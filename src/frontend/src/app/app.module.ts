@@ -19,6 +19,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { loginStoreName } from './stores/login/login.store.names';
 import { loginReducer } from './stores/login/login.reducers';
 import { LoginEffects } from './stores/login/login.effects';
+import { LoginFormDirective } from './directives/LoginFormDirective';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { LoginEffects } from './stores/login/login.effects';
     AddProductsComponent,
     ViewProductsComponent,
     LoginComponent,
-    MenuComponent
+    MenuComponent,
+    LoginFormDirective
   ],
   imports: [
     BrowserModule,
