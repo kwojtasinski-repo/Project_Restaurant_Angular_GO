@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Product } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
 import { Observable } from 'rxjs';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-menu',
@@ -9,7 +10,9 @@ import { Observable } from 'rxjs';
   styleUrls: ['./menu.component.scss']
 })
 export class MenuComponent {
-  constructor(private productService: ProductService) { }
+  public user$ = this.authService.getUser();
+
+  constructor(private productService: ProductService, private authService: AuthService) { }
 
   public showProducts(): Observable<Product[]> {
     return this.productService.getAll();

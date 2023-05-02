@@ -4,6 +4,7 @@ import { MenuComponent } from "./components/menu/menu.component";
 import { ActivatedRouteSnapshot, RouterStateSnapshot, Routes, createUrlTreeFromSnapshot } from "@angular/router";
 import { AuthService } from "./services/auth.service";
 import { map } from 'rxjs';
+import { AddProductsComponent } from "./components/product/add-products/add-products.component";
 
 const authGuard = (next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot) => {
@@ -11,6 +12,24 @@ const authGuard = (next: ActivatedRouteSnapshot,
 
     return authService.isAuthenticated().pipe(
         map((authenticated) => authenticated ? true : createUrlTreeFromSnapshot(next, ['/login']))
+    );
+};
+
+const adminGuard = (next: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot) => {
+    const authService = inject(AuthService);
+
+    return authService.getUser().pipe(
+        map((user) => user?.role === 'admin' ? true : createUrlTreeFromSnapshot(next, ['/menu']))
+    );
+};
+
+const authorizedGuard = (next: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot) => {
+    const authService = inject(AuthService);
+
+    return authService.isAuthenticated().pipe(
+        map((authenticated) => authenticated ? createUrlTreeFromSnapshot(next, ['/menu']) : true)
     );
 };
 
@@ -22,12 +41,18 @@ export const customRoutes: Routes = [
             {
                 path: 'menu',
                 component: MenuComponent
+            },
+            {
+                path: 'products/add',
+                component: AddProductsComponent,
+                canActivate: [adminGuard]
             }
         ],
     },
     {
         path: 'login',
-        component: LoginComponent
+        component: LoginComponent,
+        canActivate: [authorizedGuard]
     },
 ]
 

@@ -20,6 +20,7 @@ export class LoginEffects {
         return of(loginRequestSuccess({ user: {
             id: 1,
             email: 'testowy@test.com',
+            role: 'admin',
             deleted: null
           }})
         ).pipe(
