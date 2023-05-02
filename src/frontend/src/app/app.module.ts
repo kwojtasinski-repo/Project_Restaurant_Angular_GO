@@ -20,6 +20,10 @@ import { loginStoreName } from './stores/login/login.store.names';
 import { loginReducer } from './stores/login/login.reducers';
 import { LoginEffects } from './stores/login/login.effects';
 import { LoginFormDirective } from './directives/LoginFormDirective';
+import { HeaderComponent } from './components/header/header.component';
+import { appStoreName } from './stores/app/app.store.names';
+import { appReducer } from './stores/app/app.reducers';
+import { AppEffects } from './stores/app/app.effects';
 
 @NgModule({
   declarations: [
@@ -32,7 +36,8 @@ import { LoginFormDirective } from './directives/LoginFormDirective';
     ViewProductsComponent,
     LoginComponent,
     MenuComponent,
-    LoginFormDirective
+    LoginFormDirective,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
@@ -41,8 +46,8 @@ import { LoginFormDirective } from './directives/LoginFormDirective';
     AlertModule.forRoot(),
     FormsModule,
     ReactiveFormsModule,
-    StoreModule.forRoot({ [loginStoreName]: loginReducer }),
-    EffectsModule.forRoot([ LoginEffects ])
+    StoreModule.forRoot({ [loginStoreName]: loginReducer, [appStoreName]: appReducer }),
+    EffectsModule.forRoot([ LoginEffects, AppEffects ])
   ],
   providers: [],
   bootstrap: [AppComponent]
