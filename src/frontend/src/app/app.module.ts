@@ -11,6 +11,7 @@ import { AddProductsComponent } from './components/product/add-products/add-prod
 import { ViewProductsComponent } from './components/product/view-products/view-products.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AlertModule } from 'ngx-bootstrap/alert';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { LoginComponent } from './components/login/login.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -43,6 +44,7 @@ import { AppEffects } from './stores/app/app.effects';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    CollapseModule.forRoot(),
     AlertModule.forRoot(),
     FormsModule,
     ReactiveFormsModule,

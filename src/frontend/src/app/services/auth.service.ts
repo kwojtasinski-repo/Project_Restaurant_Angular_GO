@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { LoginState } from '../stores/login/login.state';
 import { Store } from '@ngrx/store';
-import { take } from "rxjs";
-import { getAuthenticated } from '../stores/login/login.selectors';
-import { initializeLogin } from '../stores/login/login.actions';
+import { Observable } from "rxjs";
+import { getAuthenticated, getUser } from '../stores/login/login.selectors';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -12,9 +11,11 @@ import { initializeLogin } from '../stores/login/login.actions';
 export class AuthService {
   constructor(private store: Store<LoginState>) {}
 
-  public isAuthenticated(): boolean {
-    let authenticated = false;
-    this.store.select(getAuthenticated).pipe(take(1)).subscribe(a => authenticated = a);
-    return authenticated;
+  public isAuthenticated(): Observable<boolean> {
+    return this.store.select(getAuthenticated);
+  }
+
+  public getUser(): Observable<User | null> {
+    return this.store.select(getUser);
   }
 }
