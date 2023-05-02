@@ -32,7 +32,6 @@ export class LoginFormDirective implements OnInit, OnDestroy {
     }
 
     public ngOnDestroy(): void {
-        debugger
         this.formChange.unsubscribe();
     }
 }
