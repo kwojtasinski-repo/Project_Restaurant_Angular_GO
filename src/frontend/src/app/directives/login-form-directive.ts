@@ -1,15 +1,14 @@
-import { Directive, Input, OnInit } from "@angular/core";
+import { Directive, OnDestroy, OnInit } from "@angular/core";
 import { FormGroupDirective } from "@angular/forms";
 import { LoginState } from "../stores/login/login.state";
 import { Store } from "@ngrx/store";
-import { Subscription, take, debounceTime } from "rxjs";
+import { Subscription, take } from "rxjs";
 import { loginFormUpdate } from "../stores/login/login.actions";
 
 @Directive({
     selector: '[loginForm]'
   })
-export class LoginFormDirective implements OnInit {
-    @Input() public debounce : number = 300;
+export class LoginFormDirective implements OnInit, OnDestroy {
     public formChange : Subscription = new Subscription();
 
     constructor(private formGroupDirective: FormGroupDirective,
@@ -24,12 +23,16 @@ export class LoginFormDirective implements OnInit {
             });
         
         this.formChange = this.formGroupDirective.form.valueChanges
-            .pipe(debounceTime(this.debounce))
             .subscribe(value => {
                 this.store.dispatch(loginFormUpdate({ credentials: {
                     email: value.emailAddress,
                     password: value.password
                 }}));
             });
+    }
+
+    public ngOnDestroy(): void {
+        debugger
+        this.formChange.unsubscribe();
     }
 }

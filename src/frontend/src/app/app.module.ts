@@ -19,7 +19,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { loginStoreName } from './stores/login/login.store.names';
 import { loginReducer } from './stores/login/login.reducers';
 import { LoginEffects } from './stores/login/login.effects';
-import { LoginFormDirective } from './directives/LoginFormDirective';
+import { LoginFormDirective } from './directives/login-form-directive';
 import { HeaderComponent } from './components/header/header.component';
 import { appStoreName } from './stores/app/app.store.names';
 import { appReducer } from './stores/app/app.reducers';

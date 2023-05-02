@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { customRoutes } from 'src/app/routes';
-import { getCurrentUrl, hideHeader } from 'src/app/stores/app/app.selectors';
+import { getCurrentUrl, showHeader } from 'src/app/stores/app/app.selectors';
 import { AppState } from 'src/app/stores/app/app.state';
 
 @Component({
@@ -12,7 +11,7 @@ import { AppState } from 'src/app/stores/app/app.state';
 export class HeaderComponent implements OnInit {
   public routerLinks: any[] = [];
   public currentUrl$ = this.store.select(getCurrentUrl);
-  public hideHeader$ = this.store.select(hideHeader);
+  public showHeader$ = this.store.select(showHeader);
 
   constructor(private store: Store<AppState>) { }
   

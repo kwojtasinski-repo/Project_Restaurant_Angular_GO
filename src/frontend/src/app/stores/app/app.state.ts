@@ -1,4 +1,4 @@
 export interface AppState {
-    hideHeader: boolean
+    showHeader: boolean
     currentUrl: string
 }

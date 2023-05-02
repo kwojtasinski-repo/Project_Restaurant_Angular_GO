@@ -1,8 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { NavigationStart, Router } from '@angular/router';
-import { take } from "rxjs";
-import { AuthService } from './services/auth.service';
-import { HeaderService } from './services/header.service';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { AppService } from './services/app.service';
 
 @Component({
   selector: 'app-root',
@@ -10,4 +8,14 @@ import { HeaderService } from './services/header.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  constructor(private router: Router, private appService: AppService) { }
+
+  onActivateRoute() {
+    this.appService.setCurrentUrl(this.router.url);
+    if (this.router.url === '/login') {
+        this.appService.hideHeader();
+    } else {
+        this.appService.showHeader();
+    }
+  }
 }

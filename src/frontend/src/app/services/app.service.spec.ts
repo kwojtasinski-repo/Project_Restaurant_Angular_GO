@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockStore } from '@ngrx/store/testing';
 
-import { HeaderService } from './header.service';
+import { AppService } from './app.service';
 import { initialState } from '../stores/app/app.reducers';
 
-describe('HeaderService', () => {
-  let service: HeaderService;
+describe('AppService', () => {
+  let service: AppService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -13,7 +13,7 @@ describe('HeaderService', () => {
         provideMockStore({ initialState })
       ]
     });
-    service = TestBed.inject(HeaderService);
+    service = TestBed.inject(AppService);
   });
 
   it('should be created', () => {

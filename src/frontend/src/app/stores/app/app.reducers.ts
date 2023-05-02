@@ -3,7 +3,7 @@ import { disableHeader, enableHeader, setCurrentUrl } from "./app.actions"
 import { AppState } from "./app.state"
 
 export const initialState: AppState = {
-    hideHeader: false,
+    showHeader: false,
     currentUrl: ''
 }
 
@@ -12,13 +12,13 @@ export const appReducer = createReducer(
     on(enableHeader, (state, _) => {
         return {
             ...state,
-            hideHeader: false
+            showHeader: true
         }
     }),
     on(disableHeader, (state, _) => {
         return {
             ...state,
-            hideHeader: true
+            showHeader: false
         }
     }),
     on(setCurrentUrl, (state, action) => {

@@ -10,12 +10,8 @@ const authGuard = (next: ActivatedRouteSnapshot,
     const authService = inject(AuthService);
     const router = inject(Router);
 
-    if (state.url.substring(1) === '') {
-        return of(true);
-    }
-
     if (!authService.isAuthenticated()) {
-        router.navigate(['']);
+        router.navigate(['/login']);
         return of(false);
     }
 
@@ -28,20 +24,14 @@ export const customRoutes: Routes = [
         canActivate: [authGuard],
         children: [
             {
-                path: '',
-                component: LoginComponent,
-                data: {
-                    ['showHeader']: false
-                }
-            },
-            {
                 path: 'menu',
-                component: MenuComponent,
-                data: {
-                    ['showHeader']: true
-                }
+                component: MenuComponent
             }
-        ]
+        ],
+    },
+    {
+        path: 'login',
+        component: LoginComponent
     },
 ]
 
