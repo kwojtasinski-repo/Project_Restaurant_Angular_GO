@@ -2,7 +2,7 @@ import { Directive, OnDestroy, OnInit } from "@angular/core";
 import { FormGroupDirective } from "@angular/forms";
 import { LoginState } from "../stores/login/login.state";
 import { Store } from "@ngrx/store";
-import { Subscription, take } from "rxjs";
+import { Subscription, debounceTime, take } from "rxjs";
 import { loginFormUpdate } from "../stores/login/login.actions";
 
 @Directive({
@@ -23,6 +23,7 @@ export class LoginFormDirective implements OnInit, OnDestroy {
             });
         
         this.formChange = this.formGroupDirective.form.valueChanges
+            .pipe(debounceTime(10))
             .subscribe(value => {
                 this.store.dispatch(loginFormUpdate({ credentials: {
                     email: value.emailAddress,

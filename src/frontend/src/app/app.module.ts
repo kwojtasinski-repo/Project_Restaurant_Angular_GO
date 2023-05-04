@@ -25,6 +25,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { appStoreName } from './stores/app/app.store.names';
 import { appReducer } from './stores/app/app.reducers';
 import { AppEffects } from './stores/app/app.effects';
+import { CurrencyFormatterDirective } from './directives/currency-formatter-directive';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { AppEffects } from './stores/app/app.effects';
     LoginComponent,
     MenuComponent,
     LoginFormDirective,
-    HeaderComponent
+    HeaderComponent,
+    CurrencyFormatterDirective
   ],
   imports: [
     BrowserModule,
