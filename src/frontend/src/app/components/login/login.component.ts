@@ -25,8 +25,8 @@ export class LoginComponent implements OnInit {
   public ngOnInit(): void {
   }
 
-  public getErrorMessage(code: string): string | null {
-    return getValidationMessage(code);
+  public getErrorMessage(error: any): string | null {
+    return getValidationMessage(error);
   }
 
   public onSubmit() {

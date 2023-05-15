@@ -26,6 +26,9 @@ import { appStoreName } from './stores/app/app.store.names';
 import { appReducer } from './stores/app/app.reducers';
 import { AppEffects } from './stores/app/app.effects';
 import { CurrencyFormatterDirective } from './directives/currency-formatter-directive';
+import { productStoreName } from './stores/product/product.store.names';
+import { productReducer } from './stores/product/product.reducers';
+import { ProductEffects } from './stores/product/product.effects';
 
 @NgModule({
   declarations: [
@@ -50,8 +53,8 @@ import { CurrencyFormatterDirective } from './directives/currency-formatter-dire
     AlertModule.forRoot(),
     FormsModule,
     ReactiveFormsModule,
-    StoreModule.forRoot({ [loginStoreName]: loginReducer, [appStoreName]: appReducer }),
-    EffectsModule.forRoot([ LoginEffects, AppEffects ])
+    StoreModule.forRoot({ [loginStoreName]: loginReducer, [appStoreName]: appReducer, [productStoreName]: productReducer }),
+    EffectsModule.forRoot([ LoginEffects, AppEffects, ProductEffects ])
   ],
   providers: [],
   bootstrap: [AppComponent]

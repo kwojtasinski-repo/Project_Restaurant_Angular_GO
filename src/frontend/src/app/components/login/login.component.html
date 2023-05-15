@@ -14,7 +14,7 @@
                 <ng-container *ngFor="let error of loginForm.get('emailAddress')?.errors | keyvalue">
                     <ng-container *ngIf="error.value && this.loginForm.get('emailAddress')?.dirty">
                         <div class="invalid-feedback d-block bg-dark label-login-form text-break">
-                            {{ getErrorMessage(error.key) }}
+                            {{ getErrorMessage(error) }}
                         </div>
                     </ng-container>
                 </ng-container>
@@ -27,7 +27,7 @@
                 <ng-container *ngFor="let error of loginForm.get('password')?.errors | keyvalue">
                     <ng-container *ngIf="error.value && this.loginForm.get('password')?.dirty">
                         <div class="invalid-feedback d-block bg-dark label-login-form text-break">
-                            {{ getErrorMessage(error.key) }}
+                            {{ getErrorMessage(error) }}
                         </div>
                     </ng-container>
                 </ng-container>

@@ -9,23 +9,49 @@
                     Nazwa
                 </label>
                 <input id="product-name" type="text" class="form-control" formControlName="productName" placeholder="Wpisz nazwę produktu" />
+                <ng-container *ngIf="addProduct.dirty">
+                    <ng-container *ngFor="let error of addProduct.get('productName')?.errors | keyvalue">
+                        <ng-container *ngIf="error.value && this.addProduct.get('productName')?.dirty">
+                            <div class="invalid-feedback d-block text-break">
+                                {{ getErrorMessage(error) }}
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
             </div>
             <div class="form-group">
                 <label for="product-description">
                     Opis
                 </label>
                 <textarea id="product-description" maxlength="5000" class="form-control" formControlName="productDescription" placeholder="Podaj opis" ></textarea>
+                <ng-container *ngIf="addProduct.dirty">
+                    <ng-container *ngFor="let error of addProduct.get('productDescription')?.errors | keyvalue">
+                        <ng-container *ngIf="error.value && this.addProduct.get('productDescription')?.dirty">
+                            <div class="invalid-feedback d-block text-break">
+                                {{ getErrorMessage(error) }}
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
             </div>
             <div class="form-group">
                 <label id="product-cost" >
                     Cena
                 </label>
                 <input id="product-cost"
-                    (ngModelChange)="onPriceChange($event)"
                     class="form-control" 
                     formControlName="productCost" 
                     placeholder="Wpisz cenę produktu"
-                    currencyFormatter [locale]="'pl-PL'" [minimumFractionDigits]="2" [maximumFractionDigits]="2" />
+                    currencyFormatter [locale]="locale" [minimumFractionDigits]="minimumFractionDigits" [maximumFractionDigits]="maximumFractionDigits" />
+                <ng-container *ngIf="addProduct.dirty">
+                    <ng-container *ngFor="let error of addProduct.get('productCost')?.errors | keyvalue">
+                        <ng-container *ngIf="error.value && this.addProduct.get('productCost')?.dirty">
+                            <div class="invalid-feedback d-block text-break">
+                                {{ getErrorMessage(error) }}
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
             </div>
             <div class="form-group">
                 <label for="product-category">
@@ -35,6 +61,15 @@
                     <option value="" disabled selected>Wybierz kategorię</option>
                     <option value="1">Category#1</option>
                 </select>
+                <ng-container *ngIf="addProduct.dirty">
+                    <ng-container *ngFor="let error of addProduct.get('productCategory')?.errors | keyvalue">
+                        <ng-container *ngIf="error.value && this.addProduct.get('productCategory')?.dirty">
+                            <div class="invalid-feedback d-block text-break">
+                                {{ getErrorMessage(error) }}
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </ng-container>
             </div>
             <div class="mt-2">
                 <button class="btn btn-success">

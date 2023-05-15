@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Product } from '../models/product';
-import { Observable, of } from 'rxjs';
+import { EMPTY, Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
   constructor() { }
+
+  public add(product: Product): Observable<void> {
+    this.products.push(product);
+    return new Observable((ob) => { ob.next(); ob.complete(); });
+  }
 
   public getAll(): Observable<Product[]> {
     return of(this.products.filter(p => p.deleted !== true));

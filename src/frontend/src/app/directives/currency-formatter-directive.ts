@@ -1,6 +1,6 @@
 import { Directive, HostListener, OnDestroy, Self, Input, OnInit } from "@angular/core";
 import { NgControl } from "@angular/forms";
-import { Subject, takeUntil } from "rxjs";
+import { Subject, debounceTime, takeUntil } from "rxjs";
 
 @Directive({
     selector: '[currencyFormatter]'
@@ -30,16 +30,13 @@ import { Subject, takeUntil } from "rxjs";
     public ngAfterViewInit() {
       this.setValue(this.formatPrice(this.ngControl.value))
       this.ngControl.control?.valueChanges
-        .pipe(takeUntil(this.destroy$))
+        .pipe(debounceTime(10), takeUntil(this.destroy$))
         .subscribe(this.updateValue.bind(this));      
     }
   
-    private updateValue(value: any) {
-      let inputVal = value || '';
-      debugger
-      const pattern = new RegExp("[^0-9" + this.comma + "]", 'g');
-      this.setValue(!!inputVal ?
-        this.validateDecimalValue(inputVal.replace(pattern, '')) : '');
+    public ngOnDestroy() {
+      this.setValue(this.unformatValue(this.ngControl.value));
+      this.destroy$.complete();
     }
   
     @HostListener('focus') onFocus() {
@@ -47,8 +44,15 @@ import { Subject, takeUntil } from "rxjs";
     }
   
     @HostListener('blur') onBlur() {
-      let value = this.ngControl.value || '';
+      let value = this.getNumberFromValue(this.ngControl.value || '0.00');
       !!value && this.setValue(this.formatPrice(value));
+    }
+  
+    private updateValue(value: any) {
+      let inputVal = value || '';
+      const pattern = new RegExp("[^0-9" + this.comma + "]", 'g');
+      this.setValue(!!inputVal ?
+        this.validateDecimalValue(inputVal.replace(pattern, '')) : '');
     }
   
     private formatPrice(value: any) {
@@ -66,7 +70,7 @@ import { Subject, takeUntil } from "rxjs";
     }
   
     private validateDecimalValue(value: any) {
-      const newValue = this.comma === ',' ? value.replace(',', '.') : value;
+      const newValue = this.getNumberFromValue(value);
 
       // Check to see if the value is a valid number or not
       if (Number.isNaN(Number(newValue))) {
@@ -77,15 +81,14 @@ import { Subject, takeUntil } from "rxjs";
         // and in such case we simply set the value to empty
         return Number.isNaN(Number(strippedValue)) ? '' : strippedValue;
       }
-      return newValue;
+      return value;
     }
   
     private setValue(value: any) {
       this.ngControl.control?.setValue(value, { emitEvent: false })
     }
-  
-    public ngOnDestroy() {
-      this.setValue(this.unformatValue(this.ngControl.value));
-      this.destroy$.complete();
+
+    private getNumberFromValue(value: any) {
+      return this.comma === ',' ? value.replace(',', '.') : value
     }
 }
