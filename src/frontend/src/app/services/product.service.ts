@@ -17,6 +17,10 @@ export class ProductService {
     return of(this.products.filter(p => p.deleted !== true));
   }
 
+  public get(id: number): Observable<Product | undefined> {
+    return of(this.products.find(p => p.id === id));
+  }
+
   private products: Product[] = [
     {
       id: 1,

@@ -5,6 +5,8 @@ import { ActivatedRouteSnapshot, RouterStateSnapshot, Routes, createUrlTreeFromS
 import { AuthService } from "./services/auth.service";
 import { map } from 'rxjs';
 import { AddProductsComponent } from "./components/product/add-products/add-products.component";
+import { EditProductsComponent } from "./components/product/edit-products/edit-products.component";
+import { ViewProductsComponent } from "./components/product/view-products/view-products.component";
 
 const authGuard = (next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot) => {
@@ -46,6 +48,15 @@ export const customRoutes: Routes = [
                 path: 'products/add',
                 component: AddProductsComponent,
                 canActivate: [adminGuard]
+            },
+            {
+                path: 'products/edit/:id',
+                component: EditProductsComponent,
+                canActivate: [adminGuard]
+            },
+            {
+                path: 'products/view/:id',
+                component: ViewProductsComponent
             }
         ],
     },

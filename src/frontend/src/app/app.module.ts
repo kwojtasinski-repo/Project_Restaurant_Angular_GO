@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { CategoriesComponent } from './components/category/categories/categories.component';
 import { AddCategoryComponent } from './components/category/add-category/add-category.component';
 import { ViewCategoryComponent } from './components/category/view-category/view-category.component';
-import { ProductsComponent } from './components/product/products/products.component';
 import { AddProductsComponent } from './components/product/add-products/add-products.component';
 import { ViewProductsComponent } from './components/product/view-products/view-products.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -29,6 +28,7 @@ import { CurrencyFormatterDirective } from './directives/currency-formatter-dire
 import { productStoreName } from './stores/product/product.store.names';
 import { productReducer } from './stores/product/product.reducers';
 import { ProductEffects } from './stores/product/product.effects';
+import { EditProductsComponent } from './components/product/edit-products/edit-products.component';
 
 @NgModule({
   declarations: [
@@ -36,14 +36,14 @@ import { ProductEffects } from './stores/product/product.effects';
     CategoriesComponent,
     AddCategoryComponent,
     ViewCategoryComponent,
-    ProductsComponent,
     AddProductsComponent,
     ViewProductsComponent,
     LoginComponent,
     MenuComponent,
     LoginFormDirective,
     HeaderComponent,
-    CurrencyFormatterDirective
+    CurrencyFormatterDirective,
+    EditProductsComponent
   ],
   imports: [
     BrowserModule,
