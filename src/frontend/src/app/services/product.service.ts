@@ -13,6 +13,16 @@ export class ProductService {
     return new Observable((ob) => { ob.next(); ob.complete(); });
   }
 
+  public update(product: Product): Observable<void> {
+    const response: Observable<void> = new Observable((ob) => { ob.next(); ob.complete(); });
+    const index = this.products.findIndex(p => p.id === product.id);
+    if (index < 0) {
+      return response;
+    }
+    this.products[index] = product;
+    return response;
+  }
+
   public getAll(): Observable<Product[]> {
     return of(this.products.filter(p => p.deleted !== true));
   }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
-import { productFormClear, productRequestBegin, productRequestFailed, productRequestSuccess } from './product.actions';
+import { productFormClear, productAddRequestBegin, productAddRequestFailed, productAddRequestSuccess, productUpdateRequestBegin, productUpdateRequestSuccess, productCancelOperation } from './product.actions';
 import { of, catchError, exhaustMap, map } from 'rxjs';
 import { Router } from '@angular/router';
 import { ProductService } from 'src/app/services/product.service';
@@ -10,20 +10,51 @@ import { Store } from '@ngrx/store';
 
 @Injectable()
 export class ProductEffects {
-  productRequestBegin$ = createEffect(() =>
+  productAddRequestBegin$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(productRequestBegin),
+      ofType(productAddRequestBegin),
       concatLatestFrom(() => this.store.select(getProduct)),
       exhaustMap(([_, product]) => this.productService.add(product!).pipe(
-        map((_) => productRequestSuccess()),
-        catchError((err) => of(productRequestFailed(err)))
+        map((_) => productAddRequestSuccess()),
+        catchError((err) => of(productAddRequestFailed(err)))
       )),
     )
   );
 
-  productRequestSuccess$ = createEffect(() =>
+  productAddRequestSuccess$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(productRequestSuccess),
+      ofType(productAddRequestSuccess),
+      map(() => {
+        this.router.navigate(['/menu']);
+        return productFormClear();
+      })
+    )
+  );
+
+  productUpdateRequestBegin$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(productUpdateRequestBegin),
+      concatLatestFrom(() => this.store.select(getProduct)),
+      exhaustMap(([_, product]) => this.productService.update(product!).pipe(
+        map((_) => productAddRequestSuccess()),
+        catchError((err) => of(productAddRequestFailed(err)))
+      )),
+    )
+  );
+
+  productUpdateRequestSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(productUpdateRequestSuccess),
+      map(() => {
+        this.router.navigate(['/menu']);
+        return productFormClear();
+      })
+    )
+  );
+
+  productCancelOperation$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(productCancelOperation),
       map(() => {
         this.router.navigate(['/menu']);
         return productFormClear();

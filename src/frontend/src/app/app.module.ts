@@ -29,6 +29,7 @@ import { productStoreName } from './stores/product/product.store.names';
 import { productReducer } from './stores/product/product.reducers';
 import { ProductEffects } from './stores/product/product.effects';
 import { EditProductsComponent } from './components/product/edit-products/edit-products.component';
+import { ProductFormComponent } from './components/product/product-form/product-form.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { EditProductsComponent } from './components/product/edit-products/edit-p
     LoginFormDirective,
     HeaderComponent,
     CurrencyFormatterDirective,
-    EditProductsComponent
+    EditProductsComponent,
+    ProductFormComponent
   ],
   imports: [
     BrowserModule,

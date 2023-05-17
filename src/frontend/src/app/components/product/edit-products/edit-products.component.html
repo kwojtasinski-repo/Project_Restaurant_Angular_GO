@@ -1,1 +1,19 @@
-<p>edit-products works!</p>
+<div class="product-form mt-2 mb-2">
+    <div class="mb-2">
+        <h3>Edytuj produkt</h3>
+    </div>
+    <div *ngIf="product;then productFound else productNotFound"></div>
+    <ng-template #productFound>
+        <app-product-form 
+            [product]="product" 
+            [buttonNames]="['Zatwierdź', 'Anuluj']"
+            (productChanged)="onProductChange($event)" 
+            (onSubmit)="onSubmit()" 
+            (onCancel)="onCancel()"></app-product-form>
+    </ng-template>
+    <ng-template #productNotFound>
+        <h4>
+            Product was not found
+        </h4>
+    </ng-template>
+</div>

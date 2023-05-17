@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { ProductState } from "./product.state";
-import { productFormClear, productFormUpdate, productRequestFailed } from "./product.actions";
+import { productFormClear, productFormUpdate, productAddRequestFailed, productUpdateRequestFailed, productAddRequestBegin, productUpdateRequestBegin } from "./product.actions";
 
 export const initialState: ProductState = {
     product: null,
@@ -15,16 +15,35 @@ export const productReducer = createReducer(
             product: action.product
         }
     }),
-    on(productRequestFailed, (state, action) => {
+    on(productAddRequestBegin, (state, _) => {
+        return {
+            ...state,
+            error: null
+        }
+    }),
+    on(productAddRequestFailed, (state, action) => {
         return {
             ...state,
             error: action.error
         }
     }),
-    on(productFormClear, (state, action) => {
+    on(productFormClear, (state, _) => {
         return {
             ...state,
-            product: null
+            product: null,
+            error: null
         }
     }),
+    on(productUpdateRequestBegin, (state, _) => {
+        return {
+            ...state,
+            error: null
+        }
+    }),
+    on(productUpdateRequestFailed, (state, action) => {
+        return {
+            ...state,
+            error: action.error
+        }
+    })
 );

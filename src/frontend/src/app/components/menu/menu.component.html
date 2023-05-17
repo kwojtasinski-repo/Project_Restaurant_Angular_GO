@@ -28,6 +28,11 @@
                         </p>
                         <div class="d-flex">
                             <a href="#" class="card-link">Szczegóły</a>
+                            <ng-container *ngIf="(user$ | async)?.role === 'admin'">
+                                <a [routerLink]="'/products/edit/' + product.id" class="ms-2">
+                                    Edytuj produkt
+                                </a>
+                            </ng-container>
                         </div>
                     </div>
                 </div>
