@@ -26,8 +26,14 @@
                         <p class="card-text text-truncate d-flex text-break" style="max-width: 230px; height: 24px;">
                                 {{ product.description }}
                         </p>
+                        <div class="d-flex justify-content-end">
+                            <div class="bg-warning p-2">
+                                {{ product.price }} zł
+                            </div>
+                        </div>
                         <div class="d-flex">
-                            <a href="#" class="card-link">Szczegóły</a>
+                            <a class="card-link me-2" [routerLink]="'/products/view/' + product.id">Szczegóły</a>
+                            <a href="#" class="card-link">Dodaj do koszyka</a>
                             <ng-container *ngIf="(user$ | async)?.role === 'admin'">
                                 <a [routerLink]="'/products/edit/' + product.id" class="ms-2">
                                     Edytuj produkt
