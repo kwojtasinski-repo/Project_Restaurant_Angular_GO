@@ -21,12 +21,14 @@ export class EditProductsComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id') ? new Number(this.route.snapshot.paramMap.get('id')).valueOf() : 0;
     this.productService.get(id)
       .pipe(take(1))
-      .subscribe(p => this.product = p);
-    if (this.product) {
-      this.store.dispatch(productFormUpdate({
-        product: this.product
-      }))
-    }
+      .subscribe(p => {
+        this.product = p;
+        if (this.product) {
+          this.store.dispatch(productFormUpdate({
+            product: this.product
+          }));
+        }
+      });
   }
 
   public onSubmit() {

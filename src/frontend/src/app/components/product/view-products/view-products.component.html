@@ -1,1 +1,37 @@
-<p>view-products works!</p>
+<ng-container *ngIf="product;then productFound else productNotFound"></ng-container>
+<ng-template #productFound>
+    <div class="d-flex align-items-center flex-column">
+        <div class="product-description">
+            <div class="text-center">
+                <dt>Nazwa:</dt>
+                <dd>{{ product?.name }}</dd>
+            </div>
+            <div class="text-center">
+                <dt>Opis:</dt>
+                <dd class="text-break">{{ product?.description }}</dd>
+            </div>
+            <div class="text-center">
+                <dt>Cena:</dt>
+                <dd>{{ product?.price }} zł</dd>
+            </div>
+            <div class="text-center">
+                <dt>Kategoria:</dt>
+                <dd>{{ product?.category?.name }}</dd>
+            </div>
+            <ng-container *ngIf="product?.deleted">
+                <div class="text-bg-warning p-2">
+                    <div>
+                        Produkt jest nieużywany
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</ng-template>
+<ng-template #productNotFound>
+    <div class="alert alert-danger">
+        <h5>
+            Produkt nie został znaleziony
+        </h5>
+    </div>
+</ng-template>
