@@ -31,6 +31,7 @@ import { ProductEffects } from './stores/product/product.effects';
 import { EditProductsComponent } from './components/product/edit-products/edit-products.component';
 import { ProductFormComponent } from './components/product/product-form/product-form.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,7 @@ import { FooterComponent } from './components/footer/footer.component';
     CurrencyFormatterDirective,
     EditProductsComponent,
     ProductFormComponent,
-    FooterComponent
+    FooterComponent,
   ],
   imports: [
     BrowserModule,
@@ -58,7 +59,8 @@ import { FooterComponent } from './components/footer/footer.component';
     FormsModule,
     ReactiveFormsModule,
     StoreModule.forRoot({ [loginStoreName]: loginReducer, [appStoreName]: appReducer, [productStoreName]: productReducer }),
-    EffectsModule.forRoot([ LoginEffects, AppEffects, ProductEffects ])
+    EffectsModule.forRoot([ LoginEffects, AppEffects, ProductEffects ]),
+    NgxSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

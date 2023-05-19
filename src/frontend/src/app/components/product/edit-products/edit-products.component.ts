@@ -6,6 +6,7 @@ import { Product } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
 import { productCancelOperation, productFormClear, productFormUpdate, productUpdateRequestBegin } from 'src/app/stores/product/product.actions';
 import { ProductState } from 'src/app/stores/product/product.state';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-edit-products',
@@ -14,10 +15,12 @@ import { ProductState } from 'src/app/stores/product/product.state';
 })
 export class EditProductsComponent implements OnInit {
   public product: Product | undefined;
+  public isLoading = true;
 
-  constructor(private productService: ProductService, private route: ActivatedRoute, private store: Store<ProductState>) { }
+  constructor(private productService: ProductService, private route: ActivatedRoute, private store: Store<ProductState>, private spinnerService: NgxSpinnerService) { }
 
   public ngOnInit(): void {
+    this.spinnerService.show();
     const id = this.route.snapshot.paramMap.get('id') ? new Number(this.route.snapshot.paramMap.get('id')).valueOf() : 0;
     this.productService.get(id)
       .pipe(take(1))
@@ -28,6 +31,8 @@ export class EditProductsComponent implements OnInit {
             product: this.product
           }));
         }
+        this.isLoading = false;
+        this.spinnerService.hide();
       });
   }
 

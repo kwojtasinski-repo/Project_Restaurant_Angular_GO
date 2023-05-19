@@ -1,4 +1,12 @@
-<ng-container *ngIf="product;then productFound else productNotFound"></ng-container>
+<ng-container *ngIf="isLoading === true; then loading else showProduct"></ng-container>
+
+<ng-template #loading>
+</ng-template>
+
+<ng-template #showProduct>
+    <ng-container *ngIf="product;then productFound else productNotFound"></ng-container>
+</ng-template>
+
 <ng-template #productFound>
     <div class="d-flex align-items-center flex-column">
         <div class="product-description">
@@ -28,6 +36,7 @@
         </div>
     </div>
 </ng-template>
+
 <ng-template #productNotFound>
     <div class="alert alert-danger">
         <h5>
@@ -35,3 +44,5 @@
         </h5>
     </div>
 </ng-template>
+
+<ngx-spinner size="medium" [type]="'ball-pulse'"></ngx-spinner>

@@ -2,7 +2,16 @@
     <div class="mb-2">
         <h3>Edytuj produkt</h3>
     </div>
-    <div *ngIf="product;then productFound else productNotFound"></div>
+
+    <ng-container *ngIf="isLoading === true; then loading else showProduct"></ng-container>
+
+    <ng-template #loading>
+    </ng-template>
+
+    <ng-template #showProduct>
+        <ng-container *ngIf="product;then productFound else productNotFound"></ng-container>
+    </ng-template>
+
     <ng-template #productFound>
         <app-product-form 
             [product]="product" 
@@ -19,3 +28,5 @@
         </div>
     </ng-template>
 </div>
+
+<ngx-spinner size="medium" [type]="'ball-pulse'"></ngx-spinner>

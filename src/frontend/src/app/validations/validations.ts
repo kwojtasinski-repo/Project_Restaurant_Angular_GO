@@ -3,7 +3,6 @@ export function getValidationMessage(code: any): string | null {
 }
 
 function mapCodeToMessage(code: any): string | null {
-    console.log(code);
     if (code.key === 'required') {
         return 'Pole jest wymagane';
     } else if (code.key === 'email') {
