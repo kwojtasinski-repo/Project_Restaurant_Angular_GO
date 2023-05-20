@@ -4,6 +4,7 @@ import { AppComponent } from './app.component';
 import { provideMockStore } from '@ngrx/store/testing';
 import { initialState } from './stores/login/login.reducers';
 import { HeaderComponent } from './components/header/header.component';
+import { FooterComponent } from './components/footer/footer.component';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
@@ -13,7 +14,8 @@ describe('AppComponent', () => {
       ],
       declarations: [
         HeaderComponent,
-        AppComponent
+        AppComponent,
+        FooterComponent
       ],
       providers: [
         provideMockStore({ initialState }),

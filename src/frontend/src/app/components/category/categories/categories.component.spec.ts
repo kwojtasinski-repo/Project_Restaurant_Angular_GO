@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CategoriesComponent } from './categories.component';
+import { SearchBarComponent } from '../../search-bar/search-bar.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 describe('CategoriesComponent', () => {
   let component: CategoriesComponent;
@@ -8,7 +11,12 @@ describe('CategoriesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CategoriesComponent ]
+      declarations: [ CategoriesComponent, SearchBarComponent ],
+      imports: [
+        RouterTestingModule,
+        ReactiveFormsModule,
+        FormsModule
+      ]
     })
     .compileComponents();
 

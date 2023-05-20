@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AddCategoryComponent } from './add-category.component';
+import { provideMockStore } from '@ngrx/store/testing';
+import { initialState } from 'src/app/stores/category/category.reducers';
+import { ReactiveFormsModule } from '@angular/forms';
 
 describe('AddCategoryComponent', () => {
   let component: AddCategoryComponent;
@@ -8,7 +11,13 @@ describe('AddCategoryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddCategoryComponent ]
+      declarations: [ AddCategoryComponent ],
+      imports: [
+        ReactiveFormsModule
+      ],
+      providers: [
+        provideMockStore({ initialState })
+      ]
     })
     .compileComponents();
 

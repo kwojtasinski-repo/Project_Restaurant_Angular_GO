@@ -1,6 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MenuComponent } from './menu.component';
+import { initialState } from 'src/app/stores/login/login.reducers';
+import { provideMockStore } from '@ngrx/store/testing';
+import { SearchBarComponent } from '../search-bar/search-bar.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { FormsModule } from '@angular/forms';
 
 describe('MenuComponent', () => {
   let component: MenuComponent;
@@ -8,7 +13,14 @@ describe('MenuComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MenuComponent ]
+      declarations: [ MenuComponent, SearchBarComponent ],
+      imports: [
+        RouterTestingModule,
+        FormsModule
+      ],
+      providers: [
+        provideMockStore({ initialState })
+      ]
     })
     .compileComponents();
 
