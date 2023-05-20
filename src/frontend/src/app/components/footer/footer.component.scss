@@ -6,3 +6,7 @@ footer {
   width: 100%;
   height: $footerSize;
 }
+
+.vertical-center {
+  transform: translate(0%, 50%);
+}

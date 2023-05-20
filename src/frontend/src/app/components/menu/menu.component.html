@@ -11,12 +11,12 @@
             </h3>
         </div>
     </div>
-    <div *ngIf="(user$ | async)?.role === 'admin'" class="d-flex ms-2">
+    <div *ngIf="(user$ | async)?.role === 'admin'" class="d-flex ms-4">
         <button class="btn btn-success" [routerLink]="'/products/add'">
             Dodaj produkt
         </button>
     </div>
-    <div class="p-2 d-flex">
+    <div class="p-4 d-flex">
         <input id="search-bar" placeholder="Wyszukaj produktu" class="form-control" [(ngModel)]="term" (change)="search()" />
     </div>
     <div class="d-flex justify-content-center ms-2">
