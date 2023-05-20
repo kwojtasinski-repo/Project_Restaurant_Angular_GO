@@ -25,7 +25,7 @@ export class CategoryService {
   }
 
   public getAll(): Observable<Category[]> {
-    return of(this.categories.filter(c => c.deleted !== true));
+    return of(this.categories);
   }
 
   public get(id: number): Observable<Category | undefined> {

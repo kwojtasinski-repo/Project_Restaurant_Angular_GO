@@ -1,1 +1,33 @@
-<p>categories works!</p>
+<div class="mt-4">
+    <div class="d-flex ms-4">
+        <button class="btn btn-success" [routerLink]="'/categories/add'">
+            Dodaj kategorię
+        </button>
+    </div>
+    <div class="p-4">
+        <app-search-bar [placeholder]="'Wyszukaj kategorię'" [(term)]="term" (onChange)="search($event)"></app-search-bar>
+    </div>
+    <div class="d-flex justify-content-center ms-2">
+        <div class="d-flex flex-wrap" style="align-items: stretch;">
+            <div *ngFor="let category of categoriesToShow">
+                <div class="mt-2 mb-2 me-2 ms-2">
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ category.name }}</h5>
+                            <div style="height: 37px;">
+                                <span *ngIf="category.deleted" class="bg-warning p-2 mt-4 mb-4">
+                                    Kategoria usunięta
+                                </span>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <a [routerLink]="'/categories/edit/' + category.id" class="ms-2">
+                                    Edytuj kategorię
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
