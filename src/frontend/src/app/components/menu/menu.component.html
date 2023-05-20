@@ -11,14 +11,17 @@
             </h3>
         </div>
     </div>
-    <div *ngIf="(user$ | async)?.role === 'admin'" class="d-flex justify-content-center">
+    <div *ngIf="(user$ | async)?.role === 'admin'" class="d-flex ms-2">
         <button class="btn btn-success" [routerLink]="'/products/add'">
             Dodaj produkt
         </button>
     </div>
+    <div class="p-2 d-flex">
+        <input id="search-bar" placeholder="Wyszukaj produktu" class="form-control" [(ngModel)]="term" (change)="search()" />
+    </div>
     <div class="d-flex justify-content-center ms-2">
         <div class="d-flex flex-wrap" style="align-items: stretch;">
-            <div *ngFor="let product of showProducts() | async">
+            <div *ngFor="let product of productsToShow">
                 <div class="mt-2 mb-2 me-2 ms-2">
                     <div class="card" style="width: 18rem;">
                         <div class="card-body">
