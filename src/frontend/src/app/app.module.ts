@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CategoriesComponent } from './components/category/categories/categories.component';
 import { AddCategoryComponent } from './components/category/add-category/add-category.component';
-import { ViewCategoryComponent } from './components/category/view-category/view-category.component';
 import { AddProductsComponent } from './components/product/add-products/add-products.component';
 import { ViewProductsComponent } from './components/product/view-products/view-products.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -33,13 +32,13 @@ import { ProductFormComponent } from './components/product/product-form/product-
 import { FooterComponent } from './components/footer/footer.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { EditCategoryComponent } from './components/categories/edit-category/edit-category.component';
+import { SearchBarComponent } from './components/search-bar/search-bar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CategoriesComponent,
     AddCategoryComponent,
-    ViewCategoryComponent,
     AddProductsComponent,
     ViewProductsComponent,
     LoginComponent,
@@ -51,6 +50,7 @@ import { EditCategoryComponent } from './components/categories/edit-category/edi
     ProductFormComponent,
     FooterComponent,
     EditCategoryComponent,
+    SearchBarComponent,
   ],
   imports: [
     BrowserModule,

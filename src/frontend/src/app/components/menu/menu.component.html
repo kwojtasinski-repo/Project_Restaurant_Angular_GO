@@ -16,8 +16,8 @@
             Dodaj produkt
         </button>
     </div>
-    <div class="p-4 d-flex">
-        <input id="search-bar" placeholder="Wyszukaj produktu" class="form-control" [(ngModel)]="term" (change)="search()" />
+    <div class="p-4">
+        <app-search-bar [placeholder]="'Wyszukaj produktu'" [(term)]="term" (onChange)="search($event)"></app-search-bar>
     </div>
     <div class="d-flex justify-content-center ms-2">
         <div class="d-flex flex-wrap" style="align-items: stretch;">

@@ -26,7 +26,7 @@ export class MenuComponent implements OnInit {
       });
   }
 
-  public search(): void {
-    this.productsToShow = this.products.filter(p => p.name.toLocaleLowerCase().startsWith(this.term.toLocaleLowerCase()));
+  public search(term: string): void {
+    this.productsToShow = this.products.filter(p => p.name.toLocaleLowerCase().startsWith(term.toLocaleLowerCase()));
   }
 }
