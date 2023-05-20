@@ -1,8 +1,10 @@
+@import "src/styles.scss";
+
 .imgbackground {
     background-repeat: no-repeat;
     background-image: url("../../../assets/background.jpg");
     background-size: cover;
-    height:100vh;
+    height: calc(100vh - $footerSize);
     width: 100%;
     opacity: 45%;
 }
