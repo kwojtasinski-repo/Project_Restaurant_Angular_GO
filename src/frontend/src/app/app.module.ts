@@ -32,6 +32,7 @@ import { EditProductsComponent } from './components/product/edit-products/edit-p
 import { ProductFormComponent } from './components/product/product-form/product-form.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { EditCategoryComponent } from './components/categories/edit-category/edit-category.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     EditProductsComponent,
     ProductFormComponent,
     FooterComponent,
+    EditCategoryComponent,
   ],
   imports: [
     BrowserModule,
