@@ -31,8 +31,11 @@ import { EditProductsComponent } from './components/product/edit-products/edit-p
 import { ProductFormComponent } from './components/product/product-form/product-form.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { EditCategoryComponent } from './components/categories/edit-category/edit-category.component';
+import { EditCategoryComponent } from './components/category/edit-category/edit-category.component';
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
+import { categoryStoreName } from './stores/category/category.store.names';
+import { categoryReducer } from './stores/category/category.reducers';
+import { CategoryEffects } from './stores/category/category.effects';
 
 @NgModule({
   declarations: [
@@ -60,8 +63,8 @@ import { SearchBarComponent } from './components/search-bar/search-bar.component
     AlertModule.forRoot(),
     FormsModule,
     ReactiveFormsModule,
-    StoreModule.forRoot({ [loginStoreName]: loginReducer, [appStoreName]: appReducer, [productStoreName]: productReducer }),
-    EffectsModule.forRoot([ LoginEffects, AppEffects, ProductEffects ]),
+    StoreModule.forRoot({ [loginStoreName]: loginReducer, [appStoreName]: appReducer, [productStoreName]: productReducer, [categoryStoreName]: categoryReducer }),
+    EffectsModule.forRoot([ LoginEffects, AppEffects, ProductEffects, CategoryEffects ]),
     NgxSpinnerModule
   ],
   providers: [],

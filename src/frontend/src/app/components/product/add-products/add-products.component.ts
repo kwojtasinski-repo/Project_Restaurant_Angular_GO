@@ -3,6 +3,7 @@ import { ProductState } from 'src/app/stores/product/product.state';
 import { Store } from "@ngrx/store";
 import { productFormClear, productFormUpdate, productAddRequestBegin, productCancelOperation } from 'src/app/stores/product/product.actions';
 import { Product } from 'src/app/models/product';
+import { getError } from 'src/app/stores/product/product.selectors';
 
 @Component({
   selector: 'app-add-products',
@@ -10,6 +11,8 @@ import { Product } from 'src/app/models/product';
   styleUrls: ['./add-products.component.scss']
 })
 export class AddProductsComponent implements OnDestroy {  
+  public error$ = this.store.select(getError);
+
   constructor(private store: Store<ProductState>) { }
 
   public onProductChange(product: Product): void {

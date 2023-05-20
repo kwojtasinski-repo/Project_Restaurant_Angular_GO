@@ -13,6 +13,11 @@
     </ng-template>
 
     <ng-template #productFound>
+        <div class="mt-2 mb-2" *ngIf="error$ | async">
+            <div class="alert alert-danger">
+                {{ error$ | async }}
+            </div>
+        </div>
         <app-product-form 
             [product]="product" 
             [buttonNames]="['Zatwierdź', 'Anuluj']"

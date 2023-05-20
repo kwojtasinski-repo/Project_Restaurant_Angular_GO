@@ -9,7 +9,7 @@ import { EditProductsComponent } from "./components/product/edit-products/edit-p
 import { ViewProductsComponent } from "./components/product/view-products/view-products.component";
 import { CategoriesComponent } from "./components/category/categories/categories.component";
 import { AddCategoryComponent } from "./components/category/add-category/add-category.component";
-import { EditCategoryComponent } from "./components/categories/edit-category/edit-category.component";
+import { EditCategoryComponent } from "./components/category/edit-category/edit-category.component";
 
 const authGuard = (next: ActivatedRouteSnapshot, _: RouterStateSnapshot) => {
     const authService = inject(AuthService);

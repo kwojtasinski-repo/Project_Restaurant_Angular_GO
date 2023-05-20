@@ -7,6 +7,7 @@ import { ProductService } from 'src/app/services/product.service';
 import { productCancelOperation, productFormClear, productFormUpdate, productUpdateRequestBegin } from 'src/app/stores/product/product.actions';
 import { ProductState } from 'src/app/stores/product/product.state';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { getError } from 'src/app/stores/product/product.selectors';
 
 @Component({
   selector: 'app-edit-products',
@@ -16,6 +17,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class EditProductsComponent implements OnInit {
   public product: Product | undefined;
   public isLoading = true;
+  public error$ = this.store.select(getError);
 
   constructor(private productService: ProductService, private route: ActivatedRoute, private store: Store<ProductState>, private spinnerService: NgxSpinnerService) { }
 

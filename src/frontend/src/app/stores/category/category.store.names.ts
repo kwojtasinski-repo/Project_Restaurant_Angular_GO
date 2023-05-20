@@ -1,1 +1,1 @@
-export const productStoreName = 'Category State';
+export const categoryStoreName = 'Category State';

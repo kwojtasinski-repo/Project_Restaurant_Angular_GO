@@ -4,12 +4,12 @@ import { categoryFormClear, categoryAddRequestBegin, categoryAddRequestSuccess, 
 import { of, catchError, exhaustMap, map } from 'rxjs';
 import { Router } from '@angular/router';
 import { getCategory } from './category.selectors';
-import { ProductState } from './category.state';
+import { CategoryState } from './category.state';
 import { Store } from '@ngrx/store';
 import { CategoryService } from 'src/app/services/category.service';
 
 @Injectable()
-export class ProductEffects {
+export class CategoryEffects {
   categoryAddRequestBegin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(categoryAddRequestBegin),
@@ -62,5 +62,5 @@ export class ProductEffects {
     )
   );
 
-  constructor(private actions$: Actions, private store: Store<ProductState>, private router: Router, private categoryService: CategoryService) {}
+  constructor(private actions$: Actions, private store: Store<CategoryState>, private router: Router, private categoryService: CategoryService) {}
 }

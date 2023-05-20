@@ -1,13 +1,13 @@
 import { createReducer, on } from "@ngrx/store";
-import { ProductState } from "./category.state";
+import { CategoryState } from "./category.state";
 import { categoryAddRequestBegin, categoryAddRequestFailed, categoryFormClear, categoryFormUpdate, categoryUpdateRequestBegin, categoryUpdateRequestFailed } from "./category.actions";
 
-export const initialState: ProductState = {
+export const initialState: CategoryState = {
     category: null,
     error: null
 }
 
-export const productReducer = createReducer(
+export const categoryReducer = createReducer(
     initialState,
     on(categoryFormUpdate, (state, action) => {
         return {

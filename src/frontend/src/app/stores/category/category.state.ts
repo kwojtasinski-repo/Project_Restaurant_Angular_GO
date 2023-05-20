@@ -1,6 +1,6 @@
 import { Category } from "src/app/models/category";
 
-export interface ProductState {
+export interface CategoryState {
   category: Category | null;
   error: string | null;
 }
