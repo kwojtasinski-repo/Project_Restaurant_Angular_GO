@@ -37,7 +37,7 @@
                             </div>
                             <div class="d-flex">
                                 <a class="card-link me-2" [routerLink]="'/products/view/' + product.id">Szczegóły</a>
-                                <a href="#" class="card-link">Dodaj do koszyka</a>
+                                <a href="javascript:void(0)" class="card-link" (click)="addToCart(product)">Dodaj do koszyka</a>
                                 <ng-container *ngIf="(user$ | async)?.role === 'admin'">
                                     <a [routerLink]="'/products/edit/' + product.id" class="ms-2">
                                         Edytuj produkt

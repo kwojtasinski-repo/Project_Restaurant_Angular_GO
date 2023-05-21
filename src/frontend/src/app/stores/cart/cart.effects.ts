@@ -6,6 +6,7 @@ import { Store } from '@ngrx/store';
 import { addProductToCart, addProductToCartFailed, addProductToCartSuccess, fetchCart, fetchCartFailed, fetchCartSuccess, finalizeCart, finalizeCartFailed, finalizeCartSuccess, removeProductFromCart, removeProductFromCartFailed, removeProductFromCartSuccess } from './cart.actions';
 import { CartService } from 'src/app/services/cart.service';
 import { getCart } from './cart.selectors';
+import { OrderService } from 'src/app/services/order.service';
 
 @Injectable()
 export class CartEffects {
@@ -51,6 +52,7 @@ export class CartEffects {
       concatLatestFrom(() => this.store.select(getCart)),
       exhaustMap(([_, cart]) => this.cartService.finalizeCart(cart)
         .pipe(
+          map(() => this.orderService.add(cart)),
           map(() => finalizeCartSuccess()),
           catchError((err) => of(finalizeCartFailed(err)))
         )
@@ -58,5 +60,5 @@ export class CartEffects {
     )
   );
 
-  constructor(private actions$: Actions, private store: Store<CartState>, private cartService: CartService) {}
+  constructor(private actions$: Actions, private store: Store<CartState>, private cartService: CartService, private orderService: OrderService) {}
 }

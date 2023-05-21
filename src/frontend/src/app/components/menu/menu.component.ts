@@ -3,6 +3,9 @@ import { Product } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
 import { take } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
+import { Store } from "@ngrx/store";
+import { CartState } from 'src/app/stores/cart/cart.state';
+import { addProductToCart } from 'src/app/stores/cart/cart.actions';
 
 @Component({
   selector: 'app-menu',
@@ -15,7 +18,7 @@ export class MenuComponent implements OnInit {
   public productsToShow: Product[] = [];
   public term: string = '';
 
-  constructor(private productService: ProductService, private authService: AuthService) { }
+  constructor(private productService: ProductService, private authService: AuthService, private cartStore: Store<CartState>) { }
   
   public ngOnInit(): void {
     this.productService.getAll()
@@ -28,5 +31,9 @@ export class MenuComponent implements OnInit {
 
   public search(term: string): void {
     this.productsToShow = this.products.filter(p => p.name.toLocaleLowerCase().startsWith(term.toLocaleLowerCase()));
+  }
+
+  public addToCart(product: Product): void {
+    this.cartStore.dispatch(addProductToCart({ product }));
   }
 }

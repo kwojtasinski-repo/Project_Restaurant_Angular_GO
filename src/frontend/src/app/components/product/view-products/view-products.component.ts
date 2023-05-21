@@ -5,6 +5,9 @@ import { Product } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthService } from 'src/app/services/auth.service';
+import { Store } from "@ngrx/store";
+import { CartState } from 'src/app/stores/cart/cart.state';
+import { addProductToCart } from 'src/app/stores/cart/cart.actions';
 
 @Component({
   selector: 'app-view-products',
@@ -16,7 +19,8 @@ export class ViewProductsComponent implements OnInit {
   public isLoading = true;
   public user$ = this.authService.getUser();
 
-  constructor(private productService: ProductService, private route: ActivatedRoute, private spinnerService: NgxSpinnerService, private authService: AuthService) { }
+  constructor(private productService: ProductService, private route: ActivatedRoute, private spinnerService: NgxSpinnerService,
+    private authService: AuthService, private cartStore: Store<CartState>) { }
 
   public ngOnInit(): void {
     this.spinnerService.show();
@@ -28,5 +32,9 @@ export class ViewProductsComponent implements OnInit {
         this.isLoading = false;
         this.spinnerService.hide();
       });
+  }
+
+  public addToCart(product: Product): void {
+    this.cartStore.dispatch(addProductToCart({ product }));
   }
 }

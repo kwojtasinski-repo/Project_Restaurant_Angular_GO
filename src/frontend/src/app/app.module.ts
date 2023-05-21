@@ -36,6 +36,9 @@ import { SearchBarComponent } from './components/search-bar/search-bar.component
 import { categoryStoreName } from './stores/category/category.store.names';
 import { categoryReducer } from './stores/category/category.reducers';
 import { CategoryEffects } from './stores/category/category.effects';
+import { CartEffects } from './stores/cart/cart.effects';
+import { cartStoreName } from './stores/cart/cart.store.names';
+import { cartReducer } from './stores/cart/cart.reducers';
 
 @NgModule({
   declarations: [
@@ -63,8 +66,8 @@ import { CategoryEffects } from './stores/category/category.effects';
     AlertModule.forRoot(),
     FormsModule,
     ReactiveFormsModule,
-    StoreModule.forRoot({ [loginStoreName]: loginReducer, [appStoreName]: appReducer, [productStoreName]: productReducer, [categoryStoreName]: categoryReducer }),
-    EffectsModule.forRoot([ LoginEffects, AppEffects, ProductEffects, CategoryEffects ]),
+    StoreModule.forRoot({ [loginStoreName]: loginReducer, [appStoreName]: appReducer, [productStoreName]: productReducer, [categoryStoreName]: categoryReducer, [cartStoreName]: cartReducer }),
+    EffectsModule.forRoot([ LoginEffects, AppEffects, ProductEffects, CategoryEffects, CartEffects ]),
     NgxSpinnerModule
   ],
   providers: [],
