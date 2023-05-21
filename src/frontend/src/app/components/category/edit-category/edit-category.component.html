@@ -9,7 +9,7 @@
     </div>
 
     <ng-container *ngIf="isLoading === true; then loading else showCategory"></ng-container>
-    
+
 </div>
 
 <ng-template #loading>
@@ -54,5 +54,3 @@
         </h5>
     </div>
 </ng-template>
-
-<ngx-spinner size="medium" [type]="'ball-pulse'"></ngx-spinner>

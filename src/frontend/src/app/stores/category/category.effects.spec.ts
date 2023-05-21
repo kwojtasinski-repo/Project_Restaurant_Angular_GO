@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { CategoryEffects } from './category.effects';
 import { initialState } from './category.reducers';
 
-describe('ProductEffects', () => {
+describe('CategoryEffects', () => {
   let actions$: Observable<any>;
   let effects: CategoryEffects;
 

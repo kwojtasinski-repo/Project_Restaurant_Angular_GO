@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CartsComponent } from './carts.component';
+import { provideMockStore } from '@ngrx/store/testing';
+import { initialState } from 'src/app/stores/cart/cart.reducers';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 describe('CartsComponent', () => {
   let component: CartsComponent;
@@ -8,7 +11,13 @@ describe('CartsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CartsComponent ]
+      declarations: [ CartsComponent ],
+      imports: [
+        NgxSpinnerModule
+      ],
+      providers: [
+        provideMockStore({ initialState })
+      ]
     })
     .compileComponents();
 

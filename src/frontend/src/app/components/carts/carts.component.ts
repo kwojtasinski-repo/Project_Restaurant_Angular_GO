@@ -47,6 +47,7 @@ export class CartsComponent implements OnInit, OnDestroy {
 
   public finalizeOrder(): void {
     // need redirect to url with order
+    // think about store will be helpful for loading
     this.cartStore.dispatch(finalizeCart());
   }
 }
