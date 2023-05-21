@@ -18,7 +18,7 @@
         <thead class="table-dark">
             <tr>
                 <th scope="col">
-                    Id
+                    Id produktu
                 </th>
                 <th scope="col">
                     Nazwa
@@ -42,12 +42,23 @@
                 <td>
                     {{ product.price }}
                 </td>
-                <td>
-                    <button class="btn-close" title="Usuń"></button>
+                <td >
+                    <button class="btn btn-primary me-2" [routerLink]="'/products/view/' + product.id">Szczegóły</button>
+                    <button class="btn btn-danger" title="Usuń" (click)="deleteProduct(product)">Usuń</button>
                 </td>
             </tr>
         </tbody>
     </table>
+    <div>
+        <div>
+            Koszt: {{ calculateTotal() }} zł
+        </div>
+        <div>
+            <button class="btn btn-success" (click)="finalizeOrder()">
+                Złóż zamówienie
+            </button>
+        </div>
+    </div>
 </ng-template>
 
 <ng-template #cartWithoutProducts>
