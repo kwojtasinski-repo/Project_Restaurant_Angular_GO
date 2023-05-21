@@ -21,7 +21,7 @@ export class EditCategoryComponent implements OnInit, OnDestroy {
   public categoryForm: FormGroup = new FormGroup({});
   public category: Category | undefined;
   public categoryChanged: boolean = false;
-  public isLoading: boolean = false;
+  public isLoading: boolean = true;
   private categoryFormValueChanged$ = new Subject();
 
   constructor(private store: Store<CategoryState>, private categoryService: CategoryService, private route: ActivatedRoute, private spinnerService: NgxSpinnerService) { }
