@@ -4,6 +4,7 @@ import { take } from 'rxjs';
 import { Product } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-view-products',
@@ -13,8 +14,9 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class ViewProductsComponent implements OnInit {
   public product: Product | undefined;
   public isLoading = true;
+  public user$ = this.authService.getUser();
 
-  constructor(private productService: ProductService, private route: ActivatedRoute, private spinnerService: NgxSpinnerService) { }
+  constructor(private productService: ProductService, private route: ActivatedRoute, private spinnerService: NgxSpinnerService, private authService: AuthService) { }
 
   public ngOnInit(): void {
     this.spinnerService.show();

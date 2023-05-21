@@ -3,6 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ViewProductsComponent } from './view-products.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { initialState } from 'src/app/stores/login/login.reducers';
+import { provideMockStore } from '@ngrx/store/testing';
 
 describe('ViewProductsComponent', () => {
   let component: ViewProductsComponent;
@@ -14,6 +16,9 @@ describe('ViewProductsComponent', () => {
       imports: [
         RouterTestingModule,
         NgxSpinnerModule
+      ],
+      providers: [
+        provideMockStore({ initialState })
       ]
     })
     .compileComponents();
