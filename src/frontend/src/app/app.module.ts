@@ -39,6 +39,7 @@ import { CategoryEffects } from './stores/category/category.effects';
 import { CartEffects } from './stores/cart/cart.effects';
 import { cartStoreName } from './stores/cart/cart.store.names';
 import { cartReducer } from './stores/cart/cart.reducers';
+import { CartsComponent } from './components/carts/carts.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { cartReducer } from './stores/cart/cart.reducers';
     FooterComponent,
     EditCategoryComponent,
     SearchBarComponent,
+    CartsComponent,
   ],
   imports: [
     BrowserModule,

@@ -25,6 +25,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
       {
         name: 'Menu',
         path: 'menu'
+      },
+      {
+        name: 'Koszyk',
+        path: 'cart'
       }
     ]
 
@@ -32,7 +36,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .subscribe(user => {
         if (user?.role === 'admin') {
           this.routerLinks.push({
-            name: 'Category',
+            name: 'Kategorie',
             path: 'categories'
           })
         }

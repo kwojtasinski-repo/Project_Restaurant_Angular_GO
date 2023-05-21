@@ -1,0 +1,61 @@
+<div class="mt-2 mb-2 carts-view">
+    <h3>
+        Koszyk
+    </h3>
+    <div>
+        <ng-container *ngIf="isLoading === true; then loading else cartLoaded"></ng-container>
+    </div>
+</div>
+
+<ng-template #loading></ng-template>
+
+<ng-template #cartLoaded>
+    <ng-container *ngIf="cart.products.length > 0; then cartWithProducts else cartWithoutProducts"></ng-container>    
+</ng-template>
+
+<ng-template #cartWithProducts>
+    <table class="table table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">
+                    Id
+                </th>
+                <th scope="col">
+                    Nazwa
+                </th>
+                <th scope="col">
+                    Koszt [PLN]
+                </th>
+                <th scope="col">
+                    Akcja
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let product of cart.products">
+                <td>
+                    {{ product.id }}
+                </td>
+                <td>
+                    {{ product.name }}
+                </td>
+                <td>
+                    {{ product.price }}
+                </td>
+                <td>
+                    <button class="btn-close" title="Usuń"></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</ng-template>
+
+<ng-template #cartWithoutProducts>
+    <div>
+        <h5>
+            Aktualnie nie masz żadnych przedmiotów w koszyku
+        </h5>
+    </div>
+</ng-template>
+
+<ngx-spinner size="medium" [type]="'ball-pulse'"></ngx-spinner>
