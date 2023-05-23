@@ -42,6 +42,7 @@ import { cartReducer } from './stores/cart/cart.reducers';
 import { CartsComponent } from './components/carts/carts.component';
 import { OrderViewComponent } from './components/orders/order-view/order-view.component';
 import { MoneyPipe } from './pipes/money-pipe';
+import { MyOrdersComponent } from './components/orders/my-orders/my-orders.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { MoneyPipe } from './pipes/money-pipe';
     SearchBarComponent,
     CartsComponent,
     OrderViewComponent,
-    MoneyPipe
+    MoneyPipe,
+    MyOrdersComponent
   ],
   imports: [
     BrowserModule,

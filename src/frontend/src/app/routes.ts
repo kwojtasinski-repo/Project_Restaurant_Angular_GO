@@ -12,6 +12,7 @@ import { AddCategoryComponent } from "./components/category/add-category/add-cat
 import { EditCategoryComponent } from "./components/category/edit-category/edit-category.component";
 import { CartsComponent } from "./components/carts/carts.component";
 import { OrderViewComponent } from "./components/orders/order-view/order-view.component";
+import { MyOrdersComponent } from "./components/orders/my-orders/my-orders.component";
 
 const authGuard = (next: ActivatedRouteSnapshot, _: RouterStateSnapshot) => {
     const authService = inject(AuthService);
@@ -85,6 +86,10 @@ export const customRoutes: Routes = [
             {
                 path: 'orders/view/:id',
                 component: OrderViewComponent
+            },
+            {
+                path: 'orders/my',
+                component: MyOrdersComponent
             },
             ...adminRoutes
         ],

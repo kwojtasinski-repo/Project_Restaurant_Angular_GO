@@ -14,19 +14,24 @@
                     <th>Id produktu</th>
                     <th>Nazwa produktu</th>
                     <th>Koszt [PLN]</th>
-                    <th></th>
+                    <th>Akcja</th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let order of order.orderProducts">
+                <tr *ngFor="let orderProduct of order.orderProducts">
                     <td>
-                        {{ order.productId }}
+                        {{ orderProduct.productId }}
                     </td>
                     <td>
-                        {{ order.name }}
+                        {{ orderProduct.name }}
                     </td>
                     <td>
-                        {{ order.price | money }}
+                        {{ orderProduct.price | money }}
+                    </td>
+                    <td>
+                        <button class="btn btn-link" [routerLink]="'/products/view/' + orderProduct.productId">
+                            Szczegóły
+                        </button>
                     </td>
                 </tr>
             </tbody>

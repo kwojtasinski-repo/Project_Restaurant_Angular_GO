@@ -29,6 +29,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
       {
         name: 'Koszyk',
         path: 'cart'
+      },
+      {
+        name: 'Moje zamówienia',
+        path: 'orders/my'
       }
     ]
 
