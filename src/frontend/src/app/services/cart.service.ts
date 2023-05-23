@@ -27,7 +27,9 @@ export class CartService {
     return of(this.cart);
   }
 
-  public finalizeCart(cart: Cart): Observable<void> {
-    return new Observable((ob) => { ob.next(); ob.complete(); });
+  public finalizeCart(): void {
+    this.cart = {
+      products: []
+    };
   }
 }

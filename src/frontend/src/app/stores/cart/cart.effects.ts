@@ -8,6 +8,7 @@ import { CartService } from 'src/app/services/cart.service';
 import { getCart } from './cart.selectors';
 import { OrderService } from 'src/app/services/order.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class CartEffects {
@@ -66,19 +67,29 @@ export class CartEffects {
     this.actions$.pipe(
       ofType(finalizeCart),
       concatLatestFrom(() => this.store.select(getCart)),
-      exhaustMap(([_, cart]) => this.cartService.finalizeCart(cart)
+      exhaustMap(([_, cart]) => this.orderService.add(cart)
         .pipe(
-          map(() => this.orderService.add(cart)),
-          map(() => finalizeCartSuccess()),
+          map((orderId) => finalizeCartSuccess({ orderId })),
           catchError((err) => of(finalizeCartFailed(err)))
         )
       )
     )
   );
 
+  finalizeCartSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(finalizeCartSuccess),
+      tap((action) => {
+        this.cartService.finalizeCart();
+        this.router.navigate(['/orders/view/' + action.orderId]);
+      })
+    ), { dispatch: false }
+  );
+
   constructor(private actions$: Actions, 
     private store: Store<CartState>, 
     private cartService: CartService, 
     private orderService: OrderService,
-    private spinnerService: NgxSpinnerService) {}
+    private spinnerService: NgxSpinnerService, 
+    private router: Router) {}
 }

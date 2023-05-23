@@ -1,0 +1,34 @@
+<div class="mt-2 order-view">
+    <div>
+        <div>
+            <h5>Numer zamówienia {{ order.orderNumber }}</h5>
+        </div>
+        <div>
+            <h5>Koszt {{ order.price }} zł</h5>
+        </div>
+    </div>
+    <div>
+        <table class="table">
+            <thead class="table-dark">
+                <tr>
+                    <th>Id produktu</th>
+                    <th>Nazwa produktu</th>
+                    <th>Koszt</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let order of order.orderProducts">
+                    <td>
+                        {{ order.productId }}
+                    </td>
+                    <td>
+                        {{ order.name }}
+                    </td>
+                    <td>
+                        {{ order.price }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

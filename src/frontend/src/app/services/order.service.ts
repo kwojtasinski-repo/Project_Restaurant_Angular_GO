@@ -18,9 +18,10 @@ export class OrderService {
     return of(this.orders);
   }
 
-  public add(cart: Cart): Observable<void> {
+  public add(cart: Cart): Observable<number> {
+    const id = this.orders.length > 0 ? this.orders[this.orders.length - 1].id + 1 : 1;
     this.orders.push({
-      id: this.orders.length > 0 ? this.orders[this.orders.length - 1].id + 1 : 1,
+      id: id,
       created: new Date(),
       orderNumber: new Date().toISOString(),
       price: cart.products.reduce((total, product) => total + product.price, 0),
@@ -28,7 +29,7 @@ export class OrderService {
       orderProducts: this.addOrderProducts(cart.products),
       userId: 0
     });
-    return new Observable((ob) => { ob.next(); ob.complete(); });
+    return new Observable((ob) => { ob.next(id); ob.complete(); });
   }
 
   private addOrderProducts(products: Product[]): OrderProduct[] {

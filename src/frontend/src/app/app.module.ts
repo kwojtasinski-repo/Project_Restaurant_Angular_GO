@@ -40,6 +40,7 @@ import { CartEffects } from './stores/cart/cart.effects';
 import { cartStoreName } from './stores/cart/cart.store.names';
 import { cartReducer } from './stores/cart/cart.reducers';
 import { CartsComponent } from './components/carts/carts.component';
+import { OrderViewComponent } from './components/orders/order-view/order-view.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import { CartsComponent } from './components/carts/carts.component';
     EditCategoryComponent,
     SearchBarComponent,
     CartsComponent,
+    OrderViewComponent,
   ],
   imports: [
     BrowserModule,
