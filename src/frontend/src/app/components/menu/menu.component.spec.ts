@@ -6,6 +6,7 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
+import { MoneyPipe } from 'src/app/pipes/money-pipe';
 
 describe('MenuComponent', () => {
   let component: MenuComponent;
@@ -13,7 +14,11 @@ describe('MenuComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MenuComponent, SearchBarComponent ],
+      declarations: [ 
+        MenuComponent, 
+        SearchBarComponent, 
+        MoneyPipe 
+      ],
       imports: [
         RouterTestingModule,
         FormsModule

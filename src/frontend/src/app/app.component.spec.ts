@@ -5,12 +5,14 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { initialState } from './stores/login/login.reducers';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule
+        RouterTestingModule,
+        NgxSpinnerModule
       ],
       declarations: [
         HeaderComponent,

@@ -11,7 +11,9 @@ describe('CartsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CartsComponent ],
+      declarations: [ 
+        CartsComponent 
+      ],
       imports: [
         NgxSpinnerModule
       ],
