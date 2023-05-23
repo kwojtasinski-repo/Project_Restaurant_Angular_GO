@@ -40,7 +40,7 @@
                     {{ product.name }}
                 </td>
                 <td>
-                    {{ product.price }}
+                    {{ product.price | money }}
                 </td>
                 <td >
                     <button class="btn btn-primary me-2" [routerLink]="'/products/view/' + product.id">Szczegóły</button>
@@ -51,7 +51,7 @@
     </table>
     <div>
         <div>
-            Koszt: {{ calculateTotal((cart$ | async)?.products) }} zł
+            Koszt: {{ calculateTotal((cart$ | async)?.products) | money }} zł
         </div>
         <div>
             <button class="btn btn-success" (click)="finalizeOrder()">

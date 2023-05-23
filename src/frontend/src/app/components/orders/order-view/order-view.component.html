@@ -4,7 +4,7 @@
             <h5>Numer zamówienia {{ order.orderNumber }}</h5>
         </div>
         <div>
-            <h5>Koszt {{ order.price }} zł</h5>
+            <h5>Koszt {{ order.price | money }} zł</h5>
         </div>
     </div>
     <div>
@@ -13,7 +13,8 @@
                 <tr>
                     <th>Id produktu</th>
                     <th>Nazwa produktu</th>
-                    <th>Koszt</th>
+                    <th>Koszt [PLN]</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -25,7 +26,7 @@
                         {{ order.name }}
                     </td>
                     <td>
-                        {{ order.price }}
+                        {{ order.price | money }}
                     </td>
                 </tr>
             </tbody>
