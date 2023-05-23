@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
-import { of, catchError, exhaustMap, map, mergeMap } from 'rxjs';
+import { of, catchError, exhaustMap, map, mergeMap, tap } from 'rxjs';
 import { CartState } from './cart.state';
 import { Store } from '@ngrx/store';
 import { addProductToCart, addProductToCartFailed, addProductToCartSuccess, fetchCart, fetchCartFailed, fetchCartSuccess, finalizeCart, finalizeCartFailed, finalizeCartSuccess, removeProductFromCart, removeProductFromCartFailed, removeProductFromCartSuccess } from './cart.actions';
 import { CartService } from 'src/app/services/cart.service';
 import { getCart } from './cart.selectors';
 import { OrderService } from 'src/app/services/order.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Injectable()
 export class CartEffects {
@@ -15,11 +16,26 @@ export class CartEffects {
       ofType(fetchCart),
       mergeMap(() => this.cartService.getCart()
         .pipe(
+          tap(() => this.spinnerService.show()),
           map((cart) => fetchCartSuccess({ cart })),
           catchError((err) => of(fetchCartFailed(err)))
         )
       )
     )
+  );
+
+  fetchCartFailed$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(fetchCartFailed),
+        tap(() => this.spinnerService.hide())
+    ), {dispatch: false}
+  );
+
+  fetchCartSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(fetchCartSuccess),
+        tap(() => this.spinnerService.hide())
+    ), {dispatch: false}
   );
 
   addProductToCart$ = createEffect(() =>
@@ -60,5 +76,9 @@ export class CartEffects {
     )
   );
 
-  constructor(private actions$: Actions, private store: Store<CartState>, private cartService: CartService, private orderService: OrderService) {}
+  constructor(private actions$: Actions, 
+    private store: Store<CartState>, 
+    private cartService: CartService, 
+    private orderService: OrderService,
+    private spinnerService: NgxSpinnerService) {}
 }

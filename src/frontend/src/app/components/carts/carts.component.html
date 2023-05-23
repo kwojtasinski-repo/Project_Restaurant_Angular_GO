@@ -3,14 +3,14 @@
         Koszyk
     </h3>
     <div>
-        <ng-container *ngIf="isLoading === true; then loading else cartLoaded"></ng-container>
+        <ng-container *ngIf="(fetchState$ | async) === 'loading'; then loading else cartLoaded"></ng-container>
     </div>
 </div>
 
 <ng-template #loading></ng-template>
 
 <ng-template #cartLoaded>
-    <ng-container *ngIf="cart.products.length > 0; then cartWithProducts else cartWithoutProducts"></ng-container>    
+    <ng-container *ngIf="(cart$ | async)?.products!.length > 0; then cartWithProducts else cartWithoutProducts"></ng-container>    
 </ng-template>
 
 <ng-template #cartWithProducts>
@@ -32,7 +32,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let product of cart.products">
+            <tr *ngFor="let product of (cart$ | async)?.products">
                 <td>
                     {{ product.id }}
                 </td>
@@ -51,7 +51,7 @@
     </table>
     <div>
         <div>
-            Koszt: {{ calculateTotal() }} zł
+            Koszt: {{ calculateTotal((cart$ | async)?.products) }} zł
         </div>
         <div>
             <button class="btn btn-success" (click)="finalizeOrder()">
