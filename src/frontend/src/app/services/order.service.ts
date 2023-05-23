@@ -18,6 +18,10 @@ export class OrderService {
     return of(this.orders);
   }
 
+  public get(id: number): Observable<Order | undefined> {
+    return of(this.orders.find(o => o.id === id));
+  }
+
   public add(cart: Cart): Observable<number> {
     const id = this.orders.length > 0 ? this.orders[this.orders.length - 1].id + 1 : 1;
     this.orders.push({

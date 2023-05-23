@@ -43,6 +43,9 @@ import { CartsComponent } from './components/carts/carts.component';
 import { OrderViewComponent } from './components/orders/order-view/order-view.component';
 import { MoneyPipe } from './pipes/money-pipe';
 import { MyOrdersComponent } from './components/orders/my-orders/my-orders.component';
+import { orderStoreName } from './stores/order/order.store.names';
+import { orderReducer } from './stores/order/order.reducers';
+import { OrderEffects } from './stores/order/order.effects';
 
 @NgModule({
   declarations: [
@@ -74,8 +77,22 @@ import { MyOrdersComponent } from './components/orders/my-orders/my-orders.compo
     AlertModule.forRoot(),
     FormsModule,
     ReactiveFormsModule,
-    StoreModule.forRoot({ [loginStoreName]: loginReducer, [appStoreName]: appReducer, [productStoreName]: productReducer, [categoryStoreName]: categoryReducer, [cartStoreName]: cartReducer }),
-    EffectsModule.forRoot([ LoginEffects, AppEffects, ProductEffects, CategoryEffects, CartEffects ]),
+    StoreModule.forRoot({ 
+      [loginStoreName]: loginReducer, 
+      [appStoreName]: appReducer, 
+      [productStoreName]: productReducer, 
+      [categoryStoreName]: categoryReducer, 
+      [cartStoreName]: cartReducer, 
+      [orderStoreName]: orderReducer
+    }),
+    EffectsModule.forRoot([ 
+      LoginEffects, 
+      AppEffects, 
+      ProductEffects, 
+      CategoryEffects, 
+      CartEffects, 
+      OrderEffects 
+    ]),
     NgxSpinnerModule
   ],
   providers: [],
