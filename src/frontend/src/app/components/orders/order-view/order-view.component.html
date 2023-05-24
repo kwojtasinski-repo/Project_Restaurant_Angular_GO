@@ -1,10 +1,23 @@
 <div class="mt-2 order-view">
+    <ng-container *ngIf="(fetchState$ | async) === 'loading'; then loading else showOrder"></ng-container>
+</div>
+
+<ng-template #loading>
+</ng-template>
+
+<ng-template #showOrder>
+    <ng-container *ngIf="(order$ | async);then orderFound else orderNotFound"></ng-container>
+</ng-template>
+
+<ng-template #loading></ng-template>
+
+<ng-template #orderFound>
     <div>
         <div>
-            <h5>Numer zamówienia {{ order.orderNumber }}</h5>
+            <h5>Numer zamówienia {{ (order$ | async)?.orderNumber }}</h5>
         </div>
         <div>
-            <h5>Koszt {{ order.price | money }} zł</h5>
+            <h5>Koszt {{ (order$ | async)?.price | money }} zł</h5>
         </div>
     </div>
     <div>
@@ -18,7 +31,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let orderProduct of order.orderProducts">
+                <tr *ngFor="let orderProduct of (order$ | async)?.orderProducts">
                     <td>
                         {{ orderProduct.productId }}
                     </td>
@@ -37,4 +50,12 @@
             </tbody>
         </table>
     </div>
-</div>
+</ng-template>
+
+<ng-template #orderNotFound>
+    <div class="alert alert-danger">
+        <h5>
+            Zamówienie nie zostało znalezione
+        </h5>
+    </div>
+</ng-template>

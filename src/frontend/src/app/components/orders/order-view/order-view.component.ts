@@ -1,32 +1,25 @@
-import { Component } from '@angular/core';
-import { Order } from 'src/app/models/order';
+import { Component, OnInit } from '@angular/core';
+import { Store } from "@ngrx/store";
+import { OrderState } from 'src/app/stores/order/order.state';
+import { fetchOrder } from 'src/app/stores/order/order.actions';
+import { getOrder } from 'src/app/stores/order/order.selectors';
+import { ActivatedRoute } from '@angular/router';
+import { getFetchState } from 'src/app/stores/order/order.selectors';
 
 @Component({
   selector: 'app-order-view',
   templateUrl: './order-view.component.html',
-  styleUrls: ['./order-view.component.scss']
+  styleUrls: ['./order-view.component.scss'],
 })
-export class OrderViewComponent {
-  public order: Order = { 
-    id: 1,
-    orderNumber: new Date().toString(),
-    price: 100.50,
-    userId: 1,
-    created: new Date(),
-    orderProducts: [
-      {
-        id: 1,
-        name: 'abc#1',
-        price: 50.25,
-        productId: 1
-      },
-      {
-        id: 2,
-        name: 'abc#1',
-        price: 50.25,
-        productId: 1
-      },
-    ],
-    modified: new Date()
-  };
+export class OrderViewComponent implements OnInit {
+  public order$ = this.store.select(getOrder);
+  public fetchState$ = this.store.select(getFetchState);
+  private id = 0;
+
+  constructor(private store: Store<OrderState>, private route: ActivatedRoute) { }
+
+  public ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id') ? new Number(this.route.snapshot.paramMap.get('id')).valueOf() : 0;
+    this.store.dispatch(fetchOrder({ id: this.id }));
+  }
 }

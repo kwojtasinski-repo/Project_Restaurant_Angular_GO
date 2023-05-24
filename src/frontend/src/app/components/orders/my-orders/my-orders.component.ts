@@ -1,44 +1,34 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { take } from 'rxjs';
 import { Order } from 'src/app/models/order';
+import { OrderService } from 'src/app/services/order.service';
 
 @Component({
   selector: 'app-my-orders',
   templateUrl: './my-orders.component.html',
   styleUrls: ['./my-orders.component.scss']
 })
-export class MyOrdersComponent {
-  public orders: Order[] = [
-    { 
-      id: 1,
-      orderNumber: new Date().toString()+1,
-      price: 100.50,
-      userId: 1,
-      created: new Date(),
-      orderProducts: [],
-      modified: new Date()
-    },
-    { 
-      id: 2,
-      orderNumber: new Date().toString()+2,
-      price: 100.50,
-      userId: 1,
-      created: new Date(),
-      orderProducts: [],
-      modified: new Date()
-    },
-    { 
-      id: 3,
-      orderNumber: new Date().toString()+3,
-      price: 100.50,
-      userId: 1,
-      created: new Date(),
-      orderProducts: [],
-      modified: new Date()
-    }
-  ];  
-  public ordersToShow: Order[] = this.orders;
+export class MyOrdersComponent implements OnInit {
+  public orders: Order[] = [];
+  public isLoading: boolean = true;
+  public ordersToShow: Order[] = [];
   public term: string = '';
   
+  constructor(private orderService: OrderService, private spinnerService: NgxSpinnerService) { }
+  
+  public ngOnInit(): void {
+    this.spinnerService.show();
+    this.orderService.getMyOrders()
+      .pipe(take(1))
+      .subscribe(o => {
+        this.isLoading = false;
+        this.orders = o;
+        this.ordersToShow = o;
+        this.spinnerService.hide();
+      });
+  }
+
   public search(term: string): void {
     this.ordersToShow = this.orders.filter(p => p.orderNumber.toLocaleLowerCase().startsWith(term.toLocaleLowerCase()));
   }
