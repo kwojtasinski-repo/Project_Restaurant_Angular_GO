@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 
 import { CartEffects } from './cart.effects';
 import { initialState } from './cart.reducers';
+import { initialState as initialLoginState } from '../login/login.reducers';
+import { getUser } from '../login/login.selectors';
 
 describe('CartEffects', () => {
   let actions$: Observable<any>;
@@ -15,7 +17,20 @@ describe('CartEffects', () => {
       providers: [
         CartEffects,
         provideMockActions(() => actions$),
-        provideMockStore({ initialState })
+        provideMockStore({ initialState }),
+        provideMockStore({ initialState: initialLoginState, 
+          selectors: [
+            {
+              selector: getUser,
+              value: {
+                id: 1,
+                email: 'string',
+                role: 'test',
+                deleted: null
+              }
+            }
+          ] 
+        })
       ]
     });
 
