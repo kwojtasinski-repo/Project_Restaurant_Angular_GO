@@ -4,6 +4,8 @@ import { getCurrentUrl, showHeader } from 'src/app/stores/app/app.selectors';
 import { AppState } from 'src/app/stores/app/app.state';
 import { getUser } from 'src/app/stores/login/login.selectors';
 import { Subscription } from 'rxjs';
+import { LoginState } from 'src/app/stores/login/login.state';
+import { logoutRequest } from 'src/app/stores/login/login.actions';
 
 @Component({
   selector: 'app-header',
@@ -12,13 +14,13 @@ import { Subscription } from 'rxjs';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   public routerLinks: any[] = [];
-  public currentUrl$ = this.store.select(getCurrentUrl);
-  public showHeader$ = this.store.select(showHeader);
-  public user$ = this.store.select(getUser);
+  public currentUrl$ = this.appStore.select(getCurrentUrl);
+  public showHeader$ = this.appStore.select(showHeader);
+  public user$ = this.loginStore.select(getUser);
   public isCollapsed = true;
   private userSubscription: Subscription = new Subscription();
 
-  constructor(private store: Store<AppState>) { }
+  constructor(private appStore: Store<AppState>, private loginStore: Store<LoginState>) { }
   
   public ngOnInit(): void {
     this.routerLinks = [
@@ -57,5 +59,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
 
     return url.substring(1);
+  }
+
+  public logout(): void {
+    this.loginStore.dispatch(logoutRequest());
   }
 }

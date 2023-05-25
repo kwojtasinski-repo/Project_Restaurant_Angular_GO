@@ -2,7 +2,7 @@ import { inject } from "@angular/core";
 import { LoginComponent } from "./components/login/login.component";
 import { MenuComponent } from "./components/menu/menu.component";
 import { ActivatedRouteSnapshot, RouterStateSnapshot, Routes, createUrlTreeFromSnapshot } from "@angular/router";
-import { AuthService } from "./services/auth.service";
+import { AuthStateService } from "./services/auth-state.service";
 import { map } from 'rxjs';
 import { AddProductsComponent } from "./components/product/add-products/add-products.component";
 import { EditProductsComponent } from "./components/product/edit-products/edit-products.component";
@@ -13,25 +13,34 @@ import { EditCategoryComponent } from "./components/category/edit-category/edit-
 import { CartsComponent } from "./components/carts/carts.component";
 import { OrderViewComponent } from "./components/orders/order-view/order-view.component";
 import { MyOrdersComponent } from "./components/orders/my-orders/my-orders.component";
+import { LoginState } from "./stores/login/login.state";
+import { Store } from '@ngrx/store';
+import { initializeLogin } from "./stores/login/login.actions";
 
-const authGuard = (next: ActivatedRouteSnapshot, _: RouterStateSnapshot) => {
-    const authService = inject(AuthService);
-
+const authGuard = (next: ActivatedRouteSnapshot, routerStateSnapshot: RouterStateSnapshot) => {
+    const authService = inject(AuthStateService);
+    const store = inject(Store<LoginState>);
     return authService.isAuthenticated().pipe(
-        map((authenticated) => authenticated ? true : createUrlTreeFromSnapshot(next, ['/login']))
+        map((authenticated) => { 
+            if (authenticated) { 
+                return true;
+            } else {
+                store.dispatch(initializeLogin({ path: routerStateSnapshot.url }));
+                return createUrlTreeFromSnapshot(next, ['/login']);
+            }
+        })
     );
 };
 
 const adminGuard = (next: ActivatedRouteSnapshot, _: RouterStateSnapshot) => {
-    const authService = inject(AuthService);
-
+    const authService = inject(AuthStateService);
     return authService.getUser().pipe(
         map((user) => user?.role === 'admin' ? true : createUrlTreeFromSnapshot(next, ['/menu']))
     );
 };
 
 const authorizedGuard = (next: ActivatedRouteSnapshot, _: RouterStateSnapshot) => {
-    const authService = inject(AuthService);
+    const authService = inject(AuthStateService);
 
     return authService.isAuthenticated().pipe(
         map((authenticated) => authenticated ? createUrlTreeFromSnapshot(next, ['/menu']) : true)
@@ -91,12 +100,16 @@ export const customRoutes: Routes = [
                 path: 'orders/my',
                 component: MyOrdersComponent
             },
-            ...adminRoutes
-        ],
+            ...adminRoutes,
+        ]
     },
     {
         path: 'login',
         component: LoginComponent,
         canActivate: [authorizedGuard]
+    },
+    {
+        path: '**',
+        redirectTo: 'menu' // think if page not found is needed
     },
 ]

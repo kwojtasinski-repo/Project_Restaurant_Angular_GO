@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Product } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
 import { take } from 'rxjs';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthStateService } from 'src/app/services/auth-state.service';
 import { Store } from "@ngrx/store";
 import { CartState } from 'src/app/stores/cart/cart.state';
 import { addProductToCart } from 'src/app/stores/cart/cart.actions';
@@ -18,7 +18,7 @@ export class MenuComponent implements OnInit {
   public productsToShow: Product[] = [];
   public term: string = '';
 
-  constructor(private productService: ProductService, private authService: AuthService, private cartStore: Store<CartState>) { }
+  constructor(private productService: ProductService, private authService: AuthStateService, private cartStore: Store<CartState>) { }
   
   public ngOnInit(): void {
     this.productService.getAll()

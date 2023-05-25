@@ -4,7 +4,7 @@ import { take } from 'rxjs';
 import { Product } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthStateService } from 'src/app/services/auth-state.service';
 import { Store } from "@ngrx/store";
 import { CartState } from 'src/app/stores/cart/cart.state';
 import { addProductToCart } from 'src/app/stores/cart/cart.actions';
@@ -20,7 +20,7 @@ export class ViewProductsComponent implements OnInit {
   public user$ = this.authService.getUser();
 
   constructor(private productService: ProductService, private route: ActivatedRoute, private spinnerService: NgxSpinnerService,
-    private authService: AuthService, private cartStore: Store<CartState>) { }
+    private authService: AuthStateService, private cartStore: Store<CartState>) { }
 
   public ngOnInit(): void {
     this.spinnerService.show();

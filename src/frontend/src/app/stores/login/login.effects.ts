@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
-import { loginRequest, loginRequestFailed, loginRequestSuccess, loginSuccess } from './login.actions';
-import { catchError, mergeMap, of, tap } from 'rxjs';
+import { loginRequest, loginRequestFailed, loginRequestSuccess, loginSuccess, logoutRequest, 
+  logoutRequestFailed, logoutRequestSuccess } from './login.actions';
+import { catchError, exhaustMap, mergeMap, of, tap, map } from 'rxjs';
 import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { LoginState } from './login.state';
 import { getLoginPath, selectLoginState } from './login.selectors';
+import { AuthenticationService } from 'src/app/services/authenticationservice';
 
 @Injectable()
 export class LoginEffects {
@@ -13,21 +15,17 @@ export class LoginEffects {
     this.actions$.pipe(
       ofType(loginRequest),
       concatLatestFrom(() => this.store.select(selectLoginState)),
-      mergeMap(([_, state]) => {
-        if (state.credentials.email.length == 0 || state.credentials.password.length == 0) {
+      exhaustMap(([_, state]) => {
+        if (state.credentials.email.length === 0 || state.credentials.password.length === 0) {
           return of(loginRequestFailed({ error: 'invalid credentials' }));
         }
-        return of(loginRequestSuccess({ user: {
-            id: 1,
-            email: 'testowy@test.com',
-            role: 'admin',
-            deleted: null
-          }})
-        ).pipe(
+
+        return this.authenticationService.login().pipe(
+          map(user => loginRequestSuccess({ user })),
           catchError(
             (err) => of(loginRequestFailed({ error: err.message }))
           )
-        )
+        );
       })
     )
   )
@@ -47,5 +45,27 @@ export class LoginEffects {
     ), { dispatch: false }
   )
 
-  constructor(private actions$: Actions, private router: Router, private store: Store<LoginState>) {}
+  logoutRequest$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(logoutRequest),
+      exhaustMap(() => this.authenticationService.logout().pipe(
+        map(() => logoutRequestSuccess()),
+        catchError(
+          (err) => of(logoutRequestFailed({ error: err.message }))
+        ))
+      )
+    )
+  );
+
+  logoutRequestSuccess$ = createEffect(() => 
+    this.actions$.pipe(
+      ofType(logoutRequestSuccess),
+      tap(() => this.router.navigate(['/login']))
+    ), { dispatch: false }
+  );
+
+  constructor(private actions$: Actions, 
+    private router: Router, 
+    private store: Store<LoginState>, 
+    private authenticationService: AuthenticationService) {}
 }

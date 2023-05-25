@@ -13,7 +13,13 @@
                 <ng-container *ngIf="(user$ | async)">
                     {{ (user$ | async)?.email }}
                     <span class="badge text-bg-danger ms-2 span-info" *ngIf="(user$ | async)?.deleted">Konto usunięte</span>
+                    
                 </ng-container>
+            </div>
+            <div *ngIf="(user$ | async)" class="ms-2 nav-item">
+                <button class="btn btn-link nav-link text-white" (click)="logout()">
+                    Wyloguj
+                </button>
             </div>
         </div>
     </div>

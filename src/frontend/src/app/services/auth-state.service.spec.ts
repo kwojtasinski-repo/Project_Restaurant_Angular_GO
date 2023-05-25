@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockStore } from '@ngrx/store/testing';
 
-import { AuthService } from './auth.service';
+import { AuthStateService } from './auth-state.service';
 import { initialState } from '../stores/login/login.reducers';
 
-describe('AuthService', () => {
-  let service: AuthService;
+describe('AuthStateService', () => {
+  let service: AuthStateService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -13,7 +13,7 @@ describe('AuthService', () => {
         provideMockStore({ initialState })
       ]
     });
-    service = TestBed.inject(AuthService);
+    service = TestBed.inject(AuthStateService);
   });
 
   it('should be created', () => {
