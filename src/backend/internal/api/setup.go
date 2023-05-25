@@ -18,6 +18,7 @@ func SetupApi(config config.Config) *gin.Engine {
 	router := gin.Default()
 	gin.SetMode(os.Getenv(GinMode))
 	configOptions(config)
+	setupCors(router)
 	log.Println("Setup Endpoints")
 	group := router.Group("/api")
 	group.Use(AuthMiddleware())
@@ -57,4 +58,9 @@ func addHealthCheck(router *gin.Engine) {
 
 func healthCheck(context *gin.Context) {
 	context.IndentedJSON(http.StatusOK, "Welcome to Restaurant API!")
+}
+
+func setupCors(router *gin.Engine) {
+	log.Println("Setup Cors")
+	router.Use(CORSMiddleware(DefaultCorsConfig()))
 }

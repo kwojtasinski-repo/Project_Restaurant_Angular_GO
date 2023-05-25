@@ -46,6 +46,7 @@ import { MyOrdersComponent } from './components/orders/my-orders/my-orders.compo
 import { orderStoreName } from './stores/order/order.store.names';
 import { orderReducer } from './stores/order/order.reducers';
 import { OrderEffects } from './stores/order/order.effects';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -93,7 +94,8 @@ import { OrderEffects } from './stores/order/order.effects';
       CartEffects, 
       OrderEffects 
     ]),
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
