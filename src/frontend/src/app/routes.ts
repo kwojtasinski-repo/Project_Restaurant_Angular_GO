@@ -18,6 +18,10 @@ import { Store } from '@ngrx/store';
 import { initializeLogin } from "./stores/login/login.actions";
 
 const authGuard = (next: ActivatedRouteSnapshot, routerStateSnapshot: RouterStateSnapshot) => {
+    if (routerStateSnapshot.url === '/') {
+        return createUrlTreeFromSnapshot(next, ['/menu']);
+    }
+
     const authService = inject(AuthStateService);
     const store = inject(Store<LoginState>);
     return authService.isAuthenticated().pipe(

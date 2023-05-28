@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, catchError, map, of, take } from 'rxjs';
 import { User } from '../models/user';
 import { HttpClient } from '@angular/common/http';
+import { Credentials } from '../models/credentials';
 
 @Injectable({
   providedIn: 'root'
@@ -11,20 +12,14 @@ export class AuthenticationService {
 
   constructor(private httpClient: HttpClient) { }
 
-  public login(): Observable<User> {
+  public login(credentials: Credentials): Observable<User> {
     debugger
-    this.httpClient.post(`${this.backendUrl}/api/sign-in`, {
-      email: '',
-      password: ''
-    }).subscribe();
-
-    return of({
-        id: 1,
-        email: 'testowy@test.com',
-        role: 'admin',
-        deleted: null
-      }
-    );
+    this.httpClient.post(`${this.backendUrl}/api/sign-in`, credentials, { withCredentials: true })
+      .pipe(take(1))
+      .subscribe(() => {
+        debugger;
+      });
+    return this.httpClient.post<User>(`${this.backendUrl}/api/sign-in`, credentials);
   }
 
   public logout(): Observable<void> {

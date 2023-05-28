@@ -62,5 +62,11 @@ func healthCheck(context *gin.Context) {
 
 func setupCors(router *gin.Engine) {
 	log.Println("Setup Cors")
-	router.Use(CORSMiddleware(DefaultCorsConfig()))
+	corsConfig := CorsConfig{
+		AllowOrigins:     []string{"http://localhost:4200"},
+		AllowHeaders:     []string{"Authorization", "Content-Type", "Cookie"},
+		AllowMethods:     []string{"GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"},
+		AllowCredentials: true,
+	}
+	router.Use(CORSMiddleware(corsConfig))
 }

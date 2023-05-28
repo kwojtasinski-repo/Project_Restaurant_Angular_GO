@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { LoginState } from './login.state';
 import { getLoginPath, selectLoginState } from './login.selectors';
-import { AuthenticationService } from 'src/app/services/authenticationservice';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Injectable()
 export class LoginEffects {
@@ -20,7 +20,7 @@ export class LoginEffects {
           return of(loginRequestFailed({ error: 'invalid credentials' }));
         }
 
-        return this.authenticationService.login().pipe(
+        return this.authenticationService.login(state.credentials).pipe(
           map(user => loginRequestSuccess({ user })),
           catchError(
             (err) => of(loginRequestFailed({ error: err.message }))
