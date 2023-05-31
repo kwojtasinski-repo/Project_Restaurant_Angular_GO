@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, catchError, map, of, take } from 'rxjs';
+import { Observable, catchError, concatMap, exhaustMap, from, map, of, take } from 'rxjs';
 import { User } from '../models/user';
 import { HttpClient } from '@angular/common/http';
 import { Credentials } from '../models/credentials';
@@ -13,13 +13,10 @@ export class AuthenticationService {
   constructor(private httpClient: HttpClient) { }
 
   public login(credentials: Credentials): Observable<User> {
-    debugger
-    this.httpClient.post(`${this.backendUrl}/api/sign-in`, credentials, { withCredentials: true })
-      .pipe(take(1))
-      .subscribe(() => {
-        debugger;
-      });
-    return this.httpClient.post<User>(`${this.backendUrl}/api/sign-in`, credentials);
+    return this.httpClient.post<void>(`${this.backendUrl}/api/sign-in`, credentials, { withCredentials: true })
+      .pipe(
+        concatMap(() => this.httpClient.get<User>(`${this.backendUrl}/api/users/me`, { withCredentials: true }))
+      );
   }
 
   public logout(): Observable<void> {
