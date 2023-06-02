@@ -1,6 +1,7 @@
 import { createReducer, on } from "@ngrx/store";
-import { LoginState } from "./login.state";
-import { initializeLogin, loginFormUpdate, loginRequestFailed, loginRequestSuccess, 
+import { LoginState, RequestState } from "./login.state";
+import { initializeLogin, loginFormUpdate, loginRequest, loginRequestFailed, loginRequestSuccess, 
+    logoutRequest, 
     logoutRequestFailed, logoutRequestSuccess } from "./login.actions";
 
 export const initialState: LoginState = {
@@ -11,7 +12,9 @@ export const initialState: LoginState = {
         email: '',
         password: ''
     },
-    path: 'menu'
+    path: 'menu',
+    loginRequestState: RequestState.init,
+    logoutRequestState: RequestState.init
 }
 
 export const loginReducer = createReducer(
@@ -19,13 +22,22 @@ export const loginReducer = createReducer(
     on(initializeLogin, (state, action) => {
         return {
             ...state,
-            path: action.path === '' ? 'menu' : action.path
+            path: action.path === '' ? 'menu' : action.path,
+            loginRequestState: RequestState.init,
+            logoutRequestState: RequestState.init
         }
     }),
     on(loginFormUpdate, (state, action) => {
         return {
             ...state,
             credentials: action.credentials
+        }
+    }),
+    on(loginRequest, (state, _) => {
+        return {
+            ...state,
+            error: null,
+            loginRequestState: RequestState.loading
         }
     }),
     on(loginRequestSuccess, (state, action) => {
@@ -37,7 +49,8 @@ export const loginReducer = createReducer(
             credentials: {
                 email: '',
                 password: ''
-            }
+            },
+            loginRequestState: RequestState.success
         }
     }),
     on(loginRequestFailed, (state, action) => {
@@ -49,7 +62,14 @@ export const loginReducer = createReducer(
             credentials: {
                 email: '',
                 password: ''
-            }
+            },
+            loginRequestState: RequestState.failed
+        }
+    }),
+    on(logoutRequest, (state, _) => {
+        return {
+            ...state,
+            logoutRequestState: RequestState.loading
         }
     }),
     on(logoutRequestSuccess, (state, _) => {
@@ -58,12 +78,14 @@ export const loginReducer = createReducer(
             user: null,
             error: null,
             authenticated: false,
+            logoutRequestState: RequestState.success
         }
     }),
     on(logoutRequestFailed, (state, action) => {
         return {
             ...state,
             error: action.error,
+            logoutRequestState: RequestState.failed
         }
     }),
 );

@@ -6,5 +6,11 @@ export interface LoginState {
   authenticated: boolean;
   error: string | null;
   credentials: Credentials,
-  path: string
+  path: string,
+  loginRequestState: RequestState,
+  logoutRequestState: RequestState
+}
+
+export enum RequestState {
+  init = 'init', loading = 'loading', success = 'success', failed = 'failed'
 }

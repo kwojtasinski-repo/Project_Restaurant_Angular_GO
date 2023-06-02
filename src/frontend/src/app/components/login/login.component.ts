@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Actions, ofType } from '@ngrx/effects';
 import { Store } from "@ngrx/store";
+import { Subscription } from 'rxjs';
+import { loginRequestFailed } from 'src/app/stores/login/login.actions';
 import { loginRequest } from 'src/app/stores/login/login.actions';
-import { getError } from 'src/app/stores/login/login.selectors';
+import { getError, loginRequestState } from 'src/app/stores/login/login.selectors';
 import { LoginState } from 'src/app/stores/login/login.state';
 import { getValidationMessage } from 'src/app/validations/validations';
 
@@ -11,11 +14,13 @@ import { getValidationMessage } from 'src/app/validations/validations';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   public loginForm: FormGroup;
   public error$ = this.store.select(getError);
+  public loginRequestState$ = this.store.select(loginRequestState);
+  private loginError$: Subscription = new Subscription();
 
-  constructor(private store: Store<LoginState>) { 
+  constructor(private store: Store<LoginState>, private actions$: Actions) { 
     this.loginForm = new FormGroup({
       emailAddress: new FormControl('', Validators.compose([Validators.required, Validators.email])),
       password: new FormControl('', Validators.required)
@@ -23,6 +28,18 @@ export class LoginComponent implements OnInit {
   }
 
   public ngOnInit(): void {
+    this.loginError$ = this.actions$
+      .pipe(ofType(loginRequestFailed))
+      .subscribe(() => 
+        this.loginForm.setValue({
+          emailAddress: '',
+          password: ''
+        }, { emitEvent: false })
+      );
+  }
+
+  public ngOnDestroy(): void {
+    this.loginError$.unsubscribe();
   }
 
   public getErrorMessage(error: any): string | null {
@@ -36,6 +53,6 @@ export class LoginComponent implements OnInit {
       });
       return;
     }
-    this.store.dispatch(loginRequest())
+    this.store.dispatch(loginRequest());
   }
 }
