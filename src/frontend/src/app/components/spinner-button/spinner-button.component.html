@@ -1,0 +1,10 @@
+<button [class]="className ? className : 'btn btn-primary'" (click)="onClick" [disabled]="disabled">
+    <ng-container *ngIf="disabled">
+        <ng-container [ngSwitch]="version">
+            <span *ngSwitchCase="'classic'" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            <span *ngSwitchCase="'grow'" class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+            <span *ngSwitchDefault class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        </ng-container>
+    </ng-container>
+    {{ buttonText }}
+</button>

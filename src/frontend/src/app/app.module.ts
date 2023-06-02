@@ -47,6 +47,7 @@ import { orderStoreName } from './stores/order/order.store.names';
 import { orderReducer } from './stores/order/order.reducers';
 import { OrderEffects } from './stores/order/order.effects';
 import { HttpClientModule } from '@angular/common/http';
+import { SpinnerButtonComponent } from './components/spinner-button/spinner-button.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import { HttpClientModule } from '@angular/common/http';
     CartsComponent,
     OrderViewComponent,
     MoneyPipe,
-    MyOrdersComponent
+    MyOrdersComponent,
+    SpinnerButtonComponent
   ],
   imports: [
     BrowserModule,

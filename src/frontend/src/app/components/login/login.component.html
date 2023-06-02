@@ -34,12 +34,20 @@
             </ng-container>
         </div>
         <div>
-            <button class="btn btn-primary" (click)="onSubmit(); $event.preventDefault()" [disabled]="(loginRequestState$ | async) === 'loading'">
+            <!-- <button class="btn btn-primary" (click)="onSubmit(); $event.preventDefault()" [disabled]="(loginRequestState$ | async) === 'loading'">
                 <ng-container *ngIf="(loginRequestState$ | async) === 'loading'">
                     <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
                 </ng-container>
                 Zaloguj
-            </button>
+            </button> -->
+
+            <app-spinner-button 
+                [className]="'btn btn-primary'" 
+                [buttonText]="'Zaloguj'" 
+                [disabled]="(loginRequestState$ | async) === 'loading'"
+                [version]="spinnerVersion"
+                (onClick)="onSubmit(); $event.preventDefault()">
+            </app-spinner-button>
         </div>
     </form>
 </div>

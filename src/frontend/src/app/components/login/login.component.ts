@@ -8,6 +8,7 @@ import { loginRequest } from 'src/app/stores/login/login.actions';
 import { getError, loginRequestState } from 'src/app/stores/login/login.selectors';
 import { LoginState } from 'src/app/stores/login/login.state';
 import { getValidationMessage } from 'src/app/validations/validations';
+import { SpinnerVersion } from '../spinner-button/spinner-version';
 
 @Component({
   selector: 'app-login',
@@ -18,6 +19,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   public loginForm: FormGroup;
   public error$ = this.store.select(getError);
   public loginRequestState$ = this.store.select(loginRequestState);
+  public spinnerVersion = SpinnerVersion.grow;
   private loginError$: Subscription = new Subscription();
 
   constructor(private store: Store<LoginState>, private actions$: Actions) { 
