@@ -4,6 +4,7 @@ import { CategoriesComponent } from './categories.component';
 import { SearchBarComponent } from '../../search-bar/search-bar.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('CategoriesComponent', () => {
   let component: CategoriesComponent;
@@ -15,7 +16,13 @@ describe('CategoriesComponent', () => {
       imports: [
         RouterTestingModule,
         ReactiveFormsModule,
-        FormsModule
+        FormsModule,
+        HttpClientModule
+      ],
+      providers: [
+        {
+          provide: "API_URL", useValue: ''
+        }
       ]
     })
     .compileComponents();

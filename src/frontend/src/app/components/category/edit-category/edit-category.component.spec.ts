@@ -6,6 +6,7 @@ import { initialState } from 'src/app/stores/category/category.reducers';
 import { RouterTestingModule } from '@angular/router/testing';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('EditCategoryComponent', () => {
   let component: EditCategoryComponent;
@@ -15,12 +16,16 @@ describe('EditCategoryComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ EditCategoryComponent ],
       providers: [
-        provideMockStore({ initialState })
+        provideMockStore({ initialState }),
+        {
+          provide: "API_URL", useValue: ''
+        }
       ],
       imports: [
         RouterTestingModule,
         NgxSpinnerModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        HttpClientModule
       ]
     })
     .compileComponents();

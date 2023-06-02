@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { Observable, catchError, concatMap, exhaustMap, from, map, of, take } from 'rxjs';
+import { Injectable, Inject } from '@angular/core';
+import { Observable, concatMap } from 'rxjs';
 import { User } from '../models/user';
 import { HttpClient } from '@angular/common/http';
 import { Credentials } from '../models/credentials';
@@ -8,9 +8,9 @@ import { Credentials } from '../models/credentials';
   providedIn: 'root'
 })
 export class AuthenticationService {
-  private backendUrl = (window as any )['__env']['backendUrl'];
+  //private backendUrl = (window as any )['__env']['backendUrl'];
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, @Inject('API_URL') private backendUrl: string) { }
 
   public login(credentials: Credentials): Observable<User> {
     return this.httpClient.post<void>(`${this.backendUrl}/api/sign-in`, credentials, { withCredentials: true })

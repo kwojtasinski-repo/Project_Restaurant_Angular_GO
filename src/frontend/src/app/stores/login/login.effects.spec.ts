@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 
 import { LoginEffects } from './login.effects';
 import { initialState } from './login.reducers';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('LoginEffects', () => {
   let actions$: Observable<any>;
@@ -15,7 +16,13 @@ describe('LoginEffects', () => {
       providers: [
         LoginEffects,
         provideMockActions(() => actions$),
-        provideMockStore({ initialState })
+        provideMockStore({ initialState }),
+        {
+          provide: "API_URL", useValue: ''
+        }        
+      ],
+      imports: [
+        HttpClientModule
       ]
     });
 

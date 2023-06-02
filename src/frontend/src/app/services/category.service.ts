@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Injectable, Inject } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Category } from '../models/category';
 import { HttpClient } from '@angular/common/http';
 
@@ -7,9 +7,9 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class CategoryService {
-  private backendUrl = (window as any )['__env']['backendUrl'];
+  //private backendUrl = (window as any )['__env']['backendUrl'];
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, @Inject('API_URL') private backendUrl: string) { }
 
   public add(category: Category): Observable<void> {
     return this.httpClient.post<void>(`${this.backendUrl}/api/categories`, category, { withCredentials: true });

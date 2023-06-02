@@ -7,6 +7,7 @@ import { CartEffects } from './cart.effects';
 import { initialState } from './cart.reducers';
 import { initialState as initialLoginState } from '../login/login.reducers';
 import { getUser } from '../login/login.selectors';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('CartEffects', () => {
   let actions$: Observable<any>;
@@ -31,6 +32,9 @@ describe('CartEffects', () => {
             }
           ] 
         })
+      ],
+      imports: [
+        HttpClientModule
       ]
     });
 

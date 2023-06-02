@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 
 import { CategoryEffects } from './category.effects';
 import { initialState } from './category.reducers';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('CategoryEffects', () => {
   let actions$: Observable<any>;
@@ -15,7 +16,13 @@ describe('CategoryEffects', () => {
       providers: [
         CategoryEffects,
         provideMockActions(() => actions$),
-        provideMockStore({ initialState })
+        provideMockStore({ initialState }),
+        {
+          provide: "API_URL", useValue: ''
+        }
+      ],
+      imports: [
+        HttpClientModule
       ]
     });
 
