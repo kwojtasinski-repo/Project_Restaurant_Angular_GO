@@ -1,8 +1,9 @@
 import { createReducer, on } from "@ngrx/store";
-import { LoginState, RequestState } from "./login.state";
+import { LoginState } from "./login.state";
 import { initializeLogin, loginFormUpdate, loginRequest, loginRequestFailed, loginRequestSuccess, 
     logoutRequest, 
     logoutRequestFailed, logoutRequestSuccess } from "./login.actions";
+import { RequestState } from "src/app/models/request-state";
 
 export const initialState: LoginState = {
     user: null,

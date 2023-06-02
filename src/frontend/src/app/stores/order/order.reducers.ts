@@ -1,10 +1,11 @@
 import { createReducer, on } from "@ngrx/store";
-import { OrderState as OrderState, FetchState } from "./order.state";
+import { OrderState as OrderState } from "./order.state";
 import { fetchOrder, fetchOrderFailed, fetchOrderSuccess } from "./order.actions";
+import { RequestState } from "src/app/models/request-state";
 
 export const initialState: OrderState = {
     order: undefined,
-    fetchState: FetchState.init,
+    fetchState: RequestState.init,
     error: null
 }
 
@@ -13,7 +14,7 @@ export const orderReducer = createReducer(
     on(fetchOrder, (state, _) => {
         return {
             ...state,
-            fetchState: FetchState.loading,
+            fetchState: RequestState.loading,
             error: null
         }
     }),
@@ -21,7 +22,7 @@ export const orderReducer = createReducer(
         return {
             ...state,
             order: action.order,
-            fetchState: FetchState.success,
+            fetchState: RequestState.success,
             error: null
         }
     }),
@@ -29,7 +30,7 @@ export const orderReducer = createReducer(
         return {
             ...state,
             error: action.error,
-            fetchState: FetchState.failed
+            fetchState: RequestState.failed
         }
     })
 );

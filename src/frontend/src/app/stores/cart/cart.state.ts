@@ -1,11 +1,8 @@
 import { Cart } from "src/app/models/cart";
+import { RequestState } from "src/app/models/request-state";
 
 export interface CartState {
   cart: Cart;
-  fetchState: FetchState;
+  fetchState: RequestState;
   error: string | null;
-}
-
-export enum FetchState {
-  init = 'init', loading = 'loading', success = 'success', failed = 'failed'
 }
