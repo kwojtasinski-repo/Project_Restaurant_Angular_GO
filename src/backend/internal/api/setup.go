@@ -65,7 +65,7 @@ func setupCors(router *gin.Engine) {
 	corsConfig := CorsConfig{
 		AllowOrigins:     []string{"http://localhost:4200"},
 		AllowHeaders:     []string{"Authorization", "Content-Type", "Cookie"},
-		AllowMethods:     []string{"GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"},
 		AllowCredentials: true,
 	}
 	router.Use(CORSMiddleware(corsConfig))

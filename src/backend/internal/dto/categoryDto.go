@@ -30,9 +30,9 @@ func (product *CategoryDto) Validate() error {
 }
 
 type CategoryDetailsDto struct {
-	Id      int64
-	Name    string
-	Deleted bool
+	Id      int64  `json:"id"`
+	Name    string `json:"name"`
+	Deleted bool   `json:"deleted"`
 }
 
 func MapToCategoryDto(category entities.Category) *CategoryDto {

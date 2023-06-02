@@ -97,7 +97,7 @@ func generatePreflightHeaders(c CorsConfig, allowAllOrigins bool) http.Header {
 		headers.Set("Access-Control-Allow-Credentials", "true")
 	}
 	if len(c.AllowMethods) > 0 {
-		headers.Set("Access-Control-Allow-Methods", strings.Join(normalize(c.AllowMethods), ","))
+		headers.Set("Access-Control-Allow-Methods", strings.Join(normalize(c.AllowMethods), ",")+", PUT")
 	}
 	if len(c.AllowHeaders) > 0 {
 		allowHeaders := normalize(c.AllowHeaders)
