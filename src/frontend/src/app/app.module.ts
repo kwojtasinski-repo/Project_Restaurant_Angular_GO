@@ -48,6 +48,7 @@ import { orderReducer } from './stores/order/order.reducers';
 import { OrderEffects } from './stores/order/order.effects';
 import { HttpClientModule } from '@angular/common/http';
 import { SpinnerButtonComponent } from './components/spinner-button/spinner-button.component';
+import { resolveApiUrl } from './providers/api-url-provider';
 
 @NgModule({
   declarations: [
@@ -99,7 +100,13 @@ import { SpinnerButtonComponent } from './components/spinner-button/spinner-butt
     NgxSpinnerModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: "API_URL", 
+      useFactory: resolveApiUrl,
+      multi: true
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
