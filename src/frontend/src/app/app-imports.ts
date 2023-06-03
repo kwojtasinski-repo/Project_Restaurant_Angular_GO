@@ -26,6 +26,7 @@ import { CollapseModule } from "ngx-bootstrap/collapse";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { AppRoutingModule } from "./app-routing.module";
 import { BrowserModule } from "@angular/platform-browser";
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 export const appImports = [
     BrowserModule,
@@ -52,5 +53,6 @@ export const appImports = [
       OrderEffects
     ]),
     NgxSpinnerModule,
-    HttpClientModule
+    HttpClientModule,
+    ModalModule
 ]

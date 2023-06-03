@@ -1,0 +1,16 @@
+<div class="modal-header">
+    <h1 class="modal-title pull-left">Wystąpił jakiś błąd</h1>
+    <button type="button" class="btn btn-close pull-right" aria-label="Close" (click)="onClose()"></button>
+</div>
+<div class="modal-body">
+    <p *ngIf="status">
+        <b>Kod błędu: {{ status }}</b>
+    </p>
+    <p>Coś poszło nie tak!</p>
+    <p class="error-message">
+        {{ message }}
+    </p>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" (click)="onClose()">Zamknij</button>
+</div>

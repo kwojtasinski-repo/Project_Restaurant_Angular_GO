@@ -18,6 +18,7 @@ import { SpinnerButtonComponent } from "./components/spinner-button/spinner-butt
 import { CurrencyFormatterDirective } from "./directives/currency-formatter-directive";
 import { LoginFormDirective } from "./directives/login-form-directive";
 import { MoneyPipe } from "./pipes/money-pipe";
+import { ErrorDialogComponent } from "./services/error-dialog/error-dialog/error-dialog.component";
 
 export const appDeclarations = [
     AppComponent,
@@ -39,5 +40,6 @@ export const appDeclarations = [
     OrderViewComponent,
     MoneyPipe,
     MyOrdersComponent,
-    SpinnerButtonComponent
+    SpinnerButtonComponent,
+    ErrorDialogComponent
   ]
