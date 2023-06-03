@@ -31,6 +31,7 @@ func AuthMiddleware() gin.HandlerFunc {
 			writeErrorResponse(c, *applicationerrors.InternalError(errCreateObject.Error()))
 		}
 
+		// think if cookie need to be updated after refreshed session?
 		refreshedSession, errStatus := sessionService.ManageSession(session)
 		if errStatus != nil {
 			c.Abort()

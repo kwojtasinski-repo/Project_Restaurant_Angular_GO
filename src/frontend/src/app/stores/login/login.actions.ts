@@ -3,6 +3,7 @@ import { Credentials } from "src/app/models/credentials";
 import { User } from "src/app/models/user";
 
 export const initializeLogin = createAction('[Login] Initialize Login', props<{ path: string }>());
+export const reloginRequestSuccess = createAction('[Login] ReLogin Request Success', props<{ user: User }>());
 export const loginFormUpdate = createAction('[Login] Login From Update Request', props<{ credentials: Credentials }>());
 export const loginRequest = createAction('[Login] Login Request');
 export const loginRequestSuccess = createAction('[Login] Login Request Success', props<{ user: User }>());

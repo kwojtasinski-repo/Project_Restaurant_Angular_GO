@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
-import { loginRequest, loginRequestFailed, loginRequestSuccess, loginSuccess, logoutRequest, 
-  logoutRequestFailed, logoutRequestSuccess } from './login.actions';
-import { catchError, exhaustMap, mergeMap, of, tap, map } from 'rxjs';
+import { initializeLogin, loginRequest, loginRequestFailed, loginRequestSuccess, loginSuccess, logoutRequest, 
+  logoutRequestFailed, logoutRequestSuccess, reloginRequestSuccess } from './login.actions';
+import { catchError, exhaustMap, mergeMap, of, tap, map, EMPTY } from 'rxjs';
 import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { LoginState } from './login.state';
@@ -11,7 +11,32 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Injectable()
 export class LoginEffects {
-  login$ = createEffect(() =>
+  initializeLogin$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(initializeLogin),
+      exhaustMap(() =>
+        this.authenticationService.getContext()
+          .pipe(
+            map((user) => reloginRequestSuccess({ user })),
+            catchError(err => {
+                this.router.navigate(['/login']);
+                console.error(err);
+                return EMPTY;
+              }
+            )
+          )
+      )
+    )
+  );
+
+  reloginRequestSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(reloginRequestSuccess),
+      mergeMap(() => of(loginSuccess()))
+    )
+  )
+
+  loginRequest$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loginRequest),
       concatLatestFrom(() => this.store.select(selectLoginState)),

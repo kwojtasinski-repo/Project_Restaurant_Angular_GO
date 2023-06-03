@@ -8,8 +8,6 @@ import { Credentials } from '../models/credentials';
   providedIn: 'root'
 })
 export class AuthenticationService {
-  //private backendUrl = (window as any )['__env']['backendUrl'];
-
   constructor(private httpClient: HttpClient, @Inject('API_URL') private backendUrl: string) { }
 
   public login(credentials: Credentials): Observable<User> {
@@ -21,5 +19,9 @@ export class AuthenticationService {
 
   public logout(): Observable<void> {
     return new Observable((ob) => { ob.next(); ob.complete(); });
+  }
+
+  public getContext(): Observable<User> {
+    return this.httpClient.get<User>(`${this.backendUrl}/api/users/me`, {withCredentials: true});
   }
 }

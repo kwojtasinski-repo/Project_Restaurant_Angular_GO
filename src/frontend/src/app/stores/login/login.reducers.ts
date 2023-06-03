@@ -2,7 +2,7 @@ import { createReducer, on } from "@ngrx/store";
 import { LoginState } from "./login.state";
 import { initializeLogin, loginFormUpdate, loginRequest, loginRequestFailed, loginRequestSuccess, 
     logoutRequest, 
-    logoutRequestFailed, logoutRequestSuccess } from "./login.actions";
+    logoutRequestFailed, logoutRequestSuccess, reloginRequestSuccess } from "./login.actions";
 import { RequestState } from "src/app/models/request-state";
 
 export const initialState: LoginState = {
@@ -87,6 +87,19 @@ export const loginReducer = createReducer(
             ...state,
             error: action.error,
             logoutRequestState: RequestState.failed
+        }
+    }),
+    on(reloginRequestSuccess, (state, action) => {
+        return {
+            ...state,
+            user: action.user,
+            error: null,
+            authenticated: true,
+            credentials: {
+                email: '',
+                password: ''
+            },
+            loginRequestState: RequestState.success
         }
     }),
 );
