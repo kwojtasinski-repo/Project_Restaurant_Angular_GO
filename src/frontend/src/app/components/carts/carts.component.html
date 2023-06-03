@@ -10,7 +10,7 @@
 <ng-template #loading></ng-template>
 
 <ng-template #cartLoaded>
-    <ng-container *ngIf="(carts$ | async)!.length > 0; then cartWithProducts else cartWithoutProducts"></ng-container>    
+    <ng-container *ngIf="((carts$ | async) ?? []).length > 0; then cartWithProducts else cartWithoutProducts"></ng-container>    
 </ng-template>
 
 <ng-template #cartWithProducts>

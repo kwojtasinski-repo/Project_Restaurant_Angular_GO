@@ -31,7 +31,10 @@ describe('CartEffects', () => {
               }
             }
           ] 
-        })
+        }),
+        {
+          provide: "API_URL", useValue: ''
+        }
       ],
       imports: [
         HttpClientModule
