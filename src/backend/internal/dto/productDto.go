@@ -5,19 +5,19 @@ import (
 )
 
 type ProductDto struct {
-	Id          int64
-	Name        string
-	Description string
-	Price       string
+	Id          int64  `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Price       string `json:"price"`
 }
 
 type ProductDetailsDto struct {
-	Id          int64
-	Name        string
-	Description string
-	Price       string
-	Category    CategoryDto
-	Deleted     bool
+	Id          int64       `json:"id"`
+	Name        string      `json:"name"`
+	Description string      `json:"description"`
+	Price       string      `json:"price"`
+	Category    CategoryDto `json:"category"`
+	Deleted     bool        `json:"deleted"`
 }
 
 func MapToProductDto(product entities.Product) *ProductDto {

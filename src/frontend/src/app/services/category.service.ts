@@ -7,8 +7,6 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class CategoryService {
-  //private backendUrl = (window as any )['__env']['backendUrl'];
-
   constructor(private httpClient: HttpClient, @Inject('API_URL') private backendUrl: string) { }
 
   public add(category: Category): Observable<void> {
