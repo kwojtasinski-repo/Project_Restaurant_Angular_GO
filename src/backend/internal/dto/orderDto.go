@@ -6,13 +6,31 @@ import (
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
 )
 
+type OrderDto struct {
+	Id          int64      `json:"id"`
+	OrderNumber string     `json:"orderNumber"`
+	Price       string     `json:"price"`
+	Created     time.Time  `json:"created"`
+	Modified    *time.Time `json:"modified"`
+}
+
 type OrderDetailsDto struct {
-	Id            int64
-	OrderNumber   string
-	Price         string
-	Created       time.Time
-	Modified      *time.Time
-	OrderProducts []OrderProductDto
+	Id            int64             `json:"id"`
+	OrderNumber   string            `json:"orderNumber"`
+	Price         string            `json:"price"`
+	Created       time.Time         `json:"created"`
+	Modified      *time.Time        `json:"modified"`
+	OrderProducts []OrderProductDto `json:"orderProducts"`
+}
+
+func MapToOrderDto(order entities.Order) *OrderDto {
+	return &OrderDto{
+		Id:          order.Id.Value(),
+		OrderNumber: order.OrderNumber.Value(),
+		Created:     order.Created,
+		Modified:    order.Modified,
+		Price:       order.Price.Value().StringFixedBank(2),
+	}
 }
 
 func MapToOrderDetailsDto(order entities.Order) *OrderDetailsDto {

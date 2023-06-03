@@ -13,21 +13,26 @@ import (
 
 type OrderService interface {
 	Add(dto.AddOrderDto) (*dto.OrderDetailsDto, *applicationerrors.ErrorStatus)
-	AddFromCart(userId int64) (*dto.OrderDetailsDto, *applicationerrors.ErrorStatus)
+	AddFromCart() (*dto.OrderDetailsDto, *applicationerrors.ErrorStatus)
+	Get(orderId int64) (*dto.OrderDetailsDto, *applicationerrors.ErrorStatus)
+	GetAll() ([]dto.OrderDto, *applicationerrors.ErrorStatus)
+	GetMyOrders() ([]dto.OrderDto, *applicationerrors.ErrorStatus)
 }
 
 type orderService struct {
-	repo        repositories.OrderRepository
-	cartRepo    repositories.CartRepository
-	productRepo repositories.ProductRepository
+	repo            repositories.OrderRepository
+	cartRepo        repositories.CartRepository
+	productRepo     repositories.ProductRepository
+	sessionProvider dto.SessionDto
 }
 
 func CreateOrderService(orderRepository repositories.OrderRepository, cartRepository repositories.CartRepository,
-	productRepository repositories.ProductRepository) OrderService {
+	productRepository repositories.ProductRepository, sessionProvider dto.SessionDto) OrderService {
 	return &orderService{
-		repo:        orderRepository,
-		cartRepo:    cartRepository,
-		productRepo: productRepository,
+		repo:            orderRepository,
+		cartRepo:        cartRepository,
+		productRepo:     productRepository,
+		sessionProvider: sessionProvider,
 	}
 }
 
@@ -88,13 +93,13 @@ func (service *orderService) Add(addOrderDto dto.AddOrderDto) (*dto.OrderDetails
 	return dto.MapToOrderDetailsDto(*order), nil
 }
 
-func (service *orderService) AddFromCart(userId int64) (*dto.OrderDetailsDto, *applicationerrors.ErrorStatus) {
-	userIdValue, err := valueobjects.NewId(userId)
+func (service *orderService) AddFromCart() (*dto.OrderDetailsDto, *applicationerrors.ErrorStatus) {
+	userIdValue, err := valueobjects.NewId(service.sessionProvider.UserId)
 	if err != nil {
 		return nil, applicationerrors.BadRequest(err.Error())
 	}
 
-	productsInCart, err := service.cartRepo.GetAllByUser(userId)
+	productsInCart, err := service.cartRepo.GetAllByUser(service.sessionProvider.UserId)
 	if err != nil {
 		return nil, applicationerrors.InternalError(err.Error())
 	}
@@ -138,10 +143,57 @@ func (service *orderService) AddFromCart(userId int64) (*dto.OrderDetailsDto, *a
 	if err != nil {
 		return nil, applicationerrors.InternalError(err.Error())
 	}
-	err = service.cartRepo.DeleteCartByUserId(userId)
+	err = service.cartRepo.DeleteCartByUserId(service.sessionProvider.UserId)
 	if err != nil {
 		return nil, applicationerrors.InternalError(err.Error())
 	}
 
 	return dto.MapToOrderDetailsDto(*order), nil
+}
+
+func (service *orderService) Get(orderId int64) (*dto.OrderDetailsDto, *applicationerrors.ErrorStatus) {
+	order, err := service.repo.Get(orderId)
+	if err != nil {
+		return nil, applicationerrors.InternalError(err.Error())
+	}
+
+	if service.sessionProvider.Role != "admin" && order.UserId.Value() != service.sessionProvider.UserId {
+		return nil, applicationerrors.NotFound()
+	}
+
+	return dto.MapToOrderDetailsDto(*order), nil
+}
+
+func (service *orderService) GetAll() ([]dto.OrderDto, *applicationerrors.ErrorStatus) {
+	if service.sessionProvider.Role != "admin" {
+		return nil, applicationerrors.Forbidden()
+	}
+
+	ordersFromRepo, err := service.repo.GetAll()
+	if err != nil {
+		return nil, applicationerrors.InternalError(err.Error())
+	}
+
+	orders := make([]dto.OrderDto, 0)
+	for _, order := range ordersFromRepo {
+		orders = append(orders, *dto.MapToOrderDto(order))
+	}
+
+	return orders, nil
+}
+
+func (service *orderService) GetMyOrders() ([]dto.OrderDto, *applicationerrors.ErrorStatus) {
+	ordersFromRepo, err := service.repo.GetAllByUser(service.sessionProvider.UserId)
+
+	if err != nil {
+		return nil, applicationerrors.InternalError(err.Error())
+	}
+
+	orders := make([]dto.OrderDto, 0)
+
+	for _, order := range ordersFromRepo {
+		orders = append(orders, *dto.MapToOrderDto(order))
+	}
+
+	return orders, nil
 }

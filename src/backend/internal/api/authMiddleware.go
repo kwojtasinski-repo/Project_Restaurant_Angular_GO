@@ -39,6 +39,7 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
+		addSessionProvider(refreshedSession)
 		c.Keys = refreshedSession.AsMap()
 		c.Next()
 	}

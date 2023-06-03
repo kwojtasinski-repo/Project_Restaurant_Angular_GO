@@ -4,7 +4,9 @@ import (
 	"log"
 	"net/http"
 	"testing"
+	"time"
 
+	"github.com/google/uuid"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
 	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
@@ -19,6 +21,7 @@ type OrderServiceTestSuite struct {
 	cartRepository    repositories.CartRepository
 	productRepository repositories.ProductRepository
 	service           OrderService
+	sessionProvider   dto.SessionDto
 }
 
 func (suite *OrderServiceTestSuite) SetupTest() {
@@ -26,7 +29,18 @@ func (suite *OrderServiceTestSuite) SetupTest() {
 	suite.orderRepository = repositories.NewInMemoryOrderRepository()
 	suite.productRepository = suite.createProductRepository()
 	suite.cartRepository = suite.createCartRepository()
-	suite.service = CreateOrderService(suite.orderRepository, suite.cartRepository, suite.productRepository)
+	suite.sessionProvider = defaultSessionDto()
+	suite.service = CreateOrderService(suite.orderRepository, suite.cartRepository, suite.productRepository, suite.sessionProvider)
+}
+
+func defaultSessionDto() dto.SessionDto {
+	return dto.SessionDto{
+		SessionId: uuid.New(),
+		Expiry:    time.Now().UTC().Add(time.Hour).UnixMicro(),
+		UserId:    1,
+		Email:     "email@email.com",
+		Role:      "user",
+	}
 }
 
 func (suite *OrderServiceTestSuite) createProductRepository() repositories.ProductRepository {
@@ -116,7 +130,7 @@ func (suite *OrderServiceTestSuite) Test_Add_ProductNotExists_ShouldReturnBadReq
 }
 
 func (suite *OrderServiceTestSuite) Test_Add_AnErrorOccuredInProductRepository_ShouldReturnInternalErrorServer() {
-	service := CreateOrderService(suite.orderRepository, suite.cartRepository, repositories.NewErrorProductRepository())
+	service := CreateOrderService(suite.orderRepository, suite.cartRepository, repositories.NewErrorProductRepository(), defaultSessionDto())
 	addOrder := dto.AddOrderDto{
 		ProductIds: []int64{20},
 		UserId:     1,
@@ -130,7 +144,7 @@ func (suite *OrderServiceTestSuite) Test_Add_AnErrorOccuredInProductRepository_S
 }
 
 func (suite *OrderServiceTestSuite) Test_Add_WithNoOrderProductsAndAnErrorOccuredInOrderRepository_ShouldReturnInternalErrorServer() {
-	service := CreateOrderService(repositories.NewErrorOrderRepository(), suite.cartRepository, suite.productRepository)
+	service := CreateOrderService(repositories.NewErrorOrderRepository(), suite.cartRepository, suite.productRepository, defaultSessionDto())
 	addOrder := dto.AddOrderDto{
 		ProductIds: make([]int64, 0),
 		UserId:     1,
@@ -144,7 +158,7 @@ func (suite *OrderServiceTestSuite) Test_Add_WithNoOrderProductsAndAnErrorOccure
 }
 
 func (suite *OrderServiceTestSuite) Test_Add_AnErrorOccuredInOrderRepository_ShouldReturnInternalErrorServer() {
-	service := CreateOrderService(repositories.NewErrorOrderRepository(), suite.cartRepository, suite.productRepository)
+	service := CreateOrderService(repositories.NewErrorOrderRepository(), suite.cartRepository, suite.productRepository, defaultSessionDto())
 	addOrder := dto.AddOrderDto{
 		ProductIds: []int64{1},
 		UserId:     1,
@@ -158,9 +172,9 @@ func (suite *OrderServiceTestSuite) Test_Add_AnErrorOccuredInOrderRepository_Sho
 }
 
 func (suite *OrderServiceTestSuite) Test_AddFromCart_ShouldAddOrderWithProductsFromCart() {
-	order, err := suite.service.AddFromCart(1)
+	order, err := suite.service.AddFromCart()
 
-	carts, errRepo := suite.cartRepository.GetAllByUser(1)
+	carts, errRepo := suite.cartRepository.GetAllByUser(suite.sessionProvider.UserId)
 	suite.Assertions.NotNil(order)
 	suite.Assertions.Nil(err)
 	suite.Assertions.Nil(errRepo)
@@ -172,30 +186,36 @@ func (suite *OrderServiceTestSuite) Test_AddFromCart_ShouldAddOrderWithProductsF
 }
 
 func (suite *OrderServiceTestSuite) Test_AddFromCart_InvalidId_ShouldReturnBadRequest() {
-	order, err := suite.service.AddFromCart(-1)
+	suite.sessionProvider.UserId = -1
+	service := CreateOrderService(suite.orderRepository, suite.cartRepository, suite.productRepository, suite.sessionProvider)
+
+	order, err := service.AddFromCart()
 
 	suite.Assertions.Nil(order)
 	suite.Assertions.NotNil(err)
-	suite.Assertions.Equal(err.Status, http.StatusBadRequest)
+	suite.Assertions.Equal(http.StatusBadRequest, err.Status)
 }
 
 func (suite *OrderServiceTestSuite) Test_AddFromCart_EmptyCart_ShouldReturnBadRequest() {
-	order, err := suite.service.AddFromCart(10)
+	suite.sessionProvider.UserId = 10
+	service := CreateOrderService(suite.orderRepository, suite.cartRepository, suite.productRepository, suite.sessionProvider)
+
+	order, err := service.AddFromCart()
 
 	suite.Assertions.Nil(order)
 	suite.Assertions.NotNil(err)
-	suite.Assertions.Equal(err.Status, http.StatusBadRequest)
+	suite.Assertions.Equal(http.StatusBadRequest, err.Status)
 }
 
 func (suite *OrderServiceTestSuite) Test_AddFromCart_ProductNotExists_ShouldReturnBadRequest() {
-	carts, _ := suite.cartRepository.GetAllByUser(1)
+	carts, _ := suite.cartRepository.GetAllByUser(suite.sessionProvider.UserId)
 	newProductId, _ := valueobjects.NewId(100)
 	cart := carts[0]
 	cart.Id = *newProductId
 	cart.ProductId = *newProductId
 	suite.cartRepository.Add(&cart)
 
-	order, err := suite.service.AddFromCart(1)
+	order, err := suite.service.AddFromCart()
 
 	suite.Assertions.Nil(order)
 	suite.Assertions.NotNil(err)
@@ -203,9 +223,9 @@ func (suite *OrderServiceTestSuite) Test_AddFromCart_ProductNotExists_ShouldRetu
 }
 
 func (suite *OrderServiceTestSuite) Test_AddFromCart_AnErrorOccuredInProductRepository_ShouldReturnInternalServerError() {
-	service := CreateOrderService(suite.orderRepository, suite.cartRepository, repositories.NewErrorProductRepository())
+	service := CreateOrderService(suite.orderRepository, suite.cartRepository, repositories.NewErrorProductRepository(), defaultSessionDto())
 
-	order, err := service.AddFromCart(1)
+	order, err := service.AddFromCart()
 
 	suite.Assertions.Nil(order)
 	suite.Assertions.NotNil(err)
@@ -213,9 +233,9 @@ func (suite *OrderServiceTestSuite) Test_AddFromCart_AnErrorOccuredInProductRepo
 }
 
 func (suite *OrderServiceTestSuite) Test_AddFromCart_AnErrorOccuredInCartRepository_ShouldReturnInternalServerError() {
-	service := CreateOrderService(suite.orderRepository, repositories.NewErrorCartRepository(), suite.productRepository)
+	service := CreateOrderService(suite.orderRepository, repositories.NewErrorCartRepository(), suite.productRepository, defaultSessionDto())
 
-	order, err := service.AddFromCart(1)
+	order, err := service.AddFromCart()
 
 	suite.Assertions.Nil(order)
 	suite.Assertions.NotNil(err)
@@ -223,9 +243,9 @@ func (suite *OrderServiceTestSuite) Test_AddFromCart_AnErrorOccuredInCartReposit
 }
 
 func (suite *OrderServiceTestSuite) Test_AddFromCart_AnErrorOccuredInOrderRepository_ShouldReturnInternalServerError() {
-	service := CreateOrderService(repositories.NewErrorOrderRepository(), suite.cartRepository, suite.productRepository)
+	service := CreateOrderService(repositories.NewErrorOrderRepository(), suite.cartRepository, suite.productRepository, defaultSessionDto())
 
-	order, err := service.AddFromCart(1)
+	order, err := service.AddFromCart()
 
 	suite.Assertions.Nil(order)
 	suite.Assertions.NotNil(err)

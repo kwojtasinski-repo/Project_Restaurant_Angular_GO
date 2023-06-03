@@ -11,6 +11,7 @@ type OrderRepository interface {
 	Get(int64) (*entities.Order, error)
 	GetAllByUser(int64) ([]entities.Order, error)
 	Update(*entities.Order) error
+	GetAll() ([]entities.Order, error)
 }
 
 type inMemoryOrderRepository struct {
@@ -85,6 +86,10 @@ func (repo *inMemoryOrderRepository) GetAllByUser(userId int64) ([]entities.Orde
 		}
 	}
 	return orders, nil
+}
+
+func (repo *inMemoryOrderRepository) GetAll() ([]entities.Order, error) {
+	return repo.orders, nil
 }
 
 func setOrderProductsIds(orders []entities.Order, order entities.Order) {

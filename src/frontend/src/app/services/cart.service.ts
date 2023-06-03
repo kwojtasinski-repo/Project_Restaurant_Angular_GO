@@ -23,9 +23,4 @@ export class CartService {
   public getCart(): Observable<Cart[]> {
     return this.httpClient.get<Cart[]>(`${this.backendUrl}/${this.cartPath}/my`, { withCredentials: true });
   }
-
-  // think if it is needed
-  public finalizeCart(): void {
-    
-  }
 }

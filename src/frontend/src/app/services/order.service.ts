@@ -1,92 +1,38 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Order } from '../models/order';
 import { Cart } from '../models/cart';
-import { Observable, Subscription } from 'rxjs';
-import { Product } from '../models/product';
-import { OrderProduct } from '../models/orderProduct';
-import { of } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { LoginState } from '../stores/login/login.state';
-import { getUser } from '../stores/login/login.selectors';
-import { User } from '../models/user';
+import { Observable, map } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
-export class OrderService implements OnDestroy {
-  private orders: Order[] = [];
-  private user: User | null = null;
-  private getUserSubscription$ = new Subscription();
+export class OrderService {
+  private orderPath = 'api/orders';
 
-  constructor(private store: Store<LoginState>) {
-    this.getUserSubscription$ = this.store.select(getUser)
-      .subscribe(u => {
-        this.user = u
-      });
-  }
-
-  public ngOnDestroy(): void {
-    this.getUserSubscription$.unsubscribe();
-  }
+  constructor(private httpClient: HttpClient, @Inject('API_URL') private backendUrl: string) { }
 
   public getAll(): Observable<Order[]> {
-    return of(this.orders);
+    return this.httpClient.get<Order[]>(`${this.backendUrl}/${this.orderPath}`, { withCredentials: true })
   }
 
-  public getMyOrders() {
-    return of(this.orders.filter(o => o.userId === this.user?.id ?? 0));
+  public getMyOrders(): Observable<Order[]> {
+    return this.httpClient.get<Order[]>(`${this.backendUrl}/${this.orderPath}/my`, { withCredentials: true })
   }
 
   public get(id: number): Observable<Order | undefined> {
-    return of(this.orders.find(o => o.id === id));
+    return this.httpClient.get<Order>(`${this.backendUrl}/${this.orderPath}/${id}`, { withCredentials: true })
+  }
+
+  public addFromCart(): Observable<number> {
+    return this.httpClient.post<Order>(`${this.backendUrl}/${this.orderPath}/from-cart`, {}, { withCredentials: true })
+      .pipe(map(order => order.id));
   }
 
   public add(carts: Cart[]): Observable<number> {
-    const id = this.orders.length > 0 ? this.orders[this.orders.length - 1].id + 1 : 1;
-    this.orders.push({
-      id: id,
-      created: new Date(),
-      orderNumber: new Date().toISOString(),
-      price: carts.reduce((total, cart) => total + (cart.product?.price ?? 0), 0),
-      modified: undefined,
-      orderProducts: this.addOrderProducts(carts),
-      userId: this.user?.id ?? 0
-    });
-    
-    return new Observable((ob) => { ob.next(id); ob.complete(); });
-  }
-
-  private addOrderProducts(carts: Cart[]): OrderProduct[] {
-    let id = this.getLastIdFromOrderProducts();
-    const orderProducts: OrderProduct[] = [];
-    
-    for (let cart of carts) {
-      id++;
-      orderProducts.push({
-        id,
-        name: cart.product?.name ?? '',
-        price: cart.product?.price ?? 0,
-        productId: cart.product?.id ?? 0
-      });
-    }
-
-    return orderProducts;
-  }
-
-  private getLastIdFromOrderProducts(): number {
-    const id = 1;
-    if (this.orders.length === 0) {
-      return id;
-    }
-
-    for (let i = this.orders.length - 1; i >= 0; i--) {
-      if (this.orders[i].orderProducts.length === 0) {
-        continue;
-      }
-
-      return this.orders[i].orderProducts[this.orders[i].orderProducts.length - 1].id
-    }
-
-    return id;
+    return this.httpClient.post<Order>(`${this.backendUrl}/${this.orderPath}/from-cart`, {
+        productIds: carts.map(c => c.product?.id)
+      }, { withCredentials: true })
+        .pipe(map(order => order.id));
   }
 }

@@ -2,8 +2,10 @@ package api
 
 import (
 	"database/sql"
+	"errors"
 
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/config"
+	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/repositories"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/services"
 )
@@ -119,7 +121,12 @@ func createOrderService() (services.OrderService, error) {
 		return nil, err
 	}
 
-	orderService := services.CreateOrderService(orderRepository, cartRepository, productRepository)
+	sessionProvider, err := getSessionProvider()
+	if err != nil {
+		return nil, err
+	}
+
+	orderService := services.CreateOrderService(orderRepository, cartRepository, productRepository, *sessionProvider)
 	objectsPerRequest["services.OrderService"] = orderService
 	return orderService, nil
 }
@@ -268,4 +275,23 @@ func createUserRepository() (repositories.UserRepository, error) {
 	userRepository := repositories.CreateUserRepository(*databaseConnection)
 	objectsPerRequest["repositories.UserRepository"] = userRepository
 	return userRepository, nil
+}
+
+func addSessionProvider(sessionDto *dto.SessionDto) error {
+	if sessionDto == nil {
+		return errors.New("Invalid session")
+	}
+
+	objectsPerRequest["sessionProvider"] = sessionDto
+	return nil
+}
+
+func getSessionProvider() (*dto.SessionDto, error) {
+	sessionProvider := objectsPerRequest["sessionProvider"]
+
+	if sessionProvider == nil {
+		return nil, errors.New("Session Provider is nil, check if is added to objectCreator")
+	}
+
+	return sessionProvider.(*dto.SessionDto), nil
 }

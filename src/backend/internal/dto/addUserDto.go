@@ -8,8 +8,8 @@ import (
 )
 
 type AddUserDto struct {
-	Email    string
-	Password string
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 func (user *AddUserDto) Validate() error {

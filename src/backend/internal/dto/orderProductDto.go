@@ -5,10 +5,10 @@ import (
 )
 
 type OrderProductDto struct {
-	Id        int64
-	Name      string
-	Price     string
-	ProductId int64
+	Id        int64  `json:"id"`
+	Name      string `json:"name"`
+	Price     string `json:"price"`
+	ProductId int64  `json:"productId"`
 }
 
 func mapToOrderProductDto(orderProduct entities.OrderProduct) *OrderProductDto {

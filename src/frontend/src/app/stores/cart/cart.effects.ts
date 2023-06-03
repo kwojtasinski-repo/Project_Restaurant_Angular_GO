@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of, catchError, exhaustMap, map, mergeMap, tap } from 'rxjs';
 import { CartState } from './cart.state';
 import { Store } from '@ngrx/store';
 import { addProductToCart, addProductToCartFailed, addProductToCartSuccess, fetchCart, fetchCartFailed, fetchCartSuccess, finalizeCart, finalizeCartFailed, finalizeCartSuccess, removeProductFromCart, removeProductFromCartFailed, removeProductFromCartSuccess } from './cart.actions';
 import { CartService } from 'src/app/services/cart.service';
-import { getCart } from './cart.selectors';
 import { OrderService } from 'src/app/services/order.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Router } from '@angular/router';
@@ -66,8 +65,7 @@ export class CartEffects {
   finalizeCart$ = createEffect(() =>
     this.actions$.pipe(
       ofType(finalizeCart),
-      concatLatestFrom(() => this.store.select(getCart)),
-      exhaustMap(([_, cart]) => this.orderService.add(cart)
+      exhaustMap(() => this.orderService.addFromCart()
         .pipe(
           map((orderId) => finalizeCartSuccess({ orderId })),
           catchError((err) => of(finalizeCartFailed(err)))
@@ -79,10 +77,7 @@ export class CartEffects {
   finalizeCartSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType(finalizeCartSuccess),
-      tap((action) => {
-        this.cartService.finalizeCart();
-        this.router.navigate(['/orders/view/' + action.orderId]);
-      })
+      tap((action) => this.router.navigate(['/orders/view/' + action.orderId]))
     ), { dispatch: false }
   );
 

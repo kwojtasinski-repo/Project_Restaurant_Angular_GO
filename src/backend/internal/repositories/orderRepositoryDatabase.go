@@ -72,13 +72,13 @@ func (repo *orderRepository) Update(orderToUpdate *entities.Order) error {
 }
 
 func (repo *orderRepository) Get(id int64) (*entities.Order, error) {
-	query := `SELECT o.id, o.order_number, o.price, o.created, o.modified, o.user_id 
-					 op.id, op.name, op.price, op.product_id 
+	query := `SELECT o.id, o.order_number, o.price, o.created, o.modified, o.user_id, 
+					 op.id, op.name, op.price, op.product_id, 
 					 u.email 
 			  FROM orders o 
 			  INNER JOIN order_products op ON op.order_id = o.id 
 			  LEFT JOIN users u ON u.id = o.user_id 
-			  WHERE id = ?;`
+			  WHERE o.id = ?;`
 
 	rows, err := repo.database.Query(query, id)
 	if err != nil {
@@ -146,6 +146,43 @@ func (repo *orderRepository) GetAllByUser(userId int64) ([]entities.Order, error
 	orders := make([]entities.Order, 0)
 	query := "SELECT id, order_number, price, created, modified, user_id FROM `orders` WHERE user_id = ?;"
 	rows, err := repo.database.Query(query, userId)
+	if err != nil {
+		return orders, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var id int64
+		var orderNumber string
+		var price decimal.Decimal
+		var created time.Time
+		var modified *time.Time
+		var userId int64
+		if err := rows.Scan(&id, &orderNumber, &price, &created, &modified, &userId); err != nil {
+			return nil, err
+		}
+
+		newId, _ := valueobjects.NewId(id)
+		newPrice, _ := valueobjects.NewPrice(price)
+		newUserId, _ := valueobjects.NewId(userId)
+		order := entities.Order{
+			Id:          *newId,
+			OrderNumber: valueobjects.NewOrderNumberWithGiven(orderNumber),
+			Price:       *newPrice,
+			Created:     created,
+			Modified:    modified,
+			UserId:      *newUserId,
+		}
+		orders = append(orders, order)
+	}
+
+	return orders, nil
+}
+
+func (repo *orderRepository) GetAll() ([]entities.Order, error) {
+	orders := make([]entities.Order, 0)
+	query := "SELECT id, order_number, price, created, modified, user_id FROM `orders`;"
+	rows, err := repo.database.Query(query)
 	if err != nil {
 		return orders, err
 	}

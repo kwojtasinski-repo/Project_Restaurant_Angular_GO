@@ -105,6 +105,9 @@ func (eor *errorOrderRepository) Get(int64) (*entities.Order, error) {
 func (eor *errorOrderRepository) GetAllByUser(int64) ([]entities.Order, error) {
 	return make([]entities.Order, 0), errors.New("some error")
 }
+func (eor *errorOrderRepository) GetAll() ([]entities.Order, error) {
+	return make([]entities.Order, 0), errors.New("some error")
+}
 func (eor *errorOrderRepository) Update(*entities.Order) error {
 	return errors.New("some error")
 }
