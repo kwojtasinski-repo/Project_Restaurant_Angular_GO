@@ -4,9 +4,7 @@ import { addProductToCartFailed, fetchCart, fetchCartFailed, fetchCartSuccess, f
 import { RequestState } from "src/app/models/request-state";
 
 export const initialState: CartState = {
-    cart: {
-        products: []
-    },
+    cart: [],
     fetchState: RequestState.init,
     error: null
 }
@@ -56,9 +54,7 @@ export const cartReducer = createReducer(
     on(finalizeCartSuccess, (state, _) => {
         return {
             ...state,
-            cart: {
-                products: []
-            },
+            cart: [],
             error: null
         }
     })

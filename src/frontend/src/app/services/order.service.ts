@@ -41,31 +41,32 @@ export class OrderService implements OnDestroy {
     return of(this.orders.find(o => o.id === id));
   }
 
-  public add(cart: Cart): Observable<number> {
+  public add(carts: Cart[]): Observable<number> {
     const id = this.orders.length > 0 ? this.orders[this.orders.length - 1].id + 1 : 1;
     this.orders.push({
       id: id,
       created: new Date(),
       orderNumber: new Date().toISOString(),
-      price: cart.products.reduce((total, product) => total + product.price, 0),
+      price: carts.reduce((total, cart) => total + (cart.product?.price ?? 0), 0),
       modified: undefined,
-      orderProducts: this.addOrderProducts(cart.products),
+      orderProducts: this.addOrderProducts(carts),
       userId: this.user?.id ?? 0
     });
+    
     return new Observable((ob) => { ob.next(id); ob.complete(); });
   }
 
-  private addOrderProducts(products: Product[]): OrderProduct[] {
+  private addOrderProducts(carts: Cart[]): OrderProduct[] {
     let id = this.getLastIdFromOrderProducts();
     const orderProducts: OrderProduct[] = [];
     
-    for (let product of products) {
+    for (let cart of carts) {
       id++;
       orderProducts.push({
         id,
-        name: product.name,
-        price: product.price,
-        productId: product.id
+        name: cart.product?.name ?? '',
+        price: cart.product?.price ?? 0,
+        productId: cart.product?.id ?? 0
       });
     }
 

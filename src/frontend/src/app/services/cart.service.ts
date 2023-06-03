@@ -1,35 +1,31 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Cart } from '../models/cart';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Product } from '../models/product';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
-  private cart: Cart = {
-    products: []
-  };
+  private cartPath = 'api/carts';
 
-  constructor() { }
+  constructor(private httpClient: HttpClient, @Inject('API_URL') private backendUrl: string) { }
 
   public add(product: Product): Observable<void> {
-    this.cart = { products: [...this.cart.products, product] };
-    return new Observable((ob) => { ob.next(); ob.complete(); });
+    return this.httpClient.post<void>(`${this.backendUrl}/${this.cartPath}`, { productId: product.id }, { withCredentials: true });
   }
 
-  public delete(product: Product): Observable<void> {
-    this.cart = { products: this.cart.products.filter(p => p.id !== product.id) };
-    return new Observable((ob) => { ob.next(); ob.complete(); });
+  public delete(id: number): Observable<void> {
+    return this.httpClient.delete<void>(`${this.backendUrl}/${this.cartPath}/${id}`, { withCredentials: true });
   }
 
-  public getCart(): Observable<Cart> {
-    return of(this.cart);
+  public getCart(): Observable<Cart[]> {
+    return this.httpClient.get<Cart[]>(`${this.backendUrl}/${this.cartPath}/my`, { withCredentials: true });
   }
 
+  // think if it is needed
   public finalizeCart(): void {
-    this.cart = {
-      products: []
-    };
+    
   }
 }

@@ -190,7 +190,7 @@ func (repo *cachedProductRepository) Get(id int64) (*entities.Product, error) {
 		return nil, nil
 	}
 
-	repo.cacheStore.Set(fmt.Sprintf("%v", product.Id.Value()), &product, settings.TimeStoreInCache)
+	repo.cacheStore.Set(fmt.Sprintf("%v", product.Id.Value()), product, settings.TimeStoreInCache)
 	return product, nil
 }
 

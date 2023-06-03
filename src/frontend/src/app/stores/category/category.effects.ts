@@ -62,5 +62,10 @@ export class CategoryEffects {
     )
   );
 
-  constructor(private actions$: Actions, private store: Store<CategoryState>, private router: Router, private categoryService: CategoryService) {}
+  constructor(
+    private actions$: Actions, 
+    private store: Store<CategoryState>, 
+    private router: Router, 
+    private categoryService: CategoryService
+  ) {}
 }

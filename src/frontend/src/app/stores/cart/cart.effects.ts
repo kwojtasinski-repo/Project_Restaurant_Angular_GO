@@ -54,7 +54,7 @@ export class CartEffects {
   removeProductFromCart$ = createEffect(() =>
     this.actions$.pipe(
       ofType(removeProductFromCart),
-      exhaustMap((action) => this.cartService.delete(action.product)
+      exhaustMap((action) => this.cartService.delete(action.cart.id)
         .pipe(
           map(() => removeProductFromCartSuccess()),
           catchError((err) => of(removeProductFromCartFailed(err)))

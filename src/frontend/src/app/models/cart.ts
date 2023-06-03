@@ -1,5 +1,7 @@
 import { Product } from "./product";
 
 export class Cart {
-    products: Product[] = [];
+    id: number = 0;
+    product: Product | undefined;
+    userId: number = 0;
 }

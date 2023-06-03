@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { ErrorDialogComponent } from './error-dialog/error-dialog/error-dialog.component';
+import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
 
 @Injectable({
   providedIn: 'root'

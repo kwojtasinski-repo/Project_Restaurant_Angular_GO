@@ -34,7 +34,9 @@ export class OrderEffects {
     ), {dispatch: false}
   );
 
-  constructor(private actions$: Actions,
+  constructor(
+    private actions$: Actions,
     private orderService: OrderService,
-    private spinnerService: NgxSpinnerService) {}
+    private spinnerService: NgxSpinnerService
+  ) {}
 }

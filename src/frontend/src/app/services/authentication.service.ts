@@ -8,12 +8,15 @@ import { Credentials } from '../models/credentials';
   providedIn: 'root'
 })
 export class AuthenticationService {
+  private signInPath = 'api/sign-in';
+  private usersPath = 'api/users';
+
   constructor(private httpClient: HttpClient, @Inject('API_URL') private backendUrl: string) { }
 
   public login(credentials: Credentials): Observable<User> {
-    return this.httpClient.post<void>(`${this.backendUrl}/api/sign-in`, credentials, { withCredentials: true })
+    return this.httpClient.post<void>(`${this.backendUrl}/${this.signInPath}`, credentials, { withCredentials: true })
       .pipe(
-        concatMap(() => this.httpClient.get<User>(`${this.backendUrl}/api/users/me`, { withCredentials: true }))
+        concatMap(() => this.httpClient.get<User>(`${this.backendUrl}/${this.usersPath}/me`, { withCredentials: true }))
       );
   }
 
@@ -22,6 +25,6 @@ export class AuthenticationService {
   }
 
   public getContext(): Observable<User> {
-    return this.httpClient.get<User>(`${this.backendUrl}/api/users/me`, {withCredentials: true});
+    return this.httpClient.get<User>(`${this.backendUrl}/${this.usersPath}/me`, {withCredentials: true});
   }
 }

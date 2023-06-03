@@ -5,6 +5,6 @@ import { Cart } from "src/app/models/cart";
 import { RequestState } from "src/app/models/request-state";
 
 export const selectCartState = createFeatureSelector<CartState>(cartStoreName);
-export const getCart = createSelector(selectCartState, (state): Cart => state.cart);
+export const getCart = createSelector(selectCartState, (state): Cart[] => state.cart ?? []);
 export const getError = createSelector(selectCartState, (state): string | null => state.error);
 export const getFetchState = createSelector(selectCartState, (state): RequestState => state.fetchState);

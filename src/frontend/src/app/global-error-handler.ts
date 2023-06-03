@@ -12,8 +12,7 @@ export class GlobalErrorHandler implements ErrorHandler {
   handleError(error: any) {
     const ngZone = this.injector.get(NgZone);
     const errorDialogService = this.injector.get(ErrorDialogService);
-    const spinnerService = this.injector.get(NgxSpinnerService);
-    spinnerService.hide();
+    this.injector.get(NgxSpinnerService).hide();
 
     // Check if it's an error from an HTTP response
     if (!(error instanceof HttpErrorResponse)) {

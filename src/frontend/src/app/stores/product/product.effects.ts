@@ -62,5 +62,10 @@ export class ProductEffects {
     )
   );
 
-  constructor(private actions$: Actions, private store: Store<ProductState>, private router: Router, private productService: ProductService) {}
+  constructor(
+    private actions$: Actions, 
+    private store: Store<ProductState>, 
+    private router: Router, 
+    private productService: ProductService
+  ) {}
 }

@@ -10,7 +10,7 @@
 <ng-template #loading></ng-template>
 
 <ng-template #cartLoaded>
-    <ng-container *ngIf="(cart$ | async)?.products!.length > 0; then cartWithProducts else cartWithoutProducts"></ng-container>    
+    <ng-container *ngIf="(carts$ | async)!.length > 0; then cartWithProducts else cartWithoutProducts"></ng-container>    
 </ng-template>
 
 <ng-template #cartWithProducts>
@@ -32,26 +32,26 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let product of (cart$ | async)?.products">
+            <tr *ngFor="let cart of (carts$ | async)">
                 <td>
-                    {{ product.id }}
+                    {{ cart.product?.id }}
                 </td>
                 <td>
-                    {{ product.name }}
+                    {{ cart.product?.name }}
                 </td>
                 <td>
-                    {{ product.price | money }}
+                    {{ cart.product?.price ?? 0 | money }}
                 </td>
                 <td >
-                    <button class="btn btn-primary me-2" [routerLink]="'/products/view/' + product.id">Szczegóły</button>
-                    <button class="btn btn-danger" title="Usuń" (click)="deleteProduct(product)">Usuń</button>
+                    <button class="btn btn-primary me-2" [routerLink]="'/products/view/' + cart.product?.id">Szczegóły</button>
+                    <button class="btn btn-danger" title="Usuń" (click)="deleteCart(cart)">Usuń</button>
                 </td>
             </tr>
         </tbody>
     </table>
     <div>
         <div>
-            Koszt: {{ calculateTotal((cart$ | async)?.products) | money }} zł
+            Koszt: {{ calculateTotal((carts$ | async)) | money }} zł
         </div>
         <div>
             <button class="btn btn-success" (click)="finalizeOrder()">

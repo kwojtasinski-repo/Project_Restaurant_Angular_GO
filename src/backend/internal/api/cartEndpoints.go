@@ -24,10 +24,10 @@ func getMyCart(context *gin.Context) {
 		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
 	}
 
-	if categories, err := cartService.GetMyCart(userId); err != nil {
+	if myCart, err := cartService.GetMyCart(userId); err != nil {
 		writeErrorResponse(context, *err)
 	} else {
-		context.IndentedJSON(http.StatusOK, categories)
+		context.IndentedJSON(http.StatusOK, myCart)
 	}
 
 	ResetObjectCreator()

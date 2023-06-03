@@ -89,8 +89,10 @@ export class LoginEffects {
     ), { dispatch: false }
   );
 
-  constructor(private actions$: Actions, 
+  constructor(
+    private actions$: Actions, 
     private router: Router, 
     private store: Store<LoginState>, 
-    private authenticationService: AuthenticationService) {}
+    private authenticationService: AuthenticationService
+  ) {}
 }
