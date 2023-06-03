@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 
 import { ProductEffects } from './product.effects';
 import { initialState } from './product.reducers';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('ProductEffects', () => {
   let actions$: Observable<any>;
@@ -15,7 +16,13 @@ describe('ProductEffects', () => {
       providers: [
         ProductEffects,
         provideMockActions(() => actions$),
-        provideMockStore({ initialState })
+        provideMockStore({ initialState }),
+        {
+          provide: "API_URL", useValue: ''
+        }
+      ],
+      imports: [
+        HttpClientModule
       ]
     });
 

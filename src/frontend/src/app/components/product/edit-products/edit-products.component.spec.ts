@@ -5,6 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { initialState } from 'src/app/stores/product/product.reducers';
 import { provideMockStore } from '@ngrx/store/testing';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('EditProductsComponent', () => {
   let component: EditProductsComponent;
@@ -15,10 +16,14 @@ describe('EditProductsComponent', () => {
       declarations: [ EditProductsComponent ],
       imports: [
         RouterTestingModule,
-        NgxSpinnerModule
+        NgxSpinnerModule,
+        HttpClientModule
       ],
       providers: [
-        provideMockStore({ initialState })
+        provideMockStore({ initialState }),
+        {
+          provide: "API_URL", useValue: ''
+        }
       ]
     })
     .compileComponents();

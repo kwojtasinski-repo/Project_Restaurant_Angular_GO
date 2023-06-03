@@ -7,6 +7,7 @@ import { SearchBarComponent } from '../search-bar/search-bar.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
 import { MoneyPipe } from 'src/app/pipes/money-pipe';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('MenuComponent', () => {
   let component: MenuComponent;
@@ -21,10 +22,14 @@ describe('MenuComponent', () => {
       ],
       imports: [
         RouterTestingModule,
-        FormsModule
+        FormsModule,
+        HttpClientModule
       ],
       providers: [
-        provideMockStore({ initialState })
+        provideMockStore({ initialState }),
+        {
+          provide: "API_URL", useValue: ''
+        }
       ]
     })
     .compileComponents();
