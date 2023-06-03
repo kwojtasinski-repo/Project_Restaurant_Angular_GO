@@ -79,7 +79,7 @@ const adminRoutes = [
     }
 ];
 
-export const customRoutes: Routes = [
+export const appRoutes: Routes = [
     {
         path: '',
         canActivate: [authGuard],
