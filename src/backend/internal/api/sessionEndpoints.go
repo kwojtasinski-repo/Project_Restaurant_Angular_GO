@@ -29,6 +29,8 @@ func getAllUserSessions(context *gin.Context) {
 	sessionService, err := createSessionService()
 	if err != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(err.Error()))
+		ResetObjectCreator()
+		return
 	}
 
 	if sessions, err := sessionService.GetUserSessions(userId); err != nil {
@@ -52,6 +54,8 @@ func revokeAllUserSessions(context *gin.Context) {
 	sessionService, err := createSessionService()
 	if err != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(err.Error()))
+		ResetObjectCreator()
+		return
 	}
 
 	if err := sessionService.RevokeAllUsersSessions(userId); err != nil {

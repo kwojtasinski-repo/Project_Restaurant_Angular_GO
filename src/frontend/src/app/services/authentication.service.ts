@@ -10,6 +10,7 @@ import { Credentials } from '../models/credentials';
 export class AuthenticationService {
   private signInPath = 'api/sign-in';
   private usersPath = 'api/users';
+  private signOutPath = 'api/sign-out';
 
   constructor(private httpClient: HttpClient, @Inject('API_URL') private backendUrl: string) { }
 
@@ -21,7 +22,7 @@ export class AuthenticationService {
   }
 
   public logout(): Observable<void> {
-    return new Observable((ob) => { ob.next(); ob.complete(); });
+    return this.httpClient.post<void>(`${this.backendUrl}/${this.signOutPath}`, {}, { withCredentials: true });
   }
 
   public getContext(): Observable<User> {
