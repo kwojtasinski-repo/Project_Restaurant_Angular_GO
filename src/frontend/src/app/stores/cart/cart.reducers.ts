@@ -1,6 +1,7 @@
 import { createReducer, on } from "@ngrx/store";
 import { CartState } from "./cart.state";
-import { addProductToCartFailed, fetchCart, fetchCartFailed, fetchCartSuccess, finalizeCart, finalizeCartFailed, finalizeCartSuccess, removeProductFromCartFailed } from "./cart.actions";
+import { addProductToCartFailed, fetchCart, fetchCartFailed, fetchCartSuccess, finalizeCart, 
+    finalizeCartFailed, finalizeCartSuccess, removeProductFromCartFailed } from "./cart.actions";
 import { RequestState } from "src/app/models/request-state";
 
 export const initialState: CartState = {

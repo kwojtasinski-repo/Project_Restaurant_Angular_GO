@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
-import { productFormClear, productAddRequestBegin, productAddRequestFailed, productAddRequestSuccess, productUpdateRequestBegin, productUpdateRequestSuccess, productCancelOperation } from './product.actions';
+import { productFormClear, productAddRequestBegin, productAddRequestFailed, productAddRequestSuccess, 
+  productUpdateRequestBegin, productUpdateRequestSuccess, productCancelOperation } from './product.actions';
 import { of, catchError, exhaustMap, map } from 'rxjs';
 import { Router } from '@angular/router';
 import { ProductService } from 'src/app/services/product.service';

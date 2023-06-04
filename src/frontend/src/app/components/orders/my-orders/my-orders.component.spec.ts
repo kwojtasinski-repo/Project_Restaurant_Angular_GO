@@ -8,6 +8,7 @@ import { MoneyPipe } from 'src/app/pipes/money-pipe';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { initialState } from 'src/app/stores/order/order.reducers';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('MyOrdersComponent', () => {
   let component: MyOrdersComponent;
@@ -24,10 +25,15 @@ describe('MyOrdersComponent', () => {
         RouterTestingModule,
         NgxSpinnerModule,
         ReactiveFormsModule,
-        FormsModule
+        FormsModule,
+        HttpClientModule
       ],
       providers: [
         provideMockStore({ initialState }),
+        provideMockStore({ initialState }),
+        {
+          provide: "API_URL", useValue: ''
+        }
       ]
     })
     .compileComponents();

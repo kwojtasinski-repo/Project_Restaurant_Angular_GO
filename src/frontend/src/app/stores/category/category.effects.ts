@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
-import { categoryFormClear, categoryAddRequestBegin, categoryAddRequestSuccess, categoryAddRequestFailed, categoryUpdateRequestSuccess, categoryUpdateRequestBegin, categoryCancelOperation } from './category.actions';
+import { categoryFormClear, categoryAddRequestBegin, categoryAddRequestSuccess, categoryAddRequestFailed, 
+  categoryUpdateRequestSuccess, categoryUpdateRequestBegin, categoryCancelOperation } from './category.actions';
 import { of, catchError, exhaustMap, map } from 'rxjs';
 import { Router } from '@angular/router';
 import { getCategory } from './category.selectors';

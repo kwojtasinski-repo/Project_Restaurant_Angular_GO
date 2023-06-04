@@ -1,6 +1,7 @@
 import { createReducer, on } from "@ngrx/store";
 import { ProductState } from "./product.state";
-import { productFormClear, productFormUpdate, productAddRequestFailed, productUpdateRequestFailed, productAddRequestBegin, productUpdateRequestBegin } from "./product.actions";
+import { productFormClear, productFormUpdate, productAddRequestFailed, productUpdateRequestFailed, 
+    productAddRequestBegin, productUpdateRequestBegin } from "./product.actions";
 
 export const initialState: ProductState = {
     product: null,

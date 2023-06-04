@@ -1,6 +1,7 @@
 import { createReducer, on } from "@ngrx/store";
 import { CategoryState } from "./category.state";
-import { categoryAddRequestBegin, categoryAddRequestFailed, categoryFormClear, categoryFormUpdate, categoryUpdateRequestBegin, categoryUpdateRequestFailed } from "./category.actions";
+import { categoryAddRequestBegin, categoryAddRequestFailed, categoryFormClear, categoryFormUpdate, 
+    categoryUpdateRequestBegin, categoryUpdateRequestFailed } from "./category.actions";
 
 export const initialState: CategoryState = {
     category: null,
