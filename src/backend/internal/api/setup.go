@@ -20,6 +20,7 @@ func SetupApi(config config.Config) *gin.Engine {
 	configOptions(config)
 	setupCors(router)
 	log.Println("Setup Endpoints")
+	router.Use(CleanupMiddleware)
 	group := router.Group("/api")
 	group.Use(AuthMiddleware())
 	{
@@ -33,6 +34,13 @@ func SetupApi(config config.Config) *gin.Engine {
 	AddIdentityEndpoints(router)
 	addHealthCheck(router)
 	return router
+}
+
+func CleanupMiddleware(c *gin.Context) {
+	c.Next()
+	// Cleanup
+	log.Println("CleanupMiddleware -> Clean up resources")
+	ResetObjectCreator()
 }
 
 func configOptions(config config.Config) {

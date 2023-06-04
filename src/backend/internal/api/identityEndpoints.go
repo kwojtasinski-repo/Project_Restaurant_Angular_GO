@@ -24,35 +24,30 @@ func signIn(context *gin.Context) {
 	var signInDto dto.SignInDto
 	if err := context.BindJSON(&signInDto); err != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid payload"})
-		ResetObjectCreator()
 		return
 	}
 
 	userService, errCreateObject := createUserService()
 	if errCreateObject != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
-		ResetObjectCreator()
 		return
 	}
 
 	if session, err := userService.Login(signInDto); err != nil {
 		writeErrorResponse(context, *err)
-		ResetObjectCreator()
 	} else {
 		jsonBytes, err := json.Marshal(session)
 		if err != nil {
 			writeErrorResponse(context, *applicationerrors.InternalError(err.Error()))
-			ResetObjectCreator()
 			return
 		}
 
 		if err := settings.CookieIssued.SetValue(context.Writer, jsonBytes); err != nil {
 			writeErrorResponse(context, *applicationerrors.InternalError(err.Error()))
-			ResetObjectCreator()
 			return
 		}
 
-		ResetObjectCreator()
+		context.Writer.WriteHeader(http.StatusOK)
 	}
 }
 
@@ -60,21 +55,21 @@ func signUp(context *gin.Context) {
 	var addUserDto dto.AddUserDto
 	if err := context.BindJSON(&addUserDto); err != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid payload"})
-		ResetObjectCreator()
 		return
 	}
 
 	userService, errCreateObject := createUserService()
 	if errCreateObject != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
+		return
 	}
 
 	if _, err := userService.Register(&addUserDto); err != nil {
 		writeErrorResponse(context, *err)
-	} else {
-		context.Writer.WriteHeader(http.StatusCreated)
+		return
 	}
-	ResetObjectCreator()
+
+	context.Writer.WriteHeader(http.StatusCreated)
 }
 
 func signOut(context *gin.Context) {
@@ -82,24 +77,20 @@ func signOut(context *gin.Context) {
 	sessionService, err := createSessionService()
 	if err != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(err.Error()))
-		ResetObjectCreator()
 		return
 	}
 
 	log.Print("User with sessionId: ", sessionId, " is trying to logout")
 	if err := sessionService.RevokeSession(sessionId); err != nil {
 		writeErrorResponse(context, *err)
-		ResetObjectCreator()
 		return
 	}
 
 	if err := settings.CookieIssued.Delete(context.Writer); err != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(err.Error()))
-		ResetObjectCreator()
 		return
 	}
 
 	log.Print("User with sessionId: ", sessionId, " successfully logout")
 	context.Writer.WriteHeader(http.StatusOK)
-	ResetObjectCreator()
 }

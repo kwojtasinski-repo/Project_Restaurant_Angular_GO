@@ -22,14 +22,12 @@ func getAllUserSessions(context *gin.Context) {
 
 	if errorConvert != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
-		ResetObjectCreator()
 		return
 	}
 
 	sessionService, err := createSessionService()
 	if err != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(err.Error()))
-		ResetObjectCreator()
 		return
 	}
 
@@ -38,7 +36,6 @@ func getAllUserSessions(context *gin.Context) {
 	} else {
 		context.IndentedJSON(http.StatusOK, sessions)
 	}
-	ResetObjectCreator()
 }
 
 func revokeAllUserSessions(context *gin.Context) {
@@ -47,21 +44,19 @@ func revokeAllUserSessions(context *gin.Context) {
 
 	if errorConvert != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
-		ResetObjectCreator()
 		return
 	}
 
 	sessionService, err := createSessionService()
 	if err != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(err.Error()))
-		ResetObjectCreator()
 		return
 	}
 
 	if err := sessionService.RevokeAllUsersSessions(userId); err != nil {
 		writeErrorResponse(context, *err)
-	} else {
-		context.Writer.WriteHeader(http.StatusNoContent)
+		return
 	}
-	ResetObjectCreator()
+
+	context.Writer.WriteHeader(http.StatusNoContent)
 }

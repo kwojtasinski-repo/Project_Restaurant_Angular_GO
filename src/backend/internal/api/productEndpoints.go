@@ -27,10 +27,10 @@ func getProducts(context *gin.Context) {
 
 	if products, err := productService.GetAll(); err != nil {
 		writeErrorResponse(context, *err)
+		return
 	} else {
 		context.IndentedJSON(http.StatusOK, products)
 	}
-	ResetObjectCreator()
 }
 
 func getProduct(context *gin.Context) {
@@ -39,13 +39,13 @@ func getProduct(context *gin.Context) {
 
 	if errorConvert != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
-		ResetObjectCreator()
 		return
 	}
 
 	productService, errCreateObject := createProductService()
 	if errCreateObject != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
+		return
 	}
 
 	if products, err := productService.Get(productId); err != nil {
@@ -53,7 +53,6 @@ func getProduct(context *gin.Context) {
 	} else {
 		context.IndentedJSON(http.StatusOK, products)
 	}
-	ResetObjectCreator()
 }
 
 func addProduct(context *gin.Context) {
@@ -61,25 +60,23 @@ func addProduct(context *gin.Context) {
 
 	if err := context.BindJSON(&newProduct); err != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid Product"})
-		ResetObjectCreator()
 		return
 	}
 
 	productService, errCreateObject := createProductService()
 	if errCreateObject != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
+		return
 	}
 
 	dto, err := productService.Add(&newProduct)
 
 	if err != nil {
 		writeErrorResponse(context, *err)
-		ResetObjectCreator()
 		return
 	}
 
 	context.IndentedJSON(http.StatusCreated, dto)
-	ResetObjectCreator()
 }
 
 func updateProduct(context *gin.Context) {
@@ -88,7 +85,6 @@ func updateProduct(context *gin.Context) {
 
 	if errorConvert != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
-		ResetObjectCreator()
 		return
 	}
 
@@ -96,7 +92,6 @@ func updateProduct(context *gin.Context) {
 
 	if err := context.BindJSON(&updateProduct); err != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid Product"})
-		ResetObjectCreator()
 		return
 	}
 
@@ -104,18 +99,17 @@ func updateProduct(context *gin.Context) {
 	productService, errCreateObject := createProductService()
 	if errCreateObject != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
+		return
 	}
 
 	dto, errUpdate := productService.Update(&updateProduct)
 
 	if errUpdate != nil {
 		writeErrorResponse(context, *errUpdate)
-		ResetObjectCreator()
 		return
 	}
 
 	context.IndentedJSON(http.StatusOK, dto)
-	ResetObjectCreator()
 }
 
 func deleteProduct(context *gin.Context) {
@@ -124,20 +118,19 @@ func deleteProduct(context *gin.Context) {
 
 	if errorConvert != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
-		ResetObjectCreator()
 		return
 	}
 
 	productService, errCreateObject := createProductService()
 	if errCreateObject != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
+		return
 	}
 
 	if err := productService.Delete(productId); err != nil {
 		writeErrorResponse(context, *err)
-		ResetObjectCreator()
+		return
 	}
 
 	context.Writer.WriteHeader(http.StatusNoContent)
-	ResetObjectCreator()
 }

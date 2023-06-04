@@ -23,18 +23,17 @@ func addOrdersFromCart(context *gin.Context) {
 	orderService, errCreateObject := createOrderService()
 	if errCreateObject != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
+		return
 	}
 
 	dto, err := orderService.AddFromCart()
 
 	if err != nil {
 		writeErrorResponse(context, *err)
-		ResetObjectCreator()
 		return
 	}
 
 	context.IndentedJSON(http.StatusCreated, dto)
-	ResetObjectCreator()
 }
 
 func addOrders(context *gin.Context) {
@@ -42,7 +41,6 @@ func addOrders(context *gin.Context) {
 
 	if err := context.BindJSON(&newOrder); err != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid Order"})
-		ResetObjectCreator()
 		return
 	}
 	userId := context.Keys["userId"].(int64)
@@ -51,18 +49,17 @@ func addOrders(context *gin.Context) {
 	orderService, errCreateObject := createOrderService()
 	if errCreateObject != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
+		return
 	}
 
 	dto, err := orderService.Add(newOrder)
 
 	if err != nil {
 		writeErrorResponse(context, *err)
-		ResetObjectCreator()
 		return
 	}
 
 	context.IndentedJSON(http.StatusCreated, dto)
-	ResetObjectCreator()
 }
 
 func getOrder(context *gin.Context) {
@@ -71,7 +68,6 @@ func getOrder(context *gin.Context) {
 
 	if errorConvert != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
-		ResetObjectCreator()
 		return
 	}
 
@@ -86,12 +82,10 @@ func getOrder(context *gin.Context) {
 
 	if err != nil {
 		writeErrorResponse(context, *err)
-		ResetObjectCreator()
 		return
 	}
 
 	context.IndentedJSON(http.StatusOK, dto)
-	ResetObjectCreator()
 }
 
 func getMyOrders(context *gin.Context) {
@@ -104,12 +98,10 @@ func getMyOrders(context *gin.Context) {
 
 	if err != nil {
 		writeErrorResponse(context, *err)
-		ResetObjectCreator()
 		return
 	}
 
 	context.IndentedJSON(http.StatusOK, dtos)
-	ResetObjectCreator()
 }
 
 func getAllOrders(context *gin.Context) {
@@ -122,10 +114,8 @@ func getAllOrders(context *gin.Context) {
 
 	if err != nil {
 		writeErrorResponse(context, *err)
-		ResetObjectCreator()
 		return
 	}
 
 	context.IndentedJSON(http.StatusOK, dtos)
-	ResetObjectCreator()
 }
