@@ -11,10 +11,10 @@ import (
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/settings"
 )
 
-func RegisterSessionCleaner() gocron.Scheduler {
+func RegisterSessionCleaner() *gocron.Scheduler {
 	scheduler := gocron.NewScheduler(time.UTC)
 	scheduler.Every(2).Hour().Do(cleanPermanentlyExpiredSessions) // every 2 hours
-	return *scheduler
+	return scheduler
 }
 
 var createDatabase func() (*sql.DB, error) = func() (*sql.DB, error) {
@@ -22,7 +22,7 @@ var createDatabase func() (*sql.DB, error) = func() (*sql.DB, error) {
 }
 
 var createSessionRepository func(database *sql.DB) repositories.SessionRepository = func(database *sql.DB) repositories.SessionRepository {
-	return repositories.CreateSessionRepository(*database)
+	return repositories.CreateSessionRepository(database)
 }
 
 func cleanPermanentlyExpiredSessions() {

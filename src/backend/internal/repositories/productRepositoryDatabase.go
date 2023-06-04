@@ -12,14 +12,14 @@ import (
 )
 
 type productRepository struct {
-	database sql.DB
+	database *sql.DB
 }
 
 var productRepositoryCached = &cachedProductRepository{
 	cacheStore: cache.New(settings.TimeStoreInCache, settings.TimeStoreInCache),
 }
 
-func CreateProductRepository(database sql.DB) ProductRepository {
+func CreateProductRepository(database *sql.DB) ProductRepository {
 	productRepository := &productRepository{
 		database: database,
 	}

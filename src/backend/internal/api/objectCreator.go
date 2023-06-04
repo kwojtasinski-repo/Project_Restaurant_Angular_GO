@@ -3,6 +3,7 @@ package api
 import (
 	"database/sql"
 	"errors"
+	"log"
 
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/config"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
@@ -13,25 +14,27 @@ import (
 var passwordHasher = services.CreatePassworHasherService()
 var configuration config.Config
 var objectsPerRequest = make(map[string]interface{})
+var sqlDb *sql.DB
 
 func InitObjectCreator(configFile config.Config) {
 	configuration = configFile
 }
 
 func CreateDatabaseConnection() (*sql.DB, error) {
-	service := objectsPerRequest["database"]
-
-	if service != nil {
-		return service.(*sql.DB), nil
+	if sqlDb != nil {
+		return sqlDb, nil
 	}
 
-	database, err := sql.Open("mysql", configuration.Database.Username+":"+configuration.Database.Password+"@tcp(localhost:3306)/"+configuration.Database.Name+"?parseTime=true")
+	var err error
+	sqlDb, err = sql.Open("mysql", configuration.Database.Username+":"+configuration.Database.Password+"@tcp(localhost:3306)/"+configuration.Database.Name+"?parseTime=true")
 	if err != nil {
 		return nil, err
 	}
-	objectsPerRequest["database"] = database
+	log.Println("setting limits connections to database to 5")
+	sqlDb.SetMaxOpenConns(5)
+	sqlDb.SetMaxIdleConns(5)
 
-	return database, nil
+	return sqlDb, nil
 }
 
 func ResetObjectCreator() {
@@ -187,7 +190,7 @@ func createCategoryRepository() (repositories.CategoryRepository, error) {
 		return nil, err
 	}
 
-	categoryRepository := repositories.CreateCategoryRepository(*databaseConnection)
+	categoryRepository := repositories.CreateCategoryRepository(databaseConnection)
 	objectsPerRequest["repositories.CategoryRepository"] = categoryRepository
 	return categoryRepository, nil
 }
@@ -204,7 +207,7 @@ func createProductRepository() (repositories.ProductRepository, error) {
 		return nil, err
 	}
 
-	productRepository := repositories.CreateProductRepository(*databaseConnection)
+	productRepository := repositories.CreateProductRepository(databaseConnection)
 	objectsPerRequest["repositories.ProductRepository"] = productRepository
 	return productRepository, nil
 }
@@ -221,7 +224,7 @@ func createCartRepository() (repositories.CartRepository, error) {
 		return nil, err
 	}
 
-	cartRepository := repositories.CreateCartRepository(*databaseConnection)
+	cartRepository := repositories.CreateCartRepository(databaseConnection)
 	objectsPerRequest["repositories.CartRepository"] = cartRepository
 	return cartRepository, nil
 }
@@ -238,7 +241,7 @@ func createSessionRepository() (repositories.SessionRepository, error) {
 		return nil, err
 	}
 
-	sessionRepository := repositories.CreateSessionRepository(*database)
+	sessionRepository := repositories.CreateSessionRepository(database)
 	objectsPerRequest["repositories.SessionRepository"] = sessionRepository
 	return sessionRepository, nil
 }
@@ -255,7 +258,7 @@ func createOrderRepository() (repositories.OrderRepository, error) {
 		return nil, err
 	}
 
-	orderRepository := repositories.CreateOrderRepository(*databaseConnection)
+	orderRepository := repositories.CreateOrderRepository(databaseConnection)
 	objectsPerRequest["repositories.OrderRepository"] = orderRepository
 	return orderRepository, nil
 }
@@ -272,14 +275,14 @@ func createUserRepository() (repositories.UserRepository, error) {
 		return nil, err
 	}
 
-	userRepository := repositories.CreateUserRepository(*databaseConnection)
+	userRepository := repositories.CreateUserRepository(databaseConnection)
 	objectsPerRequest["repositories.UserRepository"] = userRepository
 	return userRepository, nil
 }
 
 func addSessionProvider(sessionDto *dto.SessionDto) error {
 	if sessionDto == nil {
-		return errors.New("Invalid session")
+		return errors.New("invalid session")
 	}
 
 	objectsPerRequest["sessionProvider"] = sessionDto
@@ -290,7 +293,7 @@ func getSessionProvider() (*dto.SessionDto, error) {
 	sessionProvider := objectsPerRequest["sessionProvider"]
 
 	if sessionProvider == nil {
-		return nil, errors.New("Session Provider is nil, check if is added to objectCreator")
+		return nil, errors.New("'Session Provider' is nil, check if is added to 'objectCreator'")
 	}
 
 	return sessionProvider.(*dto.SessionDto), nil

@@ -12,14 +12,14 @@ import (
 )
 
 type sessionRepository struct {
-	database sql.DB
+	database *sql.DB
 }
 
 var sessionRepositoryCached = &cachedSessionRepository{
 	cacheStore: cache.New(settings.TimeStoreInCache, settings.TimeStoreInCache),
 }
 
-func CreateSessionRepository(database sql.DB) SessionRepository {
+func CreateSessionRepository(database *sql.DB) SessionRepository {
 	sessionRepository := &sessionRepository{
 		database: database,
 	}

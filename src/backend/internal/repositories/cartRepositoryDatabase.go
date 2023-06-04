@@ -9,10 +9,10 @@ import (
 )
 
 type cartRepository struct {
-	database sql.DB
+	database *sql.DB
 }
 
-func CreateCartRepository(database sql.DB) CartRepository {
+func CreateCartRepository(database *sql.DB) CartRepository {
 	return &cartRepository{
 		database: database,
 	}

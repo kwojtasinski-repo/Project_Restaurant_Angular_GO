@@ -10,10 +10,10 @@ import (
 )
 
 type orderRepository struct {
-	database sql.DB
+	database *sql.DB
 }
 
-func CreateOrderRepository(database sql.DB) OrderRepository {
+func CreateOrderRepository(database *sql.DB) OrderRepository {
 	return &orderRepository{
 		database: database,
 	}
@@ -35,7 +35,7 @@ func (repo *orderRepository) Add(order *entities.Order) error {
 
 	for _, orderProduct := range order.OrderProducts {
 		queryOrderProduct := "INSERT INTO `order_products` (name, price, product_id, order_id) VALUES (?, ?, ?, ?);"
-		result, err := repo.database.Exec(queryOrderProduct, orderProduct.Name.Value(), order.Price.Value(), orderProduct.ProductId.Value(), id)
+		result, err := repo.database.Exec(queryOrderProduct, orderProduct.Name.Value(), orderProduct.Price.Value(), orderProduct.ProductId.Value(), id)
 		if err != nil {
 			return err
 		}

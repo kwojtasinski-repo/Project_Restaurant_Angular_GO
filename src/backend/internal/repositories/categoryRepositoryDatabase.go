@@ -11,14 +11,14 @@ import (
 )
 
 type categoryRepository struct {
-	database sql.DB
+	database *sql.DB
 }
 
 var categoryWithCachedRepo = &cachedCategoryRepository{
 	cacheStore: cache.New(settings.TimeStoreInCache, settings.TimeStoreInCache),
 }
 
-func CreateCategoryRepository(database sql.DB) CategoryRepository {
+func CreateCategoryRepository(database *sql.DB) CategoryRepository {
 	categoryRepository := &categoryRepository{
 		database: database,
 	}

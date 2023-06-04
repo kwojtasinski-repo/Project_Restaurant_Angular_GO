@@ -44,7 +44,7 @@
                 </td>
                 <td >
                     <button class="btn btn-primary me-2" [routerLink]="'/products/view/' + cart.product?.id">Szczegóły</button>
-                    <button class="btn btn-danger" title="Usuń" (click)="deleteCart(cart)">Usuń</button>
+                    <button class="btn btn-danger" type="button" title="Usuń" (click)="deleteCart(cart); $event.preventDefault()">Usuń</button>
                 </td>
             </tr>
         </tbody>
@@ -54,9 +54,12 @@
             Koszt: {{ calculateTotal((carts$ | async)) | money }} zł
         </div>
         <div>
-            <button class="btn btn-success" (click)="finalizeOrder()">
-                Złóż zamówienie
-            </button>
+            <app-spinner-button 
+                [className]="'btn btn-success'" 
+                [buttonText]="'Złóż zamówienie'" 
+                [disabled]="(finalizeState$ | async) === 'loading'"
+                (onClick)="finalizeOrder()">
+            </app-spinner-button>
         </div>
     </div>
 </ng-template>

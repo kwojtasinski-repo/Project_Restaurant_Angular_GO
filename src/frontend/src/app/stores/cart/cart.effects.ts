@@ -62,6 +62,13 @@ export class CartEffects {
     )
   );
 
+  removeProductFromCartSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(removeProductFromCartSuccess),
+      tap(() => this.store.dispatch(fetchCart()))
+    ), { dispatch: false }
+  );
+
   finalizeCart$ = createEffect(() =>
     this.actions$.pipe(
       ofType(finalizeCart),

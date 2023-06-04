@@ -58,7 +58,7 @@ type corsConfig struct {
 	preflightHeaders http.Header
 }
 
-func normalize(values []string) []string {
+func normalizeToLower(values []string) []string {
 	if values == nil {
 		return nil
 	}
@@ -67,7 +67,24 @@ func normalize(values []string) []string {
 	for _, value := range values {
 		value = strings.TrimSpace(value)
 		value = strings.ToLower(value)
-		if _, seen := distinctKeyValues[value]; !seen {
+		if _, distinctedValue := distinctKeyValues[value]; !distinctedValue {
+			normalizedStrings = append(normalizedStrings, value)
+			distinctKeyValues[value] = true
+		}
+	}
+	return normalizedStrings
+}
+
+func normalizeToUpper(values []string) []string {
+	if values == nil {
+		return nil
+	}
+	distinctKeyValues := make(map[string]bool, len(values))
+	normalizedStrings := make([]string, 0, len(values))
+	for _, value := range values {
+		value = strings.TrimSpace(value)
+		value = strings.ToUpper(value)
+		if _, distinctedValue := distinctKeyValues[value]; !distinctedValue {
 			normalizedStrings = append(normalizedStrings, value)
 			distinctKeyValues[value] = true
 		}
@@ -81,7 +98,7 @@ func generateNormalHeaders(c CorsConfig, allowAllOrigins bool) http.Header {
 		headers.Set("Access-Control-Allow-Credentials", "true")
 	}
 	if len(c.ExposeHeaders) > 0 {
-		headers.Set("Access-Control-Expose-Headers", strings.Join(normalize(c.ExposeHeaders), ","))
+		headers.Set("Access-Control-Expose-Headers", strings.Join(normalizeToLower(c.ExposeHeaders), ","))
 	}
 	if allowAllOrigins {
 		headers.Set("Access-Control-Allow-Origin", "*")
@@ -97,10 +114,10 @@ func generatePreflightHeaders(c CorsConfig, allowAllOrigins bool) http.Header {
 		headers.Set("Access-Control-Allow-Credentials", "true")
 	}
 	if len(c.AllowMethods) > 0 {
-		headers.Set("Access-Control-Allow-Methods", strings.Join(normalize(c.AllowMethods), ",")+", PUT")
+		headers.Set("Access-Control-Allow-Methods", strings.Join(normalizeToUpper(c.AllowMethods), ","))
 	}
 	if len(c.AllowHeaders) > 0 {
-		allowHeaders := normalize(c.AllowHeaders)
+		allowHeaders := normalizeToLower(c.AllowHeaders)
 		headers.Set("Access-Control-Allow-Headers", strings.Join(allowHeaders, ","))
 	}
 	if allowAllOrigins {
@@ -128,7 +145,7 @@ func initCors(config CorsConfig) *corsConfig {
 	return &corsConfig{
 		allowAllOrigins:  allowAllOrigins,
 		allowCredentials: config.AllowCredentials,
-		allowOrigins:     normalize(config.AllowOrigins),
+		allowOrigins:     normalizeToLower(config.AllowOrigins),
 		normalHeaders:    generateNormalHeaders(config, allowAllOrigins),
 		preflightHeaders: generatePreflightHeaders(config, allowAllOrigins),
 	}

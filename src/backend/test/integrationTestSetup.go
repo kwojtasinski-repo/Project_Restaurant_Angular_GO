@@ -17,7 +17,7 @@ const TestConfigFile = "config.test.yml"
 type IntegrationTestSuite struct {
 	suite.Suite
 	config   config.Config
-	database sql.DB
+	database *sql.DB
 	router   *gin.Engine
 }
 
@@ -36,7 +36,7 @@ func (suite *IntegrationTestSuite) SetupSuite() {
 	if err != nil {
 		log.Fatal("Cannot open database ", configFile.Database.Name)
 	}
-	suite.database = *database
+	suite.database = database
 	suite.router = api.SetupApi(suite.config)
 }
 

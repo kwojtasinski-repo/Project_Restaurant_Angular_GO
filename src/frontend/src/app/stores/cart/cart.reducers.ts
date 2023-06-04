@@ -1,12 +1,13 @@
 import { createReducer, on } from "@ngrx/store";
 import { CartState } from "./cart.state";
-import { addProductToCartFailed, fetchCart, fetchCartFailed, fetchCartSuccess, finalizeCartFailed, finalizeCartSuccess, removeProductFromCartFailed } from "./cart.actions";
+import { addProductToCartFailed, fetchCart, fetchCartFailed, fetchCartSuccess, finalizeCart, finalizeCartFailed, finalizeCartSuccess, removeProductFromCartFailed } from "./cart.actions";
 import { RequestState } from "src/app/models/request-state";
 
 export const initialState: CartState = {
     cart: [],
     fetchState: RequestState.init,
-    error: null
+    error: null,
+    finalizeCartState: RequestState.init
 }
 
 export const cartReducer = createReducer(
@@ -45,17 +46,25 @@ export const cartReducer = createReducer(
             error: action.error
         }
     }),
+    on(finalizeCart, (state, _) => {
+        return {
+            ...state,
+            finalizeCartState: RequestState.loading
+        }
+    }),
     on(finalizeCartFailed, (state, action) => {
         return {
             ...state,
-            error: action.error
+            error: action.error,
+            finalizeCartState: RequestState.failed
         }
     }),
     on(finalizeCartSuccess, (state, _) => {
         return {
             ...state,
             cart: [],
-            error: null
+            error: null,
+            finalizeCartState: RequestState.success
         }
     })
 );
