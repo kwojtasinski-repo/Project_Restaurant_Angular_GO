@@ -1,6 +1,9 @@
 <div class="imgbackground">
 </div>
 <div class="login-form">
+    <div>
+        <h4 class="text-center">Logowanie</h4>
+    </div>
     <div class="mt-2 mb-2" *ngIf="error$ | async">
         <div class="alert alert-danger">
             {{ error$ | async }}
@@ -32,6 +35,9 @@
                     </ng-container>
                 </ng-container>
             </ng-container>
+        </div>
+        <div class="mt-2 mb-2">
+            <a [routerLink]="['/register']">Utwórz konto</a>
         </div>
         <div>
             <app-spinner-button 

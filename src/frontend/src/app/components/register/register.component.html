@@ -1,0 +1,65 @@
+<div class="imgbackground">
+</div>
+<div class="register-form">
+    <div>
+        <h4 class="text-center">Rejestracja</h4>
+    </div>
+    <!-- <div class="mt-2 mb-2" *ngIf="error$ | async">
+        <div class="alert alert-danger">
+            {{ error$ | async }}
+        </div>
+    </div> -->
+    <form >
+        <div class="form-group mt-2 mb-2">
+            <label for="email-input" class="text-white bg-dark label-register-form">Email</label>
+            <input id="email-input" type="email" class="form-control" placeholder="Wpisz adres email" />
+            <!-- <ng-container *ngIf="loginForm.dirty">
+                <ng-container *ngFor="let error of loginForm.get('emailAddress')?.errors | keyvalue">
+                    <ng-container *ngIf="error.value && this.loginForm.get('emailAddress')?.dirty">
+                        <div class="invalid-feedback d-block bg-dark label-register-form text-break">
+                            {{ getErrorMessage(error) }}
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </ng-container> -->
+        </div>
+        <div class="form-group mt-2 mb-2">
+            <label for="password-input" class="text-white bg-dark label-register-form">Hasło</label>
+            <input id="password-input" type="password" class="form-control" placeholder="Wpisz hasło" />
+            <!-- <ng-container *ngIf="loginForm.dirty">
+                <ng-container *ngFor="let error of loginForm.get('password')?.errors | keyvalue">
+                    <ng-container *ngIf="error.value && this.loginForm.get('password')?.dirty">
+                        <div class="invalid-feedback d-block bg-dark label-register-form text-break">
+                            {{ getErrorMessage(error) }}
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </ng-container> -->
+        </div>
+        <div class="form-group mt-2 mb-2">
+            <label for="password-input" class="text-white bg-dark label-register-form">Powtórz hasło</label>
+            <input id="password-input" type="password" class="form-control" placeholder="Wpisz hasło" />
+            <!-- <ng-container *ngIf="loginForm.dirty">
+                <ng-container *ngFor="let error of loginForm.get('password')?.errors | keyvalue">
+                    <ng-container *ngIf="error.value && this.loginForm.get('password')?.dirty">
+                        <div class="invalid-feedback d-block bg-dark label-register-form text-break">
+                            {{ getErrorMessage(error) }}
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </ng-container> -->
+        </div>
+        <div class="mb-2">
+            <a [routerLink]="['/login']">Wróc do logowania</a>
+        </div>
+        <div>
+            <app-spinner-button 
+                [className]="'btn btn-primary me-2'" 
+                [buttonText]="'Zarejestruj'" >
+                <!-- [version]="spinnerVersion" -->
+                <!--</app-spinner-button> [disabled]="(loginRequestState$ | async) === 'loading'" -->
+                <!-- (onClick)="onSubmit(); $event.preventDefault()" -->
+            </app-spinner-button>
+        </div>
+    </form>
+</div>

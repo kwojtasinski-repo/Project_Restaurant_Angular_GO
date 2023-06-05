@@ -13,6 +13,7 @@ import { AddProductsComponent } from "./components/product/add-products/add-prod
 import { EditProductsComponent } from "./components/product/edit-products/edit-products.component";
 import { ProductFormComponent } from "./components/product/product-form/product-form.component";
 import { ViewProductsComponent } from "./components/product/view-products/view-products.component";
+import { RegisterComponent } from "./components/register/register.component";
 import { SearchBarComponent } from "./components/search-bar/search-bar.component";
 import { SpinnerButtonComponent } from "./components/spinner-button/spinner-button.component";
 import { CurrencyFormatterDirective } from "./directives/currency-formatter-directive";
@@ -41,5 +42,6 @@ export const appDeclarations = [
     MoneyPipe,
     MyOrdersComponent,
     SpinnerButtonComponent,
-    ErrorDialogComponent
+    ErrorDialogComponent,
+    RegisterComponent,
   ]

@@ -12,7 +12,7 @@ export class AppComponent {
 
   onActivateRoute() {
     this.appService.setCurrentUrl(this.router.url);
-    if (this.router.url === '/login') {
+    if (this.router.url === '/login' || this.router.url === '/register') {
         this.appService.hideHeader();
     } else {
         this.appService.showHeader();

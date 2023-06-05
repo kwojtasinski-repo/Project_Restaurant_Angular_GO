@@ -6,7 +6,7 @@ import { appProviders } from './app-provider';
 
 @NgModule({
   declarations: [
-    ...appDeclarations,
+    ...appDeclarations
   ],
   imports: [
     ...appImports

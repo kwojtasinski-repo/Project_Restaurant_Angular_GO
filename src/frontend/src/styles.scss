@@ -7,3 +7,13 @@
 @import "node_modules/ngx-bootstrap/datepicker/bs-datepicker";
 
 $footerSize: 50px;
+
+.imgbackground {
+    background-repeat: no-repeat;
+    background-image: url("./assets/background.jpg");
+    background-size: cover;
+    height: calc(100vh - $footerSize);
+    width: 100%;
+    opacity: 25%;
+    z-index: -1;
+}

@@ -16,6 +16,7 @@ import { MyOrdersComponent } from "./components/orders/my-orders/my-orders.compo
 import { LoginState } from "./stores/login/login.state";
 import { Store } from '@ngrx/store';
 import { initializeLogin } from "./stores/login/login.actions";
+import { RegisterComponent } from "./components/register/register.component";
 
 const authGuard = (next: ActivatedRouteSnapshot, routerStateSnapshot: RouterStateSnapshot) => {
     if (routerStateSnapshot.url === '/') {
@@ -110,6 +111,11 @@ export const appRoutes: Routes = [
     {
         path: 'login',
         component: LoginComponent,
+        canActivate: [authorizedGuard]
+    },
+    {
+        path: 'register',
+        component: RegisterComponent,
         canActivate: [authorizedGuard]
     },
     {
