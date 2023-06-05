@@ -1,8 +1,8 @@
 import { createAction, props } from "@ngrx/store";
 import { Category } from "src/app/models/category";
 
-export const categoryFormClear = createAction('[Category] Category From Clear');
-export const categoryFormUpdate = createAction('[Category] Category From Update', props<{ category: Category }>());
+export const categoryFormClear = createAction('[Category] Category Form Clear');
+export const categoryFormUpdate = createAction('[Category] Category Form Update', props<{ category: Category }>());
 export const categoryAddRequestBegin = createAction('[Category] Category Add Request Begin');
 export const categoryAddRequestSuccess = createAction('[Category] Category Add Request Success');
 export const categoryAddRequestFailed = createAction('[Category] Category Add Request Failed', props<{ error: string }>());
