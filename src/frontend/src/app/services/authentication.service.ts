@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
-import { Observable, concatMap } from 'rxjs';
+import { Observable, concatMap, EMPTY } from 'rxjs';
 import { User } from '../models/user';
 import { HttpClient } from '@angular/common/http';
 import { Credentials } from '../models/credentials';
@@ -27,5 +27,9 @@ export class AuthenticationService {
 
   public getContext(): Observable<User> {
     return this.httpClient.get<User>(`${this.backendUrl}/${this.usersPath}/me`, {withCredentials: true});
+  }
+
+  public register(credentials: Credentials): Observable<void> {
+    return EMPTY;
   }
 }

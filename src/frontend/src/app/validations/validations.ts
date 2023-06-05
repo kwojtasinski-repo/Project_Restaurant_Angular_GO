@@ -16,3 +16,15 @@ function mapCodeToMessage(code: any): string | null {
     }
     return null;
 }
+
+export function checkMatchValidator(field1: string, field2: string) {
+    return function (form: any) {
+      let field1Value = form.get(field1).value;
+      let field2Value = form.get(field2).value;
+  
+      if (field1Value !== '' && field1Value !== field2Value) {
+        return { 'match': `pola '${field1Value}' i '${field2Value}' nie są takie same` }
+      }
+      return null;
+    }
+  }
