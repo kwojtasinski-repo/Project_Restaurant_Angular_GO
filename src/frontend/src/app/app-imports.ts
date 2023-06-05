@@ -27,6 +27,9 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { AppRoutingModule } from "./app-routing.module";
 import { BrowserModule } from "@angular/platform-browser";
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { registerStoreName } from "./stores/register/register.store.names";
+import { registerReducer } from "./stores/register/register.reducers";
+import { RegisterEffects } from "./stores/register/register.effects";
 
 export const appImports = [
     BrowserModule,
@@ -42,7 +45,8 @@ export const appImports = [
       [productStoreName]: productReducer, 
       [categoryStoreName]: categoryReducer, 
       [cartStoreName]: cartReducer, 
-      [orderStoreName]: orderReducer
+      [orderStoreName]: orderReducer,
+      [registerStoreName]: registerReducer
     }),
     EffectsModule.forRoot([ 
       LoginEffects, 
@@ -50,7 +54,8 @@ export const appImports = [
       ProductEffects, 
       CategoryEffects, 
       CartEffects, 
-      OrderEffects
+      OrderEffects,
+      RegisterEffects
     ]),
     NgxSpinnerModule,
     HttpClientModule,

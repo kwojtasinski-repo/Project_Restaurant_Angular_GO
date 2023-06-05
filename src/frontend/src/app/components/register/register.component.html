@@ -35,6 +35,15 @@
                     </ng-container>
                 </ng-container>
             </ng-container>
+            <ng-container *ngIf="registerForm.errors">
+                <ng-container *ngFor="let error of registerForm.errors | keyvalue">
+                    <ng-container *ngIf="error.value && this.registerForm.get('confirmPassword')?.dirty">
+                        <div class="invalid-feedback d-block bg-dark label-register-form text-break">
+                            {{ error.value }}
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </ng-container>
         </div>
         <div class="form-group mt-2 mb-2">
             <label for="confirm-password-input" class="text-white bg-dark label-register-form">Powtórz hasło</label>
@@ -44,6 +53,15 @@
                     <ng-container *ngIf="error.value && this.registerForm.get('confirmPassword')?.dirty">
                         <div class="invalid-feedback d-block bg-dark label-register-form text-break">
                             {{ getErrorMessage(error) }}
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </ng-container>
+            <ng-container *ngIf="registerForm.errors">
+                <ng-container *ngFor="let error of registerForm.errors | keyvalue">
+                    <ng-container *ngIf="error.value && this.registerForm.get('confirmPassword')?.dirty">
+                        <div class="invalid-feedback d-block bg-dark label-register-form text-break">
+                            {{ error.value }}
                         </div>
                     </ng-container>
                 </ng-container>

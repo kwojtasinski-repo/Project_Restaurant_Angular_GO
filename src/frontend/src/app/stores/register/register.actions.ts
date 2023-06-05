@@ -8,5 +8,5 @@ export const registerFormUpdate = createAction('[Register] Register Form Update 
     }
 }>());
 export const registerRequestBegin = createAction('[Register] Register Request Begin');
-export const registerRequestSuccess = createAction('[Register] Register Request Begin');
-export const registerRequestFailed = createAction('[Register] Register Request Begin', props<{ error: any }>());
+export const registerRequestSuccess = createAction('[Register] Register Request Success');
+export const registerRequestFailed = createAction('[Register] Register Request Failed', props<{ error: any }>());

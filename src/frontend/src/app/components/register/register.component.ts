@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { getError, getRegisterRequestState } from 'src/app/stores/register/register.selectors';
+import { getEmail, getError, getPassword, getPasswordConfirm, getRegisterRequestState } from 'src/app/stores/register/register.selectors';
 import { RegisterState } from 'src/app/stores/register/register.state';
 import { SpinnerVersion } from '../spinner-button/spinner-version';
 import { Store } from '@ngrx/store';
-import { Subscription } from 'rxjs';
-import { checkMatchValidator, getValidationMessage } from 'src/app/validations/validations';
+import { Subscription, debounceTime } from 'rxjs';
+import { PATTERN_ONE_UPPER_ONE_LOWER_ONE_SPECIAL_CHARACTER, checkMatchValidator, getValidationMessage } from 'src/app/validations/validations';
 import { Actions, ofType } from '@ngrx/effects';
-import { registerRequestBegin, registerRequestFailed } from 'src/app/stores/register/register.actions';
+import { registerFormUpdate, registerRequestBegin, registerRequestFailed } from 'src/app/stores/register/register.actions';
 
 @Component({
   selector: 'app-register',
@@ -19,26 +19,29 @@ export class RegisterComponent {
   public error$ = this.store.select(getError);
   public loginRequestState$ = this.store.select(getRegisterRequestState);
   public spinnerVersion = SpinnerVersion.grow;
+  public email$ = this.store.select(getEmail);
+  public password$ = this.store.select(getPassword);
+  public confirmPassword$ = this.store.select(getPasswordConfirm);
   private loginError$: Subscription = new Subscription();
 
-  constructor(private store: Store<RegisterState>, private actions$: Actions) { 
+  constructor(private store: Store<RegisterState>, private actions$: Actions) {
     this.registerForm = new FormGroup({
         emailAddress: new FormControl('', Validators.compose([Validators.required, Validators.email])),
         password: new FormControl('', Validators.compose([ 
           Validators.required, 
           Validators.minLength(12), 
           Validators.maxLength(64), 
-          Validators.pattern("^(.[^a-z]{1,}|[^A-Z]{1,}|[^\\d]{1,}|[^\\W]{1,})$|[\\s]")])
+          Validators.pattern(PATTERN_ONE_UPPER_ONE_LOWER_ONE_SPECIAL_CHARACTER)])
         ),
         confirmPassword: new FormControl('', Validators.compose([ 
           Validators.required, 
           Validators.minLength(12), 
           Validators.maxLength(64), 
-          Validators.pattern("^(.[^a-z]{1,}|[^A-Z]{1,}|[^\\d]{1,}|[^\\W]{1,})$|[\\s]")]),
+          Validators.pattern(PATTERN_ONE_UPPER_ONE_LOWER_ONE_SPECIAL_CHARACTER)]),
         )
       },
       {
-        validators: checkMatchValidator('password', 'confirmPassword')
+        validators: checkMatchValidator({ fieldName: 'password', labelName: 'Hasło' } , { fieldName: 'confirmPassword', labelName: 'Powtórz hasło' })
       }
     );
   }
@@ -48,10 +51,22 @@ export class RegisterComponent {
       .pipe(ofType(registerRequestFailed))
       .subscribe(() => 
         this.registerForm.setValue({
+          emailAddress: this.registerForm.get('emailAddress')?.value ?? '',
           password: '',
           confirmPassword: ''
         }, { emitEvent: false })
       );
+
+      this.registerForm.valueChanges
+        .pipe(debounceTime(10))
+        .subscribe(val => {
+          this.store.dispatch(registerFormUpdate({
+          form: {
+            email: val.email,
+            password: val.password,
+            confirmPassword: val.confirmPassword,
+          }
+        }))})
   }
 
   public ngOnDestroy(): void {

@@ -11,7 +11,7 @@ export const initialState: RegisterState = {
     registerRequestState: RequestState.init
 }
 
-export const loginReducer = createReducer(
+export const registerReducer = createReducer(
     initialState,
     on(registerFormUpdate, (state, action) => {
         return {
@@ -30,14 +30,21 @@ export const loginReducer = createReducer(
     on(registerRequestSuccess, (state, _) => {
         return {
             ...state,
-            registerRequestState: RequestState.success
+            registerRequestState: RequestState.success,
+            email: '',
+            password: '',
+            passwordConfirm: '',
+            error: null
         }
     }),
     on(registerRequestFailed, (state, action) => {
         return {
             ...state,
             error: action.error,
-            registerRequestState: RequestState.failed
+            registerRequestState: RequestState.failed,
+            email: '',
+            password: '',
+            passwordConfirm: '',
         }
     }),
 );

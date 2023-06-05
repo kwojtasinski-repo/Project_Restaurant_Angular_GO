@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { registerRequestBegin, registerRequestFailed, registerRequestSuccess } from './register.actions';
-import { exhaustMap, of, tap, withLatestFrom } from 'rxjs';
+import { catchError, exhaustMap, map, of, tap, withLatestFrom } from 'rxjs';
 import { RegisterState } from './register.state';
 import { Store } from '@ngrx/store';
 import { getForm } from './register.selectors';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Router } from '@angular/router';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Injectable()
 export class RegisterEffects {
@@ -14,8 +16,14 @@ export class RegisterEffects {
       ofType(registerRequestBegin),
       withLatestFrom(this.store.select(getForm)),
       tap(() => this.spinnerService.show()),
-      exhaustMap((_) => of(registerRequestSuccess())
-        //catchError((err) => of(registerRequestFailed(err.message))))
+      exhaustMap(([_, form]) => this.authenticationService.register({
+          email: form.email,
+          password: form.password
+        })
+        .pipe(
+          map(() => registerRequestSuccess()),
+          catchError((err) => of(registerRequestFailed(err.message)))
+        )
       )
     )
   );
@@ -23,7 +31,10 @@ export class RegisterEffects {
   registerRequestSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType(registerRequestSuccess),
-      tap(() => this.spinnerService.hide())
+      tap(() => {
+        this.spinnerService.hide();
+        this.router.navigate(['/login']);
+      })
     ), { dispatch: false }
   );
 
@@ -37,6 +48,8 @@ export class RegisterEffects {
   constructor(
     private actions$: Actions,
     private store: Store<RegisterState>,
-    private spinnerService: NgxSpinnerService
+    private spinnerService: NgxSpinnerService,
+    private authenticationService: AuthenticationService,
+    private router: Router
   ) {}
 }

@@ -11,6 +11,7 @@ export class AuthenticationService {
   private signInPath = 'api/sign-in';
   private usersPath = 'api/users';
   private signOutPath = 'api/sign-out';
+  private signUpPath = '/api/sign-up';
 
   constructor(private httpClient: HttpClient, @Inject('API_URL') private backendUrl: string) { }
 
@@ -30,6 +31,6 @@ export class AuthenticationService {
   }
 
   public register(credentials: Credentials): Observable<void> {
-    return EMPTY;
+    return this.httpClient.post<void>(`${this.backendUrl}/${this.signUpPath}`, credentials, {withCredentials: true});
   }
 }
