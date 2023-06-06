@@ -3,9 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of, catchError, exhaustMap, map, mergeMap, tap } from 'rxjs';
 import { CartState } from './cart.state';
 import { Store } from '@ngrx/store';
-import { addProductToCart, addProductToCartFailed, addProductToCartSuccess, fetchCart, fetchCartFailed, 
-  fetchCartSuccess, finalizeCart, finalizeCartFailed, finalizeCartSuccess, removeProductFromCart, 
-  removeProductFromCartFailed, removeProductFromCartSuccess } from './cart.actions';
+import * as CartActions from './cart.actions';
 import { CartService } from 'src/app/services/cart.service';
 import { OrderService } from 'src/app/services/order.service';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -15,12 +13,12 @@ import { Router } from '@angular/router';
 export class CartEffects {
   fectchCart$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(fetchCart),
+      ofType(CartActions.fetchCart),
       mergeMap(() => this.cartService.getCart()
         .pipe(
           tap(() => this.spinnerService.show()),
-          map((cart) => fetchCartSuccess({ cart })),
-          catchError((err) => of(fetchCartFailed(err)))
+          map((cart) => CartActions.fetchCartSuccess({ cart })),
+          catchError((err) => of(CartActions.fetchCartFailed(err)))
         )
       )
     )
@@ -28,25 +26,25 @@ export class CartEffects {
 
   fetchCartFailed$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(fetchCartFailed),
+      ofType(CartActions.fetchCartFailed),
         tap(() => this.spinnerService.hide())
     ), {dispatch: false}
   );
 
   fetchCartSuccess$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(fetchCartSuccess),
+      ofType(CartActions.fetchCartSuccess),
         tap(() => this.spinnerService.hide())
     ), {dispatch: false}
   );
 
   addProductToCart$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(addProductToCart),
+      ofType(CartActions.addProductToCart),
       exhaustMap((action) => this.cartService.add(action.product)
         .pipe(
-          map(() => addProductToCartSuccess()),
-          catchError((err) => of(addProductToCartFailed(err)))
+          map(() => CartActions.addProductToCartSuccess()),
+          catchError((err) => of(CartActions.addProductToCartFailed(err)))
         )
       )
     )
@@ -54,11 +52,11 @@ export class CartEffects {
 
   removeProductFromCart$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(removeProductFromCart),
+      ofType(CartActions.removeProductFromCart),
       exhaustMap((action) => this.cartService.delete(action.cart.id)
         .pipe(
-          map(() => removeProductFromCartSuccess()),
-          catchError((err) => of(removeProductFromCartFailed(err)))
+          map(() => CartActions.removeProductFromCartSuccess()),
+          catchError((err) => of(CartActions.removeProductFromCartFailed(err)))
         )
       )
     )
@@ -66,18 +64,18 @@ export class CartEffects {
 
   removeProductFromCartSuccess$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(removeProductFromCartSuccess),
-      tap(() => this.store.dispatch(fetchCart()))
+      ofType(CartActions.removeProductFromCartSuccess),
+      tap(() => this.store.dispatch(CartActions.fetchCart()))
     ), { dispatch: false }
   );
 
   finalizeCart$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(finalizeCart),
+      ofType(CartActions.finalizeCart),
       exhaustMap(() => this.orderService.addFromCart()
         .pipe(
-          map((orderId) => finalizeCartSuccess({ orderId })),
-          catchError((err) => of(finalizeCartFailed(err)))
+          map((orderId) => CartActions.finalizeCartSuccess({ orderId })),
+          catchError((err) => of(CartActions.finalizeCartFailed(err)))
         )
       )
     )
@@ -85,7 +83,7 @@ export class CartEffects {
 
   finalizeCartSuccess$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(finalizeCartSuccess),
+      ofType(CartActions.finalizeCartSuccess),
       tap((action) => this.router.navigate(['/orders/view/' + action.orderId]))
     ), { dispatch: false }
   );

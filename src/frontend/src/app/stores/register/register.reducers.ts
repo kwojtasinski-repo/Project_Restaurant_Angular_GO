@@ -1,7 +1,7 @@
 import { createReducer, on } from "@ngrx/store";
 import { RegisterState } from "./register.state";
 import { RequestState } from "src/app/models/request-state";
-import { registerFormUpdate, registerRequestBegin, registerRequestFailed, registerRequestSuccess } from "./register.actions";
+import * as RegisterActions from "./register.actions";
 
 export const initialState: RegisterState = {
     email: '',
@@ -13,7 +13,7 @@ export const initialState: RegisterState = {
 
 export const registerReducer = createReducer(
     initialState,
-    on(registerFormUpdate, (state, action) => {
+    on(RegisterActions.registerFormUpdate, (state, action) => {
         return {
             ...state,
             email: action.form.email,
@@ -21,13 +21,13 @@ export const registerReducer = createReducer(
             passwordConfirm: action.form.confirmPassword
         }
     }),
-    on(registerRequestBegin, (state, _) => {
+    on(RegisterActions.registerRequestBegin, (state, _) => {
         return {
             ...state,
             registerRequestState: RequestState.loading
         }
     }),
-    on(registerRequestSuccess, (state, _) => {
+    on(RegisterActions.registerRequestSuccess, (state, _) => {
         return {
             ...state,
             registerRequestState: RequestState.success,
@@ -37,7 +37,7 @@ export const registerReducer = createReducer(
             error: null
         }
     }),
-    on(registerRequestFailed, (state, action) => {
+    on(RegisterActions.registerRequestFailed, (state, action) => {
         return {
             ...state,
             error: action.error,

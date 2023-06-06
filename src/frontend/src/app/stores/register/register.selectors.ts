@@ -3,7 +3,7 @@ import { RegisterState } from "./register.state";
 import { registerStoreName } from "./register.store.names";
 import { RequestState } from "src/app/models/request-state";
 
-export const selectRegisterState = createFeatureSelector<RegisterState>(registerStoreName);
+const selectRegisterState = createFeatureSelector<RegisterState>(registerStoreName);
 export const getEmail = createSelector(selectRegisterState, (state): string => state.email);
 export const getPassword = createSelector(selectRegisterState, (state): string => state.password);
 export const getPasswordConfirm = createSelector(selectRegisterState, (state): string => state.passwordConfirm);

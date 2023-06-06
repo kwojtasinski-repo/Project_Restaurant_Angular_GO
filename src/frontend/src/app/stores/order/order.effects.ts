@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of, catchError, map, mergeMap, tap } from 'rxjs';
-import { fetchOrder, fetchOrderFailed, fetchOrderSuccess } from './order.actions';
+import * as OrderActions from './order.actions';
 import { OrderService } from 'src/app/services/order.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 
@@ -9,12 +9,12 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class OrderEffects {
   fectchCart$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(fetchOrder),
+      ofType(OrderActions.fetchOrder),
       mergeMap((action) => this.orderService.get(action.id)
         .pipe(
           tap(() => this.spinnerService.show()),
-          map((order) => fetchOrderSuccess({ order })),
-          catchError((err) => of(fetchOrderFailed(err)))
+          map((order) => OrderActions.fetchOrderSuccess({ order })),
+          catchError((err) => of(OrderActions.fetchOrderFailed(err)))
         )
       )
     )
@@ -22,14 +22,14 @@ export class OrderEffects {
 
   fetchCartFailed$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(fetchOrderFailed),
+      ofType(OrderActions.fetchOrderFailed),
         tap(() => this.spinnerService.hide())
     ), {dispatch: false}
   );
 
   fetchCartSuccess$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(fetchOrderSuccess),
+      ofType(OrderActions.fetchOrderSuccess),
         tap(() => this.spinnerService.hide())
     ), {dispatch: false}
   );

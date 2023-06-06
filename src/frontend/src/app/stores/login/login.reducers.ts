@@ -1,8 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { LoginState } from "./login.state";
-import { initializeLogin, loginFormUpdate, loginRequest, loginRequestFailed, loginRequestSuccess, 
-    logoutRequest, 
-    logoutRequestFailed, logoutRequestSuccess, reloginRequestFailed, reloginRequestSuccess } from "./login.actions";
+import * as CategoryActions from "./login.actions";
 import { RequestState } from "src/app/models/request-state";
 
 export const initialState: LoginState = {
@@ -20,7 +18,7 @@ export const initialState: LoginState = {
 
 export const loginReducer = createReducer(
     initialState,
-    on(initializeLogin, (state, action) => {
+    on(CategoryActions.initializeLogin, (state, action) => {
         return {
             ...state,
             path: action.path === '' ? 'menu' : action.path,
@@ -28,20 +26,20 @@ export const loginReducer = createReducer(
             logoutRequestState: RequestState.init
         }
     }),
-    on(loginFormUpdate, (state, action) => {
+    on(CategoryActions.loginFormUpdate, (state, action) => {
         return {
             ...state,
             credentials: action.credentials
         }
     }),
-    on(loginRequest, (state, _) => {
+    on(CategoryActions.loginRequest, (state, _) => {
         return {
             ...state,
             error: null,
             loginRequestState: RequestState.loading
         }
     }),
-    on(loginRequestSuccess, (state, action) => {
+    on(CategoryActions.loginRequestSuccess, (state, action) => {
         return {
             ...state,
             user: action.user,
@@ -54,7 +52,7 @@ export const loginReducer = createReducer(
             loginRequestState: RequestState.success
         }
     }),
-    on(loginRequestFailed, (state, action) => {
+    on(CategoryActions.loginRequestFailed, (state, action) => {
         return {
             ...state,
             user: null,
@@ -67,13 +65,13 @@ export const loginReducer = createReducer(
             loginRequestState: RequestState.failed
         }
     }),
-    on(logoutRequest, (state, _) => {
+    on(CategoryActions.logoutRequest, (state, _) => {
         return {
             ...state,
             logoutRequestState: RequestState.loading
         }
     }),
-    on(logoutRequestSuccess, (state, _) => {
+    on(CategoryActions.logoutRequestSuccess, (state, _) => {
         return {
             ...state,
             user: null,
@@ -82,14 +80,14 @@ export const loginReducer = createReducer(
             logoutRequestState: RequestState.success
         }
     }),
-    on(logoutRequestFailed, (state, action) => {
+    on(CategoryActions.logoutRequestFailed, (state, action) => {
         return {
             ...state,
             error: action.error,
             logoutRequestState: RequestState.failed
         }
     }),
-    on(reloginRequestSuccess, (state, action) => {
+    on(CategoryActions.reloginRequestSuccess, (state, action) => {
         return {
             ...state,
             user: action.user,
@@ -102,7 +100,7 @@ export const loginReducer = createReducer(
             loginRequestState: RequestState.success
         }
     }),
-    on(reloginRequestFailed, (state, action) => {
+    on(CategoryActions.reloginRequestFailed, (state, action) => {
         return {
             ...state,
             error: action.error,

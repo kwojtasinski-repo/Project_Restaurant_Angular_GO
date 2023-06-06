@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
-import { categoryFormClear, categoryAddRequestBegin, categoryAddRequestSuccess, categoryAddRequestFailed, 
-  categoryUpdateRequestSuccess, categoryUpdateRequestBegin, categoryCancelOperation } from './category.actions';
+import * as CategoryActions from './category.actions';
 import { of, catchError, exhaustMap, map } from 'rxjs';
 import { Router } from '@angular/router';
 import { getCategory } from './category.selectors';
@@ -13,52 +12,52 @@ import { CategoryService } from 'src/app/services/category.service';
 export class CategoryEffects {
   categoryAddRequestBegin$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(categoryAddRequestBegin),
+      ofType(CategoryActions.categoryAddRequestBegin),
       concatLatestFrom(() => this.store.select(getCategory)),
       exhaustMap(([_, product]) => this.categoryService.add(product!).pipe(
-        map((_) => categoryAddRequestSuccess()),
-        catchError((err) => of(categoryAddRequestFailed(err)))
+        map((_) => CategoryActions.categoryAddRequestSuccess()),
+        catchError((err) => of(CategoryActions.categoryAddRequestFailed(err)))
       )),
     )
   );
 
   categoryAddRequestSuccess$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(categoryAddRequestSuccess),
+      ofType(CategoryActions.categoryAddRequestSuccess),
       map(() => {
         this.router.navigate(['/menu']);
-        return categoryFormClear();
+        return CategoryActions.categoryFormClear();
       })
     )
   );
 
   categoryUpdateRequestBegin$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(categoryUpdateRequestBegin),
+      ofType(CategoryActions.categoryUpdateRequestBegin),
       concatLatestFrom(() => this.store.select(getCategory)),
       exhaustMap(([_, category]) => this.categoryService.update(category!).pipe(
-        map((_) => categoryAddRequestSuccess()),
-        catchError((err) => of(categoryAddRequestFailed(err)))
+        map((_) => CategoryActions.categoryAddRequestSuccess()),
+        catchError((err) => of(CategoryActions.categoryAddRequestFailed(err)))
       )),
     )
   );
 
   categoryUpdateRequestSuccess$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(categoryUpdateRequestSuccess),
+      ofType(CategoryActions.categoryUpdateRequestSuccess),
       map(() => {
         this.router.navigate(['/categories']);
-        return categoryFormClear();
+        return CategoryActions.categoryFormClear();
       })
     )
   );
 
   categoryCancelOperation$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(categoryCancelOperation),
+      ofType(CategoryActions.categoryCancelOperation),
       map(() => {
         this.router.navigate(['/categories']);
-        return categoryFormClear();
+        return CategoryActions.categoryFormClear();
       })
     )
   );

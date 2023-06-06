@@ -1,5 +1,5 @@
 import { createReducer, on } from "@ngrx/store"
-import { disableHeader, enableHeader, setCurrentUrl } from "./app.actions"
+import * as AppActions from "./app.actions"
 import { AppState } from "./app.state"
 
 export const initialState: AppState = {
@@ -9,19 +9,19 @@ export const initialState: AppState = {
 
 export const appReducer = createReducer(
     initialState,
-    on(enableHeader, (state, _) => {
+    on(AppActions.enableHeader, (state, _) => {
         return {
             ...state,
             showHeader: true
         }
     }),
-    on(disableHeader, (state, _) => {
+    on(AppActions.disableHeader, (state, _) => {
         return {
             ...state,
             showHeader: false
         }
     }),
-    on(setCurrentUrl, (state, action) => {
+    on(AppActions.setCurrentUrl, (state, action) => {
         return {
             ...state,
             currentUrl: action.currentUrl

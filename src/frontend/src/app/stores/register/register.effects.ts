@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { registerRequestBegin, registerRequestFailed, registerRequestSuccess } from './register.actions';
+import * as RegisterActions from './register.actions';
 import { catchError, exhaustMap, map, of, tap, withLatestFrom } from 'rxjs';
 import { RegisterState } from './register.state';
 import { Store } from '@ngrx/store';
@@ -13,7 +13,7 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 export class RegisterEffects {
   registerRequestBegin$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(registerRequestBegin),
+      ofType(RegisterActions.registerRequestBegin),
       withLatestFrom(this.store.select(getForm)),
       tap(() => this.spinnerService.show()),
       exhaustMap(([_, form]) => this.authenticationService.register({
@@ -21,8 +21,8 @@ export class RegisterEffects {
           password: form.password
         })
         .pipe(
-          map(() => registerRequestSuccess()),
-          catchError((err) => of(registerRequestFailed(err.message)))
+          map(() => RegisterActions.registerRequestSuccess()),
+          catchError((err) => of(RegisterActions.registerRequestFailed(err.message)))
         )
       )
     )
@@ -30,7 +30,7 @@ export class RegisterEffects {
 
   registerRequestSuccess$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(registerRequestSuccess),
+      ofType(RegisterActions.registerRequestSuccess),
       tap(() => {
         this.spinnerService.hide();
         this.router.navigate(['/register-success'], { queryParams: { registerState: 'success' }});
@@ -40,7 +40,7 @@ export class RegisterEffects {
 
   registerRequestFailed$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(registerRequestFailed),
+      ofType(RegisterActions.registerRequestFailed),
       tap(() => this.spinnerService.hide())
     ), { dispatch: false }
   );

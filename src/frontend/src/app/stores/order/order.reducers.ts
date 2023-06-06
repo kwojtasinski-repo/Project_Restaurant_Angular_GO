@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { OrderState as OrderState } from "./order.state";
-import { fetchOrder, fetchOrderFailed, fetchOrderSuccess } from "./order.actions";
+import * as OrderActions from "./order.actions";
 import { RequestState } from "src/app/models/request-state";
 
 export const initialState: OrderState = {
@@ -11,14 +11,14 @@ export const initialState: OrderState = {
 
 export const orderReducer = createReducer(
     initialState,
-    on(fetchOrder, (state, _) => {
+    on(OrderActions.fetchOrder, (state, _) => {
         return {
             ...state,
             fetchState: RequestState.loading,
             error: null
         }
     }),
-    on(fetchOrderSuccess, (state, action) => {
+    on(OrderActions.fetchOrderSuccess, (state, action) => {
         return {
             ...state,
             order: action.order,
@@ -26,7 +26,7 @@ export const orderReducer = createReducer(
             error: null
         }
     }),
-    on(fetchOrderFailed, (state, action) => {
+    on(OrderActions.fetchOrderFailed, (state, action) => {
         return {
             ...state,
             error: action.error,

@@ -1,30 +1,29 @@
 import { Injectable } from '@angular/core';
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
-import { initializeLogin, loginRequest, loginRequestFailed, loginRequestSuccess, loginSuccess, logoutRequest, 
-  logoutRequestFailed, logoutRequestSuccess, reloginRequestFailed, reloginRequestSuccess } from './login.actions';
 import { catchError, exhaustMap, mergeMap, of, tap, map, EMPTY } from 'rxjs';
 import { Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { LoginState } from './login.state';
-import { getLoginPath, selectLoginState } from './login.selectors';
+import * as LoginActions from './login.actions';
+import * as LoginSelectors from './login.selectors';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Injectable()
 export class LoginEffects {
   initializeLogin$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(initializeLogin),
+      ofType(LoginActions.initializeLogin),
       exhaustMap(() =>
         this.authenticationService.getContext()
           .pipe(
-            map((user) => reloginRequestSuccess({ user })),
+            map((user) => LoginActions.reloginRequestSuccess({ user })),
             catchError(err => {
                 this.router.navigate(['/login']);
                 console.error(err);
                 if (err.status === 0) {
-                  return of(reloginRequestFailed({ error: 'Sprawdź połączenie z internetem' }));
+                  return of(LoginActions.reloginRequestFailed({ error: 'Sprawdź połączenie z internetem' }));
                 } else if (err.status === 500) {
-                  return of(reloginRequestFailed({ error: 'Coś poszło nie tak, spróbuj ponownie później' }));
+                  return of(LoginActions.reloginRequestFailed({ error: 'Coś poszło nie tak, spróbuj ponownie później' }));
                 }
                 return EMPTY;
               }
@@ -36,65 +35,65 @@ export class LoginEffects {
 
   reloginRequestSuccess$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(reloginRequestSuccess),
-      mergeMap(() => of(loginSuccess()))
+      ofType(LoginActions.reloginRequestSuccess),
+      mergeMap(() => of(LoginActions.loginSuccess()))
     )
-  )
+  );
 
   loginRequest$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(loginRequest),
-      concatLatestFrom(() => this.store.select(selectLoginState)),
-      exhaustMap(([_, state]) => {
-        if (state.credentials.email.length === 0 || state.credentials.password.length === 0) {
-          return of(loginRequestFailed({ error: 'invalid credentials' }));
+      ofType(LoginActions.loginRequest),
+      concatLatestFrom(() => this.store.select(LoginSelectors.getCredentials)),
+      exhaustMap(([_, credentials]) => {
+        if (credentials.email.length === 0 || credentials.password.length === 0) {
+          return of(LoginActions.loginRequestFailed({ error: 'invalid credentials' }));
         }
 
-        return this.authenticationService.login(state.credentials).pipe(
-          map(user => loginRequestSuccess({ user })),
+        return this.authenticationService.login(credentials).pipe(
+          map(user => LoginActions.loginRequestSuccess({ user })),
           catchError(
             (err) => { 
               if (err.status === 0) {
-                return of(loginRequestFailed({ error: 'Sprawdź połączenie z internetem' }));
+                return of(LoginActions.loginRequestFailed({ error: 'Sprawdź połączenie z internetem' }));
               } else if (err.status === 400) {
-                return of(loginRequestFailed({ error: 'Niepoprawne dane' }));
+                return of(LoginActions.loginRequestFailed({ error: 'Niepoprawne dane' }));
               }
               
-              return of(loginRequestFailed({ error: 'Coś poszło nie tak, spróbuj ponownie później' }))
+              return of(LoginActions.loginRequestFailed({ error: 'Coś poszło nie tak, spróbuj ponownie później' }))
             }
           )
         );
       })
     )
-  )
+  );
 
   loginRequestSuccess$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(loginRequestSuccess),
-      mergeMap(() => of(loginSuccess()))
+      ofType(LoginActions.loginRequestSuccess),
+      mergeMap(() => of(LoginActions.loginSuccess()))
     )
-  )
+  );
 
   loginSuccess$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(loginSuccess),
-      concatLatestFrom(() => this.store.pipe(select(getLoginPath))),
+      ofType(LoginActions.loginSuccess),
+      concatLatestFrom(() => this.store.pipe(select(LoginSelectors.getLoginPath))),
       tap(([_, path]) => this.router.navigate([path]))
     ), { dispatch: false }
-  )
+  );
 
   logoutRequest$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(logoutRequest),
+      ofType(LoginActions.logoutRequest),
       exhaustMap(() => this.authenticationService.logout().pipe(
-        map(() => logoutRequestSuccess()),
+        map(() => LoginActions.logoutRequestSuccess()),
         catchError(
           (err) => {
             if (err.status === 0) {
-              return of(logoutRequestFailed({ error: 'Sprawdź połączenie z internetem' }));
+              return of(LoginActions.logoutRequestFailed({ error: 'Sprawdź połączenie z internetem' }));
             }
-                        
-            return of(logoutRequestFailed({ error: 'Coś poszło nie tak, spróbuj ponownie później' }))
+
+            return of(LoginActions.logoutRequestFailed({ error: 'Coś poszło nie tak, spróbuj ponownie później' }))
           }
         ))
       )
@@ -103,7 +102,7 @@ export class LoginEffects {
 
   logoutRequestSuccess$ = createEffect(() => 
     this.actions$.pipe(
-      ofType(logoutRequestSuccess),
+      ofType(LoginActions.logoutRequestSuccess),
       tap(() => this.router.navigate(['/login']))
     ), { dispatch: false }
   );

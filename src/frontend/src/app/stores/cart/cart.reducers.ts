@@ -1,7 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { CartState } from "./cart.state";
-import { addProductToCartFailed, fetchCart, fetchCartFailed, fetchCartSuccess, finalizeCart, 
-    finalizeCartFailed, finalizeCartSuccess, removeProductFromCartFailed } from "./cart.actions";
+import * as CartActions from './cart.actions';
 import { RequestState } from "src/app/models/request-state";
 
 export const initialState: CartState = {
@@ -13,14 +12,14 @@ export const initialState: CartState = {
 
 export const cartReducer = createReducer(
     initialState,
-    on(fetchCart, (state, _) => {
+    on(CartActions.fetchCart, (state, _) => {
         return {
             ...state,
             fetchState: RequestState.loading,
             error: null
         }
     }),
-    on(fetchCartSuccess, (state, action) => {
+    on(CartActions.fetchCartSuccess, (state, action) => {
         return {
             ...state,
             cart: action.cart,
@@ -28,39 +27,39 @@ export const cartReducer = createReducer(
             error: null
         }
     }),
-    on(fetchCartFailed, (state, action) => {
+    on(CartActions.fetchCartFailed, (state, action) => {
         return {
             ...state,
             error: action.error,
             fetchState: RequestState.failed
         }
     }),
-    on(addProductToCartFailed, (state, action) => {
+    on(CartActions.addProductToCartFailed, (state, action) => {
         return {
             ...state,
             error: action.error
         }
     }),
-    on(removeProductFromCartFailed, (state, action) => {
+    on(CartActions.removeProductFromCartFailed, (state, action) => {
         return {
             ...state,
             error: action.error
         }
     }),
-    on(finalizeCart, (state, _) => {
+    on(CartActions.finalizeCart, (state, _) => {
         return {
             ...state,
             finalizeCartState: RequestState.loading
         }
     }),
-    on(finalizeCartFailed, (state, action) => {
+    on(CartActions.finalizeCartFailed, (state, action) => {
         return {
             ...state,
             error: action.error,
             finalizeCartState: RequestState.failed
         }
     }),
-    on(finalizeCartSuccess, (state, _) => {
+    on(CartActions.finalizeCartSuccess, (state, _) => {
         return {
             ...state,
             cart: [],
