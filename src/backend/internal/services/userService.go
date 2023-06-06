@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
@@ -40,6 +41,7 @@ func (service *userService) Register(addUser *dto.AddUserDto) (*dto.UserDto, *ap
 		return nil, applicationerrors.BadRequest(err.Error())
 	}
 
+	addUser.Email = strings.ToLower(addUser.Email)
 	exists, errRepo := service.repository.ExistsByEmail(addUser.Email)
 	if errRepo != nil {
 		return nil, applicationerrors.InternalError(errRepo.Error())
@@ -121,7 +123,7 @@ func (service *userService) GetAll() ([]dto.UserDto, *applicationerrors.ErrorSta
 }
 
 func (service *userService) Login(signInDto dto.SignInDto) (*dto.SessionDto, *applicationerrors.ErrorStatus) {
-	user, err := service.repository.GetByEmail(signInDto.Email)
+	user, err := service.repository.GetByEmail(strings.ToLower(signInDto.Email))
 	if err != nil {
 		return nil, applicationerrors.InternalError(err.Error())
 	}
