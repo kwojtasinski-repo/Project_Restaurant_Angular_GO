@@ -33,7 +33,7 @@ export class RegisterEffects {
       ofType(registerRequestSuccess),
       tap(() => {
         this.spinnerService.hide();
-        this.router.navigate(['/login']);
+        this.router.navigate(['/register-success'], { queryParams: { registerState: 'success' }});
       })
     ), { dispatch: false }
   );

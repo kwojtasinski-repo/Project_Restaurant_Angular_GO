@@ -62,7 +62,7 @@ export class RegisterComponent {
         .subscribe(val => {
           this.store.dispatch(registerFormUpdate({
           form: {
-            email: val.email,
+            email: val.emailAddress,
             password: val.password,
             confirmPassword: val.confirmPassword,
           }

@@ -11,7 +11,7 @@ export const appProviders = [
     },
     BsModalService,
     {
-        // processes all errors
+      // processes all errors
       provide: ErrorHandler,
       useClass: GlobalErrorHandler,
     },

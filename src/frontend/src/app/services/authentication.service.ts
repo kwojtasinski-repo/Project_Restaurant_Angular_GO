@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
-import { Observable, concatMap, EMPTY } from 'rxjs';
+import { Observable, concatMap } from 'rxjs';
 import { User } from '../models/user';
 import { HttpClient } from '@angular/common/http';
 import { Credentials } from '../models/credentials';
@@ -11,7 +11,7 @@ export class AuthenticationService {
   private signInPath = 'api/sign-in';
   private usersPath = 'api/users';
   private signOutPath = 'api/sign-out';
-  private signUpPath = '/api/sign-up';
+  private signUpPath = 'api/sign-up';
 
   constructor(private httpClient: HttpClient, @Inject('API_URL') private backendUrl: string) { }
 

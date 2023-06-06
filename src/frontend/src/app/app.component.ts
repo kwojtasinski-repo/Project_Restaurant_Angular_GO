@@ -10,7 +10,7 @@ import { AppService } from './services/app.service';
 export class AppComponent {
   constructor(private router: Router, private appService: AppService) { }
 
-  onActivateRoute() {
+  public onActivateRoute() {
     this.appService.setCurrentUrl(this.router.url);
     if (this.router.url === '/login' || this.router.url === '/register') {
         this.appService.hideHeader();
