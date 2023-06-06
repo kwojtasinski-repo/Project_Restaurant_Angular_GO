@@ -53,6 +53,24 @@ const authorizedGuard = (next: ActivatedRouteSnapshot, _: RouterStateSnapshot) =
     );
 };
 
+const registerSuccessGuard = (next: ActivatedRouteSnapshot, _: RouterStateSnapshot) => {
+    const authService = inject(AuthStateService);
+
+    return authService.isAuthenticated().pipe(
+        map((authenticated) => {
+            if (authenticated) {
+                return createUrlTreeFromSnapshot(next, ['/menu']);
+            }
+
+            if (!next.queryParamMap.has('registerState')) {
+                return createUrlTreeFromSnapshot(next, ['/register']);
+            }
+
+            return true;
+        })
+    );
+};
+
 const adminRoutes = [
     {
         path: 'products/add',
@@ -113,15 +131,19 @@ export const appRoutes: Routes = [
         path: 'login',
         component: LoginComponent,
         canActivate: [authorizedGuard],
+        data: { hideNavBar: true }
     },
     {
         path: 'register',
         component: RegisterComponent,
         canActivate: [authorizedGuard],
+        data: { hideNavBar: true }
     },
     {
         path: 'register-success',
         component: RegisterSuccessComponent,
+        canActivate: [registerSuccessGuard],
+        data: { registerState: 'success', hideNavBar: true }
     },
     {
         path: '**',
