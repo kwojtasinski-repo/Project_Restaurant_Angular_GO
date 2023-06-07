@@ -14,9 +14,10 @@ func AddCategoryEndpoints(router *gin.RouterGroup) {
 	log.Println("Setup Category Endpoints")
 	router.GET("/categories", getCategories)
 	router.GET("/categories/:id", getCategory)
-	router.POST("/categories", addCategory)
-	router.PUT("/categories/:id", updateCategory)
-	router.DELETE("/categories/:id", deleteCategory)
+	endpointWithPermissionAdmin := router.Group("/categories", PermissionMiddleware("admin"))
+	endpointWithPermissionAdmin.POST("", addCategory)
+	endpointWithPermissionAdmin.PUT("/:id", updateCategory)
+	endpointWithPermissionAdmin.DELETE("/:id", deleteCategory)
 }
 
 func getCategories(context *gin.Context) {

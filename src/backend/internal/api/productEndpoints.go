@@ -14,9 +14,10 @@ func AddProductEndpoints(router *gin.RouterGroup) {
 	log.Println("Setup Product Endpoints")
 	router.GET("/products", getProducts)
 	router.GET("/products/:id", getProduct)
-	router.POST("/products", addProduct)
-	router.PUT("/products/:id", updateProduct)
-	router.DELETE("/products/:id", deleteProduct)
+	endpointWithPermissionAdmin := router.Group("/products", PermissionMiddleware("admin"))
+	endpointWithPermissionAdmin.POST("", addProduct)
+	endpointWithPermissionAdmin.PUT("/:id", updateProduct)
+	endpointWithPermissionAdmin.DELETE("/:id", deleteProduct)
 }
 
 func getProducts(context *gin.Context) {
