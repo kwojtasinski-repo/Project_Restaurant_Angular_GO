@@ -5,6 +5,9 @@
                 Witamy w aplikacji Restaurant. Wybierz produkty aby zamówić jedzenie
             </h1>
         </div>
+        <div *ngIf="error" class="mt-2 mb-2 alert alert-danger">
+            {{ error }}
+        </div>
         <div>
             <h3>
                 Menu:

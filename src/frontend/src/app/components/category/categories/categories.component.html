@@ -4,6 +4,17 @@
             Dodaj kategorię
         </button>
     </div>
+    <ng-container *ngIf="isLoading === true; then error else showCategories"></ng-container>
+    
+</div>
+
+<ng-template #error>
+    <div class="mt-2 mb-2 alert alert-danger">
+        {{ error }}
+    </div>
+</ng-template>
+
+<ng-template #showCategories>
     <div class="p-4">
         <app-search-bar [placeholder]="'Wyszukaj kategorię'" [(term)]="term" (onChange)="search($event)"></app-search-bar>
     </div>
@@ -30,4 +41,4 @@
             </div>
         </div>
     </div>
-</div>
+</ng-template>

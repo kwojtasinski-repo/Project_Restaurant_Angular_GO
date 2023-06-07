@@ -11,9 +11,9 @@ import { OrderService } from 'src/app/services/order.service';
 })
 export class MyOrdersComponent implements OnInit {
   public orders: Order[] = [];
-  public isLoading: boolean = true;
   public ordersToShow: Order[] = [];
   public term: string = '';
+  public error: string | undefined;
   
   constructor(private orderService: OrderService, private spinnerService: NgxSpinnerService) { }
   
@@ -21,11 +21,19 @@ export class MyOrdersComponent implements OnInit {
     this.spinnerService.show();
     this.orderService.getMyOrders()
       .pipe(take(1))
-      .subscribe(o => {
-        this.isLoading = false;
-        this.orders = o;
-        this.ordersToShow = o;
-        this.spinnerService.hide();
+      .subscribe({ next: o => {
+          this.orders = o;
+          this.ordersToShow = o;
+          this.spinnerService.hide();
+        }, error: error => {
+          if (error.status === 0) {
+            this.error = 'Sprawdź połączenie z internetem';
+          } else if (error.status === 500) {
+            this.error = 'Coś poszło nie tak, spróbuj ponownie później';
+          }
+          this.spinnerService.hide();
+          console.error(error);
+        }
       });
   }
 

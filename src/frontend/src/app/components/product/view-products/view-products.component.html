@@ -1,6 +1,11 @@
 <ng-container *ngIf="isLoading === true; then loading else showProduct"></ng-container>
 
 <ng-template #loading>
+    <div class="mt-2 mb-2" *ngIf="error">
+        <div class="alert alert-danger">
+            {{ error$ | async }}
+        </div>
+    </div>
 </ng-template>
 
 <ng-template #showProduct>

@@ -1,4 +1,9 @@
 <div class="mt-2 orders-view">
+    <div class="mt-2 mb-2" *ngIf="error">
+        <div class="alert alert-danger">
+            {{ error$ | async }}
+        </div>
+    </div>
     <div class="mt-2 mb-2">
         <app-search-bar [placeholder]="'Wyszukaj zamówienia'" [(term)]="term" (onChange)="search($event)"></app-search-bar>
     </div>

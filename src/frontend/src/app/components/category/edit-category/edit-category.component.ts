@@ -23,6 +23,7 @@ export class EditCategoryComponent implements OnInit, OnDestroy {
   public categoryChanged: boolean = false;
   public isLoading: boolean = true;
   private categoryFormValueChanged$ = new Subject();
+  public error: string | undefined;
 
   constructor(private store: Store<CategoryState>, private categoryService: CategoryService, private route: ActivatedRoute, private spinnerService: NgxSpinnerService) { }
 
@@ -34,14 +35,23 @@ export class EditCategoryComponent implements OnInit, OnDestroy {
     const id = this.route.snapshot.paramMap.get('id') ? new Number(this.route.snapshot.paramMap.get('id')).valueOf() : 0;
     this.categoryService.get(id)
       .pipe(take(1))
-      .subscribe(c => {
-        this.category = c;
-        if (c) {
-          this.categoryForm.get('categoryName')?.setValue(c?.name ?? '');
-          this.store.dispatch(categoryFormUpdate({ category: c }));
+      .subscribe({ next: c => {
+          this.category = c;
+          if (c) {
+            this.categoryForm.get('categoryName')?.setValue(c?.name ?? '');
+            this.store.dispatch(categoryFormUpdate({ category: c }));
+          }
+          this.isLoading = false;
+          this.spinnerService.hide();
+        }, error: error => {
+          if (error.status === 0) {
+            this.error = 'Sprawdź połączenie z internetem';
+          } else if (error.status === 500) {
+            this.error = 'Coś poszło nie tak, spróbuj ponownie później';
+          }
+          this.spinnerService.hide();
+          console.error(error);
         }
-        this.isLoading = false;
-        this.spinnerService.hide();
       });
   }
 

@@ -18,6 +18,7 @@ export class ViewProductsComponent implements OnInit {
   public product: Product | undefined;
   public isLoading = true;
   public user$ = this.authService.getUser();
+  public error: string | undefined;
 
   constructor(private productService: ProductService, private route: ActivatedRoute, private spinnerService: NgxSpinnerService,
     private authService: AuthStateService, private cartStore: Store<CartState>) { }
@@ -27,10 +28,19 @@ export class ViewProductsComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id') ? new Number(this.route.snapshot.paramMap.get('id')).valueOf() : 0;
     this.productService.get(id)
       .pipe(take(1))
-      .subscribe(p => {
-        this.product = p
-        this.isLoading = false;
-        this.spinnerService.hide();
+      .subscribe({ next: p => {
+          this.product = p
+          this.isLoading = false;
+          this.spinnerService.hide();
+        }, error: error => {
+          if (error.status === 0) {
+            this.error = 'Sprawdź połączenie z internetem';
+          } else if (error.status === 500) {
+            this.error = 'Coś poszło nie tak, spróbuj ponownie później';
+          }
+          this.spinnerService.hide();
+          console.error(error);
+        }
       });
   }
 

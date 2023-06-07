@@ -13,6 +13,9 @@
 </div>
 
 <ng-template #loading>
+    <div *ngIf="error" class="mt-2 mb-2 alert alert-danger">
+        {{ error }}
+    </div>
 </ng-template>
 
 <ng-template #showCategory>
