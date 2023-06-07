@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { SpinnerButtonComponent } from '../spinner-button/spinner-button.component';
+import { RouterModule } from '@angular/router';
 
 describe('LoginComponent', () => {
   let actions$: Observable<any>;
@@ -20,7 +21,8 @@ describe('LoginComponent', () => {
       imports: [
         FormsModule,
         ReactiveFormsModule,
-        HttpClientModule
+        HttpClientModule,
+        RouterModule.forRoot([]),
       ],
       providers: [
         provideMockStore({ initialState }),
