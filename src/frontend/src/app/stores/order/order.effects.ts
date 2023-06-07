@@ -14,7 +14,13 @@ export class OrderEffects {
         .pipe(
           tap(() => this.spinnerService.show()),
           map((order) => OrderActions.fetchOrderSuccess({ order })),
-          catchError((err) => of(OrderActions.fetchOrderFailed(err)))
+          catchError((err) => {
+            console.error(err);
+            if (err.status === 0) {
+              return of(OrderActions.fetchOrderFailed({ error: 'Sprawdź połączenie z internetem' }));
+            }
+            return of(OrderActions.fetchOrderFailed({ error: 'Coś poszło nie tak, spróbuj później' }));
+          })
         )
       )
     )

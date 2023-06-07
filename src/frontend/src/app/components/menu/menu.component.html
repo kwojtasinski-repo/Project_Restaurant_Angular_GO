@@ -8,6 +8,9 @@
         <div *ngIf="error" class="mt-2 mb-2 alert alert-danger">
             {{ error }}
         </div>
+        <div *ngIf="cartError$ | async" class="mt-2 mb-2 alert alert-danger">
+            {{ cartError$ | async }}
+        </div>
         <div>
             <h3>
                 Menu:

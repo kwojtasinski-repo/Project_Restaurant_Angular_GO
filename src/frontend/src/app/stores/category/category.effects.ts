@@ -16,7 +16,15 @@ export class CategoryEffects {
       concatLatestFrom(() => this.store.select(getCategory)),
       exhaustMap(([_, product]) => this.categoryService.add(product!).pipe(
         map((_) => CategoryActions.categoryAddRequestSuccess()),
-        catchError((err) => of(CategoryActions.categoryAddRequestFailed(err)))
+        catchError((err) => { 
+          console.log(err);
+          if (err.status === 0) {
+            return of(CategoryActions.categoryAddRequestFailed({ error: 'Sprawdź połączenie z internetem' }));
+          } else if (err.status >= 500) {
+            return of(CategoryActions.categoryAddRequestFailed({ error: 'Coś poszło nie tak, spróbuj później' }));
+          }
+          return of(CategoryActions.categoryAddRequestFailed({ error: err.error.errors }));
+        })
       )),
     )
   );
@@ -37,7 +45,15 @@ export class CategoryEffects {
       concatLatestFrom(() => this.store.select(getCategory)),
       exhaustMap(([_, category]) => this.categoryService.update(category!).pipe(
         map((_) => CategoryActions.categoryAddRequestSuccess()),
-        catchError((err) => of(CategoryActions.categoryAddRequestFailed(err)))
+        catchError((err) => { 
+          console.log(err);
+          if (err.status === 0) {
+            return of(CategoryActions.categoryUpdateRequestFailed({ error: 'Sprawdź połączenie z internetem' }));
+          } else if (err.status >= 500) {
+            return of(CategoryActions.categoryUpdateRequestFailed({ error: 'Coś poszło nie tak, spróbuj później' }));
+          }
+          return of(CategoryActions.categoryUpdateRequestFailed({ error: err.error.errors }));
+        })
       )),
     )
   );

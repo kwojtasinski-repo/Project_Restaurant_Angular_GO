@@ -47,4 +47,10 @@ export const registerReducer = createReducer(
             passwordConfirm: '',
         }
     }),
+    on(RegisterActions.clearErrors, (state, _) => {
+        return {
+            ...state,
+            error: null
+        }
+    })
 );

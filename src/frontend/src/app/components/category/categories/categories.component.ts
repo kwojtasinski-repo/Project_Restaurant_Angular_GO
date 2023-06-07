@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Category } from 'src/app/models/category';
 import { CategoryService } from 'src/app/services/category.service';
 import { take } from 'rxjs';
@@ -9,10 +9,11 @@ import { NgxSpinnerService } from 'ngx-spinner';
   templateUrl: './categories.component.html',
   styleUrls: ['./categories.component.scss']
 })
-export class CategoriesComponent {
+export class CategoriesComponent implements OnInit {
   public categories: Category[] = [];
   public categoriesToShow: Category[] = [];
   public term: string = '';
+  public isLoading: boolean = true;
   public error: string | undefined;
 
   constructor(private categoryService: CategoryService, private spinnerService: NgxSpinnerService) { }
@@ -24,6 +25,7 @@ export class CategoriesComponent {
       .subscribe({ next: c => {
           this.categories = c;
           this.categoriesToShow = c;
+          this.isLoading = false;
           this.spinnerService.hide();
         }, error: error => {
           if (error.status === 0) {
@@ -31,6 +33,7 @@ export class CategoriesComponent {
           } else if (error.status === 500) {
             this.error = 'Coś poszło nie tak, spróbuj ponownie później';
           }
+          this.isLoading = false;
           this.spinnerService.hide();
           console.error(error);
         }

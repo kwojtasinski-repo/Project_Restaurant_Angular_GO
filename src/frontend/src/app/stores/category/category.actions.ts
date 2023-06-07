@@ -10,3 +10,4 @@ export const categoryUpdateRequestBegin = createAction('[Category] Category Upda
 export const categoryUpdateRequestSuccess = createAction('[Category] Category Update Request Success');
 export const categoryUpdateRequestFailed = createAction('[Category] Category Update Request Failed', props<{ error: string }>());
 export const categoryCancelOperation = createAction('[Category] Category Cancel operation');
+export const clearErrors = createAction('[Category] Clear Errors');

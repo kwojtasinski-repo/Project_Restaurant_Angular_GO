@@ -22,7 +22,16 @@ export class RegisterEffects {
         })
         .pipe(
           map(() => RegisterActions.registerRequestSuccess()),
-          catchError((err) => of(RegisterActions.registerRequestFailed(err.message)))
+          catchError((err) => {
+            console.error(err);
+            if (err.status === 0) {
+              return of(RegisterActions.registerRequestFailed({ error: 'Sprawdź połączenie z internetem' }));
+            } else if (err.status >= 500) {
+              of(RegisterActions.registerRequestFailed({ error: 'Coś poszło nie tak, spróbuj później' }));
+            }
+
+            return of(RegisterActions.registerRequestFailed({ error: 'Niepoprawne hasło lub email' }));
+          })
         )
       )
     )

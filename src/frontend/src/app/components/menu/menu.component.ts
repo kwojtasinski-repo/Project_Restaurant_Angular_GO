@@ -1,24 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Product } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
-import { catchError, take } from 'rxjs';
+import { take } from 'rxjs';
 import { AuthStateService } from 'src/app/services/auth-state.service';
 import { Store } from "@ngrx/store";
 import { CartState } from 'src/app/stores/cart/cart.state';
-import { addProductToCart } from 'src/app/stores/cart/cart.actions';
+import { addProductToCart, clearErrors } from 'src/app/stores/cart/cart.actions';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { getError } from 'src/app/stores/cart/cart.selectors';
 
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss']
 })
-export class MenuComponent implements OnInit {
+export class MenuComponent implements OnInit, OnDestroy {
   public user$ = this.authService.getUser();
   public products: Product[] = [];
   public productsToShow: Product[] = [];
   public term: string = '';
   public error: string | undefined;
+  public cartError$ = this.cartStore.select(getError);
 
   constructor(private productService: ProductService, private authService: AuthStateService, private cartStore: Store<CartState>,
     private spinnerService: NgxSpinnerService) { }
@@ -41,6 +43,10 @@ export class MenuComponent implements OnInit {
           console.error(error);
         }
       });
+  }
+
+  public ngOnDestroy(): void {
+    this.cartStore.dispatch(clearErrors());
   }
 
   public search(term: string): void {

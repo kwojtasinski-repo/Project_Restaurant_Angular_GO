@@ -45,5 +45,11 @@ export const productReducer = createReducer(
             ...state,
             error: action.error
         }
+    }),
+    on(ProductActions.clearErrors, (state, _) => {
+        return {
+            ...state,
+            error: null
+        }
     })
 );

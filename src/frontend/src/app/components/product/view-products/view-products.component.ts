@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { take } from 'rxjs';
 import { Product } from 'src/app/models/product';
@@ -7,14 +7,14 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { AuthStateService } from 'src/app/services/auth-state.service';
 import { Store } from "@ngrx/store";
 import { CartState } from 'src/app/stores/cart/cart.state';
-import { addProductToCart } from 'src/app/stores/cart/cart.actions';
+import { addProductToCart, clearErrors } from 'src/app/stores/cart/cart.actions';
 
 @Component({
   selector: 'app-view-products',
   templateUrl: './view-products.component.html',
   styleUrls: ['./view-products.component.scss']
 })
-export class ViewProductsComponent implements OnInit {
+export class ViewProductsComponent implements OnInit, OnDestroy {
   public product: Product | undefined;
   public isLoading = true;
   public user$ = this.authService.getUser();
@@ -42,6 +42,10 @@ export class ViewProductsComponent implements OnInit {
           console.error(error);
         }
       });
+  }
+
+  public ngOnDestroy(): void {
+    this.cartStore.dispatch(clearErrors());
   }
 
   public addToCart(product: Product): void {

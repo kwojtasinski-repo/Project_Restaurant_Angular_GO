@@ -16,7 +16,15 @@ export class ProductEffects {
       concatLatestFrom(() => this.store.select(getProduct)),
       exhaustMap(([_, product]) => this.productService.add(product!).pipe(
         map((_) => ProductActions.productAddRequestSuccess()),
-        catchError((err) => of(ProductActions.productAddRequestFailed(err)))
+        catchError((err) => {
+          console.error(err);
+          if (err.status === 0) {
+            return of(ProductActions.productAddRequestFailed({ error: 'Sprawdź połączenie z internetem' }));
+          } else if (err.status >= 500) {
+            return of(ProductActions.productAddRequestFailed({ error: 'Coś poszło nie tak, spróbuj później' }));
+          }
+          return of(ProductActions.productAddRequestFailed({ error: err.error.errors }));
+        })
       )),
     )
   );
@@ -37,7 +45,15 @@ export class ProductEffects {
       concatLatestFrom(() => this.store.select(getProduct)),
       exhaustMap(([_, product]) => this.productService.update(product!).pipe(
         map((_) => ProductActions.productAddRequestSuccess()),
-        catchError((err) => of(ProductActions.productAddRequestFailed(err)))
+        catchError((err) => {
+          console.error(err);
+          if (err.status === 0) {
+            return of(ProductActions.productUpdateRequestFailed({ error: 'Sprawdź połączenie z internetem' }));
+          } else if (err.status >= 500) {
+            return of(ProductActions.productUpdateRequestFailed({ error: 'Coś poszło nie tak, spróbuj później' }));
+          }
+          return of(ProductActions.productUpdateRequestFailed({ error: err.error.errors }));
+        })
       )),
     )
   );

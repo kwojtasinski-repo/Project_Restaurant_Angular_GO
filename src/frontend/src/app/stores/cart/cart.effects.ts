@@ -18,7 +18,13 @@ export class CartEffects {
         .pipe(
           tap(() => this.spinnerService.show()),
           map((cart) => CartActions.fetchCartSuccess({ cart })),
-          catchError((err) => of(CartActions.fetchCartFailed(err)))
+          catchError((err) => {
+            console.error(err);
+            if (err.status === 0) {
+              return of(CartActions.fetchCartFailed({ error: 'Sprawdź połączenie z internetem' }));
+            }
+            return of(CartActions.fetchCartFailed({ error: 'Coś poszło nie tak, spróbuj później' }));
+          })
         )
       )
     )
@@ -44,7 +50,15 @@ export class CartEffects {
       exhaustMap((action) => this.cartService.add(action.product)
         .pipe(
           map(() => CartActions.addProductToCartSuccess()),
-          catchError((err) => of(CartActions.addProductToCartFailed(err)))
+          catchError((err) => {
+            console.error(err);
+            if (err.status === 0) {
+              return of(CartActions.addProductToCartFailed({ error: 'Sprawdź połączenie z internetem' }));
+            } else if (err.status >= 500) {
+              return of(CartActions.addProductToCartFailed({ error: 'Coś poszło nie tak, spróbuj później' }));
+            }
+            return of(CartActions.addProductToCartFailed({ error: err.error.errors }));
+          })
         )
       )
     )
@@ -56,7 +70,15 @@ export class CartEffects {
       exhaustMap((action) => this.cartService.delete(action.cart.id)
         .pipe(
           map(() => CartActions.removeProductFromCartSuccess()),
-          catchError((err) => of(CartActions.removeProductFromCartFailed(err)))
+          catchError((err) => {
+            console.error(err);
+            if (err.status === 0) {
+              return of(CartActions.removeProductFromCartFailed({ error: 'Sprawdź połączenie z internetem' }));
+            } else if (err.status >= 500) {
+              return of(CartActions.removeProductFromCartFailed({ error: 'Coś poszło nie tak, spróbuj później' }));
+            }
+            return of(CartActions.removeProductFromCartFailed({ error: err.error.errors }));
+          })
         )
       )
     )
@@ -75,7 +97,16 @@ export class CartEffects {
       exhaustMap(() => this.orderService.addFromCart()
         .pipe(
           map((orderId) => CartActions.finalizeCartSuccess({ orderId })),
-          catchError((err) => of(CartActions.finalizeCartFailed(err)))
+          catchError((err) => {
+            console.error(err);
+            if (err.status === 0) {
+              return of(CartActions.addProductToCartFailed({ error: 'Sprawdź połączenie z internetem' }));
+            } else if (err.status >= 500) {
+              return of(CartActions.addProductToCartFailed({ error: 'Coś poszło nie tak, spróbuj później' }));
+            }
+
+            return of(CartActions.finalizeCartFailed({ error: err.error.errors }));
+          })
         )
       )
     )

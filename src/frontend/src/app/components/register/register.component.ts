@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import { Subscription, debounceTime } from 'rxjs';
 import { PATTERN_ONE_UPPER_ONE_LOWER_ONE_SPECIAL_CHARACTER, checkMatchValidator, getValidationMessage } from 'src/app/validations/validations';
 import { Actions, ofType } from '@ngrx/effects';
-import { registerFormUpdate, registerRequestBegin, registerRequestFailed } from 'src/app/stores/register/register.actions';
+import * as RegisterActions from 'src/app/stores/register/register.actions';
 
 @Component({
   selector: 'app-register',
@@ -48,7 +48,7 @@ export class RegisterComponent {
 
   public ngOnInit(): void {
     this.loginError$ = this.actions$
-      .pipe(ofType(registerRequestFailed))
+      .pipe(ofType(RegisterActions.registerRequestFailed))
       .subscribe(() => 
         this.registerForm.setValue({
           emailAddress: this.registerForm.get('emailAddress')?.value ?? '',
@@ -60,7 +60,7 @@ export class RegisterComponent {
       this.registerForm.valueChanges
         .pipe(debounceTime(10))
         .subscribe(val => {
-          this.store.dispatch(registerFormUpdate({
+          this.store.dispatch(RegisterActions.registerFormUpdate({
           form: {
             email: val.emailAddress,
             password: val.password,
@@ -71,6 +71,7 @@ export class RegisterComponent {
 
   public ngOnDestroy(): void {
     this.loginError$.unsubscribe();
+    this.store.dispatch(RegisterActions.clearErrors());
   }
 
   public getErrorMessage(error: any): string | null {
@@ -84,6 +85,6 @@ export class RegisterComponent {
       });
       return;
     }
-    this.store.dispatch(registerRequestBegin());
+    this.store.dispatch(RegisterActions.registerRequestBegin());
   }
 }

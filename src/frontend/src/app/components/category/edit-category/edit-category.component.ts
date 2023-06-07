@@ -5,7 +5,7 @@ import { getError } from 'src/app/stores/category/category.selectors';
 import { CategoryState } from 'src/app/stores/category/category.state';
 import { getValidationMessage } from 'src/app/validations/validations';
 import { debounceTime, takeUntil, Subject, take } from 'rxjs';
-import { categoryCancelOperation, categoryFormUpdate, categoryUpdateRequestBegin } from 'src/app/stores/category/category.actions';
+import * as CategoryActions from 'src/app/stores/category/category.actions';
 import { Category } from 'src/app/models/category';
 import { CategoryService } from 'src/app/services/category.service';
 import { ActivatedRoute } from '@angular/router';
@@ -39,7 +39,7 @@ export class EditCategoryComponent implements OnInit, OnDestroy {
           this.category = c;
           if (c) {
             this.categoryForm.get('categoryName')?.setValue(c?.name ?? '');
-            this.store.dispatch(categoryFormUpdate({ category: c }));
+            this.store.dispatch(CategoryActions.categoryFormUpdate({ category: c }));
           }
           this.isLoading = false;
           this.spinnerService.hide();
@@ -57,7 +57,7 @@ export class EditCategoryComponent implements OnInit, OnDestroy {
 
   public ngAfterViewInit(): void {
     this.categoryForm.valueChanges.pipe(debounceTime(10), takeUntil(this.categoryFormValueChanged$))
-      .subscribe((value) => this.store.dispatch(categoryFormUpdate({
+      .subscribe((value) => this.store.dispatch(CategoryActions.categoryFormUpdate({
         category: {
           id: this.category?.id ?? 0,
           name: value.categoryName,
@@ -69,6 +69,7 @@ export class EditCategoryComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
     this.categoryFormValueChanged$.unsubscribe();
+    this.store.dispatch(CategoryActions.clearErrors());
   }
 
   public onSubmit(): void {
@@ -78,7 +79,7 @@ export class EditCategoryComponent implements OnInit, OnDestroy {
       });
       return;
     }
-    this.store.dispatch(categoryUpdateRequestBegin());
+    this.store.dispatch(CategoryActions.categoryUpdateRequestBegin());
   }
 
   public getErrorMessage(error: any): string | null {
@@ -86,6 +87,6 @@ export class EditCategoryComponent implements OnInit, OnDestroy {
   }
 
   public cancelClick(): void {
-    this.store.dispatch(categoryCancelOperation());
+    this.store.dispatch(CategoryActions.categoryCancelOperation());
   }
 }

@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ProductState } from 'src/app/stores/product/product.state';
 import { Store } from "@ngrx/store";
-import { productFormClear, productFormUpdate, productAddRequestBegin, productCancelOperation } from 'src/app/stores/product/product.actions';
+import * as ProductActions from 'src/app/stores/product/product.actions';
 import { Product } from 'src/app/models/product';
 import { getError } from 'src/app/stores/product/product.selectors';
 
@@ -16,20 +16,21 @@ export class AddProductsComponent implements OnDestroy {
   constructor(private store: Store<ProductState>) { }
 
   public onProductChange(product: Product): void {
-    this.store.dispatch(productFormUpdate({
+    this.store.dispatch(ProductActions.productFormUpdate({
       product
     }));
   }
 
   public onSubmit(): void {
-    this.store.dispatch(productAddRequestBegin());
+    this.store.dispatch(ProductActions.productAddRequestBegin());
   }
 
   public onCancel(): void {
-    this.store.dispatch(productCancelOperation());
+    this.store.dispatch(ProductActions.productCancelOperation());
   }
 
   public ngOnDestroy(): void {
-    this.store.dispatch(productFormClear());
+    this.store.dispatch(ProductActions.productFormClear());
+    this.store.dispatch(ProductActions.clearErrors());
   }
 }

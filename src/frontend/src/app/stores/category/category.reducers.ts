@@ -45,5 +45,11 @@ export const categoryReducer = createReducer(
             ...state,
             error: action.error
         }
+    }),
+    on(CategoryActions.clearErrors, (state, _) => {
+        return {
+            ...state,
+            error: null
+        }
     })
 );

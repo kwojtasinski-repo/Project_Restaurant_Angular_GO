@@ -66,5 +66,11 @@ export const cartReducer = createReducer(
             error: null,
             finalizeCartState: RequestState.success
         }
+    }),
+    on(CartActions.clearErrors, (state, _) => {
+        return {
+            ...state,
+            error: null
+        }
     })
 );
