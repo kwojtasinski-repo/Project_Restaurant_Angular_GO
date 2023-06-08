@@ -11,7 +11,7 @@ function mapCodeToMessage(code: any): string | null {
         return 'Niepoprawny adres email';
     } else if (code.key === 'minlength') {
         if (code.value.requiredLength > 1) {
-            return `Pole powinno zawierać ${code.value.requiredLength} znaki`;
+            return `Pole powinno składać się przynajmniej z ${code.value.requiredLength} znaków`;
         } else {
             return `Pole powinno zawierać ${code.value.requiredLength} znak`;
         }

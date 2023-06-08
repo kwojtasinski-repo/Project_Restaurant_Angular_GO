@@ -59,14 +59,15 @@ export class RegisterComponent {
 
       this.registerForm.valueChanges
         .pipe(debounceTime(10))
-        .subscribe(val => {
+        .subscribe(val => 
           this.store.dispatch(RegisterActions.registerFormUpdate({
-          form: {
-            email: val.emailAddress,
-            password: val.password,
-            confirmPassword: val.confirmPassword,
-          }
-        }))})
+            form: {
+              email: val.emailAddress,
+              password: val.password,
+              confirmPassword: val.confirmPassword,
+            }})
+          )
+        )
   }
 
   public ngOnDestroy(): void {
