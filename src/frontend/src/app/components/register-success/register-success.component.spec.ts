@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RegisterSuccessComponent } from './register-success.component';
-import { RouterModule } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { By } from '@angular/platform-browser';
 
 describe('RegisterSuccessComponent', () => {
   let component: RegisterSuccessComponent;
@@ -10,10 +11,10 @@ describe('RegisterSuccessComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ 
-        RegisterSuccessComponent
+        RegisterSuccessComponent,
       ],
       imports: [
-        RouterModule.forRoot([]),
+        RouterTestingModule.withRoutes([]),
       ]
     })
     .compileComponents();
@@ -25,5 +26,34 @@ describe('RegisterSuccessComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should create content', () => {
+    const registerSuccessForm = (fixture.nativeElement as HTMLElement).querySelector('.border-register-success-form');
+
+    const registerText = registerSuccessForm?.querySelector('div > h3');
+    const linkNavigateBack = registerSuccessForm?.querySelector('div > a');
+
+    expect(registerText).not.toBeUndefined();
+    expect(registerText).not.toBeNull();
+    expect(registerText?.innerHTML).not.toBeUndefined();
+    expect(registerText?.innerHTML).not.toBeNull();
+    expect(registerText?.innerHTML.length).toBeGreaterThan(0);
+    expect(linkNavigateBack?.innerHTML).not.toBeUndefined();
+    expect(linkNavigateBack?.innerHTML).not.toBeNull();
+    expect(linkNavigateBack?.innerHTML).not.toBeUndefined();
+    expect(linkNavigateBack?.innerHTML).not.toBeNull();
+    expect(linkNavigateBack?.innerHTML.length).toBeGreaterThan(0);
+  });
+
+  it('should create link with proper href url', async () => {
+    const anchorTag = fixture.debugElement.query(By.css('a')).nativeElement;
+    
+    expect(anchorTag).not.toBeUndefined();
+    expect(anchorTag).not.toBeNull();
+    const hrefAttribute = anchorTag.getAttribute('href');
+    expect(hrefAttribute).not.toBeUndefined();
+    expect(hrefAttribute).not.toBeNull();
+    expect(hrefAttribute).toEqual('/login');
   });
 });
