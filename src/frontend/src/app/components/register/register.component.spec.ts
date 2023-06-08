@@ -10,7 +10,7 @@ import { SpinnerButtonComponent } from '../spinner-button/spinner-button.compone
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegisterState } from 'src/app/stores/register/register.state';
 import { Store } from '@ngrx/store';
-import { changeInputValue } from 'src/app/test-utils';
+import { changeInputValue } from 'src/app/unit-test-fixtures/test-utils';
 import { registerRequestBegin } from 'src/app/stores/register/register.actions';
 
 describe('RegisterComponent', () => {
