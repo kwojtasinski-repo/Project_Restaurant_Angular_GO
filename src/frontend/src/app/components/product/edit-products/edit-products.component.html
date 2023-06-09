@@ -26,6 +26,7 @@
         <app-product-form 
             [product]="product" 
             [buttonNames]="['Zatwierdź', 'Anuluj']"
+            [categories]="categories"
             (productChanged)="onProductChange($event)" 
             (onSubmit)="onSubmit()" 
             (onCancel)="onCancel()"></app-product-form>

@@ -9,11 +9,11 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { ProductService } from 'src/app/services/product.service';
 import productService from 'src/app/unit-test-fixtures/in-memory-product.service';
-import { Category } from 'src/app/models/category';
 import { Product } from 'src/app/models/product';
 import { ActivatedRoute } from '@angular/router';
 import { convertToParamMap } from '@angular/router';
 import { MoneyPipe } from 'src/app/pipes/money-pipe';
+import { stubbedProducts } from 'src/app/unit-test-fixtures/test-utils';
 
 describe('ViewProductsComponent', () => {
   let component: ViewProductsComponent;
@@ -65,7 +65,6 @@ describe('ViewProductsComponent', () => {
 
   it('should inform when product is not available', () => {
     const notFoundInformation = fixture.nativeElement.querySelector('.alert.alert-danger > h5');
-    console.log('notFoundInformation', notFoundInformation)
 
     expect(notFoundInformation).not.toBeUndefined();
     expect(notFoundInformation).not.toBeNull();
@@ -151,28 +150,5 @@ describe('ViewProductsComponent when product available', () => {
 });
 
 const fillServiceWithProducts = () => {
-  productService.add(createProduct(undefined, 'Produc#1'));
-  productService.add(createProduct(undefined, 'Produc#2'));
-  productService.add(createProduct(undefined, 'Produc#3'));
-  productService.add(createProduct(undefined, 'Produc#4'));
-  productService.add(createProduct(undefined, 'Produc#5'));
-}
-
-const createProduct = (id: number | undefined = undefined, 
-    name: string | undefined = undefined, 
-    price: number | undefined = undefined,
-    description: number | undefined = undefined,
-    category: Category | undefined = undefined) => {
-  return { 
-    id: id ?? 0,
-    name: name ?? 'product',
-    category: category ?? {
-      id: 1,
-      name: 'category',
-      deleted: false
-    },
-    price: price ?? 100,
-    description: description ?? 'Desc1234',
-    deleted: false
-  } as Product
-}
+  stubbedProducts().forEach(p => productService.add(p))
+};

@@ -1,6 +1,7 @@
 import { Component, OnDestroy, Input, EventEmitter, Output, ChangeDetectorRef } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
+import { Category } from 'src/app/models/category';
 import { Product } from 'src/app/models/product';
 import { getValidationMessage } from 'src/app/validations/validations';
 
@@ -12,6 +13,8 @@ import { getValidationMessage } from 'src/app/validations/validations';
 export class ProductFormComponent implements OnDestroy {
   @Input()
   public product: Product | undefined;
+  @Input()
+  public categories: Category[] = [];
 
   @Input()
   public buttonNames: Array<string> = ['Dodaj', 'Anuluj'];
@@ -45,7 +48,7 @@ export class ProductFormComponent implements OnDestroy {
           name: value.productName,
           price: this.onPriceChange(value.productCost),
           category: {
-            id: new Number(value.productCategory).valueOf(),
+            id: new Number(value.productCategory.id).valueOf(),
             name: '',
             deleted: false,
           },
@@ -77,6 +80,10 @@ export class ProductFormComponent implements OnDestroy {
     this.changeDetector.detach();
     this.productFormValueChanged$.complete();
   }
+  
+  public compareCategories(c1: any, c2: any): boolean {
+    return c1 && c2 ? c1.id === c2.id : c1 === c2;
+  }
 
   private onPriceChange(value: string): number {
     const newValue = this.comma === "," ? value.replace(this.comma, ".") : value;
@@ -88,8 +95,8 @@ export class ProductFormComponent implements OnDestroy {
     this.productForm = new FormGroup({
       productName: new FormControl(this.product?.name ?? '', Validators.compose([Validators.required, Validators.maxLength(100), Validators.minLength(3)])),
       productDescription: new FormControl(this.product?.description ?? '', Validators.maxLength(5000)),
-      productCost: new FormControl(localeNumberFormat.format(this.product?.price ?? 0.00), Validators.compose([Validators.required, Validators.min(0)])),
-      productCategory: new FormControl(this.product?.category?.id ?? '', Validators.required),
+      productCost: new FormControl(localeNumberFormat.format(this.product?.price ?? 0), Validators.compose([Validators.required, Validators.min(0)])),
+      productCategory: new FormControl(this.product?.category ?? '', Validators.required),
     });
     this.comma = localeNumberFormat.format(0.1).charAt(1);
   }

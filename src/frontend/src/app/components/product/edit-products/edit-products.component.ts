@@ -9,6 +9,8 @@ import { ProductState } from 'src/app/stores/product/product.state';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { getError } from 'src/app/stores/product/product.selectors';
 import { clearErrors } from 'src/app/stores/cart/cart.actions';
+import { CategoryService } from 'src/app/services/category.service';
+import { Category } from 'src/app/models/category';
 
 @Component({
   selector: 'app-edit-products',
@@ -20,8 +22,13 @@ export class EditProductsComponent implements OnInit, OnDestroy {
   public isLoading = true;
   public error$ = this.store.select(getError);
   public error: string | undefined;
+  public categories: Category[] = [];
 
-  constructor(private productService: ProductService, private route: ActivatedRoute, private store: Store<ProductState>, private spinnerService: NgxSpinnerService) { }
+  constructor(private productService: ProductService,
+    private route: ActivatedRoute,
+    private store: Store<ProductState>,
+    private categoryService: CategoryService,
+    private spinnerService: NgxSpinnerService) { }
 
   public ngOnInit(): void {
     this.spinnerService.show();
@@ -44,6 +51,19 @@ export class EditProductsComponent implements OnInit, OnDestroy {
             this.error = 'Coś poszło nie tak, spróbuj ponownie później';
           }
           this.spinnerService.hide();
+          console.error(error);
+        }
+      });
+    this.categoryService.getAll()
+      .pipe(take(1))
+      .subscribe({ next: c => {
+          this.categories = c;
+        }, error: error => {
+          if (error.status === 0) {
+            this.error = 'Sprawdź połączenie z internetem';
+          } else if (error.status === 500) {
+            this.error = 'Coś poszło nie tak, spróbuj ponownie później';
+          }
           console.error(error);
         }
       });

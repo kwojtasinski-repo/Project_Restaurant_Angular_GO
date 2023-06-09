@@ -30,7 +30,7 @@
         </ng-container>
     </div>
     <div class="form-group">
-        <label id="product-cost" >
+        <label for="product-cost" >
             Cena
         </label>
         <input id="product-cost"
@@ -52,9 +52,9 @@
         <label for="product-category">
             Kategoria
         </label>
-        <select id="product-category" class="form-control" formControlName="productCategory" >
+        <select id="product-category" class="form-control" [compareWith]="compareCategories" formControlName="productCategory" >
             <option value="" disabled selected>Wybierz kategorię</option>
-            <option value="1">Category#1</option>
+            <option *ngFor="let category of categories" [ngValue]="category">{{ category.name }}</option>
         </select>
         <ng-container *ngIf="productForm.dirty">
             <ng-container *ngFor="let error of productForm.get('productCategory')?.errors | keyvalue">
