@@ -15,20 +15,6 @@ describe('OrderService', () => {
         HttpClientModule
       ],
       providers: [
-        provideMockStore({ initialState, 
-          selectors: [
-            {
-              selector: getUser,
-              value: {
-                id: 1,
-                email: 'string',
-                role: 'test',
-                deleted: null
-              }
-            }
-          ]  
-        }),
-        provideMockStore({ initialState }),
         {
           provide: "API_URL", useValue: ''
         }

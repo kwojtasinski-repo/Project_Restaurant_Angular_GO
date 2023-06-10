@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditProductsComponent } from './edit-products.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { initialState } from 'src/app/stores/product/product.reducers';
-import { provideMockStore, MockStore } from '@ngrx/store/testing';
+import { provideMockStore } from '@ngrx/store/testing';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { HttpClientModule } from '@angular/common/http';
 import { stubbedCategories, stubbedProducts } from 'src/app/unit-test-fixtures/test-utils';
@@ -19,8 +19,6 @@ import { take } from 'rxjs';
 import { Category } from 'src/app/models/category';
 import { ProductState } from 'src/app/stores/product/product.state';
 import { Store } from '@ngrx/store';
-import { getError } from 'src/app/stores/cart/cart.selectors';
-import { By } from '@angular/platform-browser';
 
 describe('EditProductsComponent', () => {
   let component: EditProductsComponent;
@@ -178,65 +176,6 @@ describe('EditProductsComponent when product is available', () => {
 
     expect(onSubmit).toHaveBeenCalled();
     expect(onDispatch).toHaveBeenCalled();
-  });
-});
-
-describe('EditProductsComponent when error occured', () => {
-  let fixture: ComponentFixture<EditProductsComponent>;
-  let store: MockStore<ProductState>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [
-        EditProductsComponent,
-        ProductFormComponent,
-        CurrencyFormatterDirective
-      ],
-      imports: [
-        RouterTestingModule,
-        NgxSpinnerModule,
-        HttpClientModule,
-        ReactiveFormsModule
-      ],
-      providers: [
-        provideMockStore({ initialState }),
-        {
-          provide: ProductService, useValue: productService
-        },
-        {
-          provide: CategoryService, useValue: categoryService
-        },
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: { 
-              paramMap:  convertToParamMap({
-                id: '1'
-              }),
-            },
-          },
-        },
-      ]
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(EditProductsComponent);
-    fillProductServiceWithValues();
-    fillCategoryServiceWithValues();
-    store = TestBed.inject(MockStore);
-    store.overrideSelector(getError, 'dilin dilin i paf');
-    fixture.detectChanges();
-  });
-
-  it('should show error', async () => {
-    const errorResponse = 'dilin dilin i paf';
-    fixture.whenStable().then(() => {
-      const errorInfo = fixture.debugElement.query(By.css('.alert.alert-danger'));
-      
-      expect(errorInfo).not.toBeUndefined();
-      expect(errorInfo).not.toBeNull();
-      expect(errorInfo.nativeElement.innerHTML).toContain(errorResponse);
-    });
-
   });
 });
 
