@@ -7,6 +7,11 @@ export const changeInputValue = (htmlInputElement: any, value: any) => {
     htmlInputElement.dispatchEvent(new Event('input'));
 };
 
+export const changeSelectIndex = (htmlInputElement: any, selectedIndex: any) => {
+    htmlInputElement.selectedIndex = selectedIndex;
+    htmlInputElement.dispatchEvent(new Event('change'));
+};
+
 export function completeObservable<T>(value: T | undefined = undefined): Observable<T> {
     return new Observable<T>((o) => {
         if (value) {               
@@ -25,7 +30,7 @@ export function errorObservable<T>(error: any): Observable<T> {
 export const createProduct = (id: number | undefined = undefined, 
     name: string | undefined = undefined, 
     price: number | undefined = undefined,
-    description: number | undefined = undefined,
+    description: string | undefined = undefined,
     category: Category | undefined = undefined) => {
   return { 
     id: id ?? 0,

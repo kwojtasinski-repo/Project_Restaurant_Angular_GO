@@ -15,12 +15,20 @@ function mapCodeToMessage(code: any): string | null {
         } else {
             return `Pole powinno zawierać ${code.value.requiredLength} znak`;
         }
+    } else if (code.key === 'maxlength') {
+        if (code.value.requiredLength > 1) {
+            return `Pole nie powinno przekroczyć ${code.value.requiredLength} znaków`;
+        } else {
+            return `Pole nie powinno przekroczyć ${code.value.requiredLength} znak`;
+        }
     } else if (code.key === 'pattern') {
         if (code.value.requiredPattern === PATTERN_ONE_UPPER_ONE_LOWER_ONE_SPECIAL_CHARACTER) {
             return 'Pole powinno zawierać małą i dużą literę oraz specjalny znak znak';
         } else {
             return 'Niepoprawny format';
         }
+    } else if (code.key === 'min') {
+        return `Wartość '${code.value.actual}' powinna być większa niż '${code.value.min}'`;
     }
     return null;
 }
