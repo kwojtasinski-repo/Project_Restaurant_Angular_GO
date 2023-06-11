@@ -29,13 +29,7 @@ describe('CartReducers', () => {
         id: 1,
         name: 'name#1',
         price: 100,
-        description: 'desc',
-        deleted: false,
-        category: {
-          id: 1,
-          name: 'name#1',
-          deleted: false
-        }
+        description: 'desc'
       },
       userId: 1
     }] as Cart[];

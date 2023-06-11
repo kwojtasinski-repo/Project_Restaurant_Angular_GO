@@ -218,13 +218,7 @@ const createCart = () => {
         id: 1,
         name: 'Product#1',
         description: 'Desc',
-        price: 100,
-        category: {
-          id: 1,
-          name: 'Category',
-          deleted: false
-        },
-        deleted: false,
+        price: 100
       },
       userId: 1
     }, 
