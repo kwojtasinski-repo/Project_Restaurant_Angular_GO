@@ -9,11 +9,12 @@ import (
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/repositories"
 	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/services"
+	"golang.org/x/sync/syncmap"
 )
 
 var passwordHasher = services.CreatePassworHasherService()
 var configuration config.Config
-var objectsPerRequest = make(map[string]interface{})
+var objectsPerRequest = syncmap.Map{}
 var sqlDb *sql.DB
 
 func InitObjectCreator(configFile config.Config) {
@@ -38,13 +39,13 @@ func CreateDatabaseConnection() (*sql.DB, error) {
 }
 
 func ResetObjectCreator() {
-	objectsPerRequest = make(map[string]interface{})
+	objectsPerRequest = syncmap.Map{}
 }
 
 func createSessionService() (services.SessionService, error) {
-	service := objectsPerRequest["services.SessionService"]
+	service, exists := objectsPerRequest.Load("services.SessionService")
 
-	if service != nil {
+	if exists {
 		return service.(services.SessionService), nil
 	}
 
@@ -59,14 +60,14 @@ func createSessionService() (services.SessionService, error) {
 	}
 
 	sessionService := services.CreateSessionService(sessionRepository, userRepository)
-	objectsPerRequest["services.SessionService"] = sessionService
+	objectsPerRequest.Store("services.SessionService", sessionService)
 	return sessionService, nil
 }
 
 func createProductService() (services.ProductService, error) {
-	service := objectsPerRequest["services.ProductService"]
+	service, exists := objectsPerRequest.Load("services.ProductService")
 
-	if service != nil {
+	if exists {
 		return service.(services.ProductService), nil
 	}
 
@@ -81,14 +82,14 @@ func createProductService() (services.ProductService, error) {
 	}
 
 	productService := services.CreateProductService(productRepository, categoryRepository)
-	objectsPerRequest["services.ProductService"] = productService
+	objectsPerRequest.Store("services.ProductService", productService)
 	return productService, nil
 }
 
 func createCategoryService() (services.CategoryService, error) {
-	service := objectsPerRequest["services.CategoryService"]
+	service, exists := objectsPerRequest.Load("services.CategoryService")
 
-	if service != nil {
+	if exists {
 		return service.(services.CategoryService), nil
 	}
 
@@ -98,14 +99,14 @@ func createCategoryService() (services.CategoryService, error) {
 	}
 
 	categoryService := services.CreateCategoryService(categoryRepository)
-	objectsPerRequest["services.CategoryService"] = categoryService
+	objectsPerRequest.Store("services.CategoryService", categoryService)
 	return categoryService, nil
 }
 
 func createOrderService() (services.OrderService, error) {
-	service := objectsPerRequest["services.OrderService"]
+	service, exists := objectsPerRequest.Load("services.OrderService")
 
-	if service != nil {
+	if exists {
 		return service.(services.OrderService), nil
 	}
 
@@ -130,14 +131,14 @@ func createOrderService() (services.OrderService, error) {
 	}
 
 	orderService := services.CreateOrderService(orderRepository, cartRepository, productRepository, *sessionProvider)
-	objectsPerRequest["services.OrderService"] = orderService
+	objectsPerRequest.Store("services.OrderService", orderService)
 	return orderService, nil
 }
 
 func createUserService() (services.UserService, error) {
-	service := objectsPerRequest["services.UserService"]
+	service, exists := objectsPerRequest.Load("services.UserService")
 
-	if service != nil {
+	if exists {
 		return service.(services.UserService), nil
 	}
 
@@ -152,14 +153,14 @@ func createUserService() (services.UserService, error) {
 	}
 
 	userService := services.CreateUserService(userRepository, passwordHasher, sessionService)
-	objectsPerRequest["services.UserService"] = userService
+	objectsPerRequest.Store("services.UserService", userService)
 	return userService, nil
 }
 
 func createCartService() (services.CartService, error) {
-	service := objectsPerRequest["services.CartService"]
+	service, exists := objectsPerRequest.Load("services.CartService")
 
-	if service != nil {
+	if exists {
 		return service.(services.CartService), nil
 	}
 
@@ -174,14 +175,14 @@ func createCartService() (services.CartService, error) {
 	}
 
 	cartService := services.CreateCartService(cartRepository, productRepository)
-	objectsPerRequest["services.CartService"] = cartService
+	objectsPerRequest.Store("services.CartService", cartService)
 	return cartService, nil
 }
 
 func createCategoryRepository() (repositories.CategoryRepository, error) {
-	repo := objectsPerRequest["repositories.CategoryRepository"]
+	repo, exists := objectsPerRequest.Load("repositories.CategoryRepository")
 
-	if repo != nil {
+	if exists {
 		return repo.(repositories.CategoryRepository), nil
 	}
 
@@ -191,14 +192,14 @@ func createCategoryRepository() (repositories.CategoryRepository, error) {
 	}
 
 	categoryRepository := repositories.CreateCategoryRepository(databaseConnection)
-	objectsPerRequest["repositories.CategoryRepository"] = categoryRepository
+	objectsPerRequest.Store("repositories.CategoryRepository", categoryRepository)
 	return categoryRepository, nil
 }
 
 func createProductRepository() (repositories.ProductRepository, error) {
-	repo := objectsPerRequest["repositories.ProductRepository"]
+	repo, exists := objectsPerRequest.Load("repositories.ProductRepository")
 
-	if repo != nil {
+	if exists {
 		return repo.(repositories.ProductRepository), nil
 	}
 
@@ -208,14 +209,14 @@ func createProductRepository() (repositories.ProductRepository, error) {
 	}
 
 	productRepository := repositories.CreateProductRepository(databaseConnection)
-	objectsPerRequest["repositories.ProductRepository"] = productRepository
+	objectsPerRequest.Store("repositories.ProductRepository", productRepository)
 	return productRepository, nil
 }
 
 func createCartRepository() (repositories.CartRepository, error) {
-	repo := objectsPerRequest["repositories.CartRepository"]
+	repo, exists := objectsPerRequest.Load("repositories.CartRepository")
 
-	if repo != nil {
+	if exists {
 		return repo.(repositories.CartRepository), nil
 	}
 
@@ -225,14 +226,14 @@ func createCartRepository() (repositories.CartRepository, error) {
 	}
 
 	cartRepository := repositories.CreateCartRepository(databaseConnection)
-	objectsPerRequest["repositories.CartRepository"] = cartRepository
+	objectsPerRequest.Store("repositories.CartRepository", cartRepository)
 	return cartRepository, nil
 }
 
 func createSessionRepository() (repositories.SessionRepository, error) {
-	repo := objectsPerRequest["repositories.OrderRepository"]
+	repo, exists := objectsPerRequest.Load("repositories.OrderRepository")
 
-	if repo != nil {
+	if exists {
 		return repo.(repositories.SessionRepository), nil
 	}
 
@@ -242,14 +243,14 @@ func createSessionRepository() (repositories.SessionRepository, error) {
 	}
 
 	sessionRepository := repositories.CreateSessionRepository(database)
-	objectsPerRequest["repositories.SessionRepository"] = sessionRepository
+	objectsPerRequest.Store("repositories.SessionRepository", sessionRepository)
 	return sessionRepository, nil
 }
 
 func createOrderRepository() (repositories.OrderRepository, error) {
-	repo := objectsPerRequest["repositories.OrderRepository"]
+	repo, exists := objectsPerRequest.Load("repositories.OrderRepository")
 
-	if repo != nil {
+	if exists {
 		return repo.(repositories.OrderRepository), nil
 	}
 
@@ -259,14 +260,14 @@ func createOrderRepository() (repositories.OrderRepository, error) {
 	}
 
 	orderRepository := repositories.CreateOrderRepository(databaseConnection)
-	objectsPerRequest["repositories.OrderRepository"] = orderRepository
+	objectsPerRequest.Store("repositories.OrderRepository", orderRepository)
 	return orderRepository, nil
 }
 
 func createUserRepository() (repositories.UserRepository, error) {
-	repo := objectsPerRequest["repositories.UserRepository"]
+	repo, exists := objectsPerRequest.Load("repositories.UserRepository")
 
-	if repo != nil {
+	if exists {
 		return repo.(repositories.UserRepository), nil
 	}
 
@@ -276,7 +277,7 @@ func createUserRepository() (repositories.UserRepository, error) {
 	}
 
 	userRepository := repositories.CreateUserRepository(databaseConnection)
-	objectsPerRequest["repositories.UserRepository"] = userRepository
+	objectsPerRequest.Store("repositories.UserRepository", userRepository)
 	return userRepository, nil
 }
 
@@ -285,14 +286,14 @@ func addSessionProvider(sessionDto *dto.SessionDto) error {
 		return errors.New("invalid session")
 	}
 
-	objectsPerRequest["sessionProvider"] = sessionDto
+	objectsPerRequest.Store("sessionProvider", sessionDto)
 	return nil
 }
 
 func getSessionProvider() (*dto.SessionDto, error) {
-	sessionProvider := objectsPerRequest["sessionProvider"]
+	sessionProvider, exists := objectsPerRequest.Load("sessionProvider")
 
-	if sessionProvider == nil {
+	if !exists {
 		return nil, errors.New("'Session Provider' is nil, check if is added to 'objectCreator'")
 	}
 
