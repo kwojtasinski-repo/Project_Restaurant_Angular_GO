@@ -1,16 +1,15 @@
-import { ComponentFixture, TestBed, fakeAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MenuComponent } from './menu.component';
 import { initialState } from 'src/app/stores/login/login.reducers';
 import { initialState as cartInitialState } from 'src/app/stores/cart/cart.reducers';
-import { provideMockStore, MockStore } from '@ngrx/store/testing';
+import { provideMockStore } from '@ngrx/store/testing';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
 import { MoneyPipe } from 'src/app/pipes/money-pipe';
 import { HttpClientModule } from '@angular/common/http';
-import { BehaviorSubject, Subject, take } from 'rxjs';
-import { User } from 'src/app/models/user';
+import { take } from 'rxjs';
 import { ProductService } from 'src/app/services/product.service';
 import productService from 'src/app/unit-test-fixtures/in-memory-product.service';
 import { stubbedProducts } from 'src/app/unit-test-fixtures/test-utils';
@@ -65,10 +64,10 @@ describe('MenuComponent', () => {
     expect(productsHtml).not.toBeUndefined();
     expect(productsHtml).not.toBeNull();
     expect(productsHtml.length).toEqual(products.length);
+    expect(productsHtml.some(p => p.innerHTML.includes(products[0].name))).toBeTrue();
     expect(productsHtml.some(p => p.innerHTML.includes(products[1].name))).toBeTrue();
     expect(productsHtml.some(p => p.innerHTML.includes(products[2].name))).toBeTrue();
     expect(productsHtml.some(p => p.innerHTML.includes(products[3].name))).toBeTrue();
     expect(productsHtml.some(p => p.innerHTML.includes(products[4].name))).toBeTrue();
-    expect(productsHtml.some(p => p.innerHTML.includes(products[5].name))).toBeTrue();
   });
 });

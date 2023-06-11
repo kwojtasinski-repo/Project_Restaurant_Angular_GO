@@ -100,9 +100,9 @@ export class CartEffects {
           catchError((err) => {
             console.error(err);
             if (err.status === 0) {
-              return of(CartActions.addProductToCartFailed({ error: 'Sprawdź połączenie z internetem' }));
+              return of(CartActions.finalizeCartFailed({ error: 'Sprawdź połączenie z internetem' }));
             } else if (err.status >= 500) {
-              return of(CartActions.addProductToCartFailed({ error: 'Coś poszło nie tak, spróbuj później' }));
+              return of(CartActions.finalizeCartFailed({ error: 'Coś poszło nie tak, spróbuj później' }));
             }
 
             return of(CartActions.finalizeCartFailed({ error: err.error.errors }));
