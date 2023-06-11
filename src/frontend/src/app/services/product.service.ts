@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Product } from '../models/product';
 import { Observable, catchError, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { ProductSendDto } from '../models/product-send-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +12,11 @@ export class ProductService {
 
   constructor(private httpClient: HttpClient, @Inject('API_URL') private backendUrl: string) { }
 
-  public add(product: Product): Observable<void> {
+  public add(product: ProductSendDto): Observable<void> {
     return this.httpClient.post<void>(`${this.backendUrl}/${this.productPath}`, product, { withCredentials: true });
   }
 
-  public update(product: Product): Observable<void> {
+  public update(product: ProductSendDto): Observable<void> {
     return this.httpClient.put<void>(`${this.backendUrl}/${this.productPath}/${product.id}`, product, { withCredentials: true });
   }
 

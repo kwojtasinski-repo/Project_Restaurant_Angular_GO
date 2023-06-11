@@ -48,14 +48,14 @@ export class ProductFormComponent implements OnDestroy {
           name: value.productName,
           price: this.onPriceChange(value.productCost),
           category: {
-            id: new Number(value.productCategory.id).valueOf(),
+            id: value.productCategory.id,
             name: '',
             deleted: false,
           },
           description: value.productDescription,
           deleted: false
-        }
-      ));
+        })
+      );
   }
 
   public onSubmit(): void {

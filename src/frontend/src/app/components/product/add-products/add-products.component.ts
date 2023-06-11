@@ -1,19 +1,40 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProductState } from 'src/app/stores/product/product.state';
 import { Store } from "@ngrx/store";
 import * as ProductActions from 'src/app/stores/product/product.actions';
 import { Product } from 'src/app/models/product';
 import { getError } from 'src/app/stores/product/product.selectors';
+import { Category } from 'src/app/models/category';
+import { CategoryService } from 'src/app/services/category.service';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-add-products',
   templateUrl: './add-products.component.html',
   styleUrls: ['./add-products.component.scss']
 })
-export class AddProductsComponent implements OnDestroy {  
+export class AddProductsComponent implements OnInit, OnDestroy {  
+  public categories: Category[] = [];
   public error$ = this.store.select(getError);
+  public error = '';
 
-  constructor(private store: Store<ProductState>) { }
+  constructor(private store: Store<ProductState>, private categoryService: CategoryService) { }
+
+  public ngOnInit(): void {
+    this.categoryService.getAll()
+      .pipe(take(1))
+      .subscribe({ next: c => {
+          this.categories = c;
+        }, error: error => {
+          if (error.status === 0) {
+            this.error = 'Sprawdź połączenie z internetem';
+          } else if (error.status === 500) {
+            this.error = 'Coś poszło nie tak, spróbuj ponownie później';
+          }
+          console.error(error);
+        }
+      });
+  }
 
   public onProductChange(product: Product): void {
     this.store.dispatch(ProductActions.productFormUpdate({
