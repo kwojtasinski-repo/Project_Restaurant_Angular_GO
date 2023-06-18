@@ -7,8 +7,8 @@ import (
 
 	"github.com/chmike/securecookie"
 	"github.com/gin-gonic/gin"
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/config"
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/settings"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/config"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/settings"
 )
 
 const GinMode = "GIN_MODE"

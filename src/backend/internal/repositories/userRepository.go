@@ -1,8 +1,8 @@
 package repositories
 
 import (
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
-	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/entities"
+	valueobjects "github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/entities/value-objects"
 )
 
 type UserRepository interface {

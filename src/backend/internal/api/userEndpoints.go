@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	applicationerrors "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/errors"
+	applicationerrors "github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/errors"
 )
 
 func AddUserEndpoints(router *gin.RouterGroup) {

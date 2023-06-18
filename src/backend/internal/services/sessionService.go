@@ -4,12 +4,12 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
-	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
-	applicationerrors "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/errors"
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/repositories"
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/settings"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/dto"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/entities"
+	valueobjects "github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/entities/value-objects"
+	applicationerrors "github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/errors"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/repositories"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/settings"
 )
 
 type SessionService interface {

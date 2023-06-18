@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/go-co-op/gocron"
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/api"
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/repositories"
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/settings"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/api"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/repositories"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/settings"
 )
 
 func RegisterSessionCleaner() *gocron.Scheduler {

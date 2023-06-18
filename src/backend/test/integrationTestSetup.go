@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/config"
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/api"
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/migrations"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/config"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/api"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/migrations"
 	"github.com/stretchr/testify/suite"
 )
 

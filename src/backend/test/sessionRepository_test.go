@@ -3,8 +3,8 @@ package test
 import (
 	"time"
 
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/repositories"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/entities"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/repositories"
 	"github.com/stretchr/testify/assert"
 )
 

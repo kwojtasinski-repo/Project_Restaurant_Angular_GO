@@ -4,7 +4,7 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/entities"
 )
 
 type CategoryDto struct {

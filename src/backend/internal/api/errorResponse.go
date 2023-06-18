@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/errors"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/errors"
 )
 
 func writeErrorResponse(context *gin.Context, errorStatus errors.ErrorStatus) {

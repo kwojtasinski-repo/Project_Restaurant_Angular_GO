@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/repositories"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/dto"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/repositories"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 )

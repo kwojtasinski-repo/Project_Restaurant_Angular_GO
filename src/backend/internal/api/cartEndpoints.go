@@ -6,8 +6,8 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
-	applicationerrors "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/errors"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/dto"
+	applicationerrors "github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/errors"
 )
 
 func AddCartEndpoints(router *gin.RouterGroup) {

@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/entities"
 )
 
 type SessionDto struct {

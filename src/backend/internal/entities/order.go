@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
+	valueobjects "github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/entities/value-objects"
 	"github.com/shopspring/decimal"
 )
 

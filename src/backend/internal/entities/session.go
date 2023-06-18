@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
+	valueobjects "github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/entities/value-objects"
 )
 
 type Session struct {

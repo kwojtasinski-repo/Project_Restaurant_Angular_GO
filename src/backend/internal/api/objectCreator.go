@@ -5,10 +5,10 @@ import (
 	"errors"
 	"log"
 
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/config"
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/dto"
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/repositories"
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/services"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/config"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/dto"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/repositories"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/services"
 	"golang.org/x/sync/syncmap"
 )
 

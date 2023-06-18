@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/repositories"
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/settings"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/entities"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/repositories"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/settings"
 	"github.com/stretchr/testify/suite"
 )
 

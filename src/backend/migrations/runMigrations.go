@@ -12,7 +12,7 @@ import (
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/mysql"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/config"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/config"
 )
 
 var currentMigrationVersion uint

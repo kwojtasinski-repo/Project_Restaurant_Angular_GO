@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	applicationerrors "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/errors"
+	applicationerrors "github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/errors"
 )
 
 func AddSessionEndpoints(router *gin.RouterGroup) {

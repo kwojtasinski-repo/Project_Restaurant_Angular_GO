@@ -4,9 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
-	valueobjects "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities/value-objects"
-	"github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/settings"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/entities"
+	valueobjects "github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/entities/value-objects"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/settings"
 	"github.com/patrickmn/go-cache"
 	"github.com/shopspring/decimal"
 )

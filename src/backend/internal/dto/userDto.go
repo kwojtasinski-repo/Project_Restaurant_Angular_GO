@@ -1,6 +1,6 @@
 package dto
 
-import "github.com/kamasjdev/Project_Restaurant_Angular_GO/internal/entities"
+import "github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/entities"
 
 type UserDto struct {
 	Id      int64  `json:"id"`
