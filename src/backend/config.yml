@@ -3,6 +3,7 @@ server:
   host: "localhost"
   port: 8000
   cookieHashKey: "ABcAsdfawe1241!1q2142@fgsv.,h/@!"
+  idSalt: "a0shfb8s7KBabuF0sdfsna0ps9f"
 
 # Database migration credentials
 databaseMigration:

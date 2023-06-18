@@ -13,6 +13,7 @@ type Config struct {
 		Port          string `yaml:"port"`
 		Host          string `yaml:"host"`
 		CookieHashKey string `yaml:"cookieHashKey"`
+		IdSalt        string `yaml:"idSalt"`
 	} `yaml:"server"`
 	DatabaseMigration struct {
 		Username string `yaml:"user"`
