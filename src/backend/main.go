@@ -63,5 +63,5 @@ func startServer(config config.Config) {
 	scheduler := schedulers.RegisterSessionCleaner()
 	scheduler.StartAsync()
 	log.Println("Running API...")
-	router.Run(fmt.Sprintf(":%v", config.Server.Port))
+	router.Run(fmt.Sprintf("%v:%v", config.Server.Host, config.Server.Port))
 }
