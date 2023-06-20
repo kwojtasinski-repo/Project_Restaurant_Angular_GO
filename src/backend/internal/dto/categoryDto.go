@@ -8,8 +8,8 @@ import (
 )
 
 type CategoryDto struct {
-	Id   int64  `json:"id"`
-	Name string `json:"name"`
+	Id   IdObject `json:"id"`
+	Name string   `json:"name"`
 }
 
 func (product *CategoryDto) Validate() error {
@@ -30,21 +30,21 @@ func (product *CategoryDto) Validate() error {
 }
 
 type CategoryDetailsDto struct {
-	Id      int64  `json:"id"`
-	Name    string `json:"name"`
-	Deleted bool   `json:"deleted"`
+	Id      IdObject `json:"id"`
+	Name    string   `json:"name"`
+	Deleted bool     `json:"deleted"`
 }
 
 func MapToCategoryDto(category entities.Category) *CategoryDto {
 	return &CategoryDto{
-		Id:   category.Id.Value(),
+		Id:   IdObject{ValueInt: category.Id.Value()},
 		Name: category.Name.Value(),
 	}
 }
 
 func MapToCategoryDetailsDto(category entities.Category) *CategoryDetailsDto {
 	return &CategoryDetailsDto{
-		Id:      category.Id.Value(),
+		Id:      IdObject{ValueInt: category.Id.Value()},
 		Name:    category.Name.Value(),
 		Deleted: category.Deleted,
 	}

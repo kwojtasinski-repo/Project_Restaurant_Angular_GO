@@ -36,7 +36,7 @@ func getCategories(context *gin.Context) {
 
 func getCategory(context *gin.Context) {
 	id := context.Param("id")
-	categoryId, errorConvert := strconv.ParseInt(id, 10, 64)
+	categoryId, errorConvert := dto.NewIdObject(id)
 
 	if errorConvert != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
@@ -49,7 +49,7 @@ func getCategory(context *gin.Context) {
 		return
 	}
 
-	if category, err := categoryService.Get(categoryId); err != nil {
+	if category, err := categoryService.Get(categoryId.ValueInt); err != nil {
 		writeErrorResponse(context, *err)
 	} else {
 		context.IndentedJSON(http.StatusOK, category)
@@ -96,7 +96,7 @@ func updateCategory(context *gin.Context) {
 		return
 	}
 
-	updateCategory.Id = categoryId
+	updateCategory.Id = dto.IdObject{ValueInt: categoryId}
 	productService, errCreateObject := createCategoryService()
 	if errCreateObject != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))

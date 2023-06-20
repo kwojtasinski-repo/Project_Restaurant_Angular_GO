@@ -66,7 +66,7 @@ func (service *categoryService) Update(categoryDto *dto.CategoryDto) (*dto.Categ
 		return nil, applicationerrors.BadRequest(err.Error())
 	}
 
-	category, errorRepo := service.repository.Get(categoryDto.Id)
+	category, errorRepo := service.repository.Get(categoryDto.Id.ValueInt)
 	if errorRepo != nil {
 		return nil, applicationerrors.InternalError(errorRepo.Error())
 	}

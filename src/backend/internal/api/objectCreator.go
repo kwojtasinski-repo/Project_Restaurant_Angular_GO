@@ -9,6 +9,7 @@ import (
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/dto"
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/repositories"
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/services"
+	"github.com/speps/go-hashids/v2"
 	"golang.org/x/sync/syncmap"
 )
 
@@ -16,6 +17,7 @@ var passwordHasher = services.CreatePassworHasherService()
 var configuration config.Config
 var objectsPerRequest = syncmap.Map{}
 var sqlDb *sql.DB
+var hashId *hashids.HashID
 
 func InitObjectCreator(configFile config.Config) {
 	configuration = configFile
@@ -298,4 +300,21 @@ func getSessionProvider() (*dto.SessionDto, error) {
 	}
 
 	return sessionProvider.(*dto.SessionDto), nil
+}
+
+func CreateHashId() (*hashids.HashID, error) {
+	if hashId != nil {
+		return hashId, nil
+	}
+
+	data := hashids.NewData()
+	data.Salt = configuration.Server.IdSalt
+	data.MinLength = 7
+	hashIdLocal, err := hashids.NewWithData(data)
+	if err != nil {
+		return nil, err
+	}
+
+	hashId = hashIdLocal
+	return hashIdLocal, nil
 }

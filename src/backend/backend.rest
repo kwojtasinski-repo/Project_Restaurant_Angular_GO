@@ -47,7 +47,7 @@ Cookie: {{cookie}}
 }
 
 ### GET Category
-GET {{path}}/categories/1
+GET {{path}}/categories/oJjl1DE
 Cookie: {{cookie}}
 
 ### Add Category

@@ -37,7 +37,7 @@ func MapToProductDetailsDto(product entities.Product) *ProductDetailsDto {
 		Price:       product.Price.Value().StringFixedBank(2),
 		Deleted:     product.Deleted,
 		Category: CategoryDto{
-			Id:   product.Category.Id.Value(),
+			Id:   IdObject{ValueInt: product.Category.Id.Value()},
 			Name: product.Category.Name.Value(),
 		},
 	}

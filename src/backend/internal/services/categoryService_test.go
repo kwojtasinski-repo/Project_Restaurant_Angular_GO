@@ -99,7 +99,7 @@ func (suite *CategoryServiceTestSuite) Test_AddCategory_Nil_ShouldReturnError() 
 func (suite *CategoryServiceTestSuite) Test_GetCategory_ValidId_ShouldReturnDto() {
 	dtoAdded := suite.addTestCategory()
 
-	dto, err := suite.service.Get(dtoAdded.Id)
+	dto, err := suite.service.Get(dtoAdded.Id.ValueInt)
 
 	assert.Nil(suite.T(), err)
 	assert.NotNil(suite.T(), dto)
@@ -153,7 +153,7 @@ func (suite *CategoryServiceTestSuite) Test_UpdateAndGetCategory_ValidCategory_S
 	}
 
 	dtoUpdate, err := suite.service.Update(updateDto)
-	dtoAfterUpdate, errGet := suite.service.Get(dtoUpdate.Id)
+	dtoAfterUpdate, errGet := suite.service.Get(dtoUpdate.Id.ValueInt)
 
 	assert.Nil(suite.T(), err)
 	assert.NotNil(suite.T(), dtoUpdate)
@@ -207,7 +207,7 @@ func (suite *CategoryServiceTestSuite) Test_UpdateCategory_TooLongName_ShouldRet
 
 func (suite *CategoryServiceTestSuite) Test_UpdateCategory_CategoryNotExists_ShouldReturnError() {
 	updateCategory := &dto.CategoryDto{
-		Id:   1000,
+		Id:   dto.IdObject{ValueInt: 1000},
 		Name: "Name#1",
 	}
 
@@ -231,9 +231,9 @@ func (suite *CategoryServiceTestSuite) Test_UpdateCategory_NilCategory_ShouldRet
 func (suite *CategoryServiceTestSuite) Test_DeleteCategory_ValidId_ShouldDelete() {
 	dtoAdded := suite.addTestCategory()
 
-	err := suite.service.Delete(dtoAdded.Id)
+	err := suite.service.Delete(dtoAdded.Id.ValueInt)
 
-	dtoAfterDelete, errGet := suite.service.Get(dtoAdded.Id)
+	dtoAfterDelete, errGet := suite.service.Get(dtoAdded.Id.ValueInt)
 	assert.Nil(suite.T(), err)
 	assert.NotNil(suite.T(), dtoAfterDelete)
 	assert.Equal(suite.T(), true, dtoAfterDelete.Deleted)

@@ -8,6 +8,7 @@ import (
 
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/config"
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/api"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/app"
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/schedulers"
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/migrations"
 )
@@ -19,7 +20,7 @@ const (
 
 func main() {
 	configFile := config.LoadConfig("config.yml")
-	api.InitObjectCreator(configFile)
+	app.InitApp(configFile)
 	if containsString(os.Args, "migrations") {
 		runMigrations(configFile)
 	} else {
