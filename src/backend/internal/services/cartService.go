@@ -30,12 +30,12 @@ func CreateCartService(cartRepository repositories.CartRepository, productReposi
 }
 
 func (service *cartService) AddToCart(addCart dto.AddCart) *applicationerrors.ErrorStatus {
-	product, errorStatus := getProduct(service.productRepository, addCart.ProductId)
+	product, errorStatus := getProduct(service.productRepository, addCart.ProductId.ValueInt)
 	if errorStatus != nil {
 		return errorStatus
 	}
 
-	userId, err := valueobjects.NewId(addCart.UserId)
+	userId, err := valueobjects.NewId(addCart.UserId.ValueInt)
 	if err != nil {
 		return applicationerrors.BadRequest("Invalid UserId")
 	}
@@ -79,9 +79,9 @@ func (service *cartService) GetMyCart(userId int64) ([]dto.CartDto, *application
 
 	for _, cart := range cartsInRepo {
 		carts = append(carts, dto.CartDto{
-			Id:      cart.Id.Value(),
+			Id:      dto.IdObject{ValueInt: cart.Id.Value()},
 			Product: *dto.MapToProductDto(cart.Product),
-			UserId:  userId,
+			UserId:  dto.IdObject{ValueInt: userId},
 		})
 	}
 

@@ -52,7 +52,7 @@ func (suite *ProductServiceTestSuite) addTestProduct() *dto.ProductDetailsDto {
 	dto, _ := suite.service.Add(&dto.AddProductDto{
 		Name:        "Name#1",
 		Description: "",
-		CategoryId:  1,
+		CategoryId:  dto.IdObject{ValueInt: 1},
 		Price:       decimal.New(100, 0),
 	})
 	return dto
@@ -66,7 +66,7 @@ func (suite *ProductServiceTestSuite) Test_AddProduct_ValidProduct_ShouldReturnD
 	addProduct := &dto.AddProductDto{
 		Name:        "Name#1",
 		Description: "",
-		CategoryId:  1,
+		CategoryId:  dto.IdObject{ValueInt: 1},
 		Price:       decimal.New(100, 0),
 	}
 
@@ -84,7 +84,7 @@ func (suite *ProductServiceTestSuite) Test_AddProduct_TooShortProductNameAndNega
 	addProduct := &dto.AddProductDto{
 		Name:        "",
 		Description: "",
-		CategoryId:  1,
+		CategoryId:  dto.IdObject{ValueInt: 1},
 		Price:       decimal.New(-100, 0),
 	}
 
@@ -102,7 +102,7 @@ func (suite *ProductServiceTestSuite) Test_AddProduct_WhiteSpacesOnProductNameAn
 	addProduct := &dto.AddProductDto{
 		Name:        "                                                                                                                                                                                                                                                                        ",
 		Description: "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ",
-		CategoryId:  1,
+		CategoryId:  dto.IdObject{ValueInt: 1},
 		Price:       decimal.New(100, 0),
 	}
 
@@ -119,7 +119,7 @@ func (suite *ProductServiceTestSuite) Test_AddProduct_TooLongProductNameAndDescr
 	addProduct := &dto.AddProductDto{
 		Name:        "NameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameName1",
 		Description: "DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescri1",
-		CategoryId:  1,
+		CategoryId:  dto.IdObject{ValueInt: 1},
 		Price:       decimal.New(100, 0),
 	}
 
@@ -137,7 +137,7 @@ func (suite *ProductServiceTestSuite) Test_AddProduct_CategoryNotExists_ShouldRe
 	addProduct := &dto.AddProductDto{
 		Name:        "Name#1",
 		Description: "",
-		CategoryId:  21,
+		CategoryId:  dto.IdObject{ValueInt: 21},
 		Price:       decimal.New(100, 0),
 	}
 
@@ -161,7 +161,7 @@ func (suite *ProductServiceTestSuite) Test_AddProduct_NilAddProduct_ShouldReturn
 func (suite *ProductServiceTestSuite) Test_GetProduct_ValidId_ShouldReturnDto() {
 	dtoAdded := suite.addTestProduct()
 
-	dto, err := suite.service.Get(dtoAdded.Id)
+	dto, err := suite.service.Get(dtoAdded.Id.ValueInt)
 
 	assert.Nil(suite.T(), err)
 	assert.NotNil(suite.T(), dto)
@@ -199,7 +199,7 @@ func (suite *ProductServiceTestSuite) Test_UpdateProduct_ValidProduct_ShouldRetu
 		Id:          dtoAdded.Id,
 		Name:        "Abc1235467436",
 		Description: "Description12345465475477686799670",
-		CategoryId:  2,
+		CategoryId:  dto.IdObject{ValueInt: 2},
 		Price:       decimal.New(22025, -2),
 	}
 
@@ -219,12 +219,12 @@ func (suite *ProductServiceTestSuite) Test_UpdateAndGetProduct_ValidProduct_Shou
 		Id:          dtoAdded.Id,
 		Name:        "Abc1235467436",
 		Description: "Description12345465475477686799670",
-		CategoryId:  2,
+		CategoryId:  dto.IdObject{ValueInt: 2},
 		Price:       decimal.New(22025, -2),
 	}
 
 	dtoUpdate, err := suite.service.Update(updateDto)
-	dtoAfterUpdate, errGet := suite.service.Get(dtoUpdate.Id)
+	dtoAfterUpdate, errGet := suite.service.Get(dtoUpdate.Id.ValueInt)
 
 	assert.Nil(suite.T(), err)
 	assert.NotNil(suite.T(), dtoUpdate)
@@ -244,7 +244,7 @@ func (suite *ProductServiceTestSuite) Test_UpdateProduct_TooShortProductNameAndN
 	updateProduct := &dto.UpdateProductDto{
 		Name:        "",
 		Description: "",
-		CategoryId:  1,
+		CategoryId:  dto.IdObject{ValueInt: 1},
 		Price:       decimal.New(-100, 0),
 	}
 
@@ -262,7 +262,7 @@ func (suite *ProductServiceTestSuite) Test_UpdateProduct_WhiteSpacesOnProductNam
 	updateProduct := &dto.UpdateProductDto{
 		Name:        "                                                                                                                                                                                                                                                                        ",
 		Description: "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ",
-		CategoryId:  1,
+		CategoryId:  dto.IdObject{ValueInt: 1},
 		Price:       decimal.New(100, 0),
 	}
 
@@ -279,7 +279,7 @@ func (suite *ProductServiceTestSuite) Test_UpdateProduct_TooLongProductNameAndDe
 	updateProduct := &dto.UpdateProductDto{
 		Name:        "NameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameName1",
 		Description: "DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescri1",
-		CategoryId:  1,
+		CategoryId:  dto.IdObject{ValueInt: 1},
 		Price:       decimal.New(100, 0),
 	}
 
@@ -297,7 +297,7 @@ func (suite *ProductServiceTestSuite) Test_UpdateProduct_CategoryNotExists_Shoul
 	updateProduct := &dto.UpdateProductDto{
 		Name:        "Name#1",
 		Description: "",
-		CategoryId:  21,
+		CategoryId:  dto.IdObject{ValueInt: 21},
 		Price:       decimal.New(100, 0),
 	}
 
@@ -311,10 +311,10 @@ func (suite *ProductServiceTestSuite) Test_UpdateProduct_CategoryNotExists_Shoul
 
 func (suite *ProductServiceTestSuite) Test_UpdateProduct_ProductNotExists_ShouldReturnError() {
 	updateProduct := &dto.UpdateProductDto{
-		Id:          1000,
+		Id:          dto.IdObject{ValueInt: 1000},
 		Name:        "Name#1",
 		Description: "",
-		CategoryId:  3,
+		CategoryId:  dto.IdObject{ValueInt: 3},
 		Price:       decimal.New(100, 0),
 	}
 
@@ -338,9 +338,9 @@ func (suite *ProductServiceTestSuite) Test_UpdateProduct_NilUpdateProduct_Should
 func (suite *ProductServiceTestSuite) Test_DeleteProduct_ValidId_ShouldDelete() {
 	dtoAdded := suite.addTestProduct()
 
-	err := suite.service.Delete(dtoAdded.Id)
+	err := suite.service.Delete(dtoAdded.Id.ValueInt)
 
-	dtoAfterDelete, errGet := suite.service.Get(dtoAdded.Id)
+	dtoAfterDelete, errGet := suite.service.Get(dtoAdded.Id.ValueInt)
 	assert.Nil(suite.T(), err)
 	assert.NotNil(suite.T(), dtoAfterDelete)
 	assert.Equal(suite.T(), true, dtoAfterDelete.Deleted)

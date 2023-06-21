@@ -19,7 +19,12 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 		var session dto.SessionDto
-		json.Unmarshal(cookieValue, &session)
+		err = json.Unmarshal(cookieValue, &session)
+		if err != nil {
+			writeErrorResponse(c, *applicationerrors.InternalError(err.Error()))
+			return
+		}
+
 		if err := session.Validate(); err != nil {
 			log.Println("ERROR: AuthMiddleware() ", err)
 			c.AbortWithStatusJSON(401, gin.H{"errors": "Invalid cookie"})

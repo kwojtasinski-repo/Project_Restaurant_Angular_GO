@@ -125,11 +125,11 @@ func (service *sessionService) ManageSession(sessionDto dto.SessionDto) (*dto.Se
 	}
 
 	userId := session.UserId()
-	if userId.Value() != sessionDto.UserId {
+	if userId.Value() != sessionDto.UserId.ValueInt {
 		return nil, applicationerrors.Unauthorized()
 	}
 
-	user, errRepo := service.userRepo.Get(sessionDto.UserId)
+	user, errRepo := service.userRepo.Get(sessionDto.UserId.ValueInt)
 	if errRepo != nil {
 		return nil, applicationerrors.InternalError(errRepo.Error())
 	}

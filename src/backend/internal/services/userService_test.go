@@ -228,7 +228,7 @@ func (suite *UserServiceTestSuite) Test_Register_ShouldLoginAsNewUser() {
 	suite.Assertions.NotNil(user)
 	suite.Assertions.NotNil(sessionDto)
 	suite.Assertions.Equal(addUser.Email, sessionDto.Email)
-	suite.Assertions.Equal(user.Id, sessionDto.UserId)
+	suite.Assertions.Equal(user.Id.ValueInt, sessionDto.UserId.ValueInt)
 }
 
 func (suite *UserServiceTestSuite) Test_Register_InvalidEmailAndPassword_ShouldReturnBadRequest() {

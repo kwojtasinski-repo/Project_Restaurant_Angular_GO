@@ -5,17 +5,17 @@ import (
 )
 
 type OrderProductDto struct {
-	Id        int64  `json:"id"`
-	Name      string `json:"name"`
-	Price     string `json:"price"`
-	ProductId int64  `json:"productId"`
+	Id        IdObject `json:"id"`
+	Name      string   `json:"name"`
+	Price     string   `json:"price"`
+	ProductId IdObject `json:"productId"`
 }
 
 func mapToOrderProductDto(orderProduct entities.OrderProduct) *OrderProductDto {
 	return &OrderProductDto{
-		Id:        orderProduct.Id.Value(),
+		Id:        IdObject{ValueInt: orderProduct.Id.Value()},
 		Name:      orderProduct.Name.Value(),
 		Price:     orderProduct.Price.Value().StringFixedBank(2),
-		ProductId: orderProduct.ProductId.Value(),
+		ProductId: IdObject{ValueInt: orderProduct.ProductId.Value()},
 	}
 }

@@ -37,7 +37,7 @@ func defaultSessionDto() dto.SessionDto {
 	return dto.SessionDto{
 		SessionId: uuid.New(),
 		Expiry:    time.Now().UTC().Add(time.Hour).UnixMicro(),
-		UserId:    1,
+		UserId:    dto.IdObject{ValueInt: 1},
 		Email:     "email@email.com",
 		Role:      "user",
 	}
@@ -74,8 +74,8 @@ func TestOrderServiceTestSuite(t *testing.T) {
 
 func (suite *OrderServiceTestSuite) Test_Add_WithProducts_ShouldAddOrder() {
 	addOrder := dto.AddOrderDto{
-		ProductIds: []int64{1, 2, 3, 1},
-		UserId:     1,
+		ProductIds: []dto.IdObject{{ValueInt: 1}, {ValueInt: 2}, {ValueInt: 3}, {ValueInt: 1}},
+		UserId:     dto.IdObject{ValueInt: 1},
 	}
 	expectedPrice := decimal.New(10050, -2).Add(decimal.New(55550, -2)).Add(decimal.New(12550, -2)).Add(decimal.New(10050, -2))
 
@@ -90,8 +90,8 @@ func (suite *OrderServiceTestSuite) Test_Add_WithProducts_ShouldAddOrder() {
 
 func (suite *OrderServiceTestSuite) Test_Add_WithoutProducts_ShouldAddOrderWithEmptyPosistions() {
 	addOrder := dto.AddOrderDto{
-		ProductIds: make([]int64, 0),
-		UserId:     1,
+		ProductIds: make([]dto.IdObject, 0),
+		UserId:     dto.IdObject{ValueInt: 1},
 	}
 
 	orderDto, err := suite.service.Add(addOrder)
@@ -105,8 +105,8 @@ func (suite *OrderServiceTestSuite) Test_Add_WithoutProducts_ShouldAddOrderWithE
 
 func (suite *OrderServiceTestSuite) Test_Add_WithInvalidUserId_ShouldReturnBadRequest() {
 	addOrder := dto.AddOrderDto{
-		ProductIds: make([]int64, 0),
-		UserId:     -1,
+		ProductIds: make([]dto.IdObject, 0),
+		UserId:     dto.IdObject{ValueInt: -1},
 	}
 
 	orderDto, err := suite.service.Add(addOrder)
@@ -118,8 +118,8 @@ func (suite *OrderServiceTestSuite) Test_Add_WithInvalidUserId_ShouldReturnBadRe
 
 func (suite *OrderServiceTestSuite) Test_Add_ProductNotExists_ShouldReturnBadRequest() {
 	addOrder := dto.AddOrderDto{
-		ProductIds: []int64{20},
-		UserId:     -1,
+		ProductIds: []dto.IdObject{{ValueInt: 20}},
+		UserId:     dto.IdObject{ValueInt: -1},
 	}
 
 	orderDto, err := suite.service.Add(addOrder)
@@ -132,8 +132,8 @@ func (suite *OrderServiceTestSuite) Test_Add_ProductNotExists_ShouldReturnBadReq
 func (suite *OrderServiceTestSuite) Test_Add_AnErrorOccuredInProductRepository_ShouldReturnInternalErrorServer() {
 	service := CreateOrderService(suite.orderRepository, suite.cartRepository, repositories.NewErrorProductRepository(), defaultSessionDto())
 	addOrder := dto.AddOrderDto{
-		ProductIds: []int64{20},
-		UserId:     1,
+		ProductIds: []dto.IdObject{{ValueInt: 20}},
+		UserId:     dto.IdObject{ValueInt: 1},
 	}
 
 	orderDto, err := service.Add(addOrder)
@@ -146,8 +146,8 @@ func (suite *OrderServiceTestSuite) Test_Add_AnErrorOccuredInProductRepository_S
 func (suite *OrderServiceTestSuite) Test_Add_WithNoOrderProductsAndAnErrorOccuredInOrderRepository_ShouldReturnInternalErrorServer() {
 	service := CreateOrderService(repositories.NewErrorOrderRepository(), suite.cartRepository, suite.productRepository, defaultSessionDto())
 	addOrder := dto.AddOrderDto{
-		ProductIds: make([]int64, 0),
-		UserId:     1,
+		ProductIds: make([]dto.IdObject, 0),
+		UserId:     dto.IdObject{ValueInt: 1},
 	}
 
 	orderDto, err := service.Add(addOrder)
@@ -160,8 +160,8 @@ func (suite *OrderServiceTestSuite) Test_Add_WithNoOrderProductsAndAnErrorOccure
 func (suite *OrderServiceTestSuite) Test_Add_AnErrorOccuredInOrderRepository_ShouldReturnInternalErrorServer() {
 	service := CreateOrderService(repositories.NewErrorOrderRepository(), suite.cartRepository, suite.productRepository, defaultSessionDto())
 	addOrder := dto.AddOrderDto{
-		ProductIds: []int64{1},
-		UserId:     1,
+		ProductIds: []dto.IdObject{{ValueInt: 1}},
+		UserId:     dto.IdObject{ValueInt: 1},
 	}
 
 	orderDto, err := service.Add(addOrder)
@@ -174,7 +174,7 @@ func (suite *OrderServiceTestSuite) Test_Add_AnErrorOccuredInOrderRepository_Sho
 func (suite *OrderServiceTestSuite) Test_AddFromCart_ShouldAddOrderWithProductsFromCart() {
 	order, err := suite.service.AddFromCart()
 
-	carts, errRepo := suite.cartRepository.GetAllByUser(suite.sessionProvider.UserId)
+	carts, errRepo := suite.cartRepository.GetAllByUser(suite.sessionProvider.UserId.ValueInt)
 	suite.Assertions.NotNil(order)
 	suite.Assertions.Nil(err)
 	suite.Assertions.Nil(errRepo)
@@ -186,7 +186,7 @@ func (suite *OrderServiceTestSuite) Test_AddFromCart_ShouldAddOrderWithProductsF
 }
 
 func (suite *OrderServiceTestSuite) Test_AddFromCart_InvalidId_ShouldReturnBadRequest() {
-	suite.sessionProvider.UserId = -1
+	suite.sessionProvider.UserId = dto.IdObject{ValueInt: -1}
 	service := CreateOrderService(suite.orderRepository, suite.cartRepository, suite.productRepository, suite.sessionProvider)
 
 	order, err := service.AddFromCart()
@@ -197,7 +197,7 @@ func (suite *OrderServiceTestSuite) Test_AddFromCart_InvalidId_ShouldReturnBadRe
 }
 
 func (suite *OrderServiceTestSuite) Test_AddFromCart_EmptyCart_ShouldReturnBadRequest() {
-	suite.sessionProvider.UserId = 10
+	suite.sessionProvider.UserId = dto.IdObject{ValueInt: 10}
 	service := CreateOrderService(suite.orderRepository, suite.cartRepository, suite.productRepository, suite.sessionProvider)
 
 	order, err := service.AddFromCart()
@@ -208,7 +208,7 @@ func (suite *OrderServiceTestSuite) Test_AddFromCart_EmptyCart_ShouldReturnBadRe
 }
 
 func (suite *OrderServiceTestSuite) Test_AddFromCart_ProductNotExists_ShouldReturnBadRequest() {
-	carts, _ := suite.cartRepository.GetAllByUser(suite.sessionProvider.UserId)
+	carts, _ := suite.cartRepository.GetAllByUser(suite.sessionProvider.UserId.ValueInt)
 	newProductId, _ := valueobjects.NewId(100)
 	cart := carts[0]
 	cart.Id = *newProductId

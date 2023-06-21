@@ -3,7 +3,6 @@ package api
 import (
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/dto"
@@ -18,14 +17,14 @@ func AddCartEndpoints(router *gin.RouterGroup) {
 }
 
 func getMyCart(context *gin.Context) {
-	userId := context.Keys["userId"].(int64)
+	userId := context.Keys["userId"].(dto.IdObject)
 	cartService, errCreateObject := createCartService()
 	if errCreateObject != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
 		return
 	}
 
-	if myCart, err := cartService.GetMyCart(userId); err != nil {
+	if myCart, err := cartService.GetMyCart(userId.ValueInt); err != nil {
 		writeErrorResponse(context, *err)
 	} else {
 		context.IndentedJSON(http.StatusOK, myCart)
@@ -40,7 +39,7 @@ func addCart(context *gin.Context) {
 		return
 	}
 
-	userId := context.Keys["userId"].(int64)
+	userId := context.Keys["userId"].(dto.IdObject)
 	newCart.UserId = userId
 	cartService, errCreateObject := createCartService()
 	if errCreateObject != nil {
@@ -60,8 +59,8 @@ func addCart(context *gin.Context) {
 
 func deleteCart(context *gin.Context) {
 	id := context.Param("id")
-	cartId, errorConvertCart := strconv.ParseInt(id, 10, 64)
-	userId := context.Keys["userId"].(int64)
+	cartId, errorConvertCart := dto.NewIdObject(id)
+	userId := context.Keys["userId"].(dto.IdObject)
 	if errorConvertCart != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
 		return
@@ -73,7 +72,7 @@ func deleteCart(context *gin.Context) {
 		return
 	}
 
-	if err := cartService.RemoveFromCart(cartId, userId); err != nil {
+	if err := cartService.RemoveFromCart(cartId.ValueInt, userId.ValueInt); err != nil {
 		writeErrorResponse(context, *err)
 		return
 	}

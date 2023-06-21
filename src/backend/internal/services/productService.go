@@ -40,7 +40,7 @@ func (service *productService) Add(productDto *dto.AddProductDto) (*dto.ProductD
 		return nil, applicationerrors.BadRequest(err.Error())
 	}
 
-	category, errorRepo := service.categoryRepository.Get(productDto.CategoryId)
+	category, errorRepo := service.categoryRepository.Get(productDto.CategoryId.ValueInt)
 	if errorRepo != nil {
 		return nil, applicationerrors.InternalError(errorRepo.Error())
 	}
@@ -69,7 +69,7 @@ func (service *productService) Update(productDto *dto.UpdateProductDto) (*dto.Pr
 		return nil, applicationerrors.BadRequest(err.Error())
 	}
 
-	category, errorRepo := service.categoryRepository.Get(productDto.CategoryId)
+	category, errorRepo := service.categoryRepository.Get(productDto.CategoryId.ValueInt)
 	if errorRepo != nil {
 		return nil, applicationerrors.InternalError(errorRepo.Error())
 	}
@@ -78,7 +78,7 @@ func (service *productService) Update(productDto *dto.UpdateProductDto) (*dto.Pr
 		return nil, applicationerrors.BadRequest(fmt.Sprintf("'Category' with id %v was not found", productDto.CategoryId))
 	}
 
-	product, errorRepo := service.repository.Get(productDto.Id)
+	product, errorRepo := service.repository.Get(productDto.Id.ValueInt)
 	if errorRepo != nil {
 		return nil, applicationerrors.InternalError(errorRepo.Error())
 	}

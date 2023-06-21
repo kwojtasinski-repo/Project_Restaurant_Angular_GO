@@ -316,7 +316,7 @@ func (suite *SessionServiceTestSuite) Test_ManageSession_ExpiredSession_ShouldRe
 
 	suite.service.ManageSession(sessionDto)
 
-	userSessions, _ := suite.service.GetUserSessions(sessionDto.UserId)
+	userSessions, _ := suite.service.GetUserSessions(sessionDto.UserId.ValueInt)
 	var sessionRefreshed dto.SessionDto
 	for _, session := range userSessions {
 		if session.SessionId == sessionDto.SessionId {

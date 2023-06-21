@@ -10,7 +10,7 @@ import (
 type AddProductDto struct {
 	Name        string          `json:"name"`
 	Description string          `json:"description"`
-	CategoryId  int64           `json:"categoryId"`
+	CategoryId  IdObject        `json:"categoryId"`
 	Price       decimal.Decimal `json:"price"`
 }
 

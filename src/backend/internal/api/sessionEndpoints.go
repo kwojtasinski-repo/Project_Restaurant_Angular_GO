@@ -3,9 +3,9 @@ package api
 import (
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/dto"
 	applicationerrors "github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/errors"
 )
 
@@ -18,7 +18,7 @@ func AddSessionEndpoints(router *gin.RouterGroup) {
 
 func getAllUserSessions(context *gin.Context) {
 	id := context.Param("id")
-	userId, errorConvert := strconv.ParseInt(id, 10, 64)
+	userId, errorConvert := dto.NewIdObject(id)
 
 	if errorConvert != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
@@ -31,7 +31,7 @@ func getAllUserSessions(context *gin.Context) {
 		return
 	}
 
-	if sessions, err := sessionService.GetUserSessions(userId); err != nil {
+	if sessions, err := sessionService.GetUserSessions(userId.ValueInt); err != nil {
 		writeErrorResponse(context, *err)
 	} else {
 		context.IndentedJSON(http.StatusOK, sessions)
@@ -40,7 +40,7 @@ func getAllUserSessions(context *gin.Context) {
 
 func revokeAllUserSessions(context *gin.Context) {
 	id := context.Param("id")
-	userId, errorConvert := strconv.ParseInt(id, 10, 64)
+	userId, errorConvert := dto.NewIdObject(id)
 
 	if errorConvert != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
@@ -53,7 +53,7 @@ func revokeAllUserSessions(context *gin.Context) {
 		return
 	}
 
-	if err := sessionService.RevokeAllUsersSessions(userId); err != nil {
+	if err := sessionService.RevokeAllUsersSessions(userId.ValueInt); err != nil {
 		writeErrorResponse(context, *err)
 		return
 	}

@@ -43,7 +43,7 @@ PUT {{path}}/categories/1
 Cookie: {{cookie}}
 
 {
-    "name": "CategoryUpdated"
+    "name": "CategoryUpdated#1"
 }
 
 ### GET Category

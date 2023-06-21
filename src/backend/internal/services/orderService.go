@@ -37,7 +37,7 @@ func CreateOrderService(orderRepository repositories.OrderRepository, cartReposi
 }
 
 func (service *orderService) Add(addOrderDto dto.AddOrderDto) (*dto.OrderDetailsDto, *applicationerrors.ErrorStatus) {
-	userId, err := valueobjects.NewId(addOrderDto.UserId)
+	userId, err := valueobjects.NewId(addOrderDto.UserId.ValueInt)
 	if err != nil {
 		return nil, applicationerrors.BadRequest(err.Error())
 	}
@@ -61,7 +61,7 @@ func (service *orderService) Add(addOrderDto dto.AddOrderDto) (*dto.OrderDetails
 
 	var errors strings.Builder
 	for _, productId := range addOrderDto.ProductIds {
-		product, err := service.productRepo.Get(productId)
+		product, err := service.productRepo.Get(productId.ValueInt)
 		if err != nil {
 			return nil, applicationerrors.InternalError(err.Error())
 		}
@@ -94,12 +94,12 @@ func (service *orderService) Add(addOrderDto dto.AddOrderDto) (*dto.OrderDetails
 }
 
 func (service *orderService) AddFromCart() (*dto.OrderDetailsDto, *applicationerrors.ErrorStatus) {
-	userIdValue, err := valueobjects.NewId(service.sessionProvider.UserId)
+	userIdValue, err := valueobjects.NewId(service.sessionProvider.UserId.ValueInt)
 	if err != nil {
 		return nil, applicationerrors.BadRequest(err.Error())
 	}
 
-	productsInCart, err := service.cartRepo.GetAllByUser(service.sessionProvider.UserId)
+	productsInCart, err := service.cartRepo.GetAllByUser(service.sessionProvider.UserId.ValueInt)
 	if err != nil {
 		return nil, applicationerrors.InternalError(err.Error())
 	}
@@ -143,7 +143,7 @@ func (service *orderService) AddFromCart() (*dto.OrderDetailsDto, *applicationer
 	if err != nil {
 		return nil, applicationerrors.InternalError(err.Error())
 	}
-	err = service.cartRepo.DeleteCartByUserId(service.sessionProvider.UserId)
+	err = service.cartRepo.DeleteCartByUserId(service.sessionProvider.UserId.ValueInt)
 	if err != nil {
 		return nil, applicationerrors.InternalError(err.Error())
 	}
@@ -157,7 +157,7 @@ func (service *orderService) Get(orderId int64) (*dto.OrderDetailsDto, *applicat
 		return nil, applicationerrors.InternalError(err.Error())
 	}
 
-	if service.sessionProvider.Role != "admin" && order.UserId.Value() != service.sessionProvider.UserId {
+	if service.sessionProvider.Role != "admin" && order.UserId.Value() != service.sessionProvider.UserId.ValueInt {
 		return nil, applicationerrors.NotFound()
 	}
 
@@ -183,7 +183,7 @@ func (service *orderService) GetAll() ([]dto.OrderDto, *applicationerrors.ErrorS
 }
 
 func (service *orderService) GetMyOrders() ([]dto.OrderDto, *applicationerrors.ErrorStatus) {
-	ordersFromRepo, err := service.repo.GetAllByUser(service.sessionProvider.UserId)
+	ordersFromRepo, err := service.repo.GetAllByUser(service.sessionProvider.UserId.ValueInt)
 
 	if err != nil {
 		return nil, applicationerrors.InternalError(err.Error())

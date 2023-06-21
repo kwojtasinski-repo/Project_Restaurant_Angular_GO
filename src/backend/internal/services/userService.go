@@ -113,7 +113,7 @@ func (service *userService) GetAll() ([]dto.UserDto, *applicationerrors.ErrorSta
 	usersDto := make([]dto.UserDto, 0)
 	for _, userInRepo := range users {
 		usersDto = append(usersDto, dto.UserDto{
-			Id:    userInRepo.Id.Value(),
+			Id:    dto.IdObject{ValueInt: userInRepo.Id.Value()},
 			Email: userInRepo.Email.Value(),
 			Role:  userInRepo.Role,
 		})

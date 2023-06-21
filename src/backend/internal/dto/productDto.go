@@ -5,14 +5,14 @@ import (
 )
 
 type ProductDto struct {
-	Id          int64  `json:"id"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Price       string `json:"price"`
+	Id          IdObject `json:"id"`
+	Name        string   `json:"name"`
+	Description string   `json:"description"`
+	Price       string   `json:"price"`
 }
 
 type ProductDetailsDto struct {
-	Id          int64       `json:"id"`
+	Id          IdObject    `json:"id"`
 	Name        string      `json:"name"`
 	Description string      `json:"description"`
 	Price       string      `json:"price"`
@@ -22,7 +22,7 @@ type ProductDetailsDto struct {
 
 func MapToProductDto(product entities.Product) *ProductDto {
 	return &ProductDto{
-		Id:          product.Id.Value(),
+		Id:          IdObject{ValueInt: product.Id.Value()},
 		Name:        product.Name.Value(),
 		Description: product.Description.Value(),
 		Price:       product.Price.Value().StringFixedBank(2),
@@ -31,7 +31,7 @@ func MapToProductDto(product entities.Product) *ProductDto {
 
 func MapToProductDetailsDto(product entities.Product) *ProductDetailsDto {
 	return &ProductDetailsDto{
-		Id:          product.Id.Value(),
+		Id:          IdObject{ValueInt: product.Id.Value()},
 		Name:        product.Name.Value(),
 		Description: product.Description.Value(),
 		Price:       product.Price.Value().StringFixedBank(2),

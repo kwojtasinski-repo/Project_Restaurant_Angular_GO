@@ -58,13 +58,13 @@ func TestCartServiceTestSuite(t *testing.T) {
 
 func (suite *CartServiceTestSuite) Test_AddToCart_ValidProductAndUserId_ShoudAddProductToCart() {
 	addCart := dto.AddCart{
-		ProductId: 1,
-		UserId:    2,
+		ProductId: dto.IdObject{ValueInt: 1},
+		UserId:    dto.IdObject{ValueInt: 2},
 	}
 
 	err := suite.service.AddToCart(addCart)
 
-	carts, errRepo := suite.service.GetMyCart(addCart.UserId)
+	carts, errRepo := suite.service.GetMyCart(addCart.UserId.ValueInt)
 	suite.Assertions.Nil(err)
 	suite.Assertions.Nil(errRepo)
 	suite.Assertions.NotNil(carts)
@@ -73,8 +73,8 @@ func (suite *CartServiceTestSuite) Test_AddToCart_ValidProductAndUserId_ShoudAdd
 
 func (suite *CartServiceTestSuite) Test_AddToCart_InvalidProductId_ShoudReturnBadRequest() {
 	addCart := dto.AddCart{
-		ProductId: 1000,
-		UserId:    2,
+		ProductId: dto.IdObject{ValueInt: 1000},
+		UserId:    dto.IdObject{ValueInt: 2},
 	}
 
 	err := suite.service.AddToCart(addCart)
@@ -85,8 +85,8 @@ func (suite *CartServiceTestSuite) Test_AddToCart_InvalidProductId_ShoudReturnBa
 
 func (suite *CartServiceTestSuite) Test_AddToCart_InvalidUserId_ShoudReturnBadRequest() {
 	addCart := dto.AddCart{
-		ProductId: 1,
-		UserId:    -2000,
+		ProductId: dto.IdObject{ValueInt: 1},
+		UserId:    dto.IdObject{ValueInt: -2000},
 	}
 
 	err := suite.service.AddToCart(addCart)
@@ -98,8 +98,8 @@ func (suite *CartServiceTestSuite) Test_AddToCart_InvalidUserId_ShoudReturnBadRe
 func (suite *CartServiceTestSuite) Test_AddToCart_AnErrorOccuredInProductRepository_ShoudReturnInternalServerError() {
 	service := CreateCartService(suite.cartRepository, repositories.NewErrorProductRepository())
 	addCart := dto.AddCart{
-		ProductId: 1,
-		UserId:    2,
+		ProductId: dto.IdObject{ValueInt: 1},
+		UserId:    dto.IdObject{ValueInt: 2},
 	}
 
 	err := service.AddToCart(addCart)
@@ -111,8 +111,8 @@ func (suite *CartServiceTestSuite) Test_AddToCart_AnErrorOccuredInProductReposit
 func (suite *CartServiceTestSuite) Test_AddToCart_AnErrorOccuredInCartRepository_ShoudReturnInternalServerError() {
 	service := CreateCartService(repositories.NewErrorCartRepository(), suite.productRepository)
 	addCart := dto.AddCart{
-		ProductId: 1,
-		UserId:    2,
+		ProductId: dto.IdObject{ValueInt: 1},
+		UserId:    dto.IdObject{ValueInt: 2},
 	}
 
 	err := service.AddToCart(addCart)
@@ -134,7 +134,7 @@ func (suite *CartServiceTestSuite) Test_RemoveFromCart_ValidCartIdAndUserId_Shou
 	suite.Assertions.NotEmpty(carts)
 	exists := false
 	for _, cart := range carts {
-		if cart.Id == int64(cartId) {
+		if cart.Id.ValueInt == int64(cartId) {
 			exists = true
 		}
 	}

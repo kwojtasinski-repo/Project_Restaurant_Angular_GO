@@ -9,11 +9,11 @@ import (
 )
 
 type SessionDto struct {
-	SessionId uuid.UUID
-	Expiry    int64
-	UserId    int64
-	Email     string
-	Role      string
+	SessionId uuid.UUID `json:"sessionId"`
+	Expiry    int64     `json:"expiry"`
+	UserId    IdObject  `json:"userId"`
+	Email     string    `json:"email"`
+	Role      string    `json:"role"`
 }
 
 func MapToSessionDto(session entities.Session) SessionDto {
@@ -21,7 +21,7 @@ func MapToSessionDto(session entities.Session) SessionDto {
 	email := session.Email()
 	return SessionDto{
 		SessionId: session.SessionId(),
-		UserId:    userId.Value(),
+		UserId:    IdObject{ValueInt: userId.Value()},
 		Email:     email.Value(),
 		Expiry:    session.Expiry().UnixMilli(),
 		Role:      session.Role(),

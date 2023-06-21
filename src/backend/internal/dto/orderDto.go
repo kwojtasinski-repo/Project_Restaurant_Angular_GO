@@ -7,7 +7,7 @@ import (
 )
 
 type OrderDto struct {
-	Id          int64      `json:"id"`
+	Id          IdObject   `json:"id"`
 	OrderNumber string     `json:"orderNumber"`
 	Price       string     `json:"price"`
 	Created     time.Time  `json:"created"`
@@ -15,7 +15,7 @@ type OrderDto struct {
 }
 
 type OrderDetailsDto struct {
-	Id            int64             `json:"id"`
+	Id            IdObject          `json:"id"`
 	OrderNumber   string            `json:"orderNumber"`
 	Price         string            `json:"price"`
 	Created       time.Time         `json:"created"`
@@ -25,7 +25,7 @@ type OrderDetailsDto struct {
 
 func MapToOrderDto(order entities.Order) *OrderDto {
 	return &OrderDto{
-		Id:          order.Id.Value(),
+		Id:          IdObject{ValueInt: order.Id.Value()},
 		OrderNumber: order.OrderNumber.Value(),
 		Created:     order.Created,
 		Modified:    order.Modified,
@@ -35,7 +35,7 @@ func MapToOrderDto(order entities.Order) *OrderDto {
 
 func MapToOrderDetailsDto(order entities.Order) *OrderDetailsDto {
 	return &OrderDetailsDto{
-		Id:            order.Id.Value(),
+		Id:            IdObject{ValueInt: order.Id.Value()},
 		OrderNumber:   order.OrderNumber.Value(),
 		Created:       order.Created,
 		Modified:      order.Modified,

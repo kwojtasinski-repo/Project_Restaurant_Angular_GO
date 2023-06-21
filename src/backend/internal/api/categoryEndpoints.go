@@ -3,7 +3,6 @@ package api
 import (
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/dto"
@@ -82,7 +81,7 @@ func addCategory(context *gin.Context) {
 
 func updateCategory(context *gin.Context) {
 	id := context.Param("id")
-	categoryId, errorConvert := strconv.ParseInt(id, 10, 64)
+	categoryId, errorConvert := dto.NewIdObject(id)
 
 	if errorConvert != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
@@ -96,7 +95,7 @@ func updateCategory(context *gin.Context) {
 		return
 	}
 
-	updateCategory.Id = dto.IdObject{ValueInt: categoryId}
+	updateCategory.Id = dto.IdObject{ValueInt: categoryId.ValueInt}
 	productService, errCreateObject := createCategoryService()
 	if errCreateObject != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
@@ -114,7 +113,7 @@ func updateCategory(context *gin.Context) {
 
 func deleteCategory(context *gin.Context) {
 	id := context.Param("id")
-	categoryId, errorConvert := strconv.ParseInt(id, 10, 64)
+	categoryId, errorConvert := dto.NewIdObject(id)
 
 	if errorConvert != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
@@ -127,7 +126,7 @@ func deleteCategory(context *gin.Context) {
 		return
 	}
 
-	if err := categoryService.Delete(categoryId); err != nil {
+	if err := categoryService.Delete(categoryId.ValueInt); err != nil {
 		writeErrorResponse(context, *err)
 		return
 	}

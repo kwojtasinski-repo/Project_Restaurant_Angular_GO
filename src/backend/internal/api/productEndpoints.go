@@ -3,7 +3,6 @@ package api
 import (
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/dto"
@@ -36,7 +35,7 @@ func getProducts(context *gin.Context) {
 
 func getProduct(context *gin.Context) {
 	id := context.Param("id")
-	productId, errorConvert := strconv.ParseInt(id, 10, 64)
+	productId, errorConvert := dto.NewIdObject(id)
 
 	if errorConvert != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
@@ -49,7 +48,7 @@ func getProduct(context *gin.Context) {
 		return
 	}
 
-	if products, err := productService.Get(productId); err != nil {
+	if products, err := productService.Get(productId.ValueInt); err != nil {
 		writeErrorResponse(context, *err)
 	} else {
 		context.IndentedJSON(http.StatusOK, products)
@@ -82,7 +81,7 @@ func addProduct(context *gin.Context) {
 
 func updateProduct(context *gin.Context) {
 	id := context.Param("id")
-	productId, errorConvert := strconv.ParseInt(id, 10, 64)
+	productId, errorConvert := dto.NewIdObject(id)
 
 	if errorConvert != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
@@ -96,7 +95,7 @@ func updateProduct(context *gin.Context) {
 		return
 	}
 
-	updateProduct.Id = productId
+	updateProduct.Id = *productId
 	productService, errCreateObject := createProductService()
 	if errCreateObject != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
@@ -115,7 +114,7 @@ func updateProduct(context *gin.Context) {
 
 func deleteProduct(context *gin.Context) {
 	id := context.Param("id")
-	productId, errorConvert := strconv.ParseInt(id, 10, 64)
+	productId, errorConvert := dto.NewIdObject(id)
 
 	if errorConvert != nil {
 		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
@@ -128,7 +127,7 @@ func deleteProduct(context *gin.Context) {
 		return
 	}
 
-	if err := productService.Delete(productId); err != nil {
+	if err := productService.Delete(productId.ValueInt); err != nil {
 		writeErrorResponse(context, *err)
 		return
 	}

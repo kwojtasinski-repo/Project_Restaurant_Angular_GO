@@ -39,12 +39,12 @@ func (id *IdObject) MarshalJSON() ([]byte, error) {
 }
 
 func (id *IdObject) UnmarshalJSON(data []byte) error {
-	var v []interface{}
-	if err := json.Unmarshal(data, &v); err != nil {
+	var value string
+	if err := json.Unmarshal(data, &value); err != nil {
 		return err
 	}
 
-	id.Value, _ = v[0].(string)
+	id.Value = value
 	values, err := hashId.DecodeInt64WithError(id.Value)
 	if err != nil {
 		return err
