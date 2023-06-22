@@ -1,13 +1,21 @@
 package test
 
 import (
+	"bytes"
 	"database/sql"
+	"encoding/json"
 	"log"
 	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/config"
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/api"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/app"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/dto"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/entities"
+	valueobjects "github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/entities/value-objects"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/repositories"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/services"
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/migrations"
 	"github.com/stretchr/testify/suite"
 )
@@ -19,6 +27,7 @@ type IntegrationTestSuite struct {
 	config   config.Config
 	database *sql.DB
 	router   *gin.Engine
+	users    map[string]dto.AddUserDto
 }
 
 // this function executes before the test suite begins execution
@@ -28,7 +37,7 @@ func (suite *IntegrationTestSuite) SetupSuite() {
 	log.Println("Loading  config file ", TestConfigFile)
 	configFile := config.LoadConfig(filepath.Join(config.GetRootPath(), TestConfigFile))
 	suite.config = configFile
-	api.InitObjectCreator(configFile)
+	app.InitApp(configFile)
 	log.Println("Running migrations...")
 	migrations.UpMigrations(configFile, "")
 	log.Println("Open connection...")
@@ -37,6 +46,8 @@ func (suite *IntegrationTestSuite) SetupSuite() {
 		log.Fatal("Cannot open database ", configFile.Database.Name)
 	}
 	suite.database = database
+	suite.users = make(map[string]dto.AddUserDto)
+	suite.createUsers()
 	suite.router = api.SetupApi(suite.config)
 }
 
@@ -66,4 +77,54 @@ func (suite *IntegrationTestSuite) SetupTest() {
 func (suite *IntegrationTestSuite) TearDownTest() {
 	log.Println("---- Setup After Each Test ----")
 	// clear all tables?
+}
+
+func (suite *IntegrationTestSuite) AuthorizeRequest() {
+
+}
+
+func createPayload(value interface{}) *bytes.Reader {
+	data, err := json.Marshal(value)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return bytes.NewReader(data)
+}
+
+func (suite *IntegrationTestSuite) createUsers() {
+	passwordHasher := services.CreatePassworHasherService()
+	standardUser := dto.AddUserDto{
+		Email:    "test@test.com",
+		Password: "test123",
+	}
+	adminUser := dto.AddUserDto{
+		Email:    "admin@admin-test.com",
+		Password: "test123",
+	}
+	suite.users["user"] = standardUser
+	suite.users["admin"] = adminUser
+	userRepository := repositories.CreateUserRepository(suite.database)
+	standarUserPassword, err := passwordHasher.HashPassword(standardUser.Password)
+	if err != nil {
+		log.Fatal("Error while creating user", err.Error())
+	}
+	adminUserPassword, err := passwordHasher.HashPassword(standardUser.Password)
+	if err != nil {
+		log.Fatal("Error while creating user", err.Error())
+	}
+	standardUserEmail, _ := valueobjects.NewEmailAddress(standardUser.Email)
+	adminUserEmail, _ := valueobjects.NewEmailAddress(adminUser.Email)
+
+	userRepository.Add(&entities.User{
+		Email:    *standardUserEmail,
+		Password: standarUserPassword,
+		Role:     "user",
+		Deleted:  false,
+	})
+	userRepository.Add(&entities.User{
+		Email:    *adminUserEmail,
+		Password: adminUserPassword,
+		Role:     "admin",
+		Deleted:  false,
+	})
 }

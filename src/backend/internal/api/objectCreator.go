@@ -137,7 +137,7 @@ func createOrderService() (services.OrderService, error) {
 	return orderService, nil
 }
 
-func createUserService() (services.UserService, error) {
+func CreateUserService() (services.UserService, error) {
 	service, exists := objectsPerRequest.Load("services.UserService")
 
 	if exists {

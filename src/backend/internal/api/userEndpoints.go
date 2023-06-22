@@ -16,7 +16,7 @@ func AddUserEndpoints(router *gin.RouterGroup) {
 
 func getMyProfile(context *gin.Context) {
 	userId := context.Keys["userId"].(dto.IdObject)
-	userService, errCreateObject := createUserService()
+	userService, errCreateObject := CreateUserService()
 	if errCreateObject != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
 	}

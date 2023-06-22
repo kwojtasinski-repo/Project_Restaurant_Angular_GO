@@ -27,7 +27,7 @@ func signIn(context *gin.Context) {
 		return
 	}
 
-	userService, errCreateObject := createUserService()
+	userService, errCreateObject := CreateUserService()
 	if errCreateObject != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
 		return
@@ -58,7 +58,7 @@ func signUp(context *gin.Context) {
 		return
 	}
 
-	userService, errCreateObject := createUserService()
+	userService, errCreateObject := CreateUserService()
 	if errCreateObject != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
 		return
