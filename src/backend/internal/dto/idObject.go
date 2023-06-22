@@ -41,7 +41,26 @@ func (id *IdObject) MarshalJSON() ([]byte, error) {
 func (id *IdObject) UnmarshalJSON(data []byte) error {
 	var value string
 	if err := json.Unmarshal(data, &value); err != nil {
-		return err
+		// if empty value then check
+		var mapId map[string]interface{}
+		errConv := json.Unmarshal(data, &mapId)
+		if errConv != nil {
+			return err
+		}
+
+		// expect only 2 fields Value and ValueInt
+		if len(mapId) != 2 {
+			return err
+		}
+
+		_, valueExists := mapId["Value"]
+		_, ValueIntExists := mapId["ValueInt"]
+
+		if !valueExists || !ValueIntExists {
+			return err
+		}
+
+		return nil
 	}
 
 	id.Value = value
