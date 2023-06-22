@@ -4,7 +4,10 @@ import (
 	"bytes"
 	"database/sql"
 	"encoding/json"
+	"io"
 	"log"
+	"net/http"
+	"net/http/httptest"
 	"path/filepath"
 
 	"github.com/gin-gonic/gin"
@@ -16,11 +19,14 @@ import (
 	valueobjects "github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/entities/value-objects"
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/repositories"
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/services"
+	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/settings"
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/migrations"
 	"github.com/stretchr/testify/suite"
 )
 
 const TestConfigFile = "config.test.yml"
+
+var sessionCookie *http.Cookie
 
 type IntegrationTestSuite struct {
 	suite.Suite
@@ -76,11 +82,48 @@ func (suite *IntegrationTestSuite) SetupTest() {
 // this function executes after each test case
 func (suite *IntegrationTestSuite) TearDownTest() {
 	log.Println("---- Setup After Each Test ----")
-	// clear all tables?
 }
 
-func (suite *IntegrationTestSuite) AuthorizeRequest() {
+func (suite *IntegrationTestSuite) CreateAuthorizedRequest(method, url string, body io.Reader) *http.Request {
+	req := suite.CreateRequest(method, url, body)
+	suite.AuthorizeRequest(req)
+	return req
+}
 
+func (suite *IntegrationTestSuite) AuthorizeRequest(request *http.Request) {
+	if sessionCookie != nil {
+		request.AddCookie(sessionCookie)
+		return
+	}
+
+	user := suite.users["admin"]
+	req := suite.CreateRequest("POST", "/api/sign-in", createPayload(user))
+	rec := suite.SendRequest(req)
+	sessionCookie := suite.FindSessionCookie(rec.Result().Cookies())
+	request.AddCookie(sessionCookie)
+}
+
+func (suite *IntegrationTestSuite) FindSessionCookie(cookies []*http.Cookie) *http.Cookie {
+	suite.Require().NotEmpty(cookies)
+	for _, cookie := range cookies {
+		if cookie.Name == settings.CookieSessionName {
+			return cookie
+		}
+	}
+
+	return nil
+}
+
+func (suite *IntegrationTestSuite) CreateRequest(method, url string, body io.Reader) *http.Request {
+	req, err := http.NewRequest(method, url, body)
+	suite.Require().NoError(err)
+	return req
+}
+
+func (suite *IntegrationTestSuite) SendRequest(request *http.Request) *httptest.ResponseRecorder {
+	rec := httptest.NewRecorder()
+	suite.router.ServeHTTP(rec, request)
+	return rec
 }
 
 func createPayload(value interface{}) *bytes.Reader {
