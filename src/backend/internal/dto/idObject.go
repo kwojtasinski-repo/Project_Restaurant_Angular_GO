@@ -53,12 +53,15 @@ func (id *IdObject) UnmarshalJSON(data []byte) error {
 			return err
 		}
 
-		_, valueExists := mapId["Value"]
-		_, ValueIntExists := mapId["ValueInt"]
+		stringValue, valueExists := mapId["Value"]
+		intValue, ValueIntExists := mapId["ValueInt"]
 
 		if !valueExists || !ValueIntExists {
 			return err
 		}
+
+		id.Value = stringValue.(string)
+		id.ValueInt = int64(intValue.(float64))
 
 		return nil
 	}

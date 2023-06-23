@@ -23,6 +23,7 @@ import (
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/services"
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/settings"
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/migrations"
+	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -32,10 +33,11 @@ var sessionCookie *http.Cookie
 
 type IntegrationTestSuite struct {
 	suite.Suite
-	config   config.Config
-	database *sql.DB
-	router   *gin.Engine
-	users    map[string]dto.AddUserDto
+	config     config.Config
+	database   *sql.DB
+	router     *gin.Engine
+	users      map[string]dto.AddUserDto
+	categories []dto.CategoryDto
 }
 
 // this function executes before the test suite begins execution
@@ -57,6 +59,12 @@ func (suite *IntegrationTestSuite) SetupSuite() {
 	suite.users = make(map[string]dto.AddUserDto)
 	suite.createUsers()
 	suite.router = api.SetupApi(suite.config)
+	suite.categories = make([]dto.CategoryDto, 0)
+	suite.categories = append(suite.categories, suite.AddCategory())
+	suite.categories = append(suite.categories, suite.AddCategory())
+	suite.categories = append(suite.categories, suite.AddCategory())
+	suite.categories = append(suite.categories, suite.AddCategory())
+	suite.categories = append(suite.categories, suite.AddCategory())
 }
 
 // this function executes after all tests executed
@@ -78,7 +86,6 @@ func (suite *IntegrationTestSuite) TearDownSuite() {
 
 func (suite *IntegrationTestSuite) SetupTest() {
 	log.Println("---- Setup Before Each Test ----")
-	// add test data?
 }
 
 // this function executes after each test case
@@ -184,4 +191,20 @@ func (suite *IntegrationTestSuite) AddCategory() dto.CategoryDto {
 	category, errAdd := categoryService.Add(category)
 	suite.Require().Nil(errAdd)
 	return *category
+}
+
+func (suite *IntegrationTestSuite) AddProduct() dto.ProductDetailsDto {
+	category := suite.AddCategory()
+	value := rand.Intn(100000) + 1
+	product := &dto.AddProductDto{
+		Name:        "Product#1",
+		Description: "Description#123456789",
+		CategoryId:  category.Id,
+		Price:       decimal.New(int64(value), 1),
+	}
+	productService, err := api.CreateProductService()
+	suite.Require().Nil(err)
+	productAdded, errAdd := productService.Add(product)
+	suite.Require().Nil(errAdd)
+	return *productAdded
 }
