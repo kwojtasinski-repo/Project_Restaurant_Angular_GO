@@ -16,7 +16,7 @@ export class CartService {
     return this.httpClient.post<void>(`${this.backendUrl}/${this.cartPath}`, { productId: product.id }, { withCredentials: true });
   }
 
-  public delete(id: number): Observable<void> {
+  public delete(id: string): Observable<void> {
     return this.httpClient.delete<void>(`${this.backendUrl}/${this.cartPath}/${id}`, { withCredentials: true });
   }
 

@@ -1,11 +1,11 @@
 export class Cart {
-    id: number = 0;
+    id: string = '';
     product: CartProduct | undefined;
     userId: number = 0;
 }
 
 interface CartProduct {
-    id: number;
+    id: string;
 	name: string;
 	description: string;
 	price: number;

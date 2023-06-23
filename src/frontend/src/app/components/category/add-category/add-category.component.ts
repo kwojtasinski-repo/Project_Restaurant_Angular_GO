@@ -31,7 +31,7 @@ export class AddCategoryComponent implements OnInit, OnDestroy {
     this.categoryForm.valueChanges.pipe(debounceTime(10), takeUntil(this.categoryFormValueChanged$))
       .subscribe((value) => this.store.dispatch(CategoryActions.categoryFormUpdate({
         category: {
-          id: 0,
+          id: '',
           name: value.categoryName,
           deleted: false
         }

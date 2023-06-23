@@ -12,6 +12,6 @@ export const removeProductFromCart = createAction('[Cart] Remove Product from Ca
 export const removeProductFromCartSuccess = createAction('[Cart] Remove Product from Cart Success');
 export const removeProductFromCartFailed = createAction('[Cart] Remove Product from Cart Failed', props<{ error: string }>());
 export const finalizeCart = createAction('[Cart] Finalize Cart');
-export const finalizeCartSuccess = createAction('[Cart] Finalize Cart Success', props<{ orderId: number }>());
+export const finalizeCartSuccess = createAction('[Cart] Finalize Cart Success', props<{ orderId: string }>());
 export const finalizeCartFailed = createAction('[Cart] Finalize Cart Failed', props<{ error: string }>());
 export const clearErrors = createAction('[Cart] Clear Errors');

@@ -14,12 +14,12 @@ import { getFetchState } from 'src/app/stores/order/order.selectors';
 export class OrderViewComponent implements OnInit {
   public order$ = this.store.select(getOrder);
   public fetchState$ = this.store.select(getFetchState);
-  private id = 0;
+  private id = '';
 
   constructor(private store: Store<OrderState>, private route: ActivatedRoute) { }
 
   public ngOnInit(): void {
-    this.id = this.route.snapshot.paramMap.get('id') ? new Number(this.route.snapshot.paramMap.get('id')).valueOf() : 0;
+    this.id = this.route.snapshot.paramMap.get('id') ?? '';
     this.store.dispatch(fetchOrder({ id: this.id }));
   }
 }

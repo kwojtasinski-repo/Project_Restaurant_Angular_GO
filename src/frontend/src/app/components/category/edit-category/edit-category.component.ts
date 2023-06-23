@@ -32,7 +32,7 @@ export class EditCategoryComponent implements OnInit, OnDestroy {
     this.categoryForm = new FormGroup({
       categoryName: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(100), Validators.minLength(3)])),
     });
-    const id = this.route.snapshot.paramMap.get('id') ? new Number(this.route.snapshot.paramMap.get('id')).valueOf() : 0;
+    const id = this.route.snapshot.paramMap.get('id') ?? '';
     this.categoryService.get(id)
       .pipe(take(1))
       .subscribe({ next: c => {
@@ -59,7 +59,7 @@ export class EditCategoryComponent implements OnInit, OnDestroy {
     this.categoryForm.valueChanges.pipe(debounceTime(10), takeUntil(this.categoryFormValueChanged$))
       .subscribe((value) => this.store.dispatch(CategoryActions.categoryFormUpdate({
         category: {
-          id: this.category?.id ?? 0,
+          id: this.category?.id ?? '0',
           name: value.categoryName,
           deleted: this.category?.deleted ?? false
         }

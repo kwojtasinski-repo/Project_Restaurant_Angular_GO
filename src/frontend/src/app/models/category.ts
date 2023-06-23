@@ -1,5 +1,5 @@
 export class Category {
-    id: number = 0;
+    id: string = '';
 	name: string = '';
 	deleted: boolean = false;
 }

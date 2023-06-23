@@ -24,7 +24,7 @@ export class ProductService {
     return this.httpClient.get<Product[]>(`${this.backendUrl}/${this.productPath}`, { withCredentials: true });
   }
 
-  public get(id: number): Observable<Product | undefined> {
+  public get(id: string): Observable<Product | undefined> {
     return this.httpClient.get<Product | undefined>(`${this.backendUrl}/${this.productPath}/${id}`, { withCredentials: true })
       .pipe(
         catchError(err => {

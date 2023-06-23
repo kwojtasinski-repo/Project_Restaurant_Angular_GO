@@ -1,5 +1,5 @@
 export class OrderProduct {
-    id: number = 0;
+    id: string = '';
     name: string = '';
     price: number = 0;
     productId: number = 0;

@@ -1,7 +1,7 @@
 import { OrderProduct } from "./orderProduct";
 
 export class Order {
-    id: number = 0;
+    id: string = '';
     orderNumber: string = '';
     price: number = 0;
     created: Date = new Date();

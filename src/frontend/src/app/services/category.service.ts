@@ -23,7 +23,7 @@ export class CategoryService {
     return this.httpClient.get<Category[]>(`${this.backendUrl}/${this.categoryPath}`, { withCredentials: true });
   }
 
-  public get(id: number): Observable<Category | undefined> {
+  public get(id: string): Observable<Category | undefined> {
     return this.httpClient.get<Category | undefined>(`${this.backendUrl}/${this.categoryPath}/${id}`, { withCredentials: true });
   }
 }

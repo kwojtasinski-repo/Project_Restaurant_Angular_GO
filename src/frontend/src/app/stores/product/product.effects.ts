@@ -15,11 +15,11 @@ export class ProductEffects {
       ofType(ProductActions.productAddRequestBegin),
       concatLatestFrom(() => this.store.select(getProduct)),
       exhaustMap(([_, product]) => this.productService.add({
-        id: 0,
+        id: '0',
         name: product?.name ?? '',
         price: product?.price ?? 0,
         description: product?.description,
-        categoryId: product?.category?.id ?? 0
+        categoryId: product?.category?.id ?? '0'
       }).pipe(
         map((_) => ProductActions.productAddRequestSuccess()),
         catchError((err) => {
@@ -50,10 +50,10 @@ export class ProductEffects {
       ofType(ProductActions.productUpdateRequestBegin),
       concatLatestFrom(() => this.store.select(getProduct)),
       exhaustMap(([_, product]) => this.productService.update({
-        id: product?.id ?? 0,
+        id: product?.id ?? '0',
         name: product?.name ?? '',
         price: product?.price ?? 0,
-        categoryId: product?.category?.id ?? 0,
+        categoryId: product?.category?.id ?? '0',
         description: product?.description,
       }).pipe(
         map((_) => ProductActions.productAddRequestSuccess()),

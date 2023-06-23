@@ -31,7 +31,7 @@ describe('AuthenticationServiceService', () => {
 
   it('should login', () => {
     const user = {
-      id: 1,
+      id: '1',
       email: 'email@email.com',
       role: 'user',
       deleted: false

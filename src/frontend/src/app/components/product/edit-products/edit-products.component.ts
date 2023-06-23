@@ -32,7 +32,7 @@ export class EditProductsComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.spinnerService.show();
-    const id = this.route.snapshot.paramMap.get('id') ? new Number(this.route.snapshot.paramMap.get('id')).valueOf() : 0;
+    const id = this.route.snapshot.paramMap.get('id') ?? '';
     this.productService.get(id)
       .pipe(take(1))
       .subscribe({ next: p => {

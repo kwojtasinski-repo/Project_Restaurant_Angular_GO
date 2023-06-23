@@ -20,16 +20,16 @@ export class OrderService {
     return this.httpClient.get<Order[]>(`${this.backendUrl}/${this.orderPath}/my`, { withCredentials: true })
   }
 
-  public get(id: number): Observable<Order | undefined> {
+  public get(id: string): Observable<Order | undefined> {
     return this.httpClient.get<Order>(`${this.backendUrl}/${this.orderPath}/${id}`, { withCredentials: true })
   }
 
-  public addFromCart(): Observable<number> {
+  public addFromCart(): Observable<string> {
     return this.httpClient.post<Order>(`${this.backendUrl}/${this.orderPath}/from-cart`, {}, { withCredentials: true })
       .pipe(map(order => order.id));
   }
 
-  public add(carts: Cart[]): Observable<number> {
+  public add(carts: Cart[]): Observable<string> {
     return this.httpClient.post<Order>(`${this.backendUrl}/${this.orderPath}/from-cart`, {
         productIds: carts.map(c => c.product?.id)
       }, { withCredentials: true })

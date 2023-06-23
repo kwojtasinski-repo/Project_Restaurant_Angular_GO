@@ -44,7 +44,7 @@ export class ProductFormComponent implements OnDestroy {
     this.changeDetector.detectChanges();
     this.productForm.valueChanges.pipe(debounceTime(10), takeUntil(this.productFormValueChanged$))
       .subscribe((value) => this.productChanged.emit({
-          id: this.product?.id ?? 0,
+          id: this.product?.id ?? '0',
           name: value.productName,
           price: this.onPriceChange(value.productCost),
           category: {
