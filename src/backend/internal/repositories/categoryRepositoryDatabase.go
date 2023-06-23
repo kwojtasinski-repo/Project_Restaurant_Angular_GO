@@ -42,7 +42,7 @@ func (repo *categoryRepository) Add(category *entities.Category) error {
 	return nil
 }
 
-func (repo *categoryRepository) Update(categoryToUpdate entities.Category) error {
+func (repo *categoryRepository) Update(categoryToUpdate *entities.Category) error {
 	query := "UPDATE `categories` SET name = ?, deleted = ? WHERE id = ?;"
 	_, err := repo.database.Exec(query, categoryToUpdate.Name.Value(), categoryToUpdate.Deleted, categoryToUpdate.Id.Value())
 	if err != nil {
@@ -51,7 +51,7 @@ func (repo *categoryRepository) Update(categoryToUpdate entities.Category) error
 	return nil
 }
 
-func (repo *categoryRepository) Delete(categoryToDelete entities.Category) error {
+func (repo *categoryRepository) Delete(categoryToDelete *entities.Category) error {
 	categoryToDelete.Deleted = true
 	query := "UPDATE `categories` SET deleted = ? WHERE id = ?;"
 	_, err := repo.database.Exec(query, categoryToDelete.Deleted, categoryToDelete.Id.Value())
@@ -124,23 +124,23 @@ func (repo *cachedCategoryRepository) Add(category *entities.Category) error {
 	return nil
 }
 
-func (repo *cachedCategoryRepository) Update(categoryToUpdate entities.Category) error {
+func (repo *cachedCategoryRepository) Update(categoryToUpdate *entities.Category) error {
 	err := repo.innerRepo.Update(categoryToUpdate)
 	if err != nil {
 		return err
 	}
 
-	repo.cacheStore.Set(fmt.Sprintf("%v", categoryToUpdate.Id.Value()), &categoryToUpdate, settings.TimeStoreInCache)
+	repo.cacheStore.Set(fmt.Sprintf("%v", categoryToUpdate.Id.Value()), categoryToUpdate, settings.TimeStoreInCache)
 	return nil
 }
 
-func (repo *cachedCategoryRepository) Delete(categoryToDelete entities.Category) error {
+func (repo *cachedCategoryRepository) Delete(categoryToDelete *entities.Category) error {
 	err := repo.innerRepo.Delete(categoryToDelete)
 	if err != nil {
 		return err
 	}
 
-	repo.cacheStore.Set(fmt.Sprintf("%v", categoryToDelete.Id.Value()), &categoryToDelete, settings.TimeStoreInCache)
+	repo.cacheStore.Set(fmt.Sprintf("%v", categoryToDelete.Id.Value()), categoryToDelete, settings.TimeStoreInCache)
 	return nil
 }
 

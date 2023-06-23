@@ -113,7 +113,7 @@ func (service *productService) Update(productDto *dto.UpdateProductDto) (*dto.Pr
 	product.Price = *price
 	product.Category = *category
 
-	if errorRepo = service.repository.Update(*product); errorRepo != nil {
+	if errorRepo = service.repository.Update(product); errorRepo != nil {
 		return nil, applicationerrors.InternalError(errorRepo.Error())
 	}
 
@@ -131,7 +131,7 @@ func (service *productService) Delete(id int64) *applicationerrors.ErrorStatus {
 		return applicationerrors.NotFoundWithMessage(fmt.Sprintf("'Product' with id %v was not found", id))
 	}
 
-	if errorRepo = service.repository.Delete(*product); errorRepo != nil {
+	if errorRepo = service.repository.Delete(product); errorRepo != nil {
 		return applicationerrors.InternalError(errorRepo.Error())
 	}
 

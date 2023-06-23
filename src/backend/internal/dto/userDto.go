@@ -15,8 +15,12 @@ func MapToUserDto(user entities.User) *UserDto {
 	if user.Deleted {
 		deleted = &user.Deleted
 	}
+	idObj, err := NewIntIdObject(user.Id.Value())
+	if err != nil {
+		panic(err)
+	}
 	return &UserDto{
-		Id:      IdObject{ValueInt: user.Id.Value()},
+		Id:      *idObj,
 		Email:   user.Email.String(),
 		Role:    user.Role,
 		Deleted: deleted,

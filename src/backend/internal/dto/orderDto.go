@@ -24,8 +24,13 @@ type OrderDetailsDto struct {
 }
 
 func MapToOrderDto(order entities.Order) *OrderDto {
+	idObj, err := NewIntIdObject(order.Id.Value())
+	if err != nil {
+		panic(err)
+	}
+
 	return &OrderDto{
-		Id:          IdObject{ValueInt: order.Id.Value()},
+		Id:          *idObj,
 		OrderNumber: order.OrderNumber.Value(),
 		Created:     order.Created,
 		Modified:    order.Modified,
@@ -34,8 +39,13 @@ func MapToOrderDto(order entities.Order) *OrderDto {
 }
 
 func MapToOrderDetailsDto(order entities.Order) *OrderDetailsDto {
+	idObj, err := NewIntIdObject(order.Id.Value())
+	if err != nil {
+		panic(err)
+	}
+
 	return &OrderDetailsDto{
-		Id:            IdObject{ValueInt: order.Id.Value()},
+		Id:            *idObj,
 		OrderNumber:   order.OrderNumber.Value(),
 		Created:       order.Created,
 		Modified:      order.Modified,

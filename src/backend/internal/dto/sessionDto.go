@@ -19,9 +19,13 @@ type SessionDto struct {
 func MapToSessionDto(session entities.Session) SessionDto {
 	userId := session.UserId()
 	email := session.Email()
+	userIdObj, err := NewIntIdObject(userId.Value())
+	if err != nil {
+		panic(err)
+	}
 	return SessionDto{
 		SessionId: session.SessionId(),
-		UserId:    IdObject{ValueInt: userId.Value()},
+		UserId:    *userIdObj,
 		Email:     email.Value(),
 		Expiry:    session.Expiry().UnixMilli(),
 		Role:      session.Role(),

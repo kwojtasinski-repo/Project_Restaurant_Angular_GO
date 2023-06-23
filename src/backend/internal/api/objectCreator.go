@@ -66,7 +66,7 @@ func createSessionService() (services.SessionService, error) {
 	return sessionService, nil
 }
 
-func createProductService() (services.ProductService, error) {
+func CreateProductService() (services.ProductService, error) {
 	service, exists := objectsPerRequest.Load("services.ProductService")
 
 	if exists {
@@ -88,7 +88,7 @@ func createProductService() (services.ProductService, error) {
 	return productService, nil
 }
 
-func createCategoryService() (services.CategoryService, error) {
+func CreateCategoryService() (services.CategoryService, error) {
 	service, exists := objectsPerRequest.Load("services.CategoryService")
 
 	if exists {

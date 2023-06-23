@@ -81,7 +81,7 @@ func (service *categoryService) Update(categoryDto *dto.CategoryDto) (*dto.Categ
 
 	category.Name = *name
 
-	if errorRepo = service.repository.Update(*category); errorRepo != nil {
+	if errorRepo = service.repository.Update(category); errorRepo != nil {
 		return nil, applicationerrors.InternalError(errorRepo.Error())
 	}
 
@@ -99,7 +99,7 @@ func (service *categoryService) Delete(id int64) *applicationerrors.ErrorStatus 
 		return applicationerrors.NotFoundWithMessage(fmt.Sprintf("'Category' with id %v was not found", id))
 	}
 
-	if errorRepo = service.repository.Delete(*category); errorRepo != nil {
+	if errorRepo = service.repository.Delete(category); errorRepo != nil {
 		return applicationerrors.InternalError(errorRepo.Error())
 	}
 

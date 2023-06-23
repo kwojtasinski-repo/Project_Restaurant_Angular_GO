@@ -36,15 +36,25 @@ type CategoryDetailsDto struct {
 }
 
 func MapToCategoryDto(category entities.Category) *CategoryDto {
+	idObj, err := NewIntIdObject(category.Id.Value())
+	if err != nil {
+		panic(err)
+	}
+
 	return &CategoryDto{
-		Id:   IdObject{ValueInt: category.Id.Value()},
+		Id:   *idObj,
 		Name: category.Name.Value(),
 	}
 }
 
 func MapToCategoryDetailsDto(category entities.Category) *CategoryDetailsDto {
+	idObj, err := NewIntIdObject(category.Id.Value())
+	if err != nil {
+		panic(err)
+	}
+
 	return &CategoryDetailsDto{
-		Id:      IdObject{ValueInt: category.Id.Value()},
+		Id:      *idObj,
 		Name:    category.Name.Value(),
 		Deleted: category.Deleted,
 	}

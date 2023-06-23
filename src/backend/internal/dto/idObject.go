@@ -71,3 +71,16 @@ func (id *IdObject) UnmarshalJSON(data []byte) error {
 	id.ValueInt = values[0]
 	return nil
 }
+
+func NewIntIdObject(id int64) (*IdObject, error) {
+	idObj := IdObject{ValueInt: id}
+	if hashId != nil {
+		var err error
+		idObj.Value, err = hashId.EncodeInt64([]int64{id})
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return &idObj, nil
+}

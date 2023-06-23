@@ -7,8 +7,8 @@ import (
 
 type ProductRepository interface {
 	Add(*entities.Product) error
-	Update(entities.Product) error
-	Delete(entities.Product) error
+	Update(*entities.Product) error
+	Delete(*entities.Product) error
 	Get(int64) (*entities.Product, error)
 	GetAll() ([]entities.Product, error)
 }
@@ -39,7 +39,7 @@ func (repo *inMemoryProductRepository) Add(product *entities.Product) error {
 	return nil
 }
 
-func (repo *inMemoryProductRepository) Update(productToUpdate entities.Product) error {
+func (repo *inMemoryProductRepository) Update(productToUpdate *entities.Product) error {
 	for index, product := range repo.products {
 		if product.Id.Value() == productToUpdate.Id.Value() {
 			product.Name = productToUpdate.Name
@@ -53,7 +53,7 @@ func (repo *inMemoryProductRepository) Update(productToUpdate entities.Product) 
 	return nil
 }
 
-func (repo *inMemoryProductRepository) Delete(productToDelete entities.Product) error {
+func (repo *inMemoryProductRepository) Delete(productToDelete *entities.Product) error {
 	for index, product := range repo.products {
 		if product.Id.Value() == productToDelete.Id.Value() {
 			product.Deleted = true

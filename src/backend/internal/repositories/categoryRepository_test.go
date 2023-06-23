@@ -72,7 +72,7 @@ func Test_CategoryRepository_Delete(t *testing.T) {
 	addTestDataToCategoryRepo(newCategoryRepository)
 	var category, _ = newCategoryRepository.Get(1)
 
-	errDelete := newCategoryRepository.Delete(*category)
+	errDelete := newCategoryRepository.Delete(category)
 
 	categoryDeleted, errGet := newCategoryRepository.Get(category.Id.Value())
 	if errDelete != nil {
@@ -95,7 +95,7 @@ func Test_CategoryRepository_Update(t *testing.T) {
 	categoryName, _ := valueobjects.NewName("Abc1234Guid")
 	category.Name = *categoryName
 
-	newCategoryRepository.Update(*category)
+	newCategoryRepository.Update(category)
 
 	var productUpdated, err = newCategoryRepository.Get(category.Id.Value())
 	if err != nil {

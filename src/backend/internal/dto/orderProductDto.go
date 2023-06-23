@@ -12,10 +12,20 @@ type OrderProductDto struct {
 }
 
 func mapToOrderProductDto(orderProduct entities.OrderProduct) *OrderProductDto {
+	idObj, err := NewIntIdObject(orderProduct.Id.Value())
+	if err != nil {
+		panic(err)
+	}
+
+	productIdObj, errProductId := NewIntIdObject(orderProduct.ProductId.Value())
+	if errProductId != nil {
+		panic(errProductId)
+	}
+
 	return &OrderProductDto{
-		Id:        IdObject{ValueInt: orderProduct.Id.Value()},
+		Id:        *idObj,
 		Name:      orderProduct.Name.Value(),
 		Price:     orderProduct.Price.Value().StringFixedBank(2),
-		ProductId: IdObject{ValueInt: orderProduct.ProductId.Value()},
+		ProductId: *productIdObj,
 	}
 }

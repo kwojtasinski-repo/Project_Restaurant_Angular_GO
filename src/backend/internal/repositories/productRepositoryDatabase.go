@@ -43,7 +43,7 @@ func (repo *productRepository) Add(product *entities.Product) error {
 	return nil
 }
 
-func (repo *productRepository) Update(productToUpdate entities.Product) error {
+func (repo *productRepository) Update(productToUpdate *entities.Product) error {
 	query := "UPDATE `products` SET name = ?, description = ?, price = ?, category_id = ?, deleted = ? WHERE id = ?;"
 	_, err := repo.database.Exec(query, productToUpdate.Name.Value(), productToUpdate.Description.Value(), productToUpdate.Price.Value(), productToUpdate.Category.Id.Value(), productToUpdate.Deleted, productToUpdate.Id.Value())
 	if err != nil {
@@ -52,7 +52,7 @@ func (repo *productRepository) Update(productToUpdate entities.Product) error {
 	return nil
 }
 
-func (repo *productRepository) Delete(productToDelete entities.Product) error {
+func (repo *productRepository) Delete(productToDelete *entities.Product) error {
 	productToDelete.Deleted = true
 	query := "UPDATE `products` SET deleted = ? WHERE id = ?;"
 	_, err := repo.database.Exec(query, true, productToDelete.Id.Value())
@@ -155,23 +155,23 @@ func (repo *cachedProductRepository) Add(product *entities.Product) error {
 	return nil
 }
 
-func (repo *cachedProductRepository) Update(productToUpdate entities.Product) error {
+func (repo *cachedProductRepository) Update(productToUpdate *entities.Product) error {
 	err := repo.innerRepo.Update(productToUpdate)
 	if err != nil {
 		return err
 	}
 
-	repo.cacheStore.Set(fmt.Sprintf("%v", productToUpdate.Id.Value()), &productToUpdate, settings.TimeStoreInCache)
+	repo.cacheStore.Set(fmt.Sprintf("%v", productToUpdate.Id.Value()), productToUpdate, settings.TimeStoreInCache)
 	return nil
 }
 
-func (repo *cachedProductRepository) Delete(productToDelete entities.Product) error {
+func (repo *cachedProductRepository) Delete(productToDelete *entities.Product) error {
 	err := repo.innerRepo.Delete(productToDelete)
 	if err != nil {
 		return err
 	}
 
-	repo.cacheStore.Set(fmt.Sprintf("%v", productToDelete.Id.Value()), &productToDelete, settings.TimeStoreInCache)
+	repo.cacheStore.Set(fmt.Sprintf("%v", productToDelete.Id.Value()), productToDelete, settings.TimeStoreInCache)
 	return nil
 }
 

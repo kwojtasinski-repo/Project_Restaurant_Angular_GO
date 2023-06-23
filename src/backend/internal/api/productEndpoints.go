@@ -20,7 +20,7 @@ func AddProductEndpoints(router *gin.RouterGroup) {
 }
 
 func getProducts(context *gin.Context) {
-	productService, errCreateObject := createProductService()
+	productService, errCreateObject := CreateProductService()
 	if errCreateObject != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
 	}
@@ -42,7 +42,7 @@ func getProduct(context *gin.Context) {
 		return
 	}
 
-	productService, errCreateObject := createProductService()
+	productService, errCreateObject := CreateProductService()
 	if errCreateObject != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
 		return
@@ -63,7 +63,7 @@ func addProduct(context *gin.Context) {
 		return
 	}
 
-	productService, errCreateObject := createProductService()
+	productService, errCreateObject := CreateProductService()
 	if errCreateObject != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
 		return
@@ -96,7 +96,7 @@ func updateProduct(context *gin.Context) {
 	}
 
 	updateProduct.Id = *productId
-	productService, errCreateObject := createProductService()
+	productService, errCreateObject := CreateProductService()
 	if errCreateObject != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
 		return
@@ -121,7 +121,7 @@ func deleteProduct(context *gin.Context) {
 		return
 	}
 
-	productService, errCreateObject := createProductService()
+	productService, errCreateObject := CreateProductService()
 	if errCreateObject != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
 		return

@@ -20,7 +20,7 @@ func AddCategoryEndpoints(router *gin.RouterGroup) {
 }
 
 func getCategories(context *gin.Context) {
-	categoryService, errCreateObject := createCategoryService()
+	categoryService, errCreateObject := CreateCategoryService()
 	if errCreateObject != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
 		return
@@ -42,7 +42,7 @@ func getCategory(context *gin.Context) {
 		return
 	}
 
-	categoryService, errCreateObject := createCategoryService()
+	categoryService, errCreateObject := CreateCategoryService()
 	if errCreateObject != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
 		return
@@ -63,7 +63,7 @@ func addCategory(context *gin.Context) {
 		return
 	}
 
-	categoryService, errCreateObject := createCategoryService()
+	categoryService, errCreateObject := CreateCategoryService()
 	if errCreateObject != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
 		return
@@ -96,7 +96,7 @@ func updateCategory(context *gin.Context) {
 	}
 
 	updateCategory.Id = dto.IdObject{ValueInt: categoryId.ValueInt}
-	productService, errCreateObject := createCategoryService()
+	productService, errCreateObject := CreateCategoryService()
 	if errCreateObject != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
 	}
@@ -120,7 +120,7 @@ func deleteCategory(context *gin.Context) {
 		return
 	}
 
-	categoryService, errCreateObject := createCategoryService()
+	categoryService, errCreateObject := CreateCategoryService()
 	if errCreateObject != nil {
 		writeErrorResponse(context, *applicationerrors.InternalError(errCreateObject.Error()))
 		return

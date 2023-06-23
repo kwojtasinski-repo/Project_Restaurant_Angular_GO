@@ -51,7 +51,7 @@ func Test_ProductRepository_Delete(t *testing.T) {
 	addTestDataToProductRepo(newProductRepository)
 	var product, _ = newProductRepository.Get(1)
 
-	errDelete := newProductRepository.Delete(*product)
+	errDelete := newProductRepository.Delete(product)
 
 	productDeleted, errGet := newProductRepository.Get(product.Id.Value())
 	if errDelete != nil {
@@ -76,7 +76,7 @@ func Test_ProductRepository_Update(t *testing.T) {
 	description, _ = valueobjects.NewDescription("Test123456789")
 	product.Description = *description
 
-	newProductRepository.Update(*product)
+	newProductRepository.Update(product)
 
 	var productUpdated, err = newProductRepository.Get(product.Id.Value())
 	if err != nil {

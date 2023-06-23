@@ -7,8 +7,8 @@ import (
 
 type CategoryRepository interface {
 	Add(*entities.Category) error
-	Update(entities.Category) error
-	Delete(entities.Category) error
+	Update(*entities.Category) error
+	Delete(*entities.Category) error
 	Get(int64) (*entities.Category, error)
 	GetAll() ([]entities.Category, error)
 }
@@ -39,7 +39,7 @@ func (repo *inMemoryCategoryRepository) Add(category *entities.Category) error {
 	return nil
 }
 
-func (repo *inMemoryCategoryRepository) Update(categoryToUpdate entities.Category) error {
+func (repo *inMemoryCategoryRepository) Update(categoryToUpdate *entities.Category) error {
 	for index, category := range repo.categories {
 		if category.Id.Value() == categoryToUpdate.Id.Value() {
 			category.Name = categoryToUpdate.Name
@@ -49,7 +49,7 @@ func (repo *inMemoryCategoryRepository) Update(categoryToUpdate entities.Categor
 	return nil
 }
 
-func (repo *inMemoryCategoryRepository) Delete(categoryToDelete entities.Category) error {
+func (repo *inMemoryCategoryRepository) Delete(categoryToDelete *entities.Category) error {
 	for index, category := range repo.categories {
 		if category.Id.Value() == categoryToDelete.Id.Value() {
 			category.Deleted = true

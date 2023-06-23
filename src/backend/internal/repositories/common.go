@@ -122,10 +122,10 @@ func NewErrorProductRepository() ProductRepository {
 func (epr *errorProductRepository) Add(*entities.Product) error {
 	return errors.New("some error")
 }
-func (epr *errorProductRepository) Update(entities.Product) error {
+func (epr *errorProductRepository) Update(*entities.Product) error {
 	return errors.New("some error")
 }
-func (epr *errorProductRepository) Delete(entities.Product) error {
+func (epr *errorProductRepository) Delete(*entities.Product) error {
 	return errors.New("some error")
 }
 func (epr *errorProductRepository) Get(int64) (*entities.Product, error) {
@@ -172,10 +172,10 @@ func NewErrorCategoryRepository() CategoryRepository {
 func (ecr *errorCategoryRepository) Add(*entities.Category) error {
 	return errors.New("some error")
 }
-func (ecr *errorCategoryRepository) Update(entities.Category) error {
+func (ecr *errorCategoryRepository) Update(*entities.Category) error {
 	return errors.New("some error")
 }
-func (ecr *errorCategoryRepository) Delete(entities.Category) error {
+func (ecr *errorCategoryRepository) Delete(*entities.Category) error {
 	return errors.New("some error")
 }
 func (ecr *errorCategoryRepository) Get(int64) (*entities.Category, error) {

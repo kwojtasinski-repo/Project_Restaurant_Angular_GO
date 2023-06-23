@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
+	"math/rand"
 	"net/http"
 	"net/http/httptest"
 	"path/filepath"
@@ -170,4 +172,16 @@ func (suite *IntegrationTestSuite) createUsers() {
 		Role:     "admin",
 		Deleted:  false,
 	})
+}
+
+func (suite *IntegrationTestSuite) AddCategory() dto.CategoryDto {
+	value := rand.Intn(100000) + 1
+	category := &dto.CategoryDto{
+		Name: fmt.Sprint("category#", value),
+	}
+	categoryService, err := api.CreateCategoryService()
+	suite.Require().Nil(err)
+	category, errAdd := categoryService.Add(category)
+	suite.Require().Nil(errAdd)
+	return *category
 }
