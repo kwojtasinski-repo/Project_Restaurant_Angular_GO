@@ -4,17 +4,29 @@ import { Observable } from 'rxjs';
 import { completeObservable, errorObservable } from "./test-utils";
 import { HttpClient } from "@angular/common/http";
 import { HttpXhrBackend } from "@angular/common/http";
+import { ProductSendDto } from "../models/product-send-dto";
 
 class InMemoryProductService extends ProductService {
     private products: Product[] = [];
 
-    public override add(product: Product): Observable<void> {
-        product.id = this.products.length > 0 ? this.products[this.products.length - 1].id + 1 : 1;
-        this.products.push(product)
+    public override add(product: ProductSendDto): Observable<void> {
+        product.id = this.products.length > 0 ? (new Number(this.products[this.products.length - 1].id).valueOf() + 1).toString() : '1';
+        this.products.push({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            description: product.description ?? '',
+            category: {
+                id: product.categoryId,
+                name: '',
+                deleted: false
+            },
+            deleted: false,
+        })
         return completeObservable<void>();
     }
     
-    public override update(product: Product): Observable<void> {
+    public override update(product: ProductSendDto): Observable<void> {
         const productIndex = this.products.findIndex(p => p.id === product.id);
         if (productIndex === -1) {
             return errorObservable(`Product with id ${product.id} not found`);
@@ -27,7 +39,7 @@ class InMemoryProductService extends ProductService {
         return completeObservable<Product[]>(this.products);
     }
     
-    public override get(id: number): Observable<Product | undefined> {
+    public override get(id: string): Observable<Product | undefined> {
         const product = this.products.find(p => p.id === id);
         return completeObservable<Product | undefined>(product);
     }

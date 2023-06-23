@@ -9,7 +9,7 @@ class InMemoryCategoryService extends CategoryService {
     private categories: Category[] = [];
 
     public override add(category: Category): Observable<void> {
-        category.id = this.categories.length > 0 ? this.categories[this.categories.length - 1].id + 1 : 1;
+        category.id = this.categories.length > 0 ? (new Number(this.categories[this.categories.length - 1].id).valueOf() + 1).toString() : '1';
         this.categories.push(category)
         return completeObservable<void>();
     }
@@ -27,7 +27,7 @@ class InMemoryCategoryService extends CategoryService {
         return completeObservable<Category[]>(this.categories);
     }
     
-    public override get(id: number): Observable<Category | undefined> {
+    public override get(id: string): Observable<Category | undefined> {
         const product = this.categories.find(p => p.id === id);
         return completeObservable<Category | undefined>(product);
     }

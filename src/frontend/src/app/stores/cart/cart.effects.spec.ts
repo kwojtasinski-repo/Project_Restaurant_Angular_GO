@@ -22,8 +22,8 @@ describe('CartEffects', () => {
   let getCartSpy: jasmine.Spy<() => Observable<Cart[]>>;
   let addCartSpy: jasmine.Spy<() => Observable<void>>;
   let removeFromCartSpy: jasmine.Spy<() => Observable<void>>;
-  let addFromCartSpy: jasmine.Spy<() => Observable<number>>;
-  let orderId: number;
+  let addFromCartSpy: jasmine.Spy<() => Observable<string>>;
+  let orderId: string;
   let cartService: CartService;
   let orderService: OrderService;
 
@@ -46,7 +46,7 @@ describe('CartEffects', () => {
     myCart = createCart();
     const store = TestBed.inject(MockStore);
     store.overrideSelector(getUser, {
-      id: 1,
+      id: '1',
       email: 'email@email',
       role: 'test',
       deleted: null
@@ -56,7 +56,7 @@ describe('CartEffects', () => {
     getCartSpy = spyOn(cartService, 'getCart').and.returnValue(of(myCart));
     addCartSpy = spyOn(cartService, 'add').and.returnValue(of());
     removeFromCartSpy = spyOn(cartService, 'delete').and.returnValue(of());
-    orderId = 1;
+    orderId = '1';
     addFromCartSpy = spyOn(orderService, 'addFromCart').and.returnValue(of(orderId));
     effects = TestBed.inject(CartEffects);
   });
@@ -213,9 +213,9 @@ describe('CartEffects', () => {
 const createCart = () => {
   return [
     {
-      id: 1,
+      id: '1',
       product: {
-        id: 1,
+        id: '1',
         name: 'Product#1',
         description: 'Desc',
         price: 100

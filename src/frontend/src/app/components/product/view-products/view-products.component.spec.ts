@@ -131,9 +131,15 @@ describe('ViewProductsComponent when product available', () => {
 
   it('should show infromation when product is deleted', () => {
     let product: Product | undefined;
-    productService.get(fixture.componentInstance.product?.id ?? 1).pipe(take(1)).subscribe(p => product = p);
+    productService.get(fixture.componentInstance.product?.id ?? '1').pipe(take(1)).subscribe(p => product = p);
     product!.deleted = true;
-    productService.update(product!);
+    productService.update({
+      id: product!.id,
+      name: product!.name,
+      price: product!.price,
+      description: product!.description,
+      categoryId: product!.category!.id,
+    });
     fixture.detectChanges();
 
     const warningInfo = fixture.nativeElement.querySelector('.text-bg-warning.p-2');
@@ -150,5 +156,11 @@ describe('ViewProductsComponent when product available', () => {
 });
 
 const fillServiceWithProducts = () => {
-  stubbedProducts().forEach(p => productService.add(p))
+  stubbedProducts().forEach(p => productService.add({
+    id: p.id,
+    name: p.name,
+    price: p.price,
+    description: p.description ?? '',
+    categoryId: p.category?.id ?? '',
+  }))
 };

@@ -6,6 +6,7 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { ProductFormComponent } from '../product-form/product-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CurrencyFormatterDirective } from 'src/app/directives/currency-formatter-directive';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('AddProductsComponent', () => {
   let component: AddProductsComponent;
@@ -15,10 +16,14 @@ describe('AddProductsComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ AddProductsComponent, ProductFormComponent, CurrencyFormatterDirective ],
       imports: [
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        HttpClientModule
       ],
       providers: [
-        provideMockStore({ initialState })
+        provideMockStore({ initialState }),
+        {
+          provide: "API_URL", useValue: ''
+        },
       ]
     })
     .compileComponents();

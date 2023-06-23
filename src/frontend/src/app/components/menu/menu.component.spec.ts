@@ -45,7 +45,13 @@ describe('MenuComponent', () => {
     .compileComponents();
 
     fixture = TestBed.createComponent(MenuComponent);
-    stubbedProducts().forEach(p => productService.add(p));
+    stubbedProducts().forEach(p => productService.add({
+      id: p.id,
+      name: p.name,
+      description: p.description,
+      price: p.price,
+      categoryId: p.category?.id ?? '0'
+    }));
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

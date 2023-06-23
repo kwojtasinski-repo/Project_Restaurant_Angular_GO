@@ -120,6 +120,7 @@ describe('EditProductsComponent when product is available', () => {
   });
 
   it('should show product values in inputs', () => {
+    fixture.detectChanges();
     let categories: Category[] = [];
     categoryService.getAll().pipe(take(1)).subscribe(c => categories = c);
     const productName = fixture.nativeElement.querySelector('#product-name');
@@ -138,7 +139,7 @@ describe('EditProductsComponent when product is available', () => {
     expect(productCost.value).toEqual(formater.format(component.product?.price ?? 0));
     expect(productCategory).not.toBeUndefined();
     expect(productCategory).not.toBeNull();
-    expect(categories[productCategory.selectedIndex].id - 1).toEqual(component.product?.category?.id ?? 0);
+    expect((new Number(categories[productCategory.selectedIndex]?.id).valueOf() - 1).toString()).toEqual(component.product?.category?.id ?? '0');
   });
 
   it('should change inputs while enter new value', () => {
@@ -180,7 +181,13 @@ describe('EditProductsComponent when product is available', () => {
 });
 
 const fillProductServiceWithValues = () => {
-  stubbedProducts().forEach(p => productService.add(p))
+  stubbedProducts().forEach(p => productService.add({
+    id: p.id,
+    name: p.name,
+    price: p.price,
+    description: p.description,
+    categoryId: p.category?.id ?? '1'
+  }))
 };
 
 const fillCategoryServiceWithValues = () => {

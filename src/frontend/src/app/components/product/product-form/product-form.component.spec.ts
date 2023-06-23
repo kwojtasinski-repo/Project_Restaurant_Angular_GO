@@ -98,7 +98,7 @@ describe('ProductFormComponent with init data', () => {
     const categoriesOptions = Array.from(category.querySelectorAll('option'));
     expect(categoriesOptions.length).toEqual(categories.length + 1); // one extra ('Wybierz kategorie')
     expect(category.innerHTML).toContain('Wybierz kategorię');
-    expect(categories[category.selectedIndex-1].id).toEqual(component.product?.category?.id ?? 0);
+    expect(categories[category.selectedIndex-1].id).toEqual(component.product?.category?.id ?? '0');
   });
 
   it('should change values after user action', () => {

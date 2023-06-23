@@ -24,9 +24,9 @@ describe('CartReducers', () => {
   it('fetch cart success', () => {
     // arrange
     const cart = [{
-      id: 1,
+      id: '1',
       product: {
-        id: 1,
+        id: '1',
         name: 'name#1',
         price: 100,
         description: 'desc'

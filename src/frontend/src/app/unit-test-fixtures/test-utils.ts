@@ -33,10 +33,10 @@ export const createProduct = (id: number | undefined = undefined,
     description: string | undefined = undefined,
     category: Category | undefined = undefined) => {
   return { 
-    id: id ?? 0,
+    id: id?.toString() ?? '0',
     name: name ?? 'product',
     category: category ?? {
-      id: 1,
+      id: '1',
       name: 'category',
       deleted: false
     },
@@ -60,7 +60,7 @@ export const stubbedProducts = () => {
 export const createCategory = (id: number | undefined = undefined, 
     name: string | undefined = undefined) => {
   return { 
-    id: id ?? 0,
+    id: id ?? '0',
     name: name ?? 'category',
     deleted: false
   } as Category
