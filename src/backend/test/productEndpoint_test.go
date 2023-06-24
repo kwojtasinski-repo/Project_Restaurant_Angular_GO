@@ -14,12 +14,12 @@ func (suite *IntegrationTestSuite) Test_Add_ProductEndpoint_ShouldReturnCreated(
 	product := struct {
 		Name        string
 		Description string
-		CategoryId  dto.IdObject
+		CategoryId  string
 		Price       decimal.Decimal
 	}{
 		Name:        "Product#1",
 		Description: "Description#123456789",
-		CategoryId:  *id,
+		CategoryId:  id.Value,
 		Price:       decimal.New(100, 1),
 	}
 	req := suite.CreateAuthorizedRequest("POST", "/api/products", createPayload(product))
