@@ -57,14 +57,9 @@ func (suite *IntegrationTestSuite) SetupSuite() {
 	}
 	suite.database = database
 	suite.users = make(map[string]dto.AddUserDto)
-	suite.createUsers()
+	suite.addUsers()
 	suite.router = api.SetupApi(suite.config)
-	suite.categories = make([]dto.CategoryDto, 0)
-	suite.categories = append(suite.categories, suite.AddCategory())
-	suite.categories = append(suite.categories, suite.AddCategory())
-	suite.categories = append(suite.categories, suite.AddCategory())
-	suite.categories = append(suite.categories, suite.AddCategory())
-	suite.categories = append(suite.categories, suite.AddCategory())
+	suite.addCategories()
 }
 
 // this function executes after all tests executed
@@ -143,7 +138,7 @@ func createPayload(value interface{}) *bytes.Reader {
 	return bytes.NewReader(data)
 }
 
-func (suite *IntegrationTestSuite) createUsers() {
+func (suite *IntegrationTestSuite) addUsers() {
 	passwordHasher := services.CreatePassworHasherService()
 	standardUser := dto.AddUserDto{
 		Email:    "test@test.com",
@@ -181,6 +176,15 @@ func (suite *IntegrationTestSuite) createUsers() {
 	})
 }
 
+func (suite *IntegrationTestSuite) addCategories() {
+	suite.categories = make([]dto.CategoryDto, 0)
+	suite.categories = append(suite.categories, suite.AddCategory())
+	suite.categories = append(suite.categories, suite.AddCategory())
+	suite.categories = append(suite.categories, suite.AddCategory())
+	suite.categories = append(suite.categories, suite.AddCategory())
+	suite.categories = append(suite.categories, suite.AddCategory())
+}
+
 func (suite *IntegrationTestSuite) AddCategory() dto.CategoryDto {
 	value := rand.Intn(100000) + 1
 	category := &dto.CategoryDto{
@@ -207,4 +211,23 @@ func (suite *IntegrationTestSuite) AddProduct() dto.ProductDetailsDto {
 	productAdded, errAdd := productService.Add(product)
 	suite.Require().Nil(errAdd)
 	return *productAdded
+}
+
+func (suite *IntegrationTestSuite) AddProductToCart() {
+	product := suite.AddProduct()
+	addCart := dto.AddCart{
+		ProductId: product.Id,
+	}
+	req := suite.CreateAuthorizedRequest("POST", "/api/carts", createPayload(addCart))
+	rec := suite.SendRequest(req)
+	suite.Require().Equal(http.StatusCreated, rec.Result().StatusCode)
+}
+
+func (suite *IntegrationTestSuite) AddProductToCartWithProductId(productId dto.IdObject) {
+	addCart := dto.AddCart{
+		ProductId: productId,
+	}
+	req := suite.CreateAuthorizedRequest("POST", "/api/carts", createPayload(addCart))
+	rec := suite.SendRequest(req)
+	suite.Require().Equal(http.StatusCreated, rec.Result().StatusCode)
 }
