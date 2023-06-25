@@ -52,18 +52,12 @@ func (suite *IntegrationTestSuite) SetupSuite() {
 	configFile := config.LoadConfig(filepath.Join(config.GetRootPath(), TestConfigFile))
 	suite.config = configFile
 	app.InitApp(configFile)
-	log.Println("Running migrations...")
-	migrations.UpMigrations(configFile, "")
 	log.Println("Open connection...")
 	database, err := sql.Open("mysql", suite.config.DatabaseMigration.Username+":"+suite.config.DatabaseMigration.Password+"@tcp(localhost:3306)/"+suite.config.Database.Name+"?parseTime=true")
 	if err != nil {
 		log.Fatal("Cannot open database ", configFile.Database.Name)
 	}
 	suite.database = database
-	suite.users = make(map[string]dto.AddUserDto)
-	suite.addUsers()
-	suite.router = api.SetupApi(suite.config)
-	suite.addCategories()
 }
 
 // this function executes after all tests executed
@@ -85,11 +79,18 @@ func (suite *IntegrationTestSuite) TearDownSuite() {
 
 func (suite *IntegrationTestSuite) SetupTest() {
 	log.Println("---- Setup Before Each Test ----")
+	suite.router = api.SetupApi(suite.config)
+	log.Println("Running migrations...")
+	migrations.UpMigrations(suite.config, "")
+	suite.users = make(map[string]dto.AddUserDto)
+	suite.addUsers()
+	suite.addCategories()
 }
 
 // this function executes after each test case
 func (suite *IntegrationTestSuite) TearDownTest() {
 	log.Println("---- Setup After Each Test ----")
+	migrations.DownMigrations(suite.config, "")
 }
 
 func (suite *IntegrationTestSuite) CreateAuthorizedRequest(method, url string, body io.Reader) *http.Request {
@@ -178,9 +179,14 @@ func (suite *IntegrationTestSuite) addUsers() {
 		Email:    "test-user@test-abc123.com",
 		Password: "test123",
 	}
+	revokeSessionUser := dto.AddUserDto{
+		Email:    "test-revoke-session-user@test-abc123.com",
+		Password: "test123",
+	}
 	suite.users["user"] = standardUser
 	suite.users["admin"] = adminUser
 	suite.users["test"] = testUser
+	suite.users["revokeSessionUser"] = revokeSessionUser
 	userRepository := repositories.CreateUserRepository(suite.database)
 	commonUserPassword, err := passwordHasher.HashPassword(standardUser.Password)
 	if err != nil {
@@ -189,6 +195,7 @@ func (suite *IntegrationTestSuite) addUsers() {
 	standardUserEmail, _ := valueobjects.NewEmailAddress(standardUser.Email)
 	adminUserEmail, _ := valueobjects.NewEmailAddress(adminUser.Email)
 	testUserEmail, _ := valueobjects.NewEmailAddress(testUser.Email)
+	revokeSessionUserEmail, _ := valueobjects.NewEmailAddress(revokeSessionUser.Email)
 
 	userRepository.Add(&entities.User{
 		Email:    *standardUserEmail,
@@ -206,6 +213,12 @@ func (suite *IntegrationTestSuite) addUsers() {
 		Email:    *testUserEmail,
 		Password: commonUserPassword,
 		Role:     "test",
+		Deleted:  false,
+	})
+	userRepository.Add(&entities.User{
+		Email:    *revokeSessionUserEmail,
+		Password: commonUserPassword,
+		Role:     "admin",
 		Deleted:  false,
 	})
 }
