@@ -29,7 +29,11 @@ import (
 
 const TestConfigFile = "config.test.yml"
 
-var sessionCookie *http.Cookie
+var sessionCookies map[string]*http.Cookie = make(map[string]*http.Cookie)
+
+type ErrorResponse struct {
+	Errors string `json:"errors"`
+}
 
 type IntegrationTestSuite struct {
 	suite.Suite
@@ -94,17 +98,39 @@ func (suite *IntegrationTestSuite) CreateAuthorizedRequest(method, url string, b
 	return req
 }
 
+func (suite *IntegrationTestSuite) CreateAuthorizedRequestForUser(method, url string, body io.Reader, user dto.AddUserDto) *http.Request {
+	req := suite.CreateRequest(method, url, body)
+	suite.AuthorizeRequestForUser(req, user)
+	return req
+}
+
 func (suite *IntegrationTestSuite) AuthorizeRequest(request *http.Request) {
-	if sessionCookie != nil {
-		request.AddCookie(sessionCookie)
+	user := suite.users["admin"]
+	sessionCookieFromMap := sessionCookies[user.Email]
+	if sessionCookieFromMap != nil {
+		request.AddCookie(sessionCookieFromMap)
 		return
 	}
 
-	user := suite.users["admin"]
 	req := suite.CreateRequest("POST", "/api/sign-in", createPayload(user))
 	rec := suite.SendRequest(req)
 	sessionCookie := suite.FindSessionCookie(rec.Result().Cookies())
 	request.AddCookie(sessionCookie)
+	sessionCookies[user.Email] = sessionCookie
+}
+
+func (suite *IntegrationTestSuite) AuthorizeRequestForUser(request *http.Request, user dto.AddUserDto) {
+	sessionCookieFromMap := sessionCookies[user.Email]
+	if sessionCookieFromMap != nil {
+		request.AddCookie(sessionCookieFromMap)
+		return
+	}
+
+	req := suite.CreateRequest("POST", "/api/sign-in", createPayload(user))
+	rec := suite.SendRequest(req)
+	sessionCookie := suite.FindSessionCookie(rec.Result().Cookies())
+	request.AddCookie(sessionCookie)
+	sessionCookies[user.Email] = sessionCookie
 }
 
 func (suite *IntegrationTestSuite) FindSessionCookie(cookies []*http.Cookie) *http.Cookie {
@@ -148,30 +174,38 @@ func (suite *IntegrationTestSuite) addUsers() {
 		Email:    "admin@admin-test.com",
 		Password: "test123",
 	}
+	testUser := dto.AddUserDto{
+		Email:    "test-user@test-abc123.com",
+		Password: "test123",
+	}
 	suite.users["user"] = standardUser
 	suite.users["admin"] = adminUser
+	suite.users["test"] = testUser
 	userRepository := repositories.CreateUserRepository(suite.database)
-	standarUserPassword, err := passwordHasher.HashPassword(standardUser.Password)
-	if err != nil {
-		log.Fatal("Error while creating user", err.Error())
-	}
-	adminUserPassword, err := passwordHasher.HashPassword(standardUser.Password)
+	commonUserPassword, err := passwordHasher.HashPassword(standardUser.Password)
 	if err != nil {
 		log.Fatal("Error while creating user", err.Error())
 	}
 	standardUserEmail, _ := valueobjects.NewEmailAddress(standardUser.Email)
 	adminUserEmail, _ := valueobjects.NewEmailAddress(adminUser.Email)
+	testUserEmail, _ := valueobjects.NewEmailAddress(testUser.Email)
 
 	userRepository.Add(&entities.User{
 		Email:    *standardUserEmail,
-		Password: standarUserPassword,
+		Password: commonUserPassword,
 		Role:     "user",
 		Deleted:  false,
 	})
 	userRepository.Add(&entities.User{
 		Email:    *adminUserEmail,
-		Password: adminUserPassword,
+		Password: commonUserPassword,
 		Role:     "admin",
+		Deleted:  false,
+	})
+	userRepository.Add(&entities.User{
+		Email:    *testUserEmail,
+		Password: commonUserPassword,
+		Role:     "test",
 		Deleted:  false,
 	})
 }
@@ -223,11 +257,36 @@ func (suite *IntegrationTestSuite) AddProductToCart() {
 	suite.Require().Equal(http.StatusCreated, rec.Result().StatusCode)
 }
 
-func (suite *IntegrationTestSuite) AddProductToCartWithProductId(productId dto.IdObject) {
+func (suite *IntegrationTestSuite) AddProductToCartForUser(user dto.AddUserDto) {
+	product := suite.AddProduct()
+	addCart := dto.AddCart{
+		ProductId: product.Id,
+	}
+	req := suite.CreateAuthorizedRequestForUser("POST", "/api/carts", createPayload(addCart), user)
+	rec := suite.SendRequest(req)
+	suite.Require().Equal(http.StatusCreated, rec.Result().StatusCode)
+}
+
+func (suite *IntegrationTestSuite) AddProductWithIdToCart(productId dto.IdObject) {
 	addCart := dto.AddCart{
 		ProductId: productId,
 	}
 	req := suite.CreateAuthorizedRequest("POST", "/api/carts", createPayload(addCart))
 	rec := suite.SendRequest(req)
 	suite.Require().Equal(http.StatusCreated, rec.Result().StatusCode)
+}
+
+func (suite *IntegrationTestSuite) AddProductWithIdToCartForUser(productId dto.IdObject, user dto.AddUserDto) {
+	addCart := dto.AddCart{
+		ProductId: productId,
+	}
+	req := suite.CreateAuthorizedRequestForUser("POST", "/api/carts", createPayload(addCart), user)
+	rec := suite.SendRequest(req)
+	suite.Require().Equal(http.StatusCreated, rec.Result().StatusCode)
+}
+
+func (suite *IntegrationTestSuite) getErrorResponse(rec *httptest.ResponseRecorder) ErrorResponse {
+	var errorResponse ErrorResponse
+	suite.Require().Nil(json.Unmarshal(rec.Body.Bytes(), &errorResponse))
+	return errorResponse
 }

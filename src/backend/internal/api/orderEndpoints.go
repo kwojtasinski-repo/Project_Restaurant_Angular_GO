@@ -15,7 +15,8 @@ func AddOrderEndpoints(router *gin.RouterGroup) {
 	router.POST("/orders", addOrders)
 	router.GET("/orders/:id", getOrder)
 	router.GET("/orders/my", getMyOrders)
-	router.GET("/orders", getAllOrders)
+	adminRouter := router.Group("/orders", PermissionMiddleware("admin"))
+	adminRouter.GET("", getAllOrders)
 }
 
 func addOrdersFromCart(context *gin.Context) {
