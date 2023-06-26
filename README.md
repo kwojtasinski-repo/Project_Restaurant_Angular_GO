@@ -2,7 +2,7 @@
 
 ## Introduction
 
-A simple app where you can order food. The application has a login system and is mostly based on cookies. Users authenticate to the app with an email address and password. Each user has own role. Admin role allows to add, delete, modifidied products. 
+A simple app where you can order food. The application has a login system and is mostly based on cookies. Users authenticate to the app with an email address and password. Each user has own role. Admin role allows to add, delete, modify products. 
 
 ## Install developer environment
 
@@ -43,6 +43,28 @@ Install all packages. Make sure Angular is properly installed
 Run application
 
 `npm run start`
+
+## Tests
+
+This project has unit tests on backend and frontend and integration tests on backend site. 
+
+### Backend
+
+You can run unit test on backend typing in bash
+
+`go test -v ./...`
+
+Integration tests can be run by using this command:
+
+`go test ./test/ -v -tags=integration`
+
+
+### Frontend
+
+Unit tests can be run by this command in bash 
+
+`ng test` 
+
 
 ## Technologies
 
