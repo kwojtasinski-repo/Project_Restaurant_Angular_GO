@@ -8,7 +8,7 @@ import (
 )
 
 func (suite *IntegrationTestSuite) Test_Me_UserEndpoint_ShouldReturnOk() {
-	req := suite.CreateAuthorizedRequest("GET", "/api/users/me", http.NoBody)
+	req := suite.CreateAuthorizedRequest(http.MethodGet, "/api/users/me", http.NoBody)
 
 	rec := suite.SendRequest(req)
 
@@ -16,7 +16,7 @@ func (suite *IntegrationTestSuite) Test_Me_UserEndpoint_ShouldReturnOk() {
 }
 
 func (suite *IntegrationTestSuite) Test_Me_UserEndpoint_ShouldReturnUserInfo() {
-	req := suite.CreateAuthorizedRequest("GET", "/api/users/me", http.NoBody)
+	req := suite.CreateAuthorizedRequest(http.MethodGet, "/api/users/me", http.NoBody)
 
 	rec := suite.SendRequest(req)
 

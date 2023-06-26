@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/dto"
+	applicationerrors "github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/errors"
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/repositories"
 )
 
@@ -13,7 +14,7 @@ func (suite *IntegrationTestSuite) Test_AddFromCart_OrderEndpoint_ShouldReturnCr
 	user := suite.users["test"]
 	suite.AddProductToCartForUser(user)
 	suite.AddProductToCartForUser(user)
-	req := suite.CreateAuthorizedRequestForUser("POST", "/api/orders/from-cart", http.NoBody, user)
+	req := suite.CreateAuthorizedRequestForUser(http.MethodPost, "/api/orders/from-cart", http.NoBody, user)
 
 	rec := suite.SendRequest(req)
 
@@ -26,7 +27,7 @@ func (suite *IntegrationTestSuite) Test_AddFromCart_OrderEndpoint_ShouldAddToDat
 	suite.AddProductWithIdToCartForUser(product1.Id, user)
 	product2 := suite.AddProduct()
 	suite.AddProductWithIdToCartForUser(product2.Id, user)
-	req := suite.CreateAuthorizedRequestForUser("POST", "/api/orders/from-cart", http.NoBody, user)
+	req := suite.CreateAuthorizedRequestForUser(http.MethodPost, "/api/orders/from-cart", http.NoBody, user)
 
 	rec := suite.SendRequest(req)
 
@@ -36,7 +37,7 @@ func (suite *IntegrationTestSuite) Test_AddFromCart_OrderEndpoint_ShouldAddToDat
 	suite.Require().True(containsProductInOrder(orderCreated, product1))
 	suite.Require().True(containsProductInOrder(orderCreated, product2))
 	suite.Require().NotNil(orderCreated.OrderNumber)
-	req = suite.CreateAuthorizedRequestForUser("GET", "/api/orders/"+orderCreated.Id.Value, http.NoBody, suite.users["test"])
+	req = suite.CreateAuthorizedRequestForUser(http.MethodGet, "/api/orders/"+orderCreated.Id.Value, http.NoBody, suite.users["test"])
 	rec = suite.SendRequest(req)
 	suite.Require().Equal(http.StatusOK, rec.Result().StatusCode)
 	var orderAdded dto.OrderDetailsDto
@@ -55,7 +56,7 @@ func (suite *IntegrationTestSuite) Test_AddFromCart_ForDifferentUser_OrderEndpoi
 	suite.AddProductWithIdToCart(product1.Id)
 	product2 := suite.AddProduct()
 	suite.AddProductWithIdToCart(product2.Id)
-	req := suite.CreateAuthorizedRequestForUser("POST", "/api/orders/from-cart", http.NoBody, user)
+	req := suite.CreateAuthorizedRequestForUser(http.MethodPost, "/api/orders/from-cart", http.NoBody, user)
 
 	rec := suite.SendRequest(req)
 
@@ -68,14 +69,14 @@ func (suite *IntegrationTestSuite) Test_AddFromCart_ForDifferentUser_OrderEndpoi
 	suite.AddProductWithIdToCart(product1.Id)
 	product2 := suite.AddProduct()
 	suite.AddProductWithIdToCart(product2.Id)
-	req := suite.CreateAuthorizedRequestForUser("POST", "/api/orders/from-cart", http.NoBody, user)
+	req := suite.CreateAuthorizedRequestForUser(http.MethodPost, "/api/orders/from-cart", http.NoBody, user)
 
 	rec := suite.SendRequest(req)
 
 	suite.Require().Equal(http.StatusBadRequest, rec.Result().StatusCode)
 	errorResponse := suite.getErrorResponse(rec)
 	suite.Require().NotEmpty(errorResponse.Errors)
-	suite.Require().Contains(errorResponse.Errors, "'Cart' is empty, add something before create an 'Order'")
+	suite.Require().Contains(errorResponse.Errors, applicationerrors.AddOrderEmptyCart)
 }
 
 func (suite *IntegrationTestSuite) Test_Add_OrderEndpoint_ShouldReturnCreated() {
@@ -85,7 +86,7 @@ func (suite *IntegrationTestSuite) Test_Add_OrderEndpoint_ShouldReturnCreated() 
 	addOrder := dto.AddOrderDto{
 		ProductIds: []dto.IdObject{product1.Id, product2.Id},
 	}
-	req := suite.CreateAuthorizedRequestForUser("POST", "/api/orders", createPayload(addOrder), user)
+	req := suite.CreateAuthorizedRequestForUser(http.MethodPost, "/api/orders", createPayload(addOrder), user)
 
 	rec := suite.SendRequest(req)
 
@@ -109,7 +110,7 @@ func (suite *IntegrationTestSuite) Test_Add_OrderEndpoint_ShouldAddToDatabase() 
 	addOrder := dto.AddOrderDto{
 		ProductIds: []dto.IdObject{product1.Id, product2.Id},
 	}
-	req := suite.CreateAuthorizedRequestForUser("POST", "/api/orders", createPayload(addOrder), user)
+	req := suite.CreateAuthorizedRequestForUser(http.MethodPost, "/api/orders", createPayload(addOrder), user)
 
 	rec := suite.SendRequest(req)
 
@@ -119,7 +120,7 @@ func (suite *IntegrationTestSuite) Test_Add_OrderEndpoint_ShouldAddToDatabase() 
 func (suite *IntegrationTestSuite) Test_GetMyOrders_OrderEndpoint_ShouldReturnOkWithOrders() {
 	user := suite.users["test"]
 	addOrder(suite, &user)
-	req := suite.CreateAuthorizedRequestForUser("GET", "/api/orders/my", http.NoBody, user)
+	req := suite.CreateAuthorizedRequestForUser(http.MethodGet, "/api/orders/my", http.NoBody, user)
 
 	rec := suite.SendRequest(req)
 
@@ -132,7 +133,7 @@ func (suite *IntegrationTestSuite) Test_GetMyOrders_OrderEndpoint_ShouldReturnOk
 func (suite *IntegrationTestSuite) Test_GetAllOrders_WithNonAdminUser_OrderEndpoint_ShouldReturnForbidden() {
 	user := suite.users["test"]
 	addOrder(suite, &user)
-	req := suite.CreateAuthorizedRequestForUser("GET", "/api/orders", http.NoBody, user)
+	req := suite.CreateAuthorizedRequestForUser(http.MethodGet, "/api/orders", http.NoBody, user)
 
 	rec := suite.SendRequest(req)
 
@@ -141,7 +142,7 @@ func (suite *IntegrationTestSuite) Test_GetAllOrders_WithNonAdminUser_OrderEndpo
 
 func (suite *IntegrationTestSuite) Test_GetAllOrders_OrderEndpoint_ShouldReturnOkWithOrders() {
 	addOrder(suite, nil)
-	req := suite.CreateAuthorizedRequest("GET", "/api/orders", http.NoBody)
+	req := suite.CreateAuthorizedRequest(http.MethodGet, "/api/orders", http.NoBody)
 
 	rec := suite.SendRequest(req)
 
@@ -169,9 +170,9 @@ func addOrder(suite *IntegrationTestSuite, addUser *dto.AddUserDto) dto.OrderDet
 	}
 	var req *http.Request
 	if addUser != nil {
-		req = suite.CreateAuthorizedRequestForUser("POST", "/api/orders", createPayload(addOrder), *addUser)
+		req = suite.CreateAuthorizedRequestForUser(http.MethodPost, "/api/orders", createPayload(addOrder), *addUser)
 	} else {
-		req = suite.CreateAuthorizedRequest("POST", "/api/orders", createPayload(addOrder))
+		req = suite.CreateAuthorizedRequest(http.MethodPost, "/api/orders", createPayload(addOrder))
 	}
 	rec := suite.SendRequest(req)
 	suite.Require().Equal(http.StatusCreated, rec.Result().StatusCode)

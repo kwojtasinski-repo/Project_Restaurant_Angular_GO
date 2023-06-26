@@ -12,7 +12,7 @@ import (
 
 func (suite *IntegrationTestSuite) Test_SignIn_IdentityEndpoint_ShouldReturnStatusOK() {
 	adminUser := suite.users["admin"]
-	req := suite.CreateRequest("POST", "/api/sign-in", createPayload(adminUser))
+	req := suite.CreateRequest(http.MethodPost, "/api/sign-in", createPayload(adminUser))
 
 	rec := suite.SendRequest(req)
 
@@ -21,7 +21,7 @@ func (suite *IntegrationTestSuite) Test_SignIn_IdentityEndpoint_ShouldReturnStat
 
 func (suite *IntegrationTestSuite) Test_SignIn_IdentityEndpoint_ShouldIssueCookie() {
 	adminUser := suite.users["admin"]
-	req := suite.CreateRequest("POST", "/api/sign-in", createPayload(adminUser))
+	req := suite.CreateRequest(http.MethodPost, "/api/sign-in", createPayload(adminUser))
 
 	rec := suite.SendRequest(req)
 
@@ -39,14 +39,14 @@ func (suite *IntegrationTestSuite) Test_SignIn_IdentityEndpoint_ShouldIssueCooki
 
 func (suite *IntegrationTestSuite) Test_SignIn_IdentityEndpoint_ShouldCreateSession() {
 	adminUser := suite.users["admin"]
-	req := suite.CreateRequest("POST", "/api/sign-in", createPayload(adminUser))
+	req := suite.CreateRequest(http.MethodPost, "/api/sign-in", createPayload(adminUser))
 	sessionRepository := repositories.CreateSessionRepository(suite.database)
 
 	rec := suite.SendRequest(req)
 
 	suite.Require().Equal(http.StatusOK, rec.Result().StatusCode)
 	cookie := suite.FindSessionCookie(rec.Result().Cookies())
-	req = suite.CreateRequest("GET", "/api/users/me", http.NoBody)
+	req = suite.CreateRequest(http.MethodGet, "/api/users/me", http.NoBody)
 	req.AddCookie(cookie)
 	rec = suite.SendRequest(req)
 	suite.Require().Equal(http.StatusOK, rec.Result().StatusCode)
@@ -64,7 +64,7 @@ func (suite *IntegrationTestSuite) Test_SignUp_IdentityEndpoint_ShouldReturnCrea
 		Email:    "kocica@test.com",
 		Password: "Kocica1234!@Abc",
 	}
-	req := suite.CreateRequest("POST", "/api/sign-up", createPayload(addUser))
+	req := suite.CreateRequest(http.MethodPost, "/api/sign-up", createPayload(addUser))
 
 	rec := suite.SendRequest(req)
 
@@ -79,7 +79,7 @@ func (suite *IntegrationTestSuite) Test_SignUp_IdentityEndpoint_ShouldSignInAfte
 	req := suite.CreateRequest("POST", "/api/sign-up", createPayload(addUser))
 	rec := suite.SendRequest(req)
 	suite.Require().Equal(http.StatusCreated, rec.Result().StatusCode)
-	req = suite.CreateRequest("POST", "/api/sign-in", createPayload(addUser))
+	req = suite.CreateRequest(http.MethodPost, "/api/sign-in", createPayload(addUser))
 
 	rec = suite.SendRequest(req)
 
@@ -93,11 +93,11 @@ func (suite *IntegrationTestSuite) Test_SignUp_IdentityEndpoint_ShouldSignInAfte
 
 func (suite *IntegrationTestSuite) Test_SignOut_ShouldReturnOK() {
 	user := suite.users["user"]
-	req := suite.CreateRequest("POST", "/api/sign-in", createPayload(user))
+	req := suite.CreateRequest(http.MethodPost, "/api/sign-in", createPayload(user))
 	rec := suite.SendRequest(req)
 	suite.Require().Equal(http.StatusOK, rec.Result().StatusCode)
 	sessionCookie := suite.FindSessionCookie(rec.Result().Cookies())
-	req = suite.CreateRequest("POST", "/api/sign-out", http.NoBody)
+	req = suite.CreateRequest(http.MethodPost, "/api/sign-out", http.NoBody)
 	req.AddCookie(sessionCookie)
 
 	rec = suite.SendRequest(req)
@@ -107,17 +107,17 @@ func (suite *IntegrationTestSuite) Test_SignOut_ShouldReturnOK() {
 
 func (suite *IntegrationTestSuite) Test_SignOut_ShouldClearSession() {
 	user := suite.users["user"]
-	req := suite.CreateRequest("POST", "/api/sign-in", createPayload(user))
+	req := suite.CreateRequest(http.MethodPost, "/api/sign-in", createPayload(user))
 	rec := suite.SendRequest(req)
 	suite.Require().Equal(http.StatusOK, rec.Result().StatusCode)
 	sessionCookie := suite.FindSessionCookie(rec.Result().Cookies())
-	req = suite.CreateRequest("POST", "/api/sign-out", http.NoBody)
+	req = suite.CreateRequest(http.MethodPost, "/api/sign-out", http.NoBody)
 	req.AddCookie(sessionCookie)
 
 	rec = suite.SendRequest(req)
 
 	suite.Require().Equal(http.StatusOK, rec.Result().StatusCode)
-	req = suite.CreateRequest("GET", "/api/users/me", http.NoBody)
+	req = suite.CreateRequest(http.MethodGet, "/api/users/me", http.NoBody)
 	req.AddCookie(sessionCookie)
 	rec = suite.SendRequest(req)
 	suite.Require().Equal(http.StatusUnauthorized, rec.Result().StatusCode)

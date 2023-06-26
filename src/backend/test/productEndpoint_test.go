@@ -22,7 +22,7 @@ func (suite *IntegrationTestSuite) Test_Add_ProductEndpoint_ShouldReturnCreated(
 		CategoryId:  id.Value,
 		Price:       decimal.New(100, 1),
 	}
-	req := suite.CreateAuthorizedRequest("POST", "/api/products", createPayload(product))
+	req := suite.CreateAuthorizedRequest(http.MethodPost, "/api/products", createPayload(product))
 
 	rec := suite.SendRequest(req)
 
@@ -37,7 +37,7 @@ func (suite *IntegrationTestSuite) Test_Add_ProductEndpoint_ShouldAddToDatabase(
 		CategoryId:  *id,
 		Price:       decimal.New(100, 1),
 	}
-	req := suite.CreateAuthorizedRequest("POST", "/api/products", createPayload(product))
+	req := suite.CreateAuthorizedRequest(http.MethodPost, "/api/products", createPayload(product))
 
 	rec := suite.SendRequest(req)
 
@@ -64,7 +64,7 @@ func (suite *IntegrationTestSuite) Test_Update_ProductEndpoint_ShouldReturnOk() 
 	product.Description = "Afterwards_NextStep_1234"
 	price, err := decimal.NewFromString(product.Price)
 	suite.Require().Nil(err)
-	req := suite.CreateAuthorizedRequest("PUT", "/api/products/"+product.Id.Value, createPayload(dto.UpdateProductDto{
+	req := suite.CreateAuthorizedRequest(http.MethodPut, "/api/products/"+product.Id.Value, createPayload(dto.UpdateProductDto{
 		Id:          product.Id,
 		Name:        product.Name,
 		Description: product.Description,
@@ -82,7 +82,7 @@ func (suite *IntegrationTestSuite) Test_Update_ProductEndpoint_ShouldAddToDataba
 	product.Name = "Name#1#Product"
 	product.Description = "Afterwards_NextStep_1234"
 	price := decimal.New(150, 1)
-	req := suite.CreateAuthorizedRequest("PUT", "/api/products/"+product.Id.Value, createPayload(dto.UpdateProductDto{
+	req := suite.CreateAuthorizedRequest(http.MethodPut, "/api/products/"+product.Id.Value, createPayload(dto.UpdateProductDto{
 		Id:          product.Id,
 		Name:        product.Name,
 		Description: product.Description,
@@ -109,7 +109,7 @@ func (suite *IntegrationTestSuite) Test_Update_ProductEndpoint_ShouldAddToDataba
 
 func (suite *IntegrationTestSuite) Test_Delete_ProductEndpoint_ShouldNoContent() {
 	product := suite.AddProduct()
-	req := suite.CreateAuthorizedRequest("DELETE", "/api/products/"+product.Id.Value, http.NoBody)
+	req := suite.CreateAuthorizedRequest(http.MethodDelete, "/api/products/"+product.Id.Value, http.NoBody)
 
 	rec := suite.SendRequest(req)
 
@@ -118,7 +118,7 @@ func (suite *IntegrationTestSuite) Test_Delete_ProductEndpoint_ShouldNoContent()
 
 func (suite *IntegrationTestSuite) Test_Delete_ProductEndpoint_ShouldDeleteFromDatabase() {
 	product := suite.AddProduct()
-	req := suite.CreateAuthorizedRequest("DELETE", "/api/products/"+product.Id.Value, http.NoBody)
+	req := suite.CreateAuthorizedRequest(http.MethodDelete, "/api/products/"+product.Id.Value, http.NoBody)
 
 	rec := suite.SendRequest(req)
 
@@ -132,7 +132,7 @@ func (suite *IntegrationTestSuite) Test_Delete_ProductEndpoint_ShouldDeleteFromD
 
 func (suite *IntegrationTestSuite) Test_Get_ProductEndpoint_ShouldReturnOkWithProduct() {
 	product := suite.AddProduct()
-	req := suite.CreateAuthorizedRequest("GET", "/api/products/"+product.Id.Value, http.NoBody)
+	req := suite.CreateAuthorizedRequest(http.MethodGet, "/api/products/"+product.Id.Value, http.NoBody)
 
 	rec := suite.SendRequest(req)
 
@@ -150,7 +150,7 @@ func (suite *IntegrationTestSuite) Test_Get_ProductEndpoint_ShouldReturnOkWithPr
 func (suite *IntegrationTestSuite) Test_Get_NotExistProduct_ProductEndpoint_ShouldReturnNotFound() {
 	id, err := dto.NewIntIdObject(1000)
 	suite.Require().Nil(err)
-	req := suite.CreateAuthorizedRequest("GET", "/api/products/"+id.Value, http.NoBody)
+	req := suite.CreateAuthorizedRequest(http.MethodGet, "/api/products/"+id.Value, http.NoBody)
 
 	rec := suite.SendRequest(req)
 
@@ -160,7 +160,7 @@ func (suite *IntegrationTestSuite) Test_Get_NotExistProduct_ProductEndpoint_Shou
 func (suite *IntegrationTestSuite) Test_GetAll_ProductEndpoint_ShouldReturnOkWithCategories() {
 	suite.AddProduct()
 	suite.AddProduct()
-	req := suite.CreateAuthorizedRequest("GET", "/api/products", http.NoBody)
+	req := suite.CreateAuthorizedRequest(http.MethodGet, "/api/products", http.NoBody)
 
 	rec := suite.SendRequest(req)
 

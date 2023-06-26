@@ -7,7 +7,7 @@ import (
 )
 
 func (suite *IntegrationTestSuite) Test_SendRequest_HealthCheckEndpoint_ShouldReturnStatusOkAndContainsWelcomeText() {
-	req, err := http.NewRequest("GET", "/api", http.NoBody)
+	req, err := http.NewRequest(http.MethodGet, "/api", http.NoBody)
 	suite.Require().NoError(err)
 	rec := httptest.NewRecorder()
 	welcomeText := "Welcome to Restaurant API"

@@ -14,7 +14,7 @@ func (suite *IntegrationTestSuite) Test_Add_CategoryEndpoint_ShouldReturnCreated
 	}{
 		Name: "Category#1",
 	}
-	req := suite.CreateAuthorizedRequest("POST", "/api/categories", createPayload(category))
+	req := suite.CreateAuthorizedRequest(http.MethodPost, "/api/categories", createPayload(category))
 
 	rec := suite.SendRequest(req)
 
@@ -25,7 +25,7 @@ func (suite *IntegrationTestSuite) Test_Add_CategoryEndpoint_ShouldAddToDatabase
 	category := dto.CategoryDto{
 		Name: "Category#2",
 	}
-	req := suite.CreateAuthorizedRequest("POST", "/api/categories", createPayload(category))
+	req := suite.CreateAuthorizedRequest(http.MethodPost, "/api/categories", createPayload(category))
 
 	rec := suite.SendRequest(req)
 
@@ -43,7 +43,7 @@ func (suite *IntegrationTestSuite) Test_Add_CategoryEndpoint_ShouldAddToDatabase
 func (suite *IntegrationTestSuite) Test_Update_CategoryEndpoint_ShouldReturnOk() {
 	category := suite.AddCategory()
 	category.Name = "Name#1#Category"
-	req := suite.CreateAuthorizedRequest("PUT", "/api/categories/"+category.Id.Value, createPayload(category))
+	req := suite.CreateAuthorizedRequest(http.MethodPut, "/api/categories/"+category.Id.Value, createPayload(category))
 
 	rec := suite.SendRequest(req)
 
@@ -53,7 +53,7 @@ func (suite *IntegrationTestSuite) Test_Update_CategoryEndpoint_ShouldReturnOk()
 func (suite *IntegrationTestSuite) Test_Update_CategoryEndpoint_ShouldAddToDatabase() {
 	category := suite.AddCategory()
 	category.Name = "Name#2#Category"
-	req := suite.CreateAuthorizedRequest("PUT", "/api/categories/"+category.Id.Value, createPayload(category))
+	req := suite.CreateAuthorizedRequest(http.MethodPut, "/api/categories/"+category.Id.Value, createPayload(category))
 
 	rec := suite.SendRequest(req)
 
@@ -70,7 +70,7 @@ func (suite *IntegrationTestSuite) Test_Update_CategoryEndpoint_ShouldAddToDatab
 
 func (suite *IntegrationTestSuite) Test_Delete_CategoryEndpoint_ShouldNoContent() {
 	category := suite.AddCategory()
-	req := suite.CreateAuthorizedRequest("DELETE", "/api/categories/"+category.Id.Value, http.NoBody)
+	req := suite.CreateAuthorizedRequest(http.MethodDelete, "/api/categories/"+category.Id.Value, http.NoBody)
 
 	rec := suite.SendRequest(req)
 
@@ -79,7 +79,7 @@ func (suite *IntegrationTestSuite) Test_Delete_CategoryEndpoint_ShouldNoContent(
 
 func (suite *IntegrationTestSuite) Test_Delete_CategoryEndpoint_ShouldDeleteFromDatabase() {
 	category := suite.AddCategory()
-	req := suite.CreateAuthorizedRequest("DELETE", "/api/categories/"+category.Id.Value, http.NoBody)
+	req := suite.CreateAuthorizedRequest(http.MethodDelete, "/api/categories/"+category.Id.Value, http.NoBody)
 
 	rec := suite.SendRequest(req)
 
@@ -93,7 +93,7 @@ func (suite *IntegrationTestSuite) Test_Delete_CategoryEndpoint_ShouldDeleteFrom
 
 func (suite *IntegrationTestSuite) Test_Get_CategoryEndpoint_ShouldReturnOkWithCategory() {
 	category := suite.AddCategory()
-	req := suite.CreateAuthorizedRequest("GET", "/api/categories/"+category.Id.Value, http.NoBody)
+	req := suite.CreateAuthorizedRequest(http.MethodGet, "/api/categories/"+category.Id.Value, http.NoBody)
 
 	rec := suite.SendRequest(req)
 
@@ -107,7 +107,7 @@ func (suite *IntegrationTestSuite) Test_Get_CategoryEndpoint_ShouldReturnOkWithC
 func (suite *IntegrationTestSuite) Test_Get_NotExistCategory_CategoryEndpoint_ShouldReturnNotFound() {
 	id, err := dto.NewIntIdObject(1000)
 	suite.Require().Nil(err)
-	req := suite.CreateAuthorizedRequest("GET", "/api/categories/"+id.Value, http.NoBody)
+	req := suite.CreateAuthorizedRequest(http.MethodGet, "/api/categories/"+id.Value, http.NoBody)
 
 	rec := suite.SendRequest(req)
 
@@ -117,7 +117,7 @@ func (suite *IntegrationTestSuite) Test_Get_NotExistCategory_CategoryEndpoint_Sh
 func (suite *IntegrationTestSuite) Test_GetAll_CategoryEndpoint_ShouldReturnOkWithCategories() {
 	suite.AddCategory()
 	suite.AddCategory()
-	req := suite.CreateAuthorizedRequest("GET", "/api/categories", http.NoBody)
+	req := suite.CreateAuthorizedRequest(http.MethodGet, "/api/categories", http.NoBody)
 
 	rec := suite.SendRequest(req)
 

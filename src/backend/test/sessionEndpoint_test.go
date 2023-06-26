@@ -10,7 +10,7 @@ import (
 func (suite *IntegrationTestSuite) Test_GetAllUserSession_SessionEndpoint_ShouldReturnOkWithAllSessions() {
 	login(suite, nil)
 	user := login(suite, nil)
-	req := suite.CreateAuthorizedRequest("GET", "/api/sessions/"+user.Id.Value, http.NoBody)
+	req := suite.CreateAuthorizedRequest(http.MethodGet, "/api/sessions/"+user.Id.Value, http.NoBody)
 
 	rec := suite.SendRequest(req)
 
@@ -24,7 +24,7 @@ func (suite *IntegrationTestSuite) Test_GetAllUserSession_WithNonAdminUser_Sessi
 	userCredendtials := suite.users["user"]
 	login(suite, &userCredendtials)
 	user := login(suite, &userCredendtials)
-	req := suite.CreateAuthorizedRequestForUser("GET", "/api/sessions/"+user.Id.Value, http.NoBody, userCredendtials)
+	req := suite.CreateAuthorizedRequestForUser(http.MethodGet, "/api/sessions/"+user.Id.Value, http.NoBody, userCredendtials)
 
 	rec := suite.SendRequest(req)
 
@@ -37,7 +37,7 @@ func (suite *IntegrationTestSuite) Test_RevokeAllUserSessions_SessionEndpoint_Sh
 	user := login(suite, &userCredentials)
 	sessions := getAllUserSessions(suite, &user)
 	suite.Require().NotEmpty(sessions)
-	req := suite.CreateAuthorizedRequestForUser("DELETE", "/api/sessions/"+user.Id.Value, http.NoBody, userCredentials)
+	req := suite.CreateAuthorizedRequestForUser(http.MethodDelete, "/api/sessions/"+user.Id.Value, http.NoBody, userCredentials)
 
 	rec := suite.SendRequest(req)
 
@@ -51,7 +51,7 @@ func (suite *IntegrationTestSuite) Test_RevokeAllUserSessions_WithNonAdminUser_S
 	userCredentials := suite.users["user"]
 	login(suite, &userCredentials)
 	user := login(suite, &userCredentials)
-	req := suite.CreateAuthorizedRequestForUser("DELETE", "/api/sessions/"+user.Id.Value, http.NoBody, userCredentials)
+	req := suite.CreateAuthorizedRequestForUser(http.MethodDelete, "/api/sessions/"+user.Id.Value, http.NoBody, userCredentials)
 
 	rec := suite.SendRequest(req)
 
@@ -70,10 +70,10 @@ func login(suite *IntegrationTestSuite, user *dto.AddUserDto) dto.UserDto {
 		u := suite.users["admin"]
 		userCredendtials = &u
 	}
-	req = suite.CreateRequest("POST", "/api/sign-in", createPayload(*userCredendtials))
+	req = suite.CreateRequest(http.MethodPost, "/api/sign-in", createPayload(*userCredendtials))
 	rec := suite.SendRequest(req)
 	suite.Require().Equal(http.StatusOK, rec.Result().StatusCode)
-	req = suite.CreateAuthorizedRequestForUser("GET", "/api/users/me", http.NoBody, *userCredendtials)
+	req = suite.CreateAuthorizedRequestForUser(http.MethodGet, "/api/users/me", http.NoBody, *userCredendtials)
 	rec = suite.SendRequest(req)
 	suite.Require().Equal(http.StatusOK, rec.Result().StatusCode)
 	var userDto dto.UserDto
@@ -82,7 +82,7 @@ func login(suite *IntegrationTestSuite, user *dto.AddUserDto) dto.UserDto {
 }
 
 func getAllUserSessions(suite *IntegrationTestSuite, user *dto.UserDto) []dto.SessionDto {
-	req := suite.CreateAuthorizedRequest("GET", "/api/sessions/"+user.Id.Value, http.NoBody)
+	req := suite.CreateAuthorizedRequest(http.MethodGet, "/api/sessions/"+user.Id.Value, http.NoBody)
 	rec := suite.SendRequest(req)
 	suite.Require().Equal(http.StatusOK, rec.Result().StatusCode)
 	var sessions []dto.SessionDto

@@ -7,18 +7,12 @@ import (
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/dto"
 )
 
-/*
-	router.GET("/carts/my", getMyCart)
-	router.POST("/carts", addCart)
-	router.DELETE("/carts/:id", deleteCart)
-*/
-
 func (suite *IntegrationTestSuite) Test_AddToCart_CartEndpoint_ShouldCreated() {
 	product := suite.AddProduct()
 	addCart := dto.AddCart{
 		ProductId: product.Id,
 	}
-	req := suite.CreateAuthorizedRequest("POST", "/api/carts", createPayload(addCart))
+	req := suite.CreateAuthorizedRequest(http.MethodPost, "/api/carts", createPayload(addCart))
 
 	rec := suite.SendRequest(req)
 
@@ -30,7 +24,7 @@ func (suite *IntegrationTestSuite) Test_AddToCart_CartEndpoint_ShouldAddToDataba
 	addCart := dto.AddCart{
 		ProductId: product.Id,
 	}
-	req := suite.CreateAuthorizedRequest("POST", "/api/carts", createPayload(addCart))
+	req := suite.CreateAuthorizedRequest(http.MethodPost, "/api/carts", createPayload(addCart))
 
 	rec := suite.SendRequest(req)
 
@@ -44,7 +38,7 @@ func (suite *IntegrationTestSuite) Test_DeleteFromCart_CartEndpoint_ShouldNoCont
 	suite.AddProductToCart()
 	myCart := suite.getMyCart()
 	lastElement := myCart[len(myCart)-1]
-	req := suite.CreateAuthorizedRequest("DELETE", "/api/carts/"+lastElement.Id.Value, http.NoBody)
+	req := suite.CreateAuthorizedRequest(http.MethodDelete, "/api/carts/"+lastElement.Id.Value, http.NoBody)
 
 	rec := suite.SendRequest(req)
 
@@ -55,7 +49,7 @@ func (suite *IntegrationTestSuite) Test_DeleteFromCart_CartEndpoint_ShouldRemove
 	suite.AddProductToCart()
 	myCart := suite.getMyCart()
 	lastElement := myCart[len(myCart)-1]
-	req := suite.CreateAuthorizedRequest("DELETE", "/api/carts/"+lastElement.Id.Value, http.NoBody)
+	req := suite.CreateAuthorizedRequest(http.MethodDelete, "/api/carts/"+lastElement.Id.Value, http.NoBody)
 
 	rec := suite.SendRequest(req)
 

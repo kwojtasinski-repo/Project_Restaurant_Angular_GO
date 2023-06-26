@@ -113,7 +113,7 @@ func (suite *IntegrationTestSuite) AuthorizeRequest(request *http.Request) {
 		return
 	}
 
-	req := suite.CreateRequest("POST", "/api/sign-in", createPayload(user))
+	req := suite.CreateRequest(http.MethodPost, "/api/sign-in", createPayload(user))
 	rec := suite.SendRequest(req)
 	sessionCookie := suite.FindSessionCookie(rec.Result().Cookies())
 	request.AddCookie(sessionCookie)
@@ -127,7 +127,7 @@ func (suite *IntegrationTestSuite) AuthorizeRequestForUser(request *http.Request
 		return
 	}
 
-	req := suite.CreateRequest("POST", "/api/sign-in", createPayload(user))
+	req := suite.CreateRequest(http.MethodPost, "/api/sign-in", createPayload(user))
 	rec := suite.SendRequest(req)
 	sessionCookie := suite.FindSessionCookie(rec.Result().Cookies())
 	request.AddCookie(sessionCookie)
@@ -265,7 +265,7 @@ func (suite *IntegrationTestSuite) AddProductToCart() {
 	addCart := dto.AddCart{
 		ProductId: product.Id,
 	}
-	req := suite.CreateAuthorizedRequest("POST", "/api/carts", createPayload(addCart))
+	req := suite.CreateAuthorizedRequest(http.MethodPost, "/api/carts", createPayload(addCart))
 	rec := suite.SendRequest(req)
 	suite.Require().Equal(http.StatusCreated, rec.Result().StatusCode)
 }
@@ -275,7 +275,7 @@ func (suite *IntegrationTestSuite) AddProductToCartForUser(user dto.AddUserDto) 
 	addCart := dto.AddCart{
 		ProductId: product.Id,
 	}
-	req := suite.CreateAuthorizedRequestForUser("POST", "/api/carts", createPayload(addCart), user)
+	req := suite.CreateAuthorizedRequestForUser(http.MethodPost, "/api/carts", createPayload(addCart), user)
 	rec := suite.SendRequest(req)
 	suite.Require().Equal(http.StatusCreated, rec.Result().StatusCode)
 }
@@ -284,7 +284,7 @@ func (suite *IntegrationTestSuite) AddProductWithIdToCart(productId dto.IdObject
 	addCart := dto.AddCart{
 		ProductId: productId,
 	}
-	req := suite.CreateAuthorizedRequest("POST", "/api/carts", createPayload(addCart))
+	req := suite.CreateAuthorizedRequest(http.MethodPost, "/api/carts", createPayload(addCart))
 	rec := suite.SendRequest(req)
 	suite.Require().Equal(http.StatusCreated, rec.Result().StatusCode)
 }
@@ -293,7 +293,7 @@ func (suite *IntegrationTestSuite) AddProductWithIdToCartForUser(productId dto.I
 	addCart := dto.AddCart{
 		ProductId: productId,
 	}
-	req := suite.CreateAuthorizedRequestForUser("POST", "/api/carts", createPayload(addCart), user)
+	req := suite.CreateAuthorizedRequestForUser(http.MethodPost, "/api/carts", createPayload(addCart), user)
 	rec := suite.SendRequest(req)
 	suite.Require().Equal(http.StatusCreated, rec.Result().StatusCode)
 }
