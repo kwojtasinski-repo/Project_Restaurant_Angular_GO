@@ -51,3 +51,18 @@ Run application
 - MariaDB
 - Go Gin
 - Golang-migrate
+
+## Screens
+
+![](/images/screen1.png)
+![](/images/screen2.png)
+![](/images/screen3.png)
+![](/images/screen4.png)
+![](/images/screen5.png)
+![](/images/screen6.png)
+![](/images/screen7.png)
+![](/images/screen8.png)
+![](/images/screen9.png)
+![](/images/screen10.png)
+![](/images/screen11.png)
+![](/images/screen12.png)
