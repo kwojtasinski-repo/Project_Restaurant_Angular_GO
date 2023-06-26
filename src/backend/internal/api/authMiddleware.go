@@ -15,7 +15,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		cookieValue, err := settings.CookieIssued.GetValue([]byte{}, c.Request)
 		if err != nil {
 			log.Println("ERROR: AuthMiddleware() ", err)
-			c.AbortWithStatusJSON(401, gin.H{"errors": "Cookie is required"})
+			c.AbortWithStatusJSON(401, gin.H{"errors": applicationerrors.RequiredCookie})
 			return
 		}
 		var session dto.SessionDto
@@ -27,7 +27,7 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		if err := session.Validate(); err != nil {
 			log.Println("ERROR: AuthMiddleware() ", err)
-			c.AbortWithStatusJSON(401, gin.H{"errors": "Invalid cookie"})
+			c.AbortWithStatusJSON(401, gin.H{"errors": applicationerrors.InvalidCookie})
 			return
 		}
 

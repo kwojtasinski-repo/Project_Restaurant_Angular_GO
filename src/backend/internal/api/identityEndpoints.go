@@ -23,7 +23,7 @@ func AddIdentityEndpoints(router *gin.Engine) {
 func signIn(context *gin.Context) {
 	var signInDto dto.SignInDto
 	if err := context.BindJSON(&signInDto); err != nil {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid payload"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": applicationerrors.InvalidInputData})
 		return
 	}
 
@@ -54,7 +54,7 @@ func signIn(context *gin.Context) {
 func signUp(context *gin.Context) {
 	var addUserDto dto.AddUserDto
 	if err := context.BindJSON(&addUserDto); err != nil {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid payload"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": applicationerrors.InvalidInputData})
 		return
 	}
 

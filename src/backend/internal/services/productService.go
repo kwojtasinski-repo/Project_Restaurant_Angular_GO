@@ -33,7 +33,7 @@ func CreateProductService(repo repositories.ProductRepository, categoryRepositor
 
 func (service *productService) Add(productDto *dto.AddProductDto) (*dto.ProductDetailsDto, *applicationerrors.ErrorStatus) {
 	if productDto == nil {
-		return nil, applicationerrors.BadRequest("invalid 'Product'")
+		return nil, applicationerrors.BadRequest(applicationerrors.InvalidProduct)
 	}
 
 	if err := productDto.Validate(); err != nil {
@@ -62,7 +62,7 @@ func (service *productService) Add(productDto *dto.AddProductDto) (*dto.ProductD
 
 func (service *productService) Update(productDto *dto.UpdateProductDto) (*dto.ProductDetailsDto, *applicationerrors.ErrorStatus) {
 	if productDto == nil {
-		return nil, applicationerrors.BadRequest("invalid 'Product'")
+		return nil, applicationerrors.BadRequest(applicationerrors.InvalidProduct)
 	}
 
 	if err := productDto.Validate(); err != nil {

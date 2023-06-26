@@ -38,7 +38,7 @@ func getProduct(context *gin.Context) {
 	productId, errorConvert := dto.NewIdObject(id)
 
 	if errorConvert != nil {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": applicationerrors.InvalidId})
 		return
 	}
 
@@ -59,7 +59,7 @@ func addProduct(context *gin.Context) {
 	var newProduct dto.AddProductDto
 
 	if err := context.BindJSON(&newProduct); err != nil {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid Product"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": applicationerrors.InvalidProduct})
 		return
 	}
 
@@ -84,14 +84,14 @@ func updateProduct(context *gin.Context) {
 	productId, errorConvert := dto.NewIdObject(id)
 
 	if errorConvert != nil {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": applicationerrors.InvalidId})
 		return
 	}
 
 	var updateProduct dto.UpdateProductDto
 
 	if err := context.BindJSON(&updateProduct); err != nil {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid Product"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": applicationerrors.InvalidProduct})
 		return
 	}
 
@@ -117,7 +117,7 @@ func deleteProduct(context *gin.Context) {
 	productId, errorConvert := dto.NewIdObject(id)
 
 	if errorConvert != nil {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": applicationerrors.InvalidId})
 		return
 	}
 

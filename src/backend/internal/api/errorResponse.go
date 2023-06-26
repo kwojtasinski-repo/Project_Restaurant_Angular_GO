@@ -20,7 +20,7 @@ func writeErrorResponse(context *gin.Context, errorStatus errors.ErrorStatus) {
 	}
 
 	if errorStatus.Status >= 500 && errorStatus.Status <= 599 {
-		context.IndentedJSON(errorStatus.Status, gin.H{"errors": "Something bad happen"})
+		context.IndentedJSON(errorStatus.Status, gin.H{"errors": errors.GenericError})
 		return
 	}
 }

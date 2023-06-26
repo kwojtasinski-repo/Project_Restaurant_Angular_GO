@@ -35,7 +35,7 @@ func addCart(context *gin.Context) {
 	var newCart dto.AddCart
 
 	if err := context.BindJSON(&newCart); err != nil {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid Cart"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": applicationerrors.InvalidCart})
 		return
 	}
 
@@ -62,7 +62,7 @@ func deleteCart(context *gin.Context) {
 	cartId, errorConvertCart := dto.NewIdObject(id)
 	userId := context.Keys["userId"].(dto.IdObject)
 	if errorConvertCart != nil {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": applicationerrors.InvalidId})
 		return
 	}
 

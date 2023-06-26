@@ -34,7 +34,7 @@ func CreateUserService(repo repositories.UserRepository, passwordHasher Password
 
 func (service *userService) Register(addUser *dto.AddUserDto) (*dto.UserDto, *applicationerrors.ErrorStatus) {
 	if addUser == nil {
-		return nil, applicationerrors.BadRequest("Invalid User")
+		return nil, applicationerrors.BadRequest(applicationerrors.InvalidUser)
 	}
 
 	if err := addUser.Validate(); err != nil {
@@ -48,7 +48,7 @@ func (service *userService) Register(addUser *dto.AddUserDto) (*dto.UserDto, *ap
 	}
 
 	if exists {
-		return nil, applicationerrors.BadRequest("Invalid Email or Password")
+		return nil, applicationerrors.BadRequest(applicationerrors.InvalidEmailPassword)
 	}
 
 	hashedPassword, err := service.passwordHasher.HashPassword(addUser.Password)
@@ -129,12 +129,12 @@ func (service *userService) Login(signInDto dto.SignInDto) (*dto.SessionDto, *ap
 	}
 
 	if user == nil {
-		return nil, applicationerrors.BadRequest("Invalid Credentials")
+		return nil, applicationerrors.BadRequest(applicationerrors.InvalidCredentials)
 	}
 
 	matched := service.passwordHasher.CheckPasswordHash(signInDto.Password, user.Password)
 	if !matched {
-		return nil, applicationerrors.BadRequest("Invalid Credentials")
+		return nil, applicationerrors.BadRequest(applicationerrors.InvalidCredentials)
 	}
 
 	session, errSession := service.sessionService.CreateSession(*user)

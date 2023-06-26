@@ -37,7 +37,7 @@ func (service *cartService) AddToCart(addCart dto.AddCart) *applicationerrors.Er
 
 	userId, err := valueobjects.NewId(addCart.UserId.ValueInt)
 	if err != nil {
-		return applicationerrors.BadRequest("Invalid UserId")
+		return applicationerrors.BadRequest(applicationerrors.InvalidUserId)
 	}
 
 	cart, err := entities.NewCart(0, entities.User{Id: *userId}, *product)

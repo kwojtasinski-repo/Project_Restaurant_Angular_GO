@@ -104,7 +104,7 @@ func (service *orderService) AddFromCart() (*dto.OrderDetailsDto, *applicationer
 		return nil, applicationerrors.InternalError(err.Error())
 	}
 	if len(productsInCart) == 0 {
-		return nil, applicationerrors.BadRequest("'Cart' is empty, add something before create an 'Order'")
+		return nil, applicationerrors.BadRequest(applicationerrors.AddOrderEmptyCart)
 	}
 
 	var order *entities.Order
@@ -165,10 +165,6 @@ func (service *orderService) Get(orderId int64) (*dto.OrderDetailsDto, *applicat
 }
 
 func (service *orderService) GetAll() ([]dto.OrderDto, *applicationerrors.ErrorStatus) {
-	if service.sessionProvider.Role != "admin" {
-		return nil, applicationerrors.Forbidden()
-	}
-
 	ordersFromRepo, err := service.repo.GetAll()
 	if err != nil {
 		return nil, applicationerrors.InternalError(err.Error())

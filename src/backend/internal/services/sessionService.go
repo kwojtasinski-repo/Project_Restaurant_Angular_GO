@@ -96,7 +96,7 @@ func (service *sessionService) GetUserSessions(userId int64) ([]dto.SessionDto, 
 	newUserId, err = valueobjects.NewId(userId)
 
 	if err != nil {
-		return nil, applicationerrors.BadRequest("Invalid UserId")
+		return nil, applicationerrors.BadRequest(applicationerrors.InvalidUserId)
 	}
 
 	sessions, err = service.repo.GetSessionsByUserId(*newUserId)
@@ -118,10 +118,10 @@ func (service *sessionService) ManageSession(sessionDto dto.SessionDto) (*dto.Se
 		return nil, applicationerrors.InternalError(err.Error())
 	}
 	if session == nil {
-		return nil, applicationerrors.UnAuthorizedWithMessage("Invalid Cookie")
+		return nil, applicationerrors.UnAuthorizedWithMessage(applicationerrors.InvalidCookie)
 	}
 	if session.Expiry().Before(time.Now().UTC().Add(time.Duration(settings.CookieLifeTime * -1))) {
-		return nil, applicationerrors.UnAuthorizedWithMessage("Invalid Cookie")
+		return nil, applicationerrors.UnAuthorizedWithMessage(applicationerrors.InvalidCookie)
 	}
 
 	userId := session.UserId()
@@ -159,7 +159,7 @@ func (service *sessionService) ManageSession(sessionDto dto.SessionDto) (*dto.Se
 func (service *sessionService) RevokeAllUsersSessions(userId int64) *applicationerrors.ErrorStatus {
 	newUserId, err := valueobjects.NewId(userId)
 	if err != nil {
-		return applicationerrors.BadRequest("Invalid UserId")
+		return applicationerrors.BadRequest(applicationerrors.InvalidUserId)
 	}
 
 	err = service.repo.DeleteAllUsersSessions(*newUserId)

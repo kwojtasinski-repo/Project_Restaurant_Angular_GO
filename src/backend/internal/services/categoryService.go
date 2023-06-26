@@ -30,7 +30,7 @@ func CreateCategoryService(repo repositories.CategoryRepository) CategoryService
 
 func (service *categoryService) Add(categoryDto *dto.CategoryDto) (*dto.CategoryDto, *applicationerrors.ErrorStatus) {
 	if categoryDto == nil {
-		return nil, applicationerrors.BadRequest("invalid 'Category'")
+		return nil, applicationerrors.BadRequest(applicationerrors.InvalidCategory)
 	}
 
 	if err := categoryDto.Validate(); err != nil {
@@ -54,7 +54,7 @@ func (service *categoryService) Add(categoryDto *dto.CategoryDto) (*dto.Category
 
 func (service *categoryService) Update(categoryDto *dto.CategoryDto) (*dto.CategoryDto, *applicationerrors.ErrorStatus) {
 	if categoryDto == nil {
-		return nil, applicationerrors.BadRequest("invalid 'Category'")
+		return nil, applicationerrors.BadRequest(applicationerrors.InvalidCategory)
 	}
 
 	if err := categoryDto.Validate(); err != nil {

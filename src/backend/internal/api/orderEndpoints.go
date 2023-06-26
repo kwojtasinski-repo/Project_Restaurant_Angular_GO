@@ -40,7 +40,7 @@ func addOrders(context *gin.Context) {
 	var newOrder dto.AddOrderDto
 
 	if err := context.BindJSON(&newOrder); err != nil {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid Order"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": applicationerrors.InvalidOrder})
 		return
 	}
 	userId := context.Keys["userId"].(dto.IdObject)
@@ -67,7 +67,7 @@ func getOrder(context *gin.Context) {
 	orderId, errorConvert := dto.NewIdObject(id)
 
 	if errorConvert != nil {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": applicationerrors.InvalidId})
 		return
 	}
 

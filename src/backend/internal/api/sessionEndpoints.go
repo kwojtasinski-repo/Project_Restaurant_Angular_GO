@@ -21,7 +21,7 @@ func getAllUserSessions(context *gin.Context) {
 	userId, errorConvert := dto.NewIdObject(id)
 
 	if errorConvert != nil {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": applicationerrors.InvalidId})
 		return
 	}
 
@@ -43,7 +43,7 @@ func revokeAllUserSessions(context *gin.Context) {
 	userId, errorConvert := dto.NewIdObject(id)
 
 	if errorConvert != nil {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": applicationerrors.InvalidId})
 		return
 	}
 

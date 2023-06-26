@@ -91,7 +91,7 @@ func (order *Order) RemoveProduct(orderProduct OrderProduct) error {
 	}
 
 	if !exists {
-		return fmt.Errorf("'Product' with id %v is not exists", orderProduct.Id.Value())
+		return fmt.Errorf("'Product' with id %v not exists", orderProduct.Id.Value())
 	}
 
 	return nil

@@ -38,7 +38,7 @@ func getCategory(context *gin.Context) {
 	categoryId, errorConvert := dto.NewIdObject(id)
 
 	if errorConvert != nil {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": applicationerrors.InvalidId})
 		return
 	}
 
@@ -59,7 +59,7 @@ func addCategory(context *gin.Context) {
 	var newCategory dto.CategoryDto
 
 	if err := context.BindJSON(&newCategory); err != nil {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid Category"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": applicationerrors.InvalidCategory})
 		return
 	}
 
@@ -84,14 +84,14 @@ func updateCategory(context *gin.Context) {
 	categoryId, errorConvert := dto.NewIdObject(id)
 
 	if errorConvert != nil {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": applicationerrors.InvalidId})
 		return
 	}
 
 	var updateCategory dto.CategoryDto
 
 	if err := context.BindJSON(&updateCategory); err != nil {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid Category"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": applicationerrors.InvalidCategory})
 		return
 	}
 
@@ -116,7 +116,7 @@ func deleteCategory(context *gin.Context) {
 	categoryId, errorConvert := dto.NewIdObject(id)
 
 	if errorConvert != nil {
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": "Invalid id"})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"message": applicationerrors.InvalidId})
 		return
 	}
 

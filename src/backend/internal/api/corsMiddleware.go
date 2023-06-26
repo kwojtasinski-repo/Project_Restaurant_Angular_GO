@@ -13,6 +13,19 @@ var (
 		"http://",
 		"https://",
 	}
+
+	AccessControlAllowCredentials = "Access-Control-Allow-Credentials"
+	AccessControlExposeHeaders    = "Access-Control-Expose-Headers"
+	AccessControlAllowOrigin      = "Access-Control-Allow-Origin"
+	AccessControlAllowMethods     = "Access-Control-Allow-Methods"
+	AccessControlAllowHeaders     = "Access-Control-Allow-Headers"
+	AccessControlRequestMethod    = "Access-Control-Request-Method"
+	AccessControlRequestHeaders   = "Access-Control-Request-Headers"
+
+	Vary   = "Vary"
+	Origin = "Origin"
+	All    = "*"
+	Allow  = "true"
 )
 
 type CorsConfig struct {
@@ -95,15 +108,15 @@ func normalizeToUpper(values []string) []string {
 func generateNormalHeaders(c CorsConfig, allowAllOrigins bool) http.Header {
 	headers := make(http.Header)
 	if c.AllowCredentials {
-		headers.Set("Access-Control-Allow-Credentials", "true")
+		headers.Set(AccessControlAllowCredentials, Allow)
 	}
 	if len(c.ExposeHeaders) > 0 {
-		headers.Set("Access-Control-Expose-Headers", strings.Join(normalizeToLower(c.ExposeHeaders), ","))
+		headers.Set(AccessControlExposeHeaders, strings.Join(normalizeToLower(c.ExposeHeaders), ","))
 	}
 	if allowAllOrigins {
-		headers.Set("Access-Control-Allow-Origin", "*")
+		headers.Set(AccessControlAllowOrigin, All)
 	} else {
-		headers.Set("Vary", "Origin")
+		headers.Set(Vary, Origin)
 	}
 	return headers
 }
@@ -111,21 +124,21 @@ func generateNormalHeaders(c CorsConfig, allowAllOrigins bool) http.Header {
 func generatePreflightHeaders(c CorsConfig, allowAllOrigins bool) http.Header {
 	headers := make(http.Header)
 	if c.AllowCredentials {
-		headers.Set("Access-Control-Allow-Credentials", "true")
+		headers.Set(AccessControlAllowCredentials, Allow)
 	}
 	if len(c.AllowMethods) > 0 {
-		headers.Set("Access-Control-Allow-Methods", strings.Join(normalizeToUpper(c.AllowMethods), ","))
+		headers.Set(AccessControlAllowMethods, strings.Join(normalizeToUpper(c.AllowMethods), ","))
 	}
 	if len(c.AllowHeaders) > 0 {
 		allowHeaders := normalizeToLower(c.AllowHeaders)
-		headers.Set("Access-Control-Allow-Headers", strings.Join(allowHeaders, ","))
+		headers.Set(AccessControlAllowHeaders, strings.Join(allowHeaders, ","))
 	}
 	if allowAllOrigins {
-		headers.Set("Access-Control-Allow-Origin", "*")
+		headers.Set(AccessControlAllowOrigin, All)
 	} else {
-		headers.Add("Vary", "Origin")
-		headers.Add("Vary", "Access-Control-Request-Method")
-		headers.Add("Vary", "Access-Control-Request-Headers")
+		headers.Add(Vary, Origin)
+		headers.Add(Vary, AccessControlRequestMethod)
+		headers.Add(Vary, AccessControlRequestHeaders)
 	}
 	return headers
 }
@@ -154,7 +167,7 @@ func initCors(config CorsConfig) *corsConfig {
 func CORSMiddleware(corsConfig CorsConfig) gin.HandlerFunc {
 	corsSetup := initCors(corsConfig)
 	return func(c *gin.Context) {
-		origin := c.Request.Header.Get("Origin")
+		origin := c.Request.Header.Get(Origin)
 		if len(origin) == 0 {
 			// not apply if is not a CORS request
 			return
@@ -170,7 +183,7 @@ func CORSMiddleware(corsConfig CorsConfig) gin.HandlerFunc {
 			return
 		}
 
-		if c.Request.Method == "OPTIONS" {
+		if c.Request.Method == http.MethodOptions {
 			corsSetup.preflightRequest(c)
 			defer c.AbortWithStatus(http.StatusNoContent)
 		} else {
@@ -178,7 +191,7 @@ func CORSMiddleware(corsConfig CorsConfig) gin.HandlerFunc {
 		}
 
 		if !corsSetup.allowAllOrigins {
-			c.Header("Access-Control-Allow-Origin", origin)
+			c.Header(AccessControlAllowOrigin, origin)
 		}
 	}
 }
