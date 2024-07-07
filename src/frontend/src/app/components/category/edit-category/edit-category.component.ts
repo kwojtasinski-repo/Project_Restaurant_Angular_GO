@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { getError } from 'src/app/stores/category/category.selectors';
 import { CategoryState } from 'src/app/stores/category/category.state';
 import { getValidationMessage } from 'src/app/validations/validations';
-import { debounceTime, takeUntil, Subject, take } from 'rxjs';
+import { debounceTime, takeUntil, Subject, take, tap, finalize } from 'rxjs';
 import * as CategoryActions from 'src/app/stores/category/category.actions';
 import { Category } from 'src/app/models/category';
 import { CategoryService } from 'src/app/services/category.service';
@@ -28,28 +28,34 @@ export class EditCategoryComponent implements OnInit, OnDestroy {
   constructor(private store: Store<CategoryState>, private categoryService: CategoryService, private route: ActivatedRoute, private spinnerService: NgxSpinnerService) { }
 
   public ngOnInit(): void {
-    this.spinnerService.show();
     this.categoryForm = new FormGroup({
       categoryName: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(100), Validators.minLength(3)])),
     });
     const id = this.route.snapshot.paramMap.get('id') ?? '';
     this.categoryService.get(id)
-      .pipe(take(1))
+      .pipe(
+        take(1),
+        tap(() => {
+          this.isLoading = true;
+          this.spinnerService.show();
+        }),
+        finalize(() => {
+          this.isLoading = false;
+          this.spinnerService.hide();
+        })
+      )
       .subscribe({ next: c => {
           this.category = c;
           if (c) {
             this.categoryForm.get('categoryName')?.setValue(c?.name ?? '');
             this.store.dispatch(CategoryActions.categoryFormUpdate({ category: c }));
           }
-          this.isLoading = false;
-          this.spinnerService.hide();
         }, error: error => {
           if (error.status === 0) {
             this.error = 'Sprawdź połączenie z internetem';
           } else if (error.status === 500) {
             this.error = 'Coś poszło nie tak, spróbuj ponownie później';
           }
-          this.spinnerService.hide();
           console.error(error);
         }
       });

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Category } from 'src/app/models/category';
 import { CategoryService } from 'src/app/services/category.service';
-import { take } from 'rxjs';
+import { finalize, take, tap } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
@@ -19,22 +19,28 @@ export class CategoriesComponent implements OnInit {
   constructor(private categoryService: CategoryService, private spinnerService: NgxSpinnerService) { }
 
   public ngOnInit(): void {
-    this.spinnerService.show();
     this.categoryService.getAll()
-      .pipe(take(1))
+      .pipe(
+        take(1),
+        tap(() => {
+          this.isLoading = true;
+          this.spinnerService.show();
+        },
+        finalize(() => {
+          this.isLoading = false;
+          this.spinnerService.hide();
+        })
+      )
+      )
       .subscribe({ next: c => {
           this.categories = c;
           this.categoriesToShow = c;
-          this.isLoading = false;
-          this.spinnerService.hide();
         }, error: error => {
           if (error.status === 0) {
             this.error = 'Sprawdź połączenie z internetem';
           } else if (error.status === 500) {
             this.error = 'Coś poszło nie tak, spróbuj ponownie później';
           }
-          this.isLoading = false;
-          this.spinnerService.hide();
           console.error(error);
         }
       });

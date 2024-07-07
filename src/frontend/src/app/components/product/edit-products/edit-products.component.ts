@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { take } from 'rxjs';
+import { delay, finalize, forkJoin, take, tap } from 'rxjs';
 import { Product } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
 import * as ProductActions from 'src/app/stores/product/product.actions';
@@ -31,33 +31,28 @@ export class EditProductsComponent implements OnInit, OnDestroy {
     private spinnerService: NgxSpinnerService) { }
 
   public ngOnInit(): void {
-    this.spinnerService.show();
     const id = this.route.snapshot.paramMap.get('id') ?? '';
-    this.productService.get(id)
-      .pipe(take(1))
-      .subscribe({ next: p => {
+
+    forkJoin([this.productService.get(id), this.categoryService.getAll()])
+      .pipe(
+        take(1),
+        tap(() => {
+          this.isLoading = true;
+          this.spinnerService.show();
+        }),
+        finalize(() => {
+          this.isLoading = false;
+          this.spinnerService.hide();
+        })
+      )
+      .subscribe({ next: ([p, c]) => {
           this.product = p;
+          this.categories = c;
           if (this.product) {
             this.store.dispatch(ProductActions.productFormUpdate({
               product: this.product
             }));
           }
-          this.isLoading = false;
-          this.spinnerService.hide();
-        }, error: error => {
-          if (error.status === 0) {
-            this.error = 'Sprawdź połączenie z internetem';
-          } else if (error.status === 500) {
-            this.error = 'Coś poszło nie tak, spróbuj ponownie później';
-          }
-          this.spinnerService.hide();
-          console.error(error);
-        }
-      });
-    this.categoryService.getAll()
-      .pipe(take(1))
-      .subscribe({ next: c => {
-          this.categories = c;
         }, error: error => {
           if (error.status === 0) {
             this.error = 'Sprawdź połączenie z internetem';

@@ -24,7 +24,6 @@ export class ViewProductsComponent implements OnInit, OnDestroy {
     private authService: AuthStateService, private cartStore: Store<CartState>) { }
 
   public ngOnInit(): void {
-    this.spinnerService.show();
     const id = this.route.snapshot.paramMap.get('id') ?? '';
     this.productService.get(id)
       .pipe(
