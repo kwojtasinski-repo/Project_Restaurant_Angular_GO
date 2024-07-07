@@ -17,3 +17,8 @@ $footerSize: 50px;
     opacity: 25%;
     z-index: -1;
 }
+
+:host ::ng-deep .reset-button-space {
+    padding: 0;
+    margin: 0;
+}
