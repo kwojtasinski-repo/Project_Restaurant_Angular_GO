@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { EMPTY, catchError, finalize, forkJoin, take, tap } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, catchError, finalize, forkJoin, map, 
+  shareReplay, take, tap } from 'rxjs';
 import { Product } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
 import * as ProductActions from 'src/app/stores/product/product.actions';
@@ -18,11 +19,11 @@ import { Category } from 'src/app/models/category';
   styleUrls: ['./edit-products.component.scss']
 })
 export class EditProductsComponent implements OnInit, OnDestroy {
-  public product: Product | undefined;
+  public product$: Observable<Product | undefined> | undefined;
+  public categories$: Observable<Category[]> = new BehaviorSubject([]);
   public isLoading = true;
   public error$ = this.store.select(getError);
   public error: string | undefined;
-  public categories: Category[] = [];
 
   constructor(private productService: ProductService,
     private route: ActivatedRoute,
@@ -33,9 +34,10 @@ export class EditProductsComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id') ?? '';
 
-    forkJoin([this.productService.get(id), this.categoryService.getAll()])
+    const pipGetAll$ = forkJoin([this.productService.get(id), this.categoryService.getAll()])
       .pipe(
         take(1),
+        shareReplay(),
         tap(() => {
           this.isLoading = true;
           this.spinnerService.show();
@@ -53,15 +55,18 @@ export class EditProductsComponent implements OnInit, OnDestroy {
           console.error(error);
           return EMPTY;
         })
-      )
-      .subscribe(([p, c]) => {
-          this.product = p;
-          this.categories = c;
-          if (this.product) {
-            this.store.dispatch(ProductActions.productFormUpdate({
-              product: this.product
-            }));
-          }
+      );
+
+      this.product$ = pipGetAll$.pipe(
+        map(([product, _]) => product)
+      );
+      this.categories$ = pipGetAll$.pipe(
+        map(([_, categories]) => categories)
+      );
+      pipGetAll$.subscribe(([product, _]) => {
+        if (product) {
+          this.store.dispatch(ProductActions.productFormUpdate({ product }));
+        }
       });
   }
 

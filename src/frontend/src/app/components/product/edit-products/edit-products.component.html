@@ -20,7 +20,7 @@
     </div>
 
     <ng-template #showProduct>
-        <ng-container *ngIf="product;then productFound else productNotFound"></ng-container>
+        <ng-container *ngIf="(product$ | async);then productFound else productNotFound"></ng-container>
     </ng-template>
 
     <ng-template #productFound>
@@ -30,9 +30,9 @@
             </div>
         </div>
         <app-product-form 
-            [product]="product" 
+            [product]="(product$ | async)" 
             [buttonNames]="['Zatwierdź', 'Anuluj']"
-            [categories]="categories"
+            [categories]="(categories$ | async) ?? []"
             (productChanged)="onProductChange($event)" 
             (onSubmit)="onSubmit()" 
             (onCancel)="onCancel()"></app-product-form>

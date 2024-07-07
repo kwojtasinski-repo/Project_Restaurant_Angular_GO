@@ -12,7 +12,7 @@ import { getValidationMessage } from 'src/app/validations/validations';
 })
 export class ProductFormComponent implements OnDestroy {
   @Input()
-  public product: Product | undefined;
+  public product: Product | null | undefined;
   @Input()
   public categories: Category[] = [];
 
