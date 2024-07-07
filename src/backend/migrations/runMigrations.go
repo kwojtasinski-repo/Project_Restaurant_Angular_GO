@@ -47,10 +47,6 @@ func UpMigrations(config config.Config, migrationsToApply string) {
 	}
 	defer migrate.Close()
 
-	if err != nil {
-		panic(err)
-	}
-
 	checkVersion(*migrate)
 	log.Println("Migrating up database schema. Current version ", currentMigrationVersion)
 	if migrationsApply == 0 {
