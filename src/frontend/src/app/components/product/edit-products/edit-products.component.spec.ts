@@ -46,6 +46,7 @@ describe('EditProductsComponent', () => {
 
     fixture = TestBed.createComponent(EditProductsComponent);
     component = fixture.componentInstance;
+    component.isLoading = false;
     fixture.detectChanges();
   });
 
@@ -54,6 +55,7 @@ describe('EditProductsComponent', () => {
   });
 
   it('should inform when product is not found', () => {
+    
     const notFoundInformation = fixture.nativeElement.querySelector('.alert.alert-danger > h5');
 
     expect(notFoundInformation).not.toBeUndefined();
