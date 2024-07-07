@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { getError } from 'src/app/stores/category/category.selectors';
 import { CategoryState } from 'src/app/stores/category/category.state';
 import { getValidationMessage } from 'src/app/validations/validations';
-import { debounceTime, takeUntil, Subject, take, tap, finalize } from 'rxjs';
+import { debounceTime, takeUntil, Subject, take, tap, finalize, catchError, EMPTY } from 'rxjs';
 import * as CategoryActions from 'src/app/stores/category/category.actions';
 import { Category } from 'src/app/models/category';
 import { CategoryService } from 'src/app/services/category.service';
@@ -42,22 +42,23 @@ export class EditCategoryComponent implements OnInit, OnDestroy {
         finalize(() => {
           this.isLoading = false;
           this.spinnerService.hide();
-        })
-      )
-      .subscribe({ next: c => {
-          this.category = c;
-          if (c) {
-            this.categoryForm.get('categoryName')?.setValue(c?.name ?? '');
-            this.store.dispatch(CategoryActions.categoryFormUpdate({ category: c }));
-          }
-        }, error: error => {
+        }),
+        catchError((error) => {
           if (error.status === 0) {
             this.error = 'Sprawdź połączenie z internetem';
           } else if (error.status === 500) {
             this.error = 'Coś poszło nie tak, spróbuj ponownie później';
           }
           console.error(error);
-        }
+          return EMPTY;
+        })
+      )
+      .subscribe(c => {
+          this.category = c;
+          if (c) {
+            this.categoryForm.get('categoryName')?.setValue(c?.name ?? '');
+            this.store.dispatch(CategoryActions.categoryFormUpdate({ category: c }));
+          }
       });
   }
 

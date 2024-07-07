@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { finalize, take, tap } from 'rxjs';
+import { EMPTY, catchError, finalize, take, tap } from 'rxjs';
 import { Product } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -35,18 +35,19 @@ export class ViewProductsComponent implements OnInit, OnDestroy {
         finalize(() => {
           this.isLoading = false;
           this.spinnerService.hide();
-        })
-      )
-      .subscribe({ next: p => {
-          this.product = p
-        }, error: error => {
+        }),
+        catchError((error) => {
           if (error.status === 0) {
             this.error = 'Sprawdź połączenie z internetem';
           } else if (error.status === 500) {
             this.error = 'Coś poszło nie tak, spróbuj ponownie później';
           }
           console.error(error);
-        }
+          return EMPTY;
+        })
+      )
+      .subscribe(p => {
+          this.product = p;
       });
   }
 

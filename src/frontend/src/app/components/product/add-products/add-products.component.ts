@@ -6,7 +6,7 @@ import { Product } from 'src/app/models/product';
 import { getError } from 'src/app/stores/product/product.selectors';
 import { Category } from 'src/app/models/category';
 import { CategoryService } from 'src/app/services/category.service';
-import { take } from 'rxjs';
+import { EMPTY, catchError, take } from 'rxjs';
 
 @Component({
   selector: 'app-add-products',
@@ -22,17 +22,20 @@ export class AddProductsComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.categoryService.getAll()
-      .pipe(take(1))
-      .subscribe({ next: c => {
-          this.categories = c;
-        }, error: error => {
+      .pipe(
+        take(1),
+        catchError((error) => {
           if (error.status === 0) {
             this.error = 'Sprawdź połączenie z internetem';
           } else if (error.status === 500) {
             this.error = 'Coś poszło nie tak, spróbuj ponownie później';
           }
           console.error(error);
-        }
+          return EMPTY;
+        })
+      )
+      .subscribe(c => {
+          this.categories = c;
       });
   }
 

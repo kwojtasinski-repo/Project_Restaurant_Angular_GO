@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { finalize, take, tap } from 'rxjs';
+import { EMPTY, catchError, finalize, take, tap } from 'rxjs';
 import { Order } from 'src/app/models/order';
 import { OrderService } from 'src/app/services/order.service';
 
@@ -22,19 +22,20 @@ export class MyOrdersComponent implements OnInit {
       .pipe(
         take(1),
         tap(() => this.spinnerService.show()),
-        finalize(() => this.spinnerService.hide())
-      )
-      .subscribe({ next: o => {
-          this.orders = o;
-          this.ordersToShow = o;
-        }, error: error => {
+        finalize(() => this.spinnerService.hide()),
+        catchError((error) => {
           if (error.status === 0) {
             this.error = 'Sprawdź połączenie z internetem';
           } else if (error.status === 500) {
             this.error = 'Coś poszło nie tak, spróbuj ponownie później';
           }
           console.error(error);
-        }
+          return EMPTY;
+        })
+      )
+      .subscribe(o => {
+          this.orders = o;
+          this.ordersToShow = o;
       });
   }
 

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Product } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
-import { finalize, take, tap } from 'rxjs';
+import { EMPTY, catchError, finalize, take, tap } from 'rxjs';
 import { AuthStateService } from 'src/app/services/auth-state.service';
 import { Store } from "@ngrx/store";
 import { CartState } from 'src/app/stores/cart/cart.state';
@@ -30,19 +30,20 @@ export class MenuComponent implements OnInit, OnDestroy {
       .pipe(
         take(1),
         tap(() => this.spinnerService.show()),
-        finalize(() => this.spinnerService.hide())
-      )
-      .subscribe({ next: p => {
-          this.products = p;
-          this.productsToShow = p;
-        }, error: error => {
+        finalize(() => this.spinnerService.hide()),
+        catchError((error) => {
           if (error.status === 0) {
             this.error = 'Sprawdź połączenie z internetem';
           } else if (error.status === 500) {
             this.error = 'Coś poszło nie tak, spróbuj ponownie później';
           }
           console.error(error);
-        }
+          return EMPTY;
+        })
+      )
+      .subscribe(p => {
+          this.products = p;
+          this.productsToShow = p;
       });
   }
 

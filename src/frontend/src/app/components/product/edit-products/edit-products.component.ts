@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { delay, finalize, forkJoin, take, tap } from 'rxjs';
+import { EMPTY, catchError, finalize, forkJoin, take, tap } from 'rxjs';
 import { Product } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
 import * as ProductActions from 'src/app/stores/product/product.actions';
@@ -43,9 +43,18 @@ export class EditProductsComponent implements OnInit, OnDestroy {
         finalize(() => {
           this.isLoading = false;
           this.spinnerService.hide();
+        }),
+        catchError((error) => {
+          if (error.status === 0) {
+            this.error = 'Sprawdź połączenie z internetem';
+          } else if (error.status === 500) {
+            this.error = 'Coś poszło nie tak, spróbuj ponownie później';
+          }
+          console.error(error);
+          return EMPTY;
         })
       )
-      .subscribe({ next: ([p, c]) => {
+      .subscribe(([p, c]) => {
           this.product = p;
           this.categories = c;
           if (this.product) {
@@ -53,14 +62,6 @@ export class EditProductsComponent implements OnInit, OnDestroy {
               product: this.product
             }));
           }
-        }, error: error => {
-          if (error.status === 0) {
-            this.error = 'Sprawdź połączenie z internetem';
-          } else if (error.status === 500) {
-            this.error = 'Coś poszło nie tak, spróbuj ponownie później';
-          }
-          console.error(error);
-        }
       });
   }
 
