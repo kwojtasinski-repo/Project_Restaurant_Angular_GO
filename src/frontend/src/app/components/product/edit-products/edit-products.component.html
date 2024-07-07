@@ -29,7 +29,7 @@
                 {{ error$ | async }}
             </div>
         </div>
-        <app-product-form 
+    <app-product-form
             [product]="(product$ | async)" 
             [buttonNames]="['Zatwierdź', 'Anuluj']"
             [categories]="(categories$ | async) ?? []"
