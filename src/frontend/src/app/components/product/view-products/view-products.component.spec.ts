@@ -118,20 +118,24 @@ describe('ViewProductsComponent when product available', () => {
   });
 
   it('should show product when available', () => {
+    let productInComponent: Product | undefined;
+    component.product$?.subscribe(p => productInComponent = p);
     const productDescription = fixture.nativeElement.querySelector('.product-description');
 
     expect(fixture.componentInstance).not.toBeNull();
     expect(fixture.componentInstance).not.toBeUndefined();
     expect(fixture.componentInstance.isLoading).not.toBeTrue();
-    expect(productDescription.innerHTML).toContain(component.product?.name);
-    expect(productDescription.innerHTML).toContain(component.product?.price);
-    expect(productDescription.innerHTML).toContain(component.product?.description);
-    expect(productDescription.innerHTML).toContain(component.product?.category?.name);
+    expect(productDescription.innerHTML).toContain(productInComponent?.name);
+    expect(productDescription.innerHTML).toContain(productInComponent?.price);
+    expect(productDescription.innerHTML).toContain(productInComponent?.description);
+    expect(productDescription.innerHTML).toContain(productInComponent?.category?.name);
   });
 
   it('should show infromation when product is deleted', () => {
+    let productInComponent: Product | undefined;
+    component.product$?.subscribe(p => productInComponent = p);
     let product: Product | undefined;
-    productService.get(fixture.componentInstance.product?.id ?? '1').pipe(take(1)).subscribe(p => product = p);
+    productService.get(productInComponent?.id ?? '1').pipe(take(1)).subscribe(p => product = p);
     product!.deleted = true;
     productService.update({
       id: product!.id,
