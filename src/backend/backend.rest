@@ -152,6 +152,10 @@ Cookie: {{cookie}}
     ]
 }
 
+### Logout
+POST {{path}}/sign-out
+Cookie: {{cookie}}
+
 ### Admin section
 ### Login User
 # @name loginAdmin
@@ -166,5 +170,9 @@ Content-Type: application/json
 @cookieAdmin = {{loginAdmin.response.headers.Set-Cookie}}
 
 ### GET All User Session with id 1
-GET {{path}}/sessions/2
+GET {{path}}/sessions/rYjKdDb
+Cookie: {{cookieAdmin}}
+
+### Logout
+POST {{path}}/sign-out
 Cookie: {{cookieAdmin}}

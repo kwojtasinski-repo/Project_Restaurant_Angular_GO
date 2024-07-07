@@ -21,7 +21,8 @@ func AuthMiddleware() gin.HandlerFunc {
 		var session dto.SessionDto
 		err = json.Unmarshal(cookieValue, &session)
 		if err != nil {
-			writeErrorResponse(c, *applicationerrors.InternalError(err.Error()))
+			log.Println("ERROR: AuthMiddleware() ", err)
+			c.AbortWithStatusJSON(401, gin.H{"errors": applicationerrors.InvalidCookie})
 			return
 		}
 
@@ -33,7 +34,9 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		sessionService, errCreateObject := createSessionService()
 		if errCreateObject != nil {
+			c.Abort()
 			writeErrorResponse(c, *applicationerrors.InternalError(errCreateObject.Error()))
+			return
 		}
 
 		// think if cookie need to be updated after refreshed session?
