@@ -19,6 +19,7 @@ import { take } from 'rxjs';
 import { Category } from 'src/app/models/category';
 import { ProductState } from 'src/app/stores/product/product.state';
 import { Store } from '@ngrx/store';
+import { Product } from 'src/app/models/product';
 
 describe('EditProductsComponent', () => {
   let component: EditProductsComponent;
@@ -69,9 +70,10 @@ describe('EditProductsComponent when product is available', () => {
   let fixture: ComponentFixture<EditProductsComponent>;
   let formater: Intl.NumberFormat;
   let store: Store<ProductState>;
+  let productId = '1'
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
       declarations: [
         EditProductsComponent,
         ProductFormComponent,
@@ -96,7 +98,7 @@ describe('EditProductsComponent when product is available', () => {
           useValue: {
             snapshot: { 
               paramMap:  convertToParamMap({
-                id: '1'
+                id: productId
               }),
             },
           },
@@ -124,7 +126,11 @@ describe('EditProductsComponent when product is available', () => {
   it('should show product values in inputs', () => {
     fixture.detectChanges();
     let categories: Category[] = [];
+    let categoriesInComponent: Category[] = [];
+    let productInComponent: Product | undefined;
     categoryService.getAll().pipe(take(1)).subscribe(c => categories = c);
+    component.categories$.subscribe(c => categoriesInComponent = c);
+    component.product$?.subscribe(p => productInComponent = p);
     const productName = fixture.nativeElement.querySelector('#product-name');
     const productDescription = fixture.nativeElement.querySelector('#product-description');
     const productCost = fixture.nativeElement.querySelector('#product-cost');
@@ -132,16 +138,16 @@ describe('EditProductsComponent when product is available', () => {
 
     expect(productName).not.toBeUndefined();
     expect(productName).not.toBeNull();
-    expect(productName.value).toEqual(component.product?.name);
+    expect(productName.value).toEqual(productInComponent?.name);
     expect(productDescription).not.toBeUndefined();
     expect(productDescription).not.toBeNull();
-    expect(productDescription.value).toEqual(component.product?.description);
+    expect(productDescription.value).toEqual(productInComponent?.description);
     expect(productCost).not.toBeUndefined();
     expect(productCost).not.toBeNull();
-    expect(productCost.value).toEqual(formater.format(component.product?.price ?? 0));
+    expect(productCost.value).toEqual(formater.format(productInComponent?.price ?? 0));
     expect(productCategory).not.toBeUndefined();
     expect(productCategory).not.toBeNull();
-    expect((new Number(categories[productCategory.selectedIndex]?.id).valueOf() - 1).toString()).toEqual(component.product?.category?.id ?? '0');
+    expect((new Number(categories[productCategory.selectedIndex]?.id).valueOf() - 1).toString()).toEqual(productInComponent?.category?.id ?? '0');
   });
 
   it('should change inputs while enter new value', () => {
