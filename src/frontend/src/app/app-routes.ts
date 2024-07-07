@@ -73,29 +73,30 @@ const registerSuccessGuard = (next: ActivatedRouteSnapshot, _: RouterStateSnapsh
 
 const adminRoutes = [
     {
-        path: 'products/add',
-        component: AddProductsComponent,
-        canActivate: [adminGuard]
-    },
-    {
-        path: 'products/edit/:id',
-        component: EditProductsComponent,
-        canActivate: [adminGuard]
-    },
-    {
-        path: 'categories',
-        component: CategoriesComponent,
-        canActivate: [adminGuard]
-    },
-    {
-        path: 'categories/add',
-        component: AddCategoryComponent,
-        canActivate: [adminGuard]
-    },
-    {
-        path: 'categories/edit/:id',
-        component: EditCategoryComponent,
-        canActivate: [adminGuard]
+        path: '',
+        canActivate: [adminGuard],
+        children: [
+            {
+                path: 'products/add',
+                component: AddProductsComponent
+            },
+            {
+                path: 'products/edit/:id',
+                component: EditProductsComponent
+            },
+            {
+                path: 'categories',
+                component: CategoriesComponent
+            },
+            {
+                path: 'categories/add',
+                component: AddCategoryComponent
+            },
+            {
+                path: 'categories/edit/:id',
+                component: EditCategoryComponent
+            }
+        ]
     }
 ];
 

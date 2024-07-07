@@ -6,7 +6,9 @@
         <div class="collapse navbar-collapse" [collapse]="isCollapsed" id="navbarText">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="(user$ | async)?.deleted === null || (user$ | async)?.deleted === false">
                 <li class="nav-item" *ngFor="let routerLink of routerLinks">
-                    <a [class]="normalizeUrl(currentUrl$ | async)?.startsWith(routerLink.path) ? 'nav-link active' : 'nav-link'" [routerLink]="routerLink.path">{{ routerLink.name }}</a>
+                    <ng-container *ngIf="!routerLink.userRole || (((user$ | async)?.role) === routerLink.userRole)">
+                        <a [class]="normalizeUrl(currentUrl$ | async)?.startsWith(routerLink.path) ? 'nav-link active' : 'nav-link'" [routerLink]="routerLink.path">{{ routerLink.name }}</a>
+                    </ng-container>
                 </li>
             </ul>
             <div class="d-flex text-white text-break user-info">
