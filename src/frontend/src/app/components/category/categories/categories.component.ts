@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Category } from 'src/app/models/category';
 import { CategoryService } from 'src/app/services/category.service';
-import { EMPTY, catchError, finalize, take, tap } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, catchError, finalize,
+  map, shareReplay, take, tap } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
@@ -10,8 +11,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
   styleUrls: ['./categories.component.scss']
 })
 export class CategoriesComponent implements OnInit {
-  public categories: Category[] = [];
-  public categoriesToShow: Category[] = [];
+  public categories$: Observable<Category[]> = new BehaviorSubject([]);
+  public categoriesToShow$: Observable<Category[]> = new BehaviorSubject([]);
   public term: string = '';
   public isLoading: boolean = true;
   public error: string | undefined;
@@ -19,9 +20,10 @@ export class CategoriesComponent implements OnInit {
   constructor(private categoryService: CategoryService, private spinnerService: NgxSpinnerService) { }
 
   public ngOnInit(): void {
-    this.categoryService.getAll()
+    const getAll$ = this.categoryService.getAll()
       .pipe(
         take(1),
+        shareReplay(),
         tap(() => {
           this.isLoading = true;
           this.spinnerService.show();
@@ -39,14 +41,16 @@ export class CategoriesComponent implements OnInit {
           console.error(error);
           return EMPTY;
         })
-      )
-      .subscribe(c => {
-          this.categories = c;
-          this.categoriesToShow = c;
-      });
+      );
+
+      this.categories$ = getAll$;
+      this.categoriesToShow$ = getAll$;
+      getAll$.subscribe();
   }
 
   public search(term: string): void {
-    this.categoriesToShow = this.categories.filter(c => c.name.toLocaleLowerCase().startsWith(term.toLocaleLowerCase()));
+    this.categoriesToShow$ = this.categories$.pipe(
+      map(categories => categories.filter(c => c.name.toLocaleLowerCase().startsWith(term.toLocaleLowerCase())))
+    );
   }
 }

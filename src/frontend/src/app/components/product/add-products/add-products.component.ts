@@ -6,7 +6,7 @@ import { Product } from 'src/app/models/product';
 import { getError } from 'src/app/stores/product/product.selectors';
 import { Category } from 'src/app/models/category';
 import { CategoryService } from 'src/app/services/category.service';
-import { EMPTY, catchError, take } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, catchError, shareReplay, take } from 'rxjs';
 
 @Component({
   selector: 'app-add-products',
@@ -14,16 +14,17 @@ import { EMPTY, catchError, take } from 'rxjs';
   styleUrls: ['./add-products.component.scss']
 })
 export class AddProductsComponent implements OnInit, OnDestroy {  
-  public categories: Category[] = [];
+  public categories$: Observable<Category[]> = new BehaviorSubject([]);
   public error$ = this.store.select(getError);
   public error = '';
 
   constructor(private store: Store<ProductState>, private categoryService: CategoryService) { }
 
   public ngOnInit(): void {
-    this.categoryService.getAll()
+    this.categories$ = this.categoryService.getAll()
       .pipe(
         take(1),
+        shareReplay(),
         catchError((error) => {
           if (error.status === 0) {
             this.error = 'Sprawdź połączenie z internetem';
@@ -33,10 +34,7 @@ export class AddProductsComponent implements OnInit, OnDestroy {
           console.error(error);
           return EMPTY;
         })
-      )
-      .subscribe(c => {
-          this.categories = c;
-      });
+      );
   }
 
   public onProductChange(product: Product): void {

@@ -14,7 +14,7 @@ export class ProductFormComponent implements OnDestroy {
   @Input()
   public product: Product | null | undefined;
   @Input()
-  public categories: Category[] = [];
+  public categories: Category[] | null = [];
 
   @Input()
   public buttonNames: Array<string> = ['Dodaj', 'Anuluj'];

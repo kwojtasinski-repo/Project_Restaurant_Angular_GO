@@ -14,7 +14,7 @@
     </div>
     <div>
         <app-product-form
-            [categories]="categories"
+            [categories]="categories$ | async"
             (productChanged)="onProductChange($event)"
             (onSubmit)="onSubmit()"
             (onCancel)="onCancel()">

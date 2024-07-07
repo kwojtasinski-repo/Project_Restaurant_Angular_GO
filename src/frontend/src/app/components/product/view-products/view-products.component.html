@@ -9,10 +9,12 @@
 </ng-template>
 
 <ng-template #showProduct>
-    <ng-container *ngIf="product;then productFound else productNotFound"></ng-container>
+    <ng-container *ngIf="(product$ | async) as product; else productNotFound">
+        <ng-container *ngTemplateOutlet="productFound; context: { product: product }"></ng-container>
+      </ng-container>
 </ng-template>
 
-<ng-template #productFound>
+<ng-template #productFound let-product="product">
     <div class="d-flex align-items-center flex-column">
         <div class="product-description">
             <div class="text-center">

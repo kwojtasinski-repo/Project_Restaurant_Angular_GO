@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { EMPTY, catchError, finalize, take, tap } from 'rxjs';
+import { EMPTY, Observable, catchError, finalize, shareReplay, take, tap } from 'rxjs';
 import { Product } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -15,7 +15,7 @@ import { addProductToCart, clearErrors } from 'src/app/stores/cart/cart.actions'
   styleUrls: ['./view-products.component.scss']
 })
 export class ViewProductsComponent implements OnInit, OnDestroy {
-  public product: Product | undefined;
+  public product$: Observable<Product | undefined> | undefined;
   public isLoading = true;
   public user$ = this.authService.getUser();
   public error: string | undefined;
@@ -25,9 +25,10 @@ export class ViewProductsComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id') ?? '';
-    this.productService.get(id)
+    this.product$ = this.productService.get(id)
       .pipe(
         take(1),
+        shareReplay(),
         tap(() => {
           this.isLoading = true;
           this.spinnerService.show();
@@ -45,10 +46,9 @@ export class ViewProductsComponent implements OnInit, OnDestroy {
           console.error(error);
           return EMPTY;
         })
-      )
-      .subscribe(p => {
-          this.product = p;
-      });
+      );
+
+    this.product$.subscribe();
   }
 
   public ngOnDestroy(): void {

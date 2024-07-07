@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { EMPTY, catchError, finalize, take, tap } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, catchError, finalize, map, shareReplay, take, tap } from 'rxjs';
 import { Order } from 'src/app/models/order';
 import { OrderService } from 'src/app/services/order.service';
 
@@ -10,18 +10,19 @@ import { OrderService } from 'src/app/services/order.service';
   styleUrls: ['./my-orders.component.scss']
 })
 export class MyOrdersComponent implements OnInit {
-  public orders: Order[] = [];
-  public ordersToShow: Order[] = [];
+  public orders$: Observable<Order[]> = new BehaviorSubject([]);
+  public ordersToShow$: Observable<Order[]> = new BehaviorSubject([]);
   public term: string = '';
   public error: string | undefined;
   
   constructor(private orderService: OrderService, private spinnerService: NgxSpinnerService) { }
   
   public ngOnInit(): void {
-    this.orderService.getMyOrders()
+    this.orders$ = this.orderService.getMyOrders()
       .pipe(
         take(1),
         tap(() => this.spinnerService.show()),
+        shareReplay(),
         finalize(() => this.spinnerService.hide()),
         catchError((error) => {
           if (error.status === 0) {
@@ -32,14 +33,14 @@ export class MyOrdersComponent implements OnInit {
           console.error(error);
           return EMPTY;
         })
-      )
-      .subscribe(o => {
-          this.orders = o;
-          this.ordersToShow = o;
-      });
+      );
+    this.ordersToShow$ = this.orders$;
+    this.orders$.subscribe();
   }
 
   public search(term: string): void {
-    this.ordersToShow = this.orders.filter(p => p.orderNumber.toLocaleLowerCase().startsWith(term.toLocaleLowerCase()));
+    this.ordersToShow$ = this.orders$.pipe(
+      map((orders) => orders.filter(p => p.orderNumber.toLocaleLowerCase().startsWith(term.toLocaleLowerCase())))
+    );
   }
 }

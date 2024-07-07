@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { getError } from 'src/app/stores/category/category.selectors';
 import { CategoryState } from 'src/app/stores/category/category.state';
 import { getValidationMessage } from 'src/app/validations/validations';
-import { debounceTime, takeUntil, Subject, take, tap, finalize, catchError, EMPTY } from 'rxjs';
+import { debounceTime, takeUntil, Subject, take, tap, finalize, catchError, EMPTY, map } from 'rxjs';
 import * as CategoryActions from 'src/app/stores/category/category.actions';
 import { Category } from 'src/app/models/category';
 import { CategoryService } from 'src/app/services/category.service';
@@ -72,6 +72,18 @@ export class EditCategoryComponent implements OnInit, OnDestroy {
         }
       })
     ));
+
+    this.categoryForm.valueChanges.pipe(
+      debounceTime(10),
+      takeUntil(this.categoryFormValueChanged$),
+      map((value) => this.store.dispatch(CategoryActions.categoryFormUpdate({
+        category: {
+          id: this.category?.id ?? '0',
+          name: value.categoryName,
+          deleted: this.category?.deleted ?? false
+        }
+      })))
+    ).subscribe();
   }
 
   public ngOnDestroy(): void {

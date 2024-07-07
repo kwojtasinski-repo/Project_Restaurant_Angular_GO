@@ -18,7 +18,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let order of ordersToShow">
+            <tr *ngFor="let order of (ordersToShow$ | async)">
                 <td>{{ order.id }}</td>
                 <td>{{ order.orderNumber }}</td>
                 <td>{{ order.price | money }}</td>
