@@ -2,6 +2,7 @@ package dto
 
 import (
 	"encoding/json"
+	"strings"
 
 	"github.com/speps/go-hashids/v2"
 )
@@ -67,6 +68,11 @@ func (id *IdObject) UnmarshalJSON(data []byte) error {
 	}
 
 	id.Value = value
+	if len(strings.TrimSpace(value)) == 0 {
+		id.ValueInt = 0
+		return nil
+	}
+
 	values, err := hashId.DecodeInt64WithError(id.Value)
 	if err != nil {
 		return err
