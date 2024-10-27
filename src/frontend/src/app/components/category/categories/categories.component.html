@@ -4,12 +4,12 @@
             Dodaj kategorię
         </button>
     </div>
-    <ng-container *ngIf="isLoading === true; then error else showCategories"></ng-container>
+    <ng-container *ngIf="isLoading === true; then errorTemplate else showCategories"></ng-container>
     
 </div>
 
-<ng-template #error>
-    <div class="mt-2 mb-2 alert alert-danger">
+<ng-template #errorTemplate>
+    <div class="mt-2 mb-2 alert alert-danger" *ngIf="error">
         {{ error }}
     </div>
 </ng-template>
