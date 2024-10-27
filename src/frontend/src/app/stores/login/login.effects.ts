@@ -7,17 +7,20 @@ import { LoginState } from './login.state';
 import * as LoginActions from './login.actions';
 import * as LoginSelectors from './login.selectors';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Injectable()
 export class LoginEffects {
   initializeLogin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(LoginActions.initializeLogin),
-      exhaustMap(() =>
-        this.authenticationService.getContext()
+      exhaustMap(() => {
+        this.spinnerService.show();
+        return this.authenticationService.getContext()
           .pipe(
             map((user) => LoginActions.reloginRequestSuccess({ user })),
             catchError(err => {
+              this.spinnerService.hide();
                 this.router.navigate(['/login']);
                 console.error(err);
                 if (err.status === 0) {
@@ -28,7 +31,8 @@ export class LoginEffects {
                 return EMPTY;
               }
             )
-          )
+          );
+        }
       )
     )
   );
@@ -70,7 +74,10 @@ export class LoginEffects {
   loginRequestSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType(LoginActions.loginRequestSuccess),
-      mergeMap(() => of(LoginActions.loginSuccess()))
+      mergeMap(() => {
+        this.spinnerService.hide();
+        return of(LoginActions.loginSuccess());
+      })
     )
   );
 
@@ -111,6 +118,7 @@ export class LoginEffects {
     private actions$: Actions, 
     private router: Router, 
     private store: Store<LoginState>, 
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private spinnerService: NgxSpinnerService
   ) {}
 }
