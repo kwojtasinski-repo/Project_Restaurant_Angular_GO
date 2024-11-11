@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/dto"
+	applicationerrors "github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/errors"
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/repositories"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
@@ -93,7 +94,7 @@ func (suite *CategoryServiceTestSuite) Test_AddCategory_Nil_ShouldReturnError() 
 	assert.NotNil(suite.T(), err)
 	assert.Nil(suite.T(), dto)
 	assert.Equal(suite.T(), http.StatusBadRequest, err.Status)
-	assert.Contains(suite.T(), err.Message, "invalid 'Category'")
+	assert.Contains(suite.T(), err.Message, applicationerrors.InvalidCategory)
 }
 
 func (suite *CategoryServiceTestSuite) Test_GetCategory_ValidId_ShouldReturnDto() {
@@ -225,7 +226,7 @@ func (suite *CategoryServiceTestSuite) Test_UpdateCategory_NilCategory_ShouldRet
 	assert.NotNil(suite.T(), err)
 	assert.Nil(suite.T(), dto)
 	assert.Equal(suite.T(), http.StatusBadRequest, err.Status)
-	assert.Contains(suite.T(), err.Message, "invalid 'Category'")
+	assert.Contains(suite.T(), err.Message, applicationerrors.InvalidCategory)
 }
 
 func (suite *CategoryServiceTestSuite) Test_DeleteCategory_ValidId_ShouldDelete() {

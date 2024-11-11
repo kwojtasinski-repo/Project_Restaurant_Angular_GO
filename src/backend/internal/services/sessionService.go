@@ -78,7 +78,7 @@ func (service *sessionService) RefreshSession(sessionId uuid.UUID) (*dto.Session
 	userId := session.UserId()
 	user, errUserRepo := service.userRepo.Get(userId.Value())
 	if errUserRepo != nil {
-		return nil, applicationerrors.InternalError(err.Error())
+		return nil, applicationerrors.InternalError(errUserRepo.Error())
 	}
 
 	session.SetUser(*user)

@@ -9,6 +9,7 @@ import (
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/dto"
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/entities"
 	valueobjects "github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/entities/value-objects"
+	applicationerrors "github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/errors"
 	"github.com/kwojtasinski-repo/Project_Restaurant_Angular_GO/internal/repositories"
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
@@ -155,7 +156,8 @@ func (suite *ProductServiceTestSuite) Test_AddProduct_NilAddProduct_ShouldReturn
 	assert.NotNil(suite.T(), err)
 	assert.Nil(suite.T(), dto)
 	assert.Equal(suite.T(), http.StatusBadRequest, err.Status)
-	assert.Contains(suite.T(), err.Message, "invalid 'Product'")
+	suite.Suite.Error(fmt.Errorf(err.Message))
+	assert.Contains(suite.T(), err.Message, applicationerrors.InvalidProduct)
 }
 
 func (suite *ProductServiceTestSuite) Test_GetProduct_ValidId_ShouldReturnDto() {
@@ -332,7 +334,7 @@ func (suite *ProductServiceTestSuite) Test_UpdateProduct_NilUpdateProduct_Should
 	assert.NotNil(suite.T(), err)
 	assert.Nil(suite.T(), dto)
 	assert.Equal(suite.T(), http.StatusBadRequest, err.Status)
-	assert.Contains(suite.T(), err.Message, "invalid 'Product'")
+	assert.Contains(suite.T(), err.Message, applicationerrors.InvalidProduct)
 }
 
 func (suite *ProductServiceTestSuite) Test_DeleteProduct_ValidId_ShouldDelete() {
