@@ -5,10 +5,10 @@ import { MyOrdersComponent } from './my-orders.component';
 import { SearchBarComponent } from '../../search-bar/search-bar.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { MoneyPipe } from 'src/app/pipes/money-pipe';
-import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { initialState } from 'src/app/stores/order/order.reducers';
 import { HttpClientModule } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
 
 describe('MyOrdersComponent', () => {
   let component: MyOrdersComponent;
@@ -22,13 +22,13 @@ describe('MyOrdersComponent', () => {
         MoneyPipe
       ],
       imports: [
-        RouterTestingModule,
         NgxSpinnerModule,
         ReactiveFormsModule,
         FormsModule,
         HttpClientModule
       ],
       providers: [
+        provideRouter([]),
         provideMockStore({ initialState }),
         provideMockStore({ initialState }),
         {

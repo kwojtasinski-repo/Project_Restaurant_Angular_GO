@@ -2,9 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CategoriesComponent } from './categories.component';
 import { SearchBarComponent } from '../../search-bar/search-bar.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { provideRouter, RouterLink } from '@angular/router';
 
 describe('CategoriesComponent', () => {
   let component: CategoriesComponent;
@@ -14,12 +14,13 @@ describe('CategoriesComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ CategoriesComponent, SearchBarComponent ],
       imports: [
-        RouterTestingModule,
         ReactiveFormsModule,
         FormsModule,
-        HttpClientModule
+        HttpClientModule,
+        RouterLink
       ],
       providers: [
+        provideRouter([]),
         {
           provide: "API_URL", useValue: ''
         }

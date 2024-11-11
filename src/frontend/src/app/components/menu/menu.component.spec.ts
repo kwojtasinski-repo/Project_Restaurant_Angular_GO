@@ -5,7 +5,6 @@ import { initialState } from 'src/app/stores/login/login.reducers';
 import { initialState as cartInitialState } from 'src/app/stores/cart/cart.reducers';
 import { provideMockStore } from '@ngrx/store/testing';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
 import { MoneyPipe } from 'src/app/pipes/money-pipe';
 import { HttpClientModule } from '@angular/common/http';
@@ -14,6 +13,7 @@ import { ProductService } from 'src/app/services/product.service';
 import productService from 'src/app/unit-test-fixtures/in-memory-product.service';
 import { stubbedProducts } from 'src/app/unit-test-fixtures/test-utils';
 import { Product } from 'src/app/models/product';
+import { provideRouter, RouterLink } from '@angular/router';
 
 describe('MenuComponent', () => {
   let component: MenuComponent;
@@ -27,11 +27,12 @@ describe('MenuComponent', () => {
         MoneyPipe 
       ],
       imports: [
-        RouterTestingModule,
         FormsModule,
-        HttpClientModule
+        HttpClientModule,
+        RouterLink
       ],
       providers: [
+        provideRouter([]),
         provideMockStore({ initialState }),
         provideMockStore({ initialState: cartInitialState }),
         {

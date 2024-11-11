@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Observable, take } from 'rxjs';
 
 import { ViewProductsComponent } from './view-products.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { initialState } from 'src/app/stores/login/login.reducers';
 import { provideMockStore } from '@ngrx/store/testing';
@@ -10,7 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ProductService } from 'src/app/services/product.service';
 import productService from 'src/app/unit-test-fixtures/in-memory-product.service';
 import { Product } from 'src/app/models/product';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, provideRouter } from '@angular/router';
 import { convertToParamMap } from '@angular/router';
 import { MoneyPipe } from 'src/app/pipes/money-pipe';
 import { stubbedProducts } from 'src/app/unit-test-fixtures/test-utils';
@@ -26,11 +25,11 @@ describe('ViewProductsComponent', () => {
         MoneyPipe
       ],
       imports: [
-        RouterTestingModule,
         NgxSpinnerModule,
         HttpClientModule
       ],
       providers: [
+        provideRouter([]),
         provideMockStore({ initialState }),
         {
           provide: "API_URL", useValue: ''
@@ -84,11 +83,11 @@ describe('ViewProductsComponent when product available', () => {
         MoneyPipe
       ],
       imports: [
-        RouterTestingModule,
         NgxSpinnerModule,
         HttpClientModule
       ],
       providers: [
+        provideRouter([]),
         provideMockStore({ initialState }),
         {
           provide: "API_URL", useValue: ''

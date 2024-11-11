@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditProductsComponent } from './edit-products.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { initialState } from 'src/app/stores/product/product.reducers';
 import { provideMockStore } from '@ngrx/store/testing';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -9,7 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { stubbedCategories, stubbedProducts } from 'src/app/unit-test-fixtures/test-utils';
 import productService from 'src/app/unit-test-fixtures/in-memory-product.service';
 import { ProductService } from 'src/app/services/product.service';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
 import { ProductFormComponent } from '../product-form/product-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CurrencyFormatterDirective } from 'src/app/directives/currency-formatter-directive';
@@ -29,11 +28,11 @@ describe('EditProductsComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ EditProductsComponent ],
       imports: [
-        RouterTestingModule,
         NgxSpinnerModule,
         HttpClientModule
       ],
       providers: [
+        provideRouter([]),
         provideMockStore({ initialState }),
         {
           provide: "API_URL", useValue: ''
@@ -80,12 +79,12 @@ describe('EditProductsComponent when product is available', () => {
         CurrencyFormatterDirective
       ],
       imports: [
-        RouterTestingModule,
         NgxSpinnerModule,
         HttpClientModule,
         ReactiveFormsModule
       ],
       providers: [
+        provideRouter([]),
         provideMockStore({ initialState }),
         {
           provide: ProductService, useValue: productService

@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RegisterSuccessComponent } from './register-success.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
+import { provideRouter, RouterLink } from '@angular/router';
 
 describe('RegisterSuccessComponent', () => {
   let component: RegisterSuccessComponent;
@@ -14,7 +14,10 @@ describe('RegisterSuccessComponent', () => {
         RegisterSuccessComponent,
       ],
       imports: [
-        RouterTestingModule.withRoutes([]),
+        RouterLink
+      ],
+      providers: [
+        provideRouter([]),
       ]
     })
     .compileComponents();

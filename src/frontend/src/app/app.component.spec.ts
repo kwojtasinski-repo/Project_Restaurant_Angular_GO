@@ -1,18 +1,19 @@
 import { TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { provideMockStore } from '@ngrx/store/testing';
 import { initialState } from './stores/login/login.reducers';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { provideRouter, RouterLink, RouterModule } from '@angular/router';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
-        NgxSpinnerModule
+        NgxSpinnerModule,
+        RouterLink,
+        RouterModule
       ],
       declarations: [
         HeaderComponent,
@@ -20,6 +21,7 @@ describe('AppComponent', () => {
         FooterComponent
       ],
       providers: [
+        provideRouter([]),
         provideMockStore({ initialState }),
       ]
     }).compileComponents();
