@@ -3,7 +3,7 @@ import { LoginComponent } from "./components/login/login.component";
 import { MenuComponent } from "./components/menu/menu.component";
 import { ActivatedRouteSnapshot, RouterStateSnapshot, Routes, createUrlTreeFromSnapshot } from "@angular/router";
 import { AuthStateService } from "./services/auth-state.service";
-import { map } from 'rxjs';
+import { catchError, concatMap, exhaustMap, finalize, map, of } from 'rxjs';
 import { AddProductsComponent } from "./components/product/add-products/add-products.component";
 import { EditProductsComponent } from "./components/product/edit-products/edit-products.component";
 import { ViewProductsComponent } from "./components/product/view-products/view-products.component";
@@ -15,9 +15,13 @@ import { OrderViewComponent } from "./components/orders/order-view/order-view.co
 import { MyOrdersComponent } from "./components/orders/my-orders/my-orders.component";
 import { LoginState } from "./stores/login/login.state";
 import { Store } from '@ngrx/store';
-import { initializeLogin } from "./stores/login/login.actions";
+import * as LoginActions from "./stores/login/login.actions";
 import { RegisterComponent } from "./components/register/register.component";
 import { RegisterSuccessComponent } from "./components/register-success/register-success.component";
+import { AuthenticationService } from "./services/authentication.service";
+import { User } from "./models/user";
+import { HttpErrorResponse } from "@angular/common/http";
+import { NgxSpinnerService } from "ngx-spinner";
 
 const authGuard = (next: ActivatedRouteSnapshot, routerStateSnapshot: RouterStateSnapshot) => {
     if (routerStateSnapshot.url === '/') {
@@ -31,12 +35,53 @@ const authGuard = (next: ActivatedRouteSnapshot, routerStateSnapshot: RouterStat
             if (authenticated) { 
                 return true;
             } else {
-                store.dispatch(initializeLogin({ path: routerStateSnapshot.url }));
+                store.dispatch(LoginActions.initializeLogin({ path: routerStateSnapshot.url }));
                 return createUrlTreeFromSnapshot(next, ['/login']);
             }
         })
     );
 };
+
+const newAuthGuard = (next: ActivatedRouteSnapshot, routerStateSnapshot: RouterStateSnapshot) => {
+    if (routerStateSnapshot.url === '/') {
+        return createUrlTreeFromSnapshot(next, ['/menu']);
+    }
+
+    const authStateService = inject(AuthStateService);
+    const authenticationService = inject(AuthenticationService);
+    const store = inject(Store<LoginState>);
+    const spinnerService = inject(NgxSpinnerService);
+    spinnerService.show();
+    return authStateService.isAuthenticated()
+        .pipe(
+            concatMap((authenticated: boolean) => {
+                if (authenticated) {
+                    return of(true);
+                }
+
+                return authenticationService.getContext()
+                    .pipe(
+                        exhaustMap((user: User) => {
+                            store.dispatch(LoginActions.reloginRequestSuccess({ user }));
+                            return of(true);
+                        }),
+                        catchError((err: HttpErrorResponse) => {
+                            if (err.status === 0) {
+                                store.dispatch(LoginActions.reloginRequestFailed({ error: 'Sprawdź połączenie z internetem' }));
+                            } else if (err.status === 500) {
+                                store.dispatch(LoginActions.reloginRequestFailed({ error: 'Coś poszło nie tak, spróbuj ponownie później' }));
+                            }
+                            return of(createUrlTreeFromSnapshot(next, ['/login']));
+                        })
+                    );
+            }),
+            finalize(() => spinnerService.hide())
+        )
+};
+
+function useAuthGuard(useNew: boolean) {
+    return useNew ? newAuthGuard : authGuard;
+}
 
 const adminGuard = (next: ActivatedRouteSnapshot, _: RouterStateSnapshot) => {
     const authService = inject(AuthStateService);
@@ -103,7 +148,7 @@ const adminRoutes = [
 export const appRoutes: Routes = [
     {
         path: '',
-        canActivate: [authGuard],
+        canActivate: [useAuthGuard(true)],
         children: [
             {
                 path: 'menu',
