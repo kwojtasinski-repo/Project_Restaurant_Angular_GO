@@ -2,7 +2,7 @@
 
 ## Introduction
 
-A simple app where you can order food. The application has a login system and is mostly based on cookies. Users authenticate to the app with an email address and password. Each user has own role. Admin role allows to add, delete, modify products. 
+A simple app where you can order food. The application has a login system and is mostly based on cookies. Users authenticate to the app with an email address and password. Each user has own role. Admin role allows to add, delete, modify products.
 
 ## Install developer environment
 
@@ -46,7 +46,7 @@ Run application
 
 ## Tests
 
-This project has unit tests on backend and frontend and integration tests on backend site. 
+This project has unit tests on backend and frontend and integration tests on backend site.
 
 ### Backend
 
@@ -58,18 +58,16 @@ Integration tests can be run by using this command:
 
 `go test ./test/ -v -tags=integration`
 
-
 ### Frontend
 
-Unit tests can be run by this command in bash 
+Unit tests can be run by this command in bash
 
-`ng test` 
-
+`ng test`
 
 ## Technologies
 
 - GO 1.20
-- Angular 15
+- Angular 17
 - MariaDB
 - Go Gin
 - Golang-migrate
@@ -78,35 +76,24 @@ Unit tests can be run by this command in bash
 
 ![](/images/screen1.png)
 
-
 ![](/images/screen2.png)
-
 
 ![](/images/screen3.png)
 
-
 ![](/images/screen4.png)
-
 
 ![](/images/screen5.png)
 
-
 ![](/images/screen6.png)
-
 
 ![](/images/screen7.png)
 
-
 ![](/images/screen8.png)
-
 
 ![](/images/screen9.png)
 
-
 ![](/images/screen10.png)
 
-
 ![](/images/screen11.png)
-
 
 ![](/images/screen12.png)
