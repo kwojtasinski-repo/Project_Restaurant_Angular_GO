@@ -58,7 +58,7 @@
                 [className]="'btn btn-success'" 
                 [buttonText]="'Złóż zamówienie'" 
                 [disabled]="(finalizeState$ | async) === 'loading'"
-                (onClick)="finalizeOrder()">
+                (buttonClick)="finalizeOrder()">
             </app-spinner-button>
         </div>
     </div>

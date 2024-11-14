@@ -15,10 +15,7 @@ export class SearchBarComponent {
   @Output()
   public termChange: EventEmitter<string> = new EventEmitter<string>();
 
-  @Output()
-  public onChange: EventEmitter<string> = new EventEmitter<string>();
-
   public search(): void {
-    this.onChange.emit(this.term);
+    this.termChange.emit(this.term);
   }
 }

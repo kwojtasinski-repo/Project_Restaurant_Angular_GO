@@ -1,11 +1,11 @@
-import { Directive, HostListener, OnDestroy, Self, Input, OnInit } from "@angular/core";
+import { Directive, HostListener, OnDestroy, Self, Input, OnInit, AfterViewInit } from "@angular/core";
 import { NgControl } from "@angular/forms";
 import { Subject, debounceTime, takeUntil } from "rxjs";
 
 @Directive({
     selector: '[currencyFormatter]'
   })
-  export class CurrencyFormatterDirective implements OnDestroy, OnInit {
+  export class CurrencyFormatterDirective implements OnDestroy, OnInit, AfterViewInit {
     @Input() locale: string = 'en-US';
     @Input() minimumFractionDigits: number = 0;
     @Input() maximumFractionDigits: number = 2;
@@ -44,14 +44,14 @@ import { Subject, debounceTime, takeUntil } from "rxjs";
     }
   
     @HostListener('blur') onBlur() {
-      let value = this.getNumberFromValue(this.ngControl.value || '0.00');
+      const value = this.getNumberFromValue(this.ngControl.value || '0.00');
       !!value && this.setValue(this.formatPrice(value));
     }
   
     private updateValue(value: any) {
-      let inputVal = value || '';
+      const inputVal = value || '';
       const pattern = new RegExp("[^0-9" + this.comma + "]", 'g');
-      this.setValue(!!inputVal ?
+      this.setValue(inputVal ?
         this.validateDecimalValue(inputVal.replace(pattern, '')) : '');
     }
   

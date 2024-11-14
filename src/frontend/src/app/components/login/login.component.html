@@ -45,7 +45,7 @@
                 [buttonText]="'Zaloguj'" 
                 [disabled]="(loginRequestState$ | async) === 'loading'"
                 [version]="spinnerVersion"
-                (onClick)="onSubmit(); $event.preventDefault()">
+                (buttonClick)="onSubmit(); $event.preventDefault()">
             </app-spinner-button>
         </div>
     </form>

@@ -20,9 +20,9 @@ export class SpinnerButtonComponent {
   public version: SpinnerVersion = SpinnerVersion.classic;
   
   @Output() 
-  onClick: EventEmitter<any> = new EventEmitter();
+  buttonClick: EventEmitter<any> = new EventEmitter();
 
   public click(event: any): void {
-    this.onClick.emit(event);
+    this.buttonClick.emit(event);
   }
 }
