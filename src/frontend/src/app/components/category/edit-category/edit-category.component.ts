@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { getError } from 'src/app/stores/category/category.selectors';
@@ -16,7 +16,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
   templateUrl: './edit-category.component.html',
   styleUrls: ['./edit-category.component.scss']
 })
-export class EditCategoryComponent implements OnInit, OnDestroy {
+export class EditCategoryComponent implements OnInit, OnDestroy, AfterViewInit {
   public error$ = this.store.select(getError);
   public categoryForm: FormGroup = new FormGroup({});
   public category: Category | undefined;

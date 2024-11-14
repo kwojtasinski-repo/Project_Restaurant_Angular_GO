@@ -69,7 +69,7 @@ describe('EditProductsComponent when product is available', () => {
   let fixture: ComponentFixture<EditProductsComponent>;
   let formater: Intl.NumberFormat;
   let store: Store<ProductState>;
-  let productId = '1'
+  const productId = '1'
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -147,6 +147,7 @@ describe('EditProductsComponent when product is available', () => {
     expect(productCategory).not.toBeUndefined();
     expect(productCategory).not.toBeNull();
     expect((new Number(categories[productCategory.selectedIndex]?.id).valueOf() - 1).toString()).toEqual(productInComponent?.category?.id ?? '0');
+    expect(categoriesInComponent.length).toBe(categories.length);
   });
 
   it('should change inputs while enter new value', () => {

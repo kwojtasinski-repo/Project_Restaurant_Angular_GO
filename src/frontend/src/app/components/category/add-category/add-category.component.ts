@@ -1,7 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { Category } from 'src/app/models/category';
 import { CategoryState } from 'src/app/stores/category/category.state';
 import { Subject, debounceTime, map, takeUntil } from 'rxjs';
 import { getError } from 'src/app/stores/category/category.selectors';
@@ -13,7 +12,7 @@ import { getValidationMessage } from 'src/app/validations/validations';
   templateUrl: './add-category.component.html',
   styleUrls: ['./add-category.component.scss']
 })
-export class AddCategoryComponent implements OnInit, OnDestroy {
+export class AddCategoryComponent implements OnInit, OnDestroy, AfterViewInit {
   public error$ = this.store.select(getError);
   public categoryForm: FormGroup = new FormGroup({});
   private categoryFormValueChanged$ = new Subject();
