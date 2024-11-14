@@ -1,4 +1,4 @@
-import { createFeatureSelector, createSelector, union } from "@ngrx/store";
+import { createFeatureSelector, createSelector } from "@ngrx/store";
 import { LoginState } from "./login.state";
 import { loginStoreName } from "./login.store.names";
 import { User } from "src/app/models/user";

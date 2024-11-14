@@ -19,7 +19,6 @@
           "error",
           {
             "type": "attribute",
-            "prefix": "app",
             "style": "camelCase"
           }
         ],
@@ -29,6 +28,14 @@
             "type": "element",
             "prefix": "app",
             "style": "kebab-case"
+          }
+        ],
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            "argsIgnorePattern": "^_",       // Ignore unused variables that start with '_'
+            "varsIgnorePattern": "^_"        // Ignore unused variables in general that start with '_'
           }
         ]
       }
