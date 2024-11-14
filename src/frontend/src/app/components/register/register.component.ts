@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { getEmail, getError, getPassword, getPasswordConfirm, getRegisterRequestState } from 'src/app/stores/register/register.selectors';
 import { RegisterState } from 'src/app/stores/register/register.state';
@@ -14,7 +14,7 @@ import * as RegisterActions from 'src/app/stores/register/register.actions';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit, OnDestroy {
   public registerForm: FormGroup;
   public error$ = this.store.select(getError);
   public loginRequestState$ = this.store.select(getRegisterRequestState);

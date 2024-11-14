@@ -30,12 +30,13 @@
             </div>
         </div>
     <app-product-form
-            [product]="(product$ | async)" 
-            [buttonNames]="['Zatwierdź', 'Anuluj']"
-            [categories]="(categories$ | async) ?? []"
-            (productChanged)="onProductChange($event)" 
-            (onSubmit)="onSubmit()" 
-            (onCancel)="onCancel()"></app-product-form>
+        [product]="(product$ | async)" 
+        [buttonNames]="['Zatwierdź', 'Anuluj']"
+        [categories]="(categories$ | async) ?? []"
+        (productChanged)="onProductChange($event)" 
+        (submitValid)="onSubmit()" 
+        (cancel)="onCancel()">
+    </app-product-form>
     </ng-template>
     <ng-template #productNotFound>
         <div class="alert alert-danger">

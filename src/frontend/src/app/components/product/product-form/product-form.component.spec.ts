@@ -8,7 +8,7 @@ import { changeInputValue, changeSelectIndex, createProduct, stubbedCategories }
 describe('ProductFormComponent', () => {
   let component: ProductFormComponent;
   let fixture: ComponentFixture<ProductFormComponent>;
-  let categories = stubbedCategories();
+  const categories = stubbedCategories();
   const initialData = {
     product: {
       ...createProduct(0, 'Poduct#1', 100, 'desc', categories[0])
@@ -43,7 +43,7 @@ describe('ProductFormComponent with init data', () => {
   let formater: Intl.NumberFormat;
   let component: ProductFormComponent;
   let fixture: ComponentFixture<ProductFormComponent>;
-  let categories = stubbedCategories();
+  const categories = stubbedCategories();
   const initialData = {
     product: {
       ...createProduct(0, 'Poduct#1', 100, 'desc', categories[0])
@@ -187,7 +187,7 @@ function changeForm(form: any, productName: any, productDescription: any, produc
 }
 
 function createLongWord(size: number) {
-  let word: string[] = [];
+  const word: string[] = [];
   for (let i = 0; i < size; i++) {
     word.push('a');
   }

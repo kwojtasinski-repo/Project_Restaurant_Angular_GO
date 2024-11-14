@@ -1,4 +1,4 @@
-import { Component, OnDestroy, Input, EventEmitter, Output, ChangeDetectorRef } from '@angular/core';
+import { Component, OnDestroy, Input, EventEmitter, Output, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
 import { Category } from 'src/app/models/category';
@@ -10,7 +10,7 @@ import { getValidationMessage } from 'src/app/validations/validations';
   templateUrl: './product-form.component.html',
   styleUrls: ['./product-form.component.scss']
 })
-export class ProductFormComponent implements OnDestroy {
+export class ProductFormComponent implements OnDestroy, AfterViewInit {
   @Input()
   public product: Product | null | undefined;
   @Input()
@@ -19,14 +19,14 @@ export class ProductFormComponent implements OnDestroy {
   @Input()
   public buttonNames: Array<string> = ['Dodaj', 'Anuluj'];
 
-  @Output('productChanged')
+  @Output()
   public productChanged = new EventEmitter<Product>();
 
-  @Output('onSubmit')
-  public onSubmitValid = new EventEmitter<any>();
+  @Output()
+  public submitValid = new EventEmitter<any>();
 
-  @Output('onCancel')
-  public onCancel = new EventEmitter<any>();
+  @Output()
+  public cancel = new EventEmitter<any>();
 
   public productForm: FormGroup = new FormGroup({});
   public locale: string = 'pl-PL';
@@ -65,7 +65,7 @@ export class ProductFormComponent implements OnDestroy {
       });
       return;
     }
-    this.onSubmitValid.emit();
+    this.submitValid.emit();
   }
 
   public getErrorMessage(error: any): string | null {
@@ -73,7 +73,7 @@ export class ProductFormComponent implements OnDestroy {
   }
 
   public cancelClick(): void {
-    this.onCancel.emit();
+    this.cancel.emit();
   }
 
   public ngOnDestroy(): void {

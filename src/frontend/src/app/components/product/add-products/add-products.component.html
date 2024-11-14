@@ -16,8 +16,8 @@
         <app-product-form
             [categories]="categories$ | async"
             (productChanged)="onProductChange($event)"
-            (onSubmit)="onSubmit()"
-            (onCancel)="onCancel()">
+            (submitValid)="onSubmit()"
+            (cancel)="onCancel()">
         </app-product-form>
     </div>
 </div>
