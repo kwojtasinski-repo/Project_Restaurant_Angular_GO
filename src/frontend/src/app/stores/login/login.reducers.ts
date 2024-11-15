@@ -18,14 +18,6 @@ export const initialState: LoginState = {
 
 export const loginReducer = createReducer(
     initialState,
-    on(LoginActions.initializeLogin, (state, action) => {
-        return {
-            ...state,
-            path: action.path === '' ? 'menu' : action.path,
-            loginRequestState: RequestState.init,
-            logoutRequestState: RequestState.init
-        }
-    }),
     on(LoginActions.loginFormUpdate, (state, action) => {
         return {
             ...state,
@@ -109,6 +101,6 @@ export const loginReducer = createReducer(
     }),
     on(LoginActions.setTargetPath, (state, action) => ({
         ...state,
-        path: action.path
+        path: (!action.path || action.path  === '') ? 'menu' : action.path
     }))
 );

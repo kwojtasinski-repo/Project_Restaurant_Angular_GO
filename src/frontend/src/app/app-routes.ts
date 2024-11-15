@@ -28,25 +28,6 @@ const authGuard = (next: ActivatedRouteSnapshot, routerStateSnapshot: RouterStat
         return createUrlTreeFromSnapshot(next, ['/menu']);
     }
 
-    const authService = inject(AuthStateService);
-    const store = inject(Store<LoginState>);
-    return authService.isAuthenticated().pipe(
-        map((authenticated) => { 
-            if (authenticated) { 
-                return true;
-            } else {
-                store.dispatch(LoginActions.initializeLogin({ path: routerStateSnapshot.url }));
-                return createUrlTreeFromSnapshot(next, ['/login']);
-            }
-        })
-    );
-};
-
-const newAuthGuard = (next: ActivatedRouteSnapshot, routerStateSnapshot: RouterStateSnapshot) => {
-    if (routerStateSnapshot.url === '/') {
-        return createUrlTreeFromSnapshot(next, ['/menu']);
-    }
-
     const authStateService = inject(AuthStateService);
     const authenticationService = inject(AuthenticationService);
     const store = inject(Store<LoginState>);
@@ -79,10 +60,6 @@ const newAuthGuard = (next: ActivatedRouteSnapshot, routerStateSnapshot: RouterS
             finalize(() => spinnerService.hide())
         )
 };
-
-function useAuthGuard(useNew: boolean) {
-    return useNew ? newAuthGuard : authGuard;
-}
 
 const adminGuard = (next: ActivatedRouteSnapshot, _: RouterStateSnapshot) => {
     const authService = inject(AuthStateService);
@@ -149,7 +126,7 @@ const adminRoutes = [
 export const appRoutes: Routes = [
     {
         path: '',
-        canActivate: [useAuthGuard(true)],
+        canActivate: [authGuard],
         children: [
             {
                 path: 'menu',
