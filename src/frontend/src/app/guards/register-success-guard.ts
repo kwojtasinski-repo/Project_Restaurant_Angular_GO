@@ -7,6 +7,16 @@ export default (next: ActivatedRouteSnapshot, _: RouterStateSnapshot) => {
     const authService = inject(AuthStateService);
 
     return authService.isAuthenticated().pipe(
-        map((authenticated) => authenticated ? createUrlTreeFromSnapshot(next, ['/menu']) : true)
+        map((authenticated) => {
+            if (authenticated) {
+                return createUrlTreeFromSnapshot(next, ['/menu']);
+            }
+
+            if (!next.queryParamMap.has('registerState')) {
+                return createUrlTreeFromSnapshot(next, ['/register']);
+            }
+
+            return true;
+        })
     );
 };

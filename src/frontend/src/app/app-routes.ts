@@ -1,9 +1,6 @@
-import { inject } from "@angular/core";
 import { LoginComponent } from "./components/login/login.component";
 import { MenuComponent } from "./components/menu/menu.component";
-import { ActivatedRouteSnapshot, RouterStateSnapshot, Routes, createUrlTreeFromSnapshot } from "@angular/router";
-import { AuthStateService } from "./services/auth-state.service";
-import {  map } from 'rxjs';
+import { Routes } from "@angular/router";
 import { AddProductsComponent } from "./components/product/add-products/add-products.component";
 import { EditProductsComponent } from "./components/product/edit-products/edit-products.component";
 import { ViewProductsComponent } from "./components/product/view-products/view-products.component";
@@ -18,24 +15,7 @@ import { RegisterSuccessComponent } from "./components/register-success/register
 import authGuard from "./guards/auth-guard";
 import adminGuard from "./guards/admin-guard";
 import authorizedGuard from "./guards/authorized-guard";
-
-const registerSuccessGuard = (next: ActivatedRouteSnapshot, _: RouterStateSnapshot) => {
-    const authService = inject(AuthStateService);
-
-    return authService.isAuthenticated().pipe(
-        map((authenticated) => {
-            if (authenticated) {
-                return createUrlTreeFromSnapshot(next, ['/menu']);
-            }
-
-            if (!next.queryParamMap.has('registerState')) {
-                return createUrlTreeFromSnapshot(next, ['/register']);
-            }
-
-            return true;
-        })
-    );
-};
+import registerSuccessGuard from "./guards/register-success-guard";
 
 const adminRoutes = [
     {
