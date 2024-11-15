@@ -2,12 +2,13 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Product } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
 import { BehaviorSubject, EMPTY, Observable, catchError, finalize, map, shareReplay, take, tap } from 'rxjs';
-import { AuthStateService } from 'src/app/services/auth-state.service';
 import { Store } from "@ngrx/store";
 import { CartState } from 'src/app/stores/cart/cart.state';
 import { addProductToCart, clearErrors } from 'src/app/stores/cart/cart.actions';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { getError } from 'src/app/stores/cart/cart.selectors';
+import { LoginState } from 'src/app/stores/login/login.state';
+import * as LoginSelectors from 'src/app/stores/login/login.selectors';
 
 @Component({
   selector: 'app-menu',
@@ -15,14 +16,14 @@ import { getError } from 'src/app/stores/cart/cart.selectors';
   styleUrls: ['./menu.component.scss']
 })
 export class MenuComponent implements OnInit, OnDestroy {
-  public user$ = this.authService.getUser();
+  public user$ = this.loginStore.select(LoginSelectors.getUser);
   public products$: Observable<Product[]> = new BehaviorSubject([]);
   public productsToShow$: Observable<Product[]> = new BehaviorSubject([]);
   public term: string = '';
   public error: string | undefined;
   public cartError$ = this.cartStore.select(getError);
 
-  constructor(private productService: ProductService, private authService: AuthStateService, private cartStore: Store<CartState>,
+  constructor(private productService: ProductService, private loginStore: Store<LoginState>, private cartStore: Store<CartState>,
     private spinnerService: NgxSpinnerService) { }
   
   public ngOnInit(): void {

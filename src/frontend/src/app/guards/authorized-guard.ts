@@ -1,12 +1,14 @@
 import { ActivatedRouteSnapshot, createUrlTreeFromSnapshot, RouterStateSnapshot } from "@angular/router";
-import { AuthStateService } from "../services/auth-state.service";
 import { inject } from "@angular/core";
 import { map } from "rxjs";
+import { Store } from "@ngrx/store";
+import { LoginState } from "../stores/login/login.state";
+import * as LoginSelectors from "../stores/login/login.selectors";
 
 export default (next: ActivatedRouteSnapshot, _: RouterStateSnapshot) => {
-    const authService = inject(AuthStateService);
+    const loginStore = inject(Store<LoginState>);
 
-    return authService.isAuthenticated().pipe(
+    return loginStore.select(LoginSelectors.getAuthenticated).pipe(
         map((authenticated) => authenticated ? createUrlTreeFromSnapshot(next, ['/menu']) : true)
     );
 };

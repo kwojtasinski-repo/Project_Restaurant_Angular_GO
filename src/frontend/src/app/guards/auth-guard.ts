@@ -1,10 +1,10 @@
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, createUrlTreeFromSnapshot, RouterStateSnapshot } from "@angular/router";
-import { AuthStateService } from "../services/auth-state.service";
 import { AuthenticationService } from "../services/authentication.service";
 import { Store } from "@ngrx/store";
 import { NgxSpinnerService } from "ngx-spinner";
 import * as LoginActions from "../stores/login/login.actions";
+import * as LoginSelectors from "../stores/login/login.selectors";
 import { LoginState } from "../stores/login/login.state";
 import { catchError, exhaustMap, finalize, of } from "rxjs";
 import { User } from "../models/user";
@@ -15,13 +15,12 @@ export default (next: ActivatedRouteSnapshot, routerStateSnapshot: RouterStateSn
         return createUrlTreeFromSnapshot(next, ['/menu']);
     }
 
-    const authStateService = inject(AuthStateService);
     const authenticationService = inject(AuthenticationService);
     const store = inject(Store<LoginState>);
     const spinnerService = inject(NgxSpinnerService);
     store.dispatch(LoginActions.setTargetPath({ path: routerStateSnapshot.url }));
     spinnerService.show();
-    return authStateService.isAuthenticated()
+    return store.select(LoginSelectors.getAuthenticated)
         .pipe(
             exhaustMap((authenticated: boolean) => {
                 if (authenticated) {

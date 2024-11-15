@@ -4,10 +4,11 @@ import { EMPTY, Observable, catchError, finalize, shareReplay, take, tap } from 
 import { Product } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { AuthStateService } from 'src/app/services/auth-state.service';
 import { Store } from "@ngrx/store";
 import { CartState } from 'src/app/stores/cart/cart.state';
 import { addProductToCart, clearErrors } from 'src/app/stores/cart/cart.actions';
+import { LoginState } from 'src/app/stores/login/login.state';
+import * as LoginSelectors from 'src/app/stores/login/login.selectors';
 
 @Component({
   selector: 'app-view-products',
@@ -17,11 +18,11 @@ import { addProductToCart, clearErrors } from 'src/app/stores/cart/cart.actions'
 export class ViewProductsComponent implements OnInit, OnDestroy {
   public product$: Observable<Product | undefined> | undefined;
   public isLoading = true;
-  public user$ = this.authService.getUser();
+  public user$ = this.loginStore.select(LoginSelectors.getUser);
   public error: string | undefined;
 
   constructor(private productService: ProductService, private route: ActivatedRoute, private spinnerService: NgxSpinnerService,
-    private authService: AuthStateService, private cartStore: Store<CartState>) { }
+    private loginStore: Store<LoginState>, private cartStore: Store<CartState>) { }
 
   public ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id') ?? '';
