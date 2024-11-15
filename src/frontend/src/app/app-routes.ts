@@ -15,16 +15,9 @@ import { OrderViewComponent } from "./components/orders/order-view/order-view.co
 import { MyOrdersComponent } from "./components/orders/my-orders/my-orders.component";
 import { RegisterComponent } from "./components/register/register.component";
 import { RegisterSuccessComponent } from "./components/register-success/register-success.component";
-import { authGuard } from "./guards/auth-guard";
-import { adminGuard } from "./guards/admin-guard";
-
-const authorizedGuard = (next: ActivatedRouteSnapshot, _: RouterStateSnapshot) => {
-    const authService = inject(AuthStateService);
-
-    return authService.isAuthenticated().pipe(
-        map((authenticated) => authenticated ? createUrlTreeFromSnapshot(next, ['/menu']) : true)
-    );
-};
+import authGuard from "./guards/auth-guard";
+import adminGuard from "./guards/admin-guard";
+import authorizedGuard from "./guards/authorized-guard";
 
 const registerSuccessGuard = (next: ActivatedRouteSnapshot, _: RouterStateSnapshot) => {
     const authService = inject(AuthStateService);

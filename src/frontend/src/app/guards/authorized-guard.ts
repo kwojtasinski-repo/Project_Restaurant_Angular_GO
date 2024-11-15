@@ -5,7 +5,8 @@ import { map } from "rxjs";
 
 export default (next: ActivatedRouteSnapshot, _: RouterStateSnapshot) => {
     const authService = inject(AuthStateService);
-    return authService.getUser().pipe(
-        map((user) => user?.role === 'admin' ? true : createUrlTreeFromSnapshot(next, ['/menu']))
+
+    return authService.isAuthenticated().pipe(
+        map((authenticated) => authenticated ? createUrlTreeFromSnapshot(next, ['/menu']) : true)
     );
 };
