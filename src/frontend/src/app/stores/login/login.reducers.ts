@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { LoginState } from "./login.state";
-import * as CategoryActions from "./login.actions";
+import * as LoginActions from "./login.actions";
 import { RequestState } from "src/app/models/request-state";
 
 export const initialState: LoginState = {
@@ -18,7 +18,7 @@ export const initialState: LoginState = {
 
 export const loginReducer = createReducer(
     initialState,
-    on(CategoryActions.initializeLogin, (state, action) => {
+    on(LoginActions.initializeLogin, (state, action) => {
         return {
             ...state,
             path: action.path === '' ? 'menu' : action.path,
@@ -26,20 +26,20 @@ export const loginReducer = createReducer(
             logoutRequestState: RequestState.init
         }
     }),
-    on(CategoryActions.loginFormUpdate, (state, action) => {
+    on(LoginActions.loginFormUpdate, (state, action) => {
         return {
             ...state,
             credentials: action.credentials
         }
     }),
-    on(CategoryActions.loginRequest, (state, _) => {
+    on(LoginActions.loginRequest, (state, _) => {
         return {
             ...state,
             error: null,
             loginRequestState: RequestState.loading
         }
     }),
-    on(CategoryActions.loginRequestSuccess, (state, action) => {
+    on(LoginActions.loginRequestSuccess, (state, action) => {
         return {
             ...state,
             user: action.user,
@@ -52,7 +52,7 @@ export const loginReducer = createReducer(
             loginRequestState: RequestState.success
         }
     }),
-    on(CategoryActions.loginRequestFailed, (state, action) => {
+    on(LoginActions.loginRequestFailed, (state, action) => {
         return {
             ...state,
             user: null,
@@ -65,13 +65,13 @@ export const loginReducer = createReducer(
             loginRequestState: RequestState.failed
         }
     }),
-    on(CategoryActions.logoutRequest, (state, _) => {
+    on(LoginActions.logoutRequest, (state, _) => {
         return {
             ...state,
             logoutRequestState: RequestState.loading
         }
     }),
-    on(CategoryActions.logoutRequestSuccess, (state, _) => {
+    on(LoginActions.logoutRequestSuccess, (state, _) => {
         return {
             ...state,
             user: null,
@@ -80,14 +80,14 @@ export const loginReducer = createReducer(
             logoutRequestState: RequestState.success
         }
     }),
-    on(CategoryActions.logoutRequestFailed, (state, action) => {
+    on(LoginActions.logoutRequestFailed, (state, action) => {
         return {
             ...state,
             error: action.error,
             logoutRequestState: RequestState.failed
         }
     }),
-    on(CategoryActions.reloginRequestSuccess, (state, action) => {
+    on(LoginActions.reloginRequestSuccess, (state, action) => {
         return {
             ...state,
             user: action.user,
@@ -100,11 +100,15 @@ export const loginReducer = createReducer(
             loginRequestState: RequestState.success
         }
     }),
-    on(CategoryActions.reloginRequestFailed, (state, action) => {
+    on(LoginActions.reloginRequestFailed, (state, action) => {
         return {
             ...state,
             error: action.error,
             loginRequestState: RequestState.failed
         }
-    })
+    }),
+    on(LoginActions.setTargetPath, (state, action) => ({
+        ...state,
+        path: action.path
+    }))
 );

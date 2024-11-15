@@ -51,6 +51,7 @@ const newAuthGuard = (next: ActivatedRouteSnapshot, routerStateSnapshot: RouterS
     const authenticationService = inject(AuthenticationService);
     const store = inject(Store<LoginState>);
     const spinnerService = inject(NgxSpinnerService);
+    store.dispatch(LoginActions.setTargetPath({ path: routerStateSnapshot.url }));
     spinnerService.show();
     return authStateService.isAuthenticated()
         .pipe(

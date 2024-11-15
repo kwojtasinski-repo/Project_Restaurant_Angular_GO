@@ -13,3 +13,4 @@ export const loginSuccess = createAction('[Login] Login Success');
 export const logoutRequest = createAction('[Login] Logout Request');
 export const logoutRequestSuccess = createAction('[Login] Logout Request Success');
 export const logoutRequestFailed = createAction('[Login] Logout Request Failed', props<{ error: string }>());
+export const setTargetPath = createAction('[Login] Set Target Path', props<{ path: string }>());
