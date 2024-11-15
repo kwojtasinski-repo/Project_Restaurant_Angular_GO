@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AppService } from './services/app.service';
+import { Store } from '@ngrx/store';
+import { AppState } from './stores/app/app.state';
+import * as AppActions from './stores/app/app.actions';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +12,7 @@ import { AppService } from './services/app.service';
 export class AppComponent implements OnInit {
   private headerHiddenUrls: string[] = [];
 
-  constructor(private router: Router, private appService: AppService) { }
+  constructor(private router: Router, private appStore: Store<AppState>) { }
 
   public ngOnInit(): void {
     for (const route of this.router.config) {
@@ -27,11 +29,11 @@ export class AppComponent implements OnInit {
   }
 
   public onActivateRoute() {
-    this.appService.setCurrentUrl(this.router.url);
+    this.appStore.dispatch(AppActions.setCurrentUrl({ currentUrl: this.router.url }));
     if (this.headerHiddenUrls.some(url => this.getUrlWithoutParams(this.router.url) === url)) {
-        this.appService.hideHeader();
+      this.appStore.dispatch(AppActions.disableHeader());
     } else {
-        this.appService.showHeader();
+      this.appStore.dispatch(AppActions.enableHeader());
     }
   }
 
