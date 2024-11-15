@@ -16,13 +16,7 @@ import { MyOrdersComponent } from "./components/orders/my-orders/my-orders.compo
 import { RegisterComponent } from "./components/register/register.component";
 import { RegisterSuccessComponent } from "./components/register-success/register-success.component";
 import { authGuard } from "./guards/auth-guard";
-
-const adminGuard = (next: ActivatedRouteSnapshot, _: RouterStateSnapshot) => {
-    const authService = inject(AuthStateService);
-    return authService.getUser().pipe(
-        map((user) => user?.role === 'admin' ? true : createUrlTreeFromSnapshot(next, ['/menu']))
-    );
-};
+import { adminGuard } from "./guards/admin-guard";
 
 const authorizedGuard = (next: ActivatedRouteSnapshot, _: RouterStateSnapshot) => {
     const authService = inject(AuthStateService);
