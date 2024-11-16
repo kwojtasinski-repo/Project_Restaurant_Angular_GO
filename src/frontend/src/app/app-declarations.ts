@@ -2,6 +2,7 @@ import { AppComponent } from "./app.component";
 import { CartsComponent } from "./components/carts/carts.component";
 import { AddCategoryComponent } from "./components/category/add-category/add-category.component";
 import { CategoriesComponent } from "./components/category/categories/categories.component";
+import { CategoryFormComponent } from "./components/category/category-form/category-form.component";
 import { EditCategoryComponent } from "./components/category/edit-category/edit-category.component";
 import { FooterComponent } from "./components/footer/footer.component";
 import { HeaderComponent } from "./components/header/header.component";
@@ -46,4 +47,5 @@ export const appDeclarations = [
     ErrorDialogComponent,
     RegisterComponent,
     RegisterSuccessComponent,
+    CategoryFormComponent
   ]
