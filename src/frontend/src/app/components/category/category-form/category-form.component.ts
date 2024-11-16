@@ -11,7 +11,21 @@ import { getValidationMessage } from 'src/app/validations/validations';
 })
 export class CategoryFormComponent implements OnDestroy, AfterViewInit {
   @Input()
-  public category: Category | null | undefined;
+  public get category(): Category | null | undefined {
+    return this._category;
+  }
+
+  public set category(category: Category | null | undefined) {
+    this._category = category;
+    this.assignVariables();
+    this.categoryChanged.emit({
+        id: this._category?.id ?? '',
+        name: this._category?.name ?? '',
+        deleted: this._category?.deleted ?? false
+      })
+  }
+
+  private _category: Category | null | undefined;
 
   @Input()
   public buttonNames: Array<string> = ['Dodaj', 'Anuluj'];
@@ -37,9 +51,9 @@ export class CategoryFormComponent implements OnDestroy, AfterViewInit {
     this.changeDetector.detectChanges();
     this.categoryForm.valueChanges.pipe(debounceTime(10), takeUntil(this.categoryFormValueChanged$))
       .subscribe((value) => this.categoryChanged.emit({
-          id: this.category?.id ?? '',
+          id: this._category?.id ?? '',
           name: value.categoryName,
-          deleted: this.category?.deleted ?? false
+          deleted: this._category?.deleted ?? false
         })
       );
   }
@@ -69,7 +83,7 @@ export class CategoryFormComponent implements OnDestroy, AfterViewInit {
 
   private assignVariables(): void {
     this.categoryForm = new FormGroup({
-      categoryName: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(100), Validators.minLength(3)])),
+      categoryName: new FormControl(this._category?.name ?? '', Validators.compose([Validators.required, Validators.maxLength(100), Validators.minLength(3)])),
     });
   }
 }

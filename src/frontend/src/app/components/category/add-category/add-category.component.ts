@@ -5,7 +5,6 @@ import { CategoryState } from 'src/app/stores/category/category.state';
 import { Subject, debounceTime, map, takeUntil } from 'rxjs';
 import { getError } from 'src/app/stores/category/category.selectors';
 import * as CategoryActions from 'src/app/stores/category/category.actions';
-import { getValidationMessage } from 'src/app/validations/validations';
 import { Category } from 'src/app/models/category';
 
 @Component({
@@ -40,11 +39,6 @@ export class AddCategoryComponent implements OnInit, OnDestroy, AfterViewInit {
     ).subscribe();
   }
 
-  public ngOnDestroy(): void {
-    this.categoryFormValueChanged$.unsubscribe();
-    this.store.dispatch(CategoryActions.clearErrors());
-  }
-
   public onCategoryChange(category: Category): void {
     this.store.dispatch(CategoryActions.categoryFormUpdate({
       category
@@ -59,7 +53,8 @@ export class AddCategoryComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store.dispatch(CategoryActions.categoryCancelOperation());
   }
 
-  public getErrorMessage(error: any): string | null {
-    return getValidationMessage(error);
+  public ngOnDestroy(): void {
+    this.categoryFormValueChanged$.unsubscribe();
+    this.store.dispatch(CategoryActions.clearErrors());
   }
 }

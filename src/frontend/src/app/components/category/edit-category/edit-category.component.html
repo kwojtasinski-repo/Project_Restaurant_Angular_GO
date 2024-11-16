@@ -8,7 +8,7 @@
         </div>
     </div>
 
-    <ng-container *ngIf="isLoading === true; then loading else showCategory"></ng-container>
+    <ng-container *ngIf="(category$ | async) && (isLoading$ | async) === true; then loading else showCategory"></ng-container>
 
 </div>
 
@@ -19,35 +19,17 @@
 </ng-template>
 
 <ng-template #showCategory>
-    <ng-container *ngIf="category;then categoryFound else categoryNotFound"></ng-container>
+    <ng-container *ngIf="(category$ | async);then categoryFound else categoryNotFound"></ng-container>
 </ng-template>
 
-<ng-template #categoryFound>
-    <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
-        <div class="form-group">
-            <label for="category-name">
-                Nazwa
-            </label>
-            <input id="category-name" type="text" class="form-control" formControlName="categoryName" placeholder="Wpisz nazwę kategorii" />
-            <ng-container *ngIf="categoryForm.dirty">
-                <ng-container *ngFor="let error of categoryForm.get('categoryName')?.errors | keyvalue">
-                    <ng-container *ngIf="error.value && this.categoryForm.get('categoryName')?.dirty">
-                        <div class="invalid-feedback d-block text-break">
-                            {{ getErrorMessage(error) }}
-                        </div>
-                    </ng-container>
-                </ng-container>
-            </ng-container>
-        </div>
-        <div class="mt-2">
-            <button class="btn btn-success me-2">
-                Zatwierdź
-            </button>
-            <button class="btn btn-secondary" type="button" (click)="cancelClick()">
-                Anuluj
-            </button>
-        </div>
-    </form>
+<ng-template #categoryFound>  
+    <app-category-form
+        [category]="(category$ | async)" 
+        [buttonNames]="['Zatwierdź', 'Anuluj']"
+        (categoryChanged)="onCategoryChange($event)" 
+        (submitValid)="onSubmit()" 
+        (cancel)="cancelClick()">
+    </app-category-form>
 </ng-template>
 
 <ng-template #categoryNotFound>

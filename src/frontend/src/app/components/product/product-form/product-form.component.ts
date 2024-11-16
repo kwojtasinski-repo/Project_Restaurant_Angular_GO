@@ -12,7 +12,29 @@ import { getValidationMessage } from 'src/app/validations/validations';
 })
 export class ProductFormComponent implements OnDestroy, AfterViewInit {
   @Input()
-  public product: Product | null | undefined;
+  public get product(): Product | null | undefined {
+    return this._product;
+  }
+
+  public set product(product: Product | null | undefined) {
+    this._product = product;
+    this.assignVariables();
+    this.productChanged.emit({
+      id: this._product?.id ?? '',
+      name: this._product?.name ?? '',
+      price: this._product?.price ?? 0,
+      category: this._product && this._product.category ? {
+        id: this._product.category.id,
+        name: this._product.category.name,
+        deleted: this._product.category.deleted,
+      } : null,
+      description: this._product?.description ?? '',
+      deleted: this._product?.deleted ?? false
+    });
+  }
+
+  private _product: Product | null | undefined;
+
   @Input()
   public categories: Category[] | null = [];
 
@@ -32,6 +54,7 @@ export class ProductFormComponent implements OnDestroy, AfterViewInit {
   public locale: string = 'pl-PL';
   public minimumFractionDigits: number = 2;
   public maximumFractionDigits: number = 2;
+  private localeNumberFormat = new Intl.NumberFormat(this.locale, { minimumFractionDigits: this.minimumFractionDigits, maximumFractionDigits: this.maximumFractionDigits });
   private comma: string = ".";
   private productFormValueChanged$ = new Subject();
   
@@ -91,13 +114,16 @@ export class ProductFormComponent implements OnDestroy, AfterViewInit {
   }
 
   private assignVariables(): void {
-    const localeNumberFormat = new Intl.NumberFormat(this.locale, { minimumFractionDigits: this.minimumFractionDigits, maximumFractionDigits: this.maximumFractionDigits });
     this.productForm = new FormGroup({
       productName: new FormControl(this.product?.name ?? '', Validators.compose([Validators.required, Validators.maxLength(100), Validators.minLength(3)])),
       productDescription: new FormControl(this.product?.description ?? '', Validators.maxLength(5000)),
-      productCost: new FormControl(localeNumberFormat.format(this.product?.price ?? 0), Validators.compose([Validators.required, Validators.min(0)])),
+      productCost: new FormControl(this.setProductPrice(this.product?.price ?? 0), Validators.compose([Validators.required, Validators.min(0)])),
       productCategory: new FormControl(this.product?.category ?? '', Validators.required),
     });
-    this.comma = localeNumberFormat.format(0.1).charAt(1);
+    this.comma = this.localeNumberFormat.format(0.1).charAt(1);
+  }
+
+  private setProductPrice(price: number): string {
+    return this.localeNumberFormat.format(price);
   }
 }

@@ -63,11 +63,7 @@ export class EditProductsComponent implements OnInit, OnDestroy {
       this.categories$ = pipGetAll$.pipe(
         map(([_, categories]) => categories)
       );
-      pipGetAll$.subscribe(([product, _]) => {
-        if (product) {
-          this.store.dispatch(ProductActions.productFormUpdate({ product }));
-        }
-      });
+      pipGetAll$.subscribe();
   }
 
   public onSubmit() {
