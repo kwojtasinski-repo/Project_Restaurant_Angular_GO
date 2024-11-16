@@ -33,7 +33,7 @@ export class CategoryEffects {
     this.actions$.pipe(
       ofType(CategoryActions.categoryAddRequestSuccess),
       map(() => {
-        this.router.navigate(['/menu']);
+        this.router.navigate(['/categories']);
         return CategoryActions.categoryFormClear();
       })
     )

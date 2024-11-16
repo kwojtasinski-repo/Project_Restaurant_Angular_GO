@@ -6,6 +6,7 @@ import { Subject, debounceTime, map, takeUntil } from 'rxjs';
 import { getError } from 'src/app/stores/category/category.selectors';
 import * as CategoryActions from 'src/app/stores/category/category.actions';
 import { getValidationMessage } from 'src/app/validations/validations';
+import { Category } from 'src/app/models/category';
 
 @Component({
   selector: 'app-add-category',
@@ -44,21 +45,21 @@ export class AddCategoryComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store.dispatch(CategoryActions.clearErrors());
   }
 
+  public onCategoryChange(category: Category): void {
+    this.store.dispatch(CategoryActions.categoryFormUpdate({
+      category
+    }));
+  }
+
   public onSubmit(): void {
-    if (this.categoryForm.invalid) {
-      Object.keys(this.categoryForm.controls).forEach(key => {
-        this.categoryForm.get(key)?.markAsDirty();
-      });
-      return;
-    }
     this.store.dispatch(CategoryActions.categoryAddRequestBegin());
+  }
+
+  public onCancel(): void {
+    this.store.dispatch(CategoryActions.categoryCancelOperation());
   }
 
   public getErrorMessage(error: any): string | null {
     return getValidationMessage(error);
-  }
-
-  public cancelClick(): void {
-    this.store.dispatch(CategoryActions.categoryCancelOperation());
   }
 }
