@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import * as CategoryActions from './category.actions';
-import { of, catchError, exhaustMap, map } from 'rxjs';
+import { of, catchError, exhaustMap, map, withLatestFrom } from 'rxjs';
 import { Router } from '@angular/router';
 import { getCategory } from './category.selectors';
 import { CategoryState } from './category.state';
@@ -13,7 +13,7 @@ export class CategoryEffects {
   categoryAddRequestBegin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(CategoryActions.categoryAddRequestBegin),
-      concatLatestFrom(() => this.store.select(getCategory)),
+      withLatestFrom(this.store.select(getCategory)),
       exhaustMap(([_, product]) => this.categoryService.add(product!).pipe(
         map((_) => CategoryActions.categoryAddRequestSuccess()),
         catchError((err) => { 
@@ -42,7 +42,7 @@ export class CategoryEffects {
   categoryUpdateRequestBegin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(CategoryActions.categoryUpdateRequestBegin),
-      concatLatestFrom(() => this.store.select(getCategory)),
+      withLatestFrom(this.store.select(getCategory)),
       exhaustMap(([_, category]) => this.categoryService.update(category!).pipe(
         map((_) => CategoryActions.categoryAddRequestSuccess()),
         catchError((err) => { 

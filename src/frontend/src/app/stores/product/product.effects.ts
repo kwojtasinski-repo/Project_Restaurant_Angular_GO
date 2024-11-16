@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import * as ProductActions from './product.actions';
-import { of, catchError, exhaustMap, map } from 'rxjs';
+import { of, catchError, exhaustMap, map, withLatestFrom } from 'rxjs';
 import { Router } from '@angular/router';
 import { ProductService } from 'src/app/services/product.service';
 import { getProduct } from './product.selectors';
@@ -13,7 +13,7 @@ export class ProductEffects {
   productAddRequestBegin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ProductActions.productAddRequestBegin),
-      concatLatestFrom(() => this.store.select(getProduct)),
+      withLatestFrom(this.store.select(getProduct)),
       exhaustMap(([_, product]) => this.productService.add({
         id: '0',
         name: product?.name ?? '',
@@ -48,7 +48,7 @@ export class ProductEffects {
   productUpdateRequestBegin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ProductActions.productUpdateRequestBegin),
-      concatLatestFrom(() => this.store.select(getProduct)),
+      withLatestFrom(this.store.select(getProduct)),
       exhaustMap(([_, product]) => this.productService.update({
         id: product?.id ?? '0',
         name: product?.name ?? '',
