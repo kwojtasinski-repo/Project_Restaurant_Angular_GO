@@ -4,6 +4,7 @@ import { AddCategoryComponent } from './add-category.component';
 import { provideMockStore } from '@ngrx/store/testing';
 import { initialState } from 'src/app/stores/category/category.reducers';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CategoryFormComponent } from '../category-form/category-form.component';
 
 describe('AddCategoryComponent', () => {
   let component: AddCategoryComponent;
@@ -11,7 +12,7 @@ describe('AddCategoryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddCategoryComponent ],
+      declarations: [ AddCategoryComponent, CategoryFormComponent ],
       imports: [
         ReactiveFormsModule
       ],

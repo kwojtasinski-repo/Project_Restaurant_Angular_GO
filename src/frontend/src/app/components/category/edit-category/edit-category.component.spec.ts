@@ -7,6 +7,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
+import { CategoryFormComponent } from '../category-form/category-form.component';
 
 describe('EditCategoryComponent', () => {
   let component: EditCategoryComponent;
@@ -14,7 +15,7 @@ describe('EditCategoryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EditCategoryComponent ],
+      declarations: [ EditCategoryComponent, CategoryFormComponent ],
       providers: [
         provideRouter([]),
         provideMockStore({ initialState }),
