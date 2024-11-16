@@ -1,10 +1,10 @@
-import { Product } from "../models/product";
+import { Product } from '../models/product';
 import { ProductService } from '../services/product.service';
 import { Observable } from 'rxjs';
-import { completeObservable, errorObservable } from "./test-utils";
-import { HttpClient } from "@angular/common/http";
-import { HttpXhrBackend } from "@angular/common/http";
-import { ProductSendDto } from "../models/product-send-dto";
+import { completeObservable, errorObservable } from './test-utils';
+import { HttpClient } from '@angular/common/http';
+import { HttpXhrBackend } from '@angular/common/http';
+import { ProductSendDto } from '../models/product-send-dto';
 
 class InMemoryProductService extends ProductService {
     private products: Product[] = [];
@@ -47,5 +47,5 @@ class InMemoryProductService extends ProductService {
 
 const productService = new InMemoryProductService(new HttpClient(new HttpXhrBackend({
     build: () => new XMLHttpRequest()
-})), "");
+})), '');
 export default productService;

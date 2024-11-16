@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Product } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
 import { BehaviorSubject, EMPTY, Observable, catchError, finalize, map, shareReplay, take, tap } from 'rxjs';
-import { Store } from "@ngrx/store";
+import { Store } from '@ngrx/store';
 import { CartState } from 'src/app/stores/cart/cart.state';
 import { addProductToCart, clearErrors } from 'src/app/stores/cart/cart.actions';
 import { NgxSpinnerService } from 'ngx-spinner';

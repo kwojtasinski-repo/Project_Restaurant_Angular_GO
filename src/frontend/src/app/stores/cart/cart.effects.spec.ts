@@ -35,7 +35,7 @@ describe('CartEffects', () => {
         provideMockStore({ initialState }),
         provideMockStore({ initialState: initialLoginState }),
         {
-          provide: "API_URL", useValue: ''
+          provide: 'API_URL', useValue: ''
         }
       ],
       imports: [

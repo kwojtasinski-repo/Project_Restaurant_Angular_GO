@@ -22,7 +22,7 @@ describe('CategoriesComponent', () => {
       providers: [
         provideRouter([]),
         {
-          provide: "API_URL", useValue: ''
+          provide: 'API_URL', useValue: ''
         }
       ]
     })

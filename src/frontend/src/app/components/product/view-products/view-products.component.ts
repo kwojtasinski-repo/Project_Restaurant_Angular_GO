@@ -4,7 +4,7 @@ import { EMPTY, Observable, catchError, finalize, shareReplay, take, tap } from 
 import { Product } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { Store } from "@ngrx/store";
+import { Store } from '@ngrx/store';
 import { CartState } from 'src/app/stores/cart/cart.state';
 import { addProductToCart, clearErrors } from 'src/app/stores/cart/cart.actions';
 import { LoginState } from 'src/app/stores/login/login.state';

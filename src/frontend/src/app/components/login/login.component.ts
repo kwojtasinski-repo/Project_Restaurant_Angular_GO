@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Actions, ofType } from '@ngrx/effects';
-import { Store } from "@ngrx/store";
+import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { loginRequestFailed } from 'src/app/stores/login/login.actions';
 import { loginRequest } from 'src/app/stores/login/login.actions';

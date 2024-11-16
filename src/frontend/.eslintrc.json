@@ -37,7 +37,8 @@
             "argsIgnorePattern": "^_",       // Ignore unused variables that start with '_'
             "varsIgnorePattern": "^_"        // Ignore unused variables in general that start with '_'
           }
-        ]
+        ],
+        "quotes": ["error", "single", { "avoidEscape": true }]
       }
     },
     {

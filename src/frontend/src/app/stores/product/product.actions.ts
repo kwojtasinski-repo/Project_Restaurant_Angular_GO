@@ -1,5 +1,5 @@
-import { createAction, props } from "@ngrx/store";
-import { Product } from "src/app/models/product";
+import { createAction, props } from '@ngrx/store';
+import { Product } from 'src/app/models/product';
 
 export const productFormClear = createAction('[Product] Product Form Clear');
 export const productFormUpdate = createAction('[Product] Product Form Update', props<{ product: Product }>());

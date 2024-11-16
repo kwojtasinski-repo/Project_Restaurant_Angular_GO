@@ -1,9 +1,9 @@
-import { createFeatureSelector, createSelector } from "@ngrx/store";
-import { LoginState } from "./login.state";
-import { loginStoreName } from "./login.store.names";
-import { User } from "src/app/models/user";
-import { RequestState } from "src/app/models/request-state";
-import { Credentials } from "src/app/models/credentials";
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { LoginState } from './login.state';
+import { loginStoreName } from './login.store.names';
+import { User } from 'src/app/models/user';
+import { RequestState } from 'src/app/models/request-state';
+import { Credentials } from 'src/app/models/credentials';
 
 const selectLoginState = createFeatureSelector<LoginState>(loginStoreName);
 export const getCredentials = createSelector(selectLoginState, (state): Credentials => state.credentials)

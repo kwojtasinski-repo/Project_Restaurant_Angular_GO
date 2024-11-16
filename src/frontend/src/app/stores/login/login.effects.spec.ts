@@ -18,7 +18,7 @@ describe('LoginEffects', () => {
         provideMockActions(() => actions$),
         provideMockStore({ initialState }),
         {
-          provide: "API_URL", useValue: ''
+          provide: 'API_URL', useValue: ''
         }        
       ],
       imports: [

@@ -1,7 +1,7 @@
-import { createReducer, on } from "@ngrx/store";
-import { OrderState as OrderState } from "./order.state";
-import * as OrderActions from "./order.actions";
-import { RequestState } from "src/app/models/request-state";
+import { createReducer, on } from '@ngrx/store';
+import { OrderState as OrderState } from './order.state';
+import * as OrderActions from './order.actions';
+import { RequestState } from 'src/app/models/request-state';
 
 export const initialState: OrderState = {
     order: undefined,

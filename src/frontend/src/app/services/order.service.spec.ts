@@ -13,7 +13,7 @@ describe('OrderService', () => {
       ],
       providers: [
         {
-          provide: "API_URL", useValue: ''
+          provide: 'API_URL', useValue: ''
         }
       ]
     });

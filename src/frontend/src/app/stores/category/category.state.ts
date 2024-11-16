@@ -1,4 +1,4 @@
-import { Category } from "src/app/models/category";
+import { Category } from 'src/app/models/category';
 
 export interface CategoryState {
   category: Category | null;

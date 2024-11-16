@@ -1,7 +1,7 @@
-import { createReducer, on } from "@ngrx/store";
-import { CartState } from "./cart.state";
+import { createReducer, on } from '@ngrx/store';
+import { CartState } from './cart.state';
 import * as CartActions from './cart.actions';
-import { RequestState } from "src/app/models/request-state";
+import { RequestState } from 'src/app/models/request-state';
 
 export const initialState: CartState = {
     cart: [],

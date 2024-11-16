@@ -1,5 +1,5 @@
-import { Cart } from "src/app/models/cart";
-import { RequestState } from "src/app/models/request-state";
+import { Cart } from 'src/app/models/cart';
+import { RequestState } from 'src/app/models/request-state';
 
 export interface CartState {
   cart: Cart[];

@@ -1,5 +1,5 @@
-import { createAction, props } from "@ngrx/store";
-import { Category } from "src/app/models/category";
+import { createAction, props } from '@ngrx/store';
+import { Category } from 'src/app/models/category';
 
 export const categoryFormClear = createAction('[Category] Category Form Clear');
 export const categoryFormUpdate = createAction('[Category] Category Form Update', props<{ category: Category }>());

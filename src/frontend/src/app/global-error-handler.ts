@@ -1,7 +1,7 @@
-import { HttpErrorResponse } from "@angular/common/http";
-import { ErrorHandler, Injectable, Injector, NgZone } from "@angular/core";
-import { ErrorDialogService } from "./services/error-dialog.service";
-import { NgxSpinnerService } from "ngx-spinner";
+import { HttpErrorResponse } from '@angular/common/http';
+import { ErrorHandler, Injectable, Injector, NgZone } from '@angular/core';
+import { ErrorDialogService } from './services/error-dialog.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {

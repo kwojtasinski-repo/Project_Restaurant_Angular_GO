@@ -1,14 +1,14 @@
-import { inject } from "@angular/core";
-import { ActivatedRouteSnapshot, createUrlTreeFromSnapshot, RouterStateSnapshot } from "@angular/router";
-import { AuthenticationService } from "../services/authentication.service";
-import { Store } from "@ngrx/store";
-import { NgxSpinnerService } from "ngx-spinner";
-import * as LoginActions from "../stores/login/login.actions";
-import * as LoginSelectors from "../stores/login/login.selectors";
-import { LoginState } from "../stores/login/login.state";
-import { catchError, exhaustMap, finalize, of } from "rxjs";
-import { User } from "../models/user";
-import { HttpErrorResponse } from "@angular/common/http";
+import { inject } from '@angular/core';
+import { ActivatedRouteSnapshot, createUrlTreeFromSnapshot, RouterStateSnapshot } from '@angular/router';
+import { AuthenticationService } from '../services/authentication.service';
+import { Store } from '@ngrx/store';
+import { NgxSpinnerService } from 'ngx-spinner';
+import * as LoginActions from '../stores/login/login.actions';
+import * as LoginSelectors from '../stores/login/login.selectors';
+import { LoginState } from '../stores/login/login.state';
+import { catchError, exhaustMap, finalize, of } from 'rxjs';
+import { User } from '../models/user';
+import { HttpErrorResponse } from '@angular/common/http';
 
 export default (next: ActivatedRouteSnapshot, routerStateSnapshot: RouterStateSnapshot) => {
     if (routerStateSnapshot.url === '/') {

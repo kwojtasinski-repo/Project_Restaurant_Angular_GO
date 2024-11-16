@@ -174,8 +174,8 @@ describe('ProductFormComponent with init data', () => {
     expect(errors).not.toBeUndefined();
     expect(errors).not.toBeNull();
     expect(errors.length).toBeGreaterThan(0);
-    expect(errors.some(e => e.innerHTML.includes(`Pole nie powinno przekroczyć 100 znaków`))).toBeTrue();
-    expect(errors.some(e => e.innerHTML.includes(`Pole nie powinno przekroczyć 5000 znaków`))).toBeTrue();
+    expect(errors.some(e => e.innerHTML.includes('Pole nie powinno przekroczyć 100 znaków'))).toBeTrue();
+    expect(errors.some(e => e.innerHTML.includes('Pole nie powinno przekroczyć 5000 znaków'))).toBeTrue();
   });
 });
 

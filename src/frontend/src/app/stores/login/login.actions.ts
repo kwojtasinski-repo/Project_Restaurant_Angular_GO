@@ -1,6 +1,6 @@
-import { createAction, props } from "@ngrx/store";
-import { Credentials } from "src/app/models/credentials";
-import { User } from "src/app/models/user";
+import { createAction, props } from '@ngrx/store';
+import { Credentials } from 'src/app/models/credentials';
+import { User } from 'src/app/models/user';
 
 export const reloginRequestSuccess = createAction('[Login] ReLogin Request Success', props<{ user: User }>());
 export const reloginRequestFailed = createAction('[Login] ReLogin Request Failed', props<{ error: string }>());

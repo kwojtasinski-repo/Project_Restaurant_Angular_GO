@@ -1,6 +1,6 @@
-import { createReducer, on } from "@ngrx/store"
-import * as AppActions from "./app.actions"
-import { AppState } from "./app.state"
+import { createReducer, on } from '@ngrx/store'
+import * as AppActions from './app.actions'
+import { AppState } from './app.state'
 
 export const initialState: AppState = {
     showHeader: false,

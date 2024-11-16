@@ -2,7 +2,7 @@ export function getValidationMessage(code: any): string | null {
     return mapCodeToMessage(code)
 }
 
-export const PATTERN_ONE_UPPER_ONE_LOWER_ONE_SPECIAL_CHARACTER = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])((?=.*\\W)|(?=.*_))^[^ ]+$";
+export const PATTERN_ONE_UPPER_ONE_LOWER_ONE_SPECIAL_CHARACTER = '^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])((?=.*\\W)|(?=.*_))^[^ ]+$';
 
 function mapCodeToMessage(code: any): string | null {
     if (!code) {

@@ -1,6 +1,6 @@
-import { Directive, HostListener, OnDestroy, Self, Input, OnInit, AfterViewInit } from "@angular/core";
-import { NgControl } from "@angular/forms";
-import { Subject, debounceTime, takeUntil } from "rxjs";
+import { Directive, HostListener, OnDestroy, Self, Input, OnInit, AfterViewInit } from '@angular/core';
+import { NgControl } from '@angular/forms';
+import { Subject, debounceTime, takeUntil } from 'rxjs';
 
 @Directive({
     selector: '[currencyFormatter]'
@@ -50,7 +50,7 @@ import { Subject, debounceTime, takeUntil } from "rxjs";
   
     private updateValue(value: any) {
       const inputVal = value || '';
-      const pattern = new RegExp("[^0-9" + this.comma + "]", 'g');
+      const pattern = new RegExp('[^0-9' + this.comma + ']', 'g');
       this.setValue(inputVal ?
         this.validateDecimalValue(inputVal.replace(pattern, '')) : '');
     }

@@ -36,7 +36,7 @@ describe('MenuComponent', () => {
         provideMockStore({ initialState }),
         provideMockStore({ initialState: cartInitialState }),
         {
-          provide: "API_URL", useValue: ''
+          provide: 'API_URL', useValue: ''
         },
         {
           provide: ProductService, useValue: productService

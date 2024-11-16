@@ -1,4 +1,4 @@
-import { OrderProduct } from "./orderProduct";
+import { OrderProduct } from './orderProduct';
 
 export class Order {
     id: string = '';

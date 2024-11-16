@@ -55,7 +55,7 @@ export class ProductFormComponent implements OnDestroy, AfterViewInit {
   public minimumFractionDigits: number = 2;
   public maximumFractionDigits: number = 2;
   private localeNumberFormat = new Intl.NumberFormat(this.locale, { minimumFractionDigits: this.minimumFractionDigits, maximumFractionDigits: this.maximumFractionDigits });
-  private comma: string = ".";
+  private comma: string = '.';
   private productFormValueChanged$ = new Subject();
   
   constructor(private changeDetector: ChangeDetectorRef) {
@@ -109,8 +109,8 @@ export class ProductFormComponent implements OnDestroy, AfterViewInit {
   }
 
   private onPriceChange(value: string): number {
-    const newValue = this.comma === "," ? value.replace(this.comma, ".") : value;
-    return new Number(newValue.replace(/[^0-9.-]+/g,"")).valueOf();
+    const newValue = this.comma === ',' ? value.replace(this.comma, '.') : value;
+    return new Number(newValue.replace(/[^0-9.-]+/g,'')).valueOf();
   }
 
   private assignVariables(): void {

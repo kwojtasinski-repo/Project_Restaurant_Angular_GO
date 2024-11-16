@@ -1,9 +1,9 @@
-import { Directive, OnDestroy, OnInit } from "@angular/core";
-import { FormGroupDirective } from "@angular/forms";
-import { LoginState } from "../stores/login/login.state";
-import { Store } from "@ngrx/store";
-import { Subscription, debounceTime, take } from "rxjs";
-import { loginFormUpdate } from "../stores/login/login.actions";
+import { Directive, OnDestroy, OnInit } from '@angular/core';
+import { FormGroupDirective } from '@angular/forms';
+import { LoginState } from '../stores/login/login.state';
+import { Store } from '@ngrx/store';
+import { Subscription, debounceTime, take } from 'rxjs';
+import { loginFormUpdate } from '../stores/login/login.actions';
 
 @Directive({
     selector: '[loginForm]'

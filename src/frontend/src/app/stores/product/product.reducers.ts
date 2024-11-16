@@ -1,6 +1,6 @@
-import { createReducer, on } from "@ngrx/store";
-import { ProductState } from "./product.state";
-import * as ProductActions from "./product.actions";
+import { createReducer, on } from '@ngrx/store';
+import { ProductState } from './product.state';
+import * as ProductActions from './product.actions';
 
 export const initialState: ProductState = {
     product: null,

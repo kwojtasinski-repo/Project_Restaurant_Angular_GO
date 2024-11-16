@@ -32,7 +32,7 @@ describe('ViewProductsComponent', () => {
         provideRouter([]),
         provideMockStore({ initialState }),
         {
-          provide: "API_URL", useValue: ''
+          provide: 'API_URL', useValue: ''
         },
         {
           provide: ProductService,
@@ -90,7 +90,7 @@ describe('ViewProductsComponent when product available', () => {
         provideRouter([]),
         provideMockStore({ initialState }),
         {
-          provide: "API_URL", useValue: ''
+          provide: 'API_URL', useValue: ''
         },
         {
           provide: ProductService,

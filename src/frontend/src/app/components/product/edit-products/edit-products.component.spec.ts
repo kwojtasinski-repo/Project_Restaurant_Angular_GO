@@ -35,7 +35,7 @@ describe('EditProductsComponent', () => {
         provideRouter([]),
         provideMockStore({ initialState }),
         {
-          provide: "API_URL", useValue: ''
+          provide: 'API_URL', useValue: ''
         },
         {
           provide: ProductService, useValue: productService

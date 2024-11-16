@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Store } from "@ngrx/store";
+import { Store } from '@ngrx/store';
 import { OrderState } from 'src/app/stores/order/order.state';
 import { fetchOrder } from 'src/app/stores/order/order.actions';
 import { getOrder } from 'src/app/stores/order/order.selectors';

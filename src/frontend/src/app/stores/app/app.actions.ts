@@ -1,4 +1,4 @@
-import { createAction, props } from "@ngrx/store";
+import { createAction, props } from '@ngrx/store';
 
 export const enableHeader = createAction('[App] Enable Header');
 export const disableHeader = createAction('[App] Disable Header');

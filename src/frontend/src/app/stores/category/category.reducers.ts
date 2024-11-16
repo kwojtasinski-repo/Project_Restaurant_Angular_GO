@@ -1,6 +1,6 @@
-import { createReducer, on } from "@ngrx/store";
-import { CategoryState } from "./category.state";
-import * as CategoryActions from "./category.actions";
+import { createReducer, on } from '@ngrx/store';
+import { CategoryState } from './category.state';
+import * as CategoryActions from './category.actions';
 
 export const initialState: CategoryState = {
     category: null,

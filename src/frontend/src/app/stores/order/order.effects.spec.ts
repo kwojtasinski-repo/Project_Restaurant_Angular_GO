@@ -37,7 +37,7 @@ describe('OrderEffects', () => {
         }),
         provideMockStore({ initialState }),
         {
-          provide: "API_URL", useValue: ''
+          provide: 'API_URL', useValue: ''
         }
       ]
     });

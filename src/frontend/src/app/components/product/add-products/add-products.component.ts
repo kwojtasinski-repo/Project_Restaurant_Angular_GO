@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProductState } from 'src/app/stores/product/product.state';
-import { Store } from "@ngrx/store";
+import { Store } from '@ngrx/store';
 import * as ProductActions from 'src/app/stores/product/product.actions';
 import { Product } from 'src/app/models/product';
 import { getError } from 'src/app/stores/product/product.selectors';

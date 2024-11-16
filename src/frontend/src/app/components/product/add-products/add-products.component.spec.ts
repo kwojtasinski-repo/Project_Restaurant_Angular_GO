@@ -22,7 +22,7 @@ describe('AddProductsComponent', () => {
       providers: [
         provideMockStore({ initialState }),
         {
-          provide: "API_URL", useValue: ''
+          provide: 'API_URL', useValue: ''
         },
       ]
     })

@@ -1,8 +1,8 @@
 import { Observable } from 'rxjs';
-import { completeObservable, errorObservable } from "./test-utils";
-import { HttpClient } from "@angular/common/http";
-import { HttpXhrBackend } from "@angular/common/http";
-import { CategoryService } from "../services/category.service";
+import { completeObservable, errorObservable } from './test-utils';
+import { HttpClient } from '@angular/common/http';
+import { HttpXhrBackend } from '@angular/common/http';
+import { CategoryService } from '../services/category.service';
 import { Category } from '../models/category';
 
 class InMemoryCategoryService extends CategoryService {
@@ -35,5 +35,5 @@ class InMemoryCategoryService extends CategoryService {
 
 const categoryService = new InMemoryCategoryService(new HttpClient(new HttpXhrBackend({
     build: () => new XMLHttpRequest()
-})), "");
+})), '');
 export default categoryService;

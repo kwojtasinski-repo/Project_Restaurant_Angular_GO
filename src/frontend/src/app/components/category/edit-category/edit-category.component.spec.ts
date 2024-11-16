@@ -20,7 +20,7 @@ describe('EditCategoryComponent', () => {
         provideRouter([]),
         provideMockStore({ initialState }),
         {
-          provide: "API_URL", useValue: ''
+          provide: 'API_URL', useValue: ''
         }
       ],
       imports: [

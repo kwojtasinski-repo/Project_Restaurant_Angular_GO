@@ -32,7 +32,7 @@ describe('MyOrdersComponent', () => {
         provideMockStore({ initialState }),
         provideMockStore({ initialState }),
         {
-          provide: "API_URL", useValue: ''
+          provide: 'API_URL', useValue: ''
         }
       ]
     })

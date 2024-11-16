@@ -1,21 +1,21 @@
-import { LoginComponent } from "./components/login/login.component";
-import { MenuComponent } from "./components/menu/menu.component";
-import { Routes } from "@angular/router";
-import { AddProductsComponent } from "./components/product/add-products/add-products.component";
-import { EditProductsComponent } from "./components/product/edit-products/edit-products.component";
-import { ViewProductsComponent } from "./components/product/view-products/view-products.component";
-import { CategoriesComponent } from "./components/category/categories/categories.component";
-import { AddCategoryComponent } from "./components/category/add-category/add-category.component";
-import { EditCategoryComponent } from "./components/category/edit-category/edit-category.component";
-import { CartsComponent } from "./components/carts/carts.component";
-import { OrderViewComponent } from "./components/orders/order-view/order-view.component";
-import { MyOrdersComponent } from "./components/orders/my-orders/my-orders.component";
-import { RegisterComponent } from "./components/register/register.component";
-import { RegisterSuccessComponent } from "./components/register-success/register-success.component";
-import authGuard from "./guards/auth-guard";
-import adminGuard from "./guards/admin-guard";
-import authorizedGuard from "./guards/authorized-guard";
-import registerSuccessGuard from "./guards/register-success-guard";
+import { LoginComponent } from './components/login/login.component';
+import { MenuComponent } from './components/menu/menu.component';
+import { Routes } from '@angular/router';
+import { AddProductsComponent } from './components/product/add-products/add-products.component';
+import { EditProductsComponent } from './components/product/edit-products/edit-products.component';
+import { ViewProductsComponent } from './components/product/view-products/view-products.component';
+import { CategoriesComponent } from './components/category/categories/categories.component';
+import { AddCategoryComponent } from './components/category/add-category/add-category.component';
+import { EditCategoryComponent } from './components/category/edit-category/edit-category.component';
+import { CartsComponent } from './components/carts/carts.component';
+import { OrderViewComponent } from './components/orders/order-view/order-view.component';
+import { MyOrdersComponent } from './components/orders/my-orders/my-orders.component';
+import { RegisterComponent } from './components/register/register.component';
+import { RegisterSuccessComponent } from './components/register-success/register-success.component';
+import authGuard from './guards/auth-guard';
+import adminGuard from './guards/admin-guard';
+import authorizedGuard from './guards/authorized-guard';
+import registerSuccessGuard from './guards/register-success-guard';
 
 const adminRoutes = [
     {

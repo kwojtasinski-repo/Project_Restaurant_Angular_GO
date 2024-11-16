@@ -1,7 +1,7 @@
-import { createReducer, on } from "@ngrx/store";
-import { RegisterState } from "./register.state";
-import { RequestState } from "src/app/models/request-state";
-import * as RegisterActions from "./register.actions";
+import { createReducer, on } from '@ngrx/store';
+import { RegisterState } from './register.state';
+import { RequestState } from 'src/app/models/request-state';
+import * as RegisterActions from './register.actions';
 
 export const initialState: RegisterState = {
     email: '',
