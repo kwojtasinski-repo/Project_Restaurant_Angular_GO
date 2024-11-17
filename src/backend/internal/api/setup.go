@@ -54,6 +54,7 @@ func configOptions(config config.Config) {
 		MaxAge:   settings.CookieLifeTime,
 		HTTPOnly: true,
 		Secure:   true,
+		SameSite: securecookie.Strict,
 	})
 	if cookieErr != nil {
 		log.Fatal("ERROR: Cookie cannot be issued ", cookieErr.Error())

@@ -63,7 +63,7 @@ func findModuleRootPath() (roots string) {
 	pathBefore := ""
 	// Look for enclosing go.mod.
 	for {
-		files, _ := os.ReadDir(path)
+		files, err := os.ReadDir(path)
 
 		if err != nil {
 			log.Fatal(err)
