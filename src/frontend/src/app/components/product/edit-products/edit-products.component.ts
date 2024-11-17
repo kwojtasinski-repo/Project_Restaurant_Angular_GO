@@ -13,14 +13,14 @@ import { clearErrors } from 'src/app/stores/cart/cart.actions';
 import { CategoryService } from 'src/app/services/category.service';
 import { Category } from 'src/app/models/category';
 import { ProductFormComponent } from '../product-form/product-form.component';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-edit-products',
     templateUrl: './edit-products.component.html',
     styleUrls: ['./edit-products.component.scss'],
     standalone: true,
-    imports: [NgIf, ProductFormComponent, AsyncPipe]
+    imports: [ProductFormComponent, AsyncPipe]
 })
 export class EditProductsComponent implements OnInit, OnDestroy {
   public product$: Observable<Product | undefined> | undefined;

@@ -1,52 +1,54 @@
 <div class="imgbackground">
 </div>
 <div class="login-form">
+  <div>
+    <h4 class="text-center">Logowanie</h4>
+  </div>
+  @if (error$ | async) {
+    <div class="mt-2 mb-2">
+      <div class="alert alert-danger">
+        {{ error$ | async }}
+      </div>
+    </div>
+  }
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" loginForm="loginForm" >
+    <div class="form-group mt-2 mb-2">
+      <label for="email-input" class="text-white bg-dark label-login-form">Email</label>
+      <input id="email-input" type="email" class="form-control" formControlName="emailAddress" placeholder="Wpisz adres email" />
+      @if (loginForm.dirty) {
+        @for (error of loginForm.get('emailAddress')?.errors | keyvalue; track error) {
+          @if (error.value && this.loginForm.get('emailAddress')?.dirty) {
+            <div class="invalid-feedback d-block bg-dark label-login-form text-break">
+              {{ getErrorMessage(error) }}
+            </div>
+          }
+        }
+      }
+    </div>
+    <div class="form-group mt-2 mb-2">
+      <label for="password-input" class="text-white bg-dark label-login-form">Hasło</label>
+      <input id="password-input" type="password" class="form-control" formControlName="password" placeholder="Wpisz hasło" />
+      @if (loginForm.dirty) {
+        @for (error of loginForm.get('password')?.errors | keyvalue; track error) {
+          @if (error.value && this.loginForm.get('password')?.dirty) {
+            <div class="invalid-feedback d-block bg-dark label-login-form text-break">
+              {{ getErrorMessage(error) }}
+            </div>
+          }
+        }
+      }
+    </div>
+    <div class="mt-2 mb-2">
+      <a [routerLink]="['/register']">Utwórz konto</a>
+    </div>
     <div>
-        <h4 class="text-center">Logowanie</h4>
+      <app-spinner-button
+        [className]="'btn btn-primary'"
+        [buttonText]="'Zaloguj'"
+        [disabled]="(loginRequestState$ | async) === 'loading'"
+        [version]="spinnerVersion"
+        (buttonClick)="onSubmit(); $event.preventDefault()">
+      </app-spinner-button>
     </div>
-    <div class="mt-2 mb-2" *ngIf="error$ | async">
-        <div class="alert alert-danger">
-            {{ error$ | async }}
-        </div>
-    </div>
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" loginForm="loginForm" >
-        <div class="form-group mt-2 mb-2">
-            <label for="email-input" class="text-white bg-dark label-login-form">Email</label>
-            <input id="email-input" type="email" class="form-control" formControlName="emailAddress" placeholder="Wpisz adres email" />
-            <ng-container *ngIf="loginForm.dirty">
-                <ng-container *ngFor="let error of loginForm.get('emailAddress')?.errors | keyvalue">
-                    <ng-container *ngIf="error.value && this.loginForm.get('emailAddress')?.dirty">
-                        <div class="invalid-feedback d-block bg-dark label-login-form text-break">
-                            {{ getErrorMessage(error) }}
-                        </div>
-                    </ng-container>
-                </ng-container>
-            </ng-container>
-        </div>
-        <div class="form-group mt-2 mb-2">
-            <label for="password-input" class="text-white bg-dark label-login-form">Hasło</label>
-            <input id="password-input" type="password" class="form-control" formControlName="password" placeholder="Wpisz hasło" />
-            <ng-container *ngIf="loginForm.dirty">
-                <ng-container *ngFor="let error of loginForm.get('password')?.errors | keyvalue">
-                    <ng-container *ngIf="error.value && this.loginForm.get('password')?.dirty">
-                        <div class="invalid-feedback d-block bg-dark label-login-form text-break">
-                            {{ getErrorMessage(error) }}
-                        </div>
-                    </ng-container>
-                </ng-container>
-            </ng-container>
-        </div>
-        <div class="mt-2 mb-2">
-            <a [routerLink]="['/register']">Utwórz konto</a>
-        </div>
-        <div>
-            <app-spinner-button 
-                [className]="'btn btn-primary'" 
-                [buttonText]="'Zaloguj'" 
-                [disabled]="(loginRequestState$ | async) === 'loading'"
-                [version]="spinnerVersion"
-                (buttonClick)="onSubmit(); $event.preventDefault()">
-            </app-spinner-button>
-        </div>
-    </form>
+  </form>
 </div>

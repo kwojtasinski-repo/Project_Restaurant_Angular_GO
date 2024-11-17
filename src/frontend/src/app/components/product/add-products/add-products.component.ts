@@ -8,14 +8,14 @@ import { Category } from 'src/app/models/category';
 import { CategoryService } from 'src/app/services/category.service';
 import { BehaviorSubject, EMPTY, Observable, catchError, shareReplay, take } from 'rxjs';
 import { ProductFormComponent } from '../product-form/product-form.component';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-add-products',
     templateUrl: './add-products.component.html',
     styleUrls: ['./add-products.component.scss'],
     standalone: true,
-    imports: [NgIf, ProductFormComponent, AsyncPipe]
+    imports: [ProductFormComponent, AsyncPipe]
 })
 export class AddProductsComponent implements OnInit, OnDestroy {  
   public categories$: Observable<Category[]> = new BehaviorSubject([]);

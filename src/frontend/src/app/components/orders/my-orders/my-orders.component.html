@@ -1,34 +1,38 @@
 <div class="mt-2 orders-view">
-    <div class="mt-2 mb-2" *ngIf="error">
-        <div class="alert alert-danger">
-            {{ error }}
-        </div>
-    </div>
+  @if (error) {
     <div class="mt-2 mb-2">
-        <app-search-bar [placeholder]="'Wyszukaj zamówienia'" [term]="term" (termChange)="search($event)"></app-search-bar>
+      <div class="alert alert-danger">
+        {{ error }}
+      </div>
     </div>
-    <table class="table">
-        <thead class="table-dark">
-            <tr>
-                <th>Id</th>
-                <th>Numer zamówienia</th>
-                <th>Koszt [PLN]</th>
-                <th>Utworzono</th>
-                <th>Akcja</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let order of (ordersToShow$ | async)">
-                <td>{{ order.id }}</td>
-                <td>{{ order.orderNumber }}</td>
-                <td>{{ order.price | money }}</td>
-                <td>{{ order.created }}</td>
-                <td>
-                    <button class="btn btn-link" [routerLink]="'/orders/view/' + order.id">
-                        Szczegóły
-                    </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+  }
+  <div class="mt-2 mb-2">
+    <app-search-bar [placeholder]="'Wyszukaj zamówienia'" [term]="term" (termChange)="search($event)"></app-search-bar>
+  </div>
+  <table class="table">
+    <thead class="table-dark">
+      <tr>
+        <th>Id</th>
+        <th>Numer zamówienia</th>
+        <th>Koszt [PLN]</th>
+        <th>Utworzono</th>
+        <th>Akcja</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (order of (ordersToShow$ | async); track order) {
+        <tr>
+          <td>{{ order.id }}</td>
+          <td>{{ order.orderNumber }}</td>
+          <td>{{ order.price | money }}</td>
+          <td>{{ order.created }}</td>
+          <td>
+            <button class="btn btn-link" [routerLink]="'/orders/view/' + order.id">
+              Szczegóły
+            </button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
 </div>

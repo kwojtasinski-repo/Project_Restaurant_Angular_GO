@@ -1,15 +1,17 @@
 <div class="category-form mt-2 mb-2">
-    <h3>
-        Dodaj kategorię
-    </h3>
-    <div class="mt-2 mb-2" *ngIf="error$ | async">
-        <div class="alert alert-danger">
-            {{ error$ | async }}
-        </div>
+  <h3>
+    Dodaj kategorię
+  </h3>
+  @if (error$ | async) {
+    <div class="mt-2 mb-2">
+      <div class="alert alert-danger">
+        {{ error$ | async }}
+      </div>
     </div>
-    <app-category-form
-        (categoryChanged)="onCategoryChange($event)"
-        (submitValid)="onSubmit()"
-        (cancel)="onCancel()"
-    ></app-category-form>
+  }
+  <app-category-form
+    (categoryChanged)="onCategoryChange($event)"
+    (submitValid)="onSubmit()"
+    (cancel)="onCancel()"
+  ></app-category-form>
 </div>

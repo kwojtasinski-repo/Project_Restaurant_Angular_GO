@@ -12,14 +12,14 @@ import { SpinnerVersion } from '../spinner-button/spinner-version';
 import { SpinnerButtonComponent } from '../spinner-button/spinner-button.component';
 import { RouterLink } from '@angular/router';
 import { LoginFormDirective } from '../../directives/login-form-directive';
-import { NgIf, NgFor, AsyncPipe, KeyValuePipe } from '@angular/common';
+import { AsyncPipe, KeyValuePipe } from '@angular/common';
 
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss'],
     standalone: true,
-    imports: [NgIf, FormsModule, LoginFormDirective, ReactiveFormsModule, NgFor, RouterLink, SpinnerButtonComponent, AsyncPipe, KeyValuePipe]
+    imports: [FormsModule, LoginFormDirective, ReactiveFormsModule, RouterLink, SpinnerButtonComponent, AsyncPipe, KeyValuePipe]
 })
 export class LoginComponent implements OnInit, OnDestroy {
   public loginForm: FormGroup;

@@ -10,14 +10,14 @@ import { Actions, ofType } from '@ngrx/effects';
 import * as RegisterActions from 'src/app/stores/register/register.actions';
 import { SpinnerButtonComponent } from '../spinner-button/spinner-button.component';
 import { RouterLink } from '@angular/router';
-import { NgIf, NgFor, AsyncPipe, KeyValuePipe } from '@angular/common';
+import { AsyncPipe, KeyValuePipe } from '@angular/common';
 
 @Component({
     selector: 'app-register',
     templateUrl: './register.component.html',
     styleUrls: ['./register.component.scss'],
     standalone: true,
-    imports: [NgIf, FormsModule, ReactiveFormsModule, NgFor, RouterLink, SpinnerButtonComponent, AsyncPipe, KeyValuePipe]
+    imports: [FormsModule, ReactiveFormsModule, RouterLink, SpinnerButtonComponent, AsyncPipe, KeyValuePipe]
 })
 export class RegisterComponent implements OnInit, OnDestroy {
   public registerForm: FormGroup;

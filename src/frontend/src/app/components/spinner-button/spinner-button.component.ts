@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { SpinnerVersion } from './spinner-version';
-import { NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault } from '@angular/common';
+
 
 @Component({
     selector: 'app-spinner-button',
     templateUrl: './spinner-button.component.html',
     styleUrls: ['./spinner-button.component.scss'],
     standalone: true,
-    imports: [NgIf, NgSwitch, NgSwitchCase, NgSwitchDefault]
+    imports: []
 })
 export class SpinnerButtonComponent {
   @Input()

@@ -1,41 +1,41 @@
 <div class="category-form mt-2 mb-2">
-    <h3>
-        Edytuj kategorię
-    </h3>
-    <div class="mt-2 mb-2" *ngIf="error$ | async">
-        <div class="alert alert-danger">
-            {{ error$ | async }}
-        </div>
+  <h3>
+    Edytuj kategorię
+  </h3>
+  @if (error$ | async) {
+    <div class="mt-2 mb-2">
+      <div class="alert alert-danger">
+        {{ error$ | async }}
+      </div>
     </div>
+  }
 
-    <ng-container *ngIf="(category$ | async) && (isLoading$ | async) === true; then loading else showCategory"></ng-container>
+  @if ((category$ | async) && (isLoading$ | async) === true) {
+    @if (error) {
+      <div class="mt-2 mb-2 alert alert-danger">
+        {{ error }}
+      </div>
+    }
+  } @else {
+    @if ((category$ | async)) {
+      <app-category-form
+        [category]="(category$ | async)"
+        [buttonNames]="['Zatwierdź', 'Anuluj']"
+        (categoryChanged)="onCategoryChange($event)"
+        (submitValid)="onSubmit()"
+        (cancel)="cancelClick()">
+      </app-category-form>
+    } @else {
+      <div class="alert alert-danger">
+        <h5>
+          Kategoria nie została znaleziona
+        </h5>
+      </div>
+    }
+  }
 
 </div>
 
-<ng-template #loading>
-    <div *ngIf="error" class="mt-2 mb-2 alert alert-danger">
-        {{ error }}
-    </div>
-</ng-template>
 
-<ng-template #showCategory>
-    <ng-container *ngIf="(category$ | async);then categoryFound else categoryNotFound"></ng-container>
-</ng-template>
 
-<ng-template #categoryFound>  
-    <app-category-form
-        [category]="(category$ | async)" 
-        [buttonNames]="['Zatwierdź', 'Anuluj']"
-        (categoryChanged)="onCategoryChange($event)" 
-        (submitValid)="onSubmit()" 
-        (cancel)="cancelClick()">
-    </app-category-form>
-</ng-template>
 
-<ng-template #categoryNotFound>
-    <div class="alert alert-danger">
-        <h5>
-            Kategoria nie została znaleziona
-        </h5>
-    </div>
-</ng-template>

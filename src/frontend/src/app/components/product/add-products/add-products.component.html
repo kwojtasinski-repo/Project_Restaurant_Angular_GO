@@ -1,23 +1,27 @@
 <div class="product-form mt-2 mb-2">
-    <div class="mb-2">
-        <h3>Nowy produkt</h3>
+  <div class="mb-2">
+    <h3>Nowy produkt</h3>
+  </div>
+  @if (error) {
+    <div class="mt-2 mb-2">
+      <div class="alert alert-danger">
+        {{ error }}
+      </div>
     </div>
-    <div class="mt-2 mb-2" *ngIf="error">
-        <div class="alert alert-danger">
-            {{ error }}
-        </div>
+  }
+  @if (error$ | async) {
+    <div class="mt-2 mb-2">
+      <div class="alert alert-danger">
+        {{ error$ | async }}
+      </div>
     </div>
-    <div class="mt-2 mb-2" *ngIf="error$ | async">
-        <div class="alert alert-danger">
-            {{ error$ | async }}
-        </div>
-    </div>
-    <div>
-        <app-product-form
-            [categories]="categories$ | async"
-            (productChanged)="onProductChange($event)"
-            (submitValid)="onSubmit()"
-            (cancel)="onCancel()">
-        </app-product-form>
-    </div>
+  }
+  <div>
+    <app-product-form
+      [categories]="categories$ | async"
+      (productChanged)="onProductChange($event)"
+      (submitValid)="onSubmit()"
+      (cancel)="onCancel()">
+    </app-product-form>
+  </div>
 </div>

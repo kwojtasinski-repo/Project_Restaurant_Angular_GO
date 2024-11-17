@@ -6,14 +6,14 @@ import { OrderService } from 'src/app/services/order.service';
 import { MoneyPipe } from '../../../pipes/money-pipe';
 import { RouterLink } from '@angular/router';
 import { SearchBarComponent } from '../../search-bar/search-bar.component';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-my-orders',
     templateUrl: './my-orders.component.html',
     styleUrls: ['./my-orders.component.scss'],
     standalone: true,
-    imports: [NgIf, SearchBarComponent, NgFor, RouterLink, AsyncPipe, MoneyPipe]
+    imports: [SearchBarComponent, RouterLink, AsyncPipe, MoneyPipe]
 })
 export class MyOrdersComponent implements OnInit {
   public orders$: Observable<Order[]> = new BehaviorSubject([]);

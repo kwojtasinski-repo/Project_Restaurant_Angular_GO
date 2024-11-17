@@ -1,48 +1,50 @@
 <div class="product-form mt-2 mb-2">
-    <div class="mb-2">
-        <h3>Edytuj produkt</h3>
-    </div>
+  <div class="mb-2">
+    <h3>Edytuj produkt</h3>
+  </div>
 
-    <ng-container *ngIf="isLoading === true; then loading else showProduct"></ng-container>
-
-    <ng-template #loading>
-        <div class="mt-2 mb-2" *ngIf="error">
-            <div class="alert alert-danger">
-                {{ error }}
-            </div>
-        </div>
-    </ng-template>
-    
-    <div class="mt-2 mb-2" *ngIf="error">
+  @if (isLoading === true) {
+    @if (error) {
+      <div class="mt-2 mb-2">
         <div class="alert alert-danger">
-            {{ error }}
+          {{ error }}
         </div>
-    </div>
-
-    <ng-template #showProduct>
-        <ng-container *ngIf="(product$ | async);then productFound else productNotFound"></ng-container>
-    </ng-template>
-
-    <ng-template #productFound>
-        <div class="mt-2 mb-2" *ngIf="error$ | async">
-            <div class="alert alert-danger">
-                {{ error$ | async }}
-            </div>
+      </div>
+    }
+  } @else {
+    @if ((product$ | async)) {
+      @if (error$ | async) {
+        <div class="mt-2 mb-2">
+          <div class="alert alert-danger">
+            {{ error$ | async }}
+          </div>
         </div>
-    <app-product-form
-        [product]="(product$ | async)" 
+      }
+      <app-product-form
+        [product]="(product$ | async)"
         [buttonNames]="['Zatwierdź', 'Anuluj']"
         [categories]="(categories$ | async) ?? []"
-        (productChanged)="onProductChange($event)" 
-        (submitValid)="onSubmit()" 
+        (productChanged)="onProductChange($event)"
+        (submitValid)="onSubmit()"
         (cancel)="onCancel()">
-    </app-product-form>
-    </ng-template>
-    <ng-template #productNotFound>
-        <div class="alert alert-danger">
-            <h5>
-                Produkt nie został znaleziony
-            </h5>
-        </div>
-    </ng-template>
+      </app-product-form>
+    } @else {
+      <div class="alert alert-danger">
+        <h5>
+          Produkt nie został znaleziony
+        </h5>
+      </div>
+    }
+  }
+
+
+  @if (error) {
+    <div class="mt-2 mb-2">
+      <div class="alert alert-danger">
+        {{ error }}
+      </div>
+    </div>
+  }
+
+
 </div>

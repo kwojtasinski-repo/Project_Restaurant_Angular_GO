@@ -1,44 +1,48 @@
 <div class="mt-4">
-    <div class="d-flex ms-4">
-        <button class="btn btn-success" [routerLink]="'/categories/add'">
-            Dodaj kategorię
-        </button>
-    </div>
-    <ng-container *ngIf="isLoading === true; then errorTemplate else showCategories"></ng-container>
-    
-</div>
-
-<ng-template #errorTemplate>
-    <div class="mt-2 mb-2 alert alert-danger" *ngIf="error">
+  <div class="d-flex ms-4">
+    <button class="btn btn-success" [routerLink]="'/categories/add'">
+      Dodaj kategorię
+    </button>
+  </div>
+  @if (isLoading === true) {
+    @if (error) {
+      <div class="mt-2 mb-2 alert alert-danger">
         {{ error }}
-    </div>
-</ng-template>
-
-<ng-template #showCategories>
+      </div>
+    }
+  } @else {
     <div class="p-4">
-        <app-search-bar [placeholder]="'Wyszukaj kategorię'" [term]="term" (termChange)="search($event)"></app-search-bar>
+      <app-search-bar [placeholder]="'Wyszukaj kategorię'" [term]="term" (termChange)="search($event)"></app-search-bar>
     </div>
     <div class="d-flex justify-content-center ms-2">
-        <div class="d-flex flex-wrap" style="align-items: stretch;">
-            <div *ngFor="let category of (categoriesToShow$ | async)">
-                <div class="mt-2 mb-2 me-2 ms-2">
-                    <div class="card" style="width: 18rem;">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ category.name }}</h5>
-                            <div style="height: 37px;">
-                                <span *ngIf="category.deleted" class="bg-warning p-2 mt-4 mb-4">
-                                    Kategoria usunięta
-                                </span>
-                            </div>
-                            <div class="d-flex justify-content-end">
-                                <a [routerLink]="'/categories/edit/' + category.id" class="ms-2">
-                                    Edytuj kategorię
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+      <div class="d-flex flex-wrap" style="align-items: stretch;">
+        @for (category of (categoriesToShow$ | async); track category) {
+          <div>
+            <div class="mt-2 mb-2 me-2 ms-2">
+              <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                  <h5 class="card-title">{{ category.name }}</h5>
+                  <div style="height: 37px;">
+                    @if (category.deleted) {
+                      <span class="bg-warning p-2 mt-4 mb-4">
+                        Kategoria usunięta
+                      </span>
+                    }
+                  </div>
+                  <div class="d-flex justify-content-end">
+                    <a [routerLink]="'/categories/edit/' + category.id" class="ms-2">
+                      Edytuj kategorię
+                    </a>
+                  </div>
                 </div>
+              </div>
             </div>
-        </div>
+          </div>
+        }
+      </div>
     </div>
-</ng-template>
+  }
+
+</div>
+
+

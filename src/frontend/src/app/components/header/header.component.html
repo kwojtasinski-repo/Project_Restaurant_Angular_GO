@@ -1,28 +1,37 @@
-<nav class="navbar navbar-dark bg-dark navbar-expand-lg" *ngIf="showHeader$ | async">
+@if (showHeader$ | async) {
+  <nav class="navbar navbar-dark bg-dark navbar-expand-lg">
     <div class="me-4 ms-4 container-fluid">
-        <button class="navbar-toggler" (click)="isCollapsed = !isCollapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>       
-        <div class="collapse navbar-collapse" [collapse]="isCollapsed" id="navbarText">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="(user$ | async)?.deleted === null || (user$ | async)?.deleted === false">
-                <li class="nav-item" *ngFor="let routerLink of routerLinks">
-                    <ng-container *ngIf="!routerLink.userRole || (((user$ | async)?.role) === routerLink.userRole)">
-                        <a [class]="normalizeUrl(currentUrl$ | async)?.startsWith(routerLink.path) ? 'nav-link active' : 'nav-link'" [routerLink]="routerLink.path">{{ routerLink.name }}</a>
-                    </ng-container>
-                </li>
-            </ul>
-            <div class="d-flex text-white text-break user-info">
-                <ng-container *ngIf="(user$ | async)">
-                    {{ (user$ | async)?.email }}
-                    <span class="badge text-bg-danger ms-2 span-info" *ngIf="(user$ | async)?.deleted">Konto usunięte</span>
-                    
-                </ng-container>
-            </div>
-            <div *ngIf="(user$ | async)" class="ms-2 nav-item">
-                <button class="btn btn-link nav-link text-white" (click)="logout()">
-                    Wyloguj
-                </button>
-            </div>
+      <button class="navbar-toggler" (click)="isCollapsed = !isCollapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" [collapse]="isCollapsed" id="navbarText">
+        @if ((user$ | async)?.deleted === null || (user$ | async)?.deleted === false) {
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            @for (routerLink of routerLinks; track routerLink) {
+              <li class="nav-item">
+                @if (!routerLink.userRole || (((user$ | async)?.role) === routerLink.userRole)) {
+                  <a [class]="normalizeUrl(currentUrl$ | async)?.startsWith(routerLink.path) ? 'nav-link active' : 'nav-link'" [routerLink]="routerLink.path">{{ routerLink.name }}</a>
+                }
+              </li>
+            }
+          </ul>
+        }
+        <div class="d-flex text-white text-break user-info">
+          @if ((user$ | async)) {
+            {{ (user$ | async)?.email }}
+            @if ((user$ | async)?.deleted) {
+              <span class="badge text-bg-danger ms-2 span-info">Konto usunięte</span>
+            }
+          }
         </div>
+        @if ((user$ | async)) {
+          <div class="ms-2 nav-item">
+            <button class="btn btn-link nav-link text-white" (click)="logout()">
+              Wyloguj
+            </button>
+          </div>
+        }
+      </div>
     </div>
-</nav>
+  </nav>
+}

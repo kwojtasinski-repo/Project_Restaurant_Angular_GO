@@ -5,14 +5,14 @@ import { Category } from 'src/app/models/category';
 import { Product } from 'src/app/models/product';
 import { getValidationMessage } from 'src/app/validations/validations';
 import { CurrencyFormatterDirective } from '../../../directives/currency-formatter-directive';
-import { NgIf, NgFor, KeyValuePipe } from '@angular/common';
+import { KeyValuePipe } from '@angular/common';
 
 @Component({
     selector: 'app-product-form',
     templateUrl: './product-form.component.html',
     styleUrls: ['./product-form.component.scss'],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, NgIf, NgFor, CurrencyFormatterDirective, KeyValuePipe]
+    imports: [FormsModule, ReactiveFormsModule, CurrencyFormatterDirective, KeyValuePipe]
 })
 export class ProductFormComponent implements OnDestroy, AfterViewInit {
   @Input()

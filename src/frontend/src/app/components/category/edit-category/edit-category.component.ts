@@ -9,14 +9,14 @@ import { CategoryService } from 'src/app/services/category.service';
 import { ActivatedRoute } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { CategoryFormComponent } from '../category-form/category-form.component';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-edit-category',
     templateUrl: './edit-category.component.html',
     styleUrls: ['./edit-category.component.scss'],
     standalone: true,
-    imports: [NgIf, CategoryFormComponent, AsyncPipe]
+    imports: [CategoryFormComponent, AsyncPipe]
 })
 export class EditCategoryComponent implements OnInit, OnDestroy {
   public category$: Observable<Category | undefined> | undefined;

@@ -1,77 +1,79 @@
 <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-        <label for="product-name">
-            Nazwa
-        </label>
-        <input id="product-name" type="text" class="form-control" formControlName="productName" placeholder="Wpisz nazwę produktu" />
-        <ng-container *ngIf="productForm.dirty">
-            <ng-container *ngFor="let error of productForm.get('productName')?.errors | keyvalue">
-                <ng-container *ngIf="error.value && this.productForm.get('productName')?.dirty">
-                    <div class="invalid-feedback d-block text-break">
-                        {{ getErrorMessage(error) }}
-                    </div>
-                </ng-container>
-            </ng-container>
-        </ng-container>
-    </div>
-    <div class="form-group">
-        <label for="product-description">
-            Opis
-        </label>
-        <textarea id="product-description" maxlength="5000" class="form-control" formControlName="productDescription" placeholder="Podaj opis" ></textarea>
-        <ng-container *ngIf="productForm.dirty">
-            <ng-container *ngFor="let error of productForm.get('productDescription')?.errors | keyvalue">
-                <ng-container *ngIf="error.value && this.productForm.get('productDescription')?.dirty">
-                    <div class="invalid-feedback d-block text-break">
-                        {{ getErrorMessage(error) }}
-                    </div>
-                </ng-container>
-            </ng-container>
-        </ng-container>
-    </div>
-    <div class="form-group">
-        <label for="product-cost" >
-            Cena
-        </label>
-        <input id="product-cost"
-            class="form-control" 
-            formControlName="productCost" 
-            placeholder="Wpisz cenę produktu"
-            currencyFormatter [locale]="locale" [minimumFractionDigits]="minimumFractionDigits" [maximumFractionDigits]="maximumFractionDigits" />
-        <ng-container *ngIf="productForm.dirty">
-            <ng-container *ngFor="let error of productForm.get('productCost')?.errors | keyvalue">
-                <ng-container *ngIf="error.value && this.productForm.get('productCost')?.dirty">
-                    <div class="invalid-feedback d-block text-break">
-                        {{ getErrorMessage(error) }}
-                    </div>
-                </ng-container>
-            </ng-container>
-        </ng-container>
-    </div>
-    <div class="form-group">
-        <label for="product-category">
-            Kategoria
-        </label>
-        <select id="product-category" class="form-control" [compareWith]="compareCategories" formControlName="productCategory" >
-            <option value="" disabled selected>Wybierz kategorię</option>
-            <option *ngFor="let category of categories" [ngValue]="category">{{ category.name }}</option>
-        </select>
-        <ng-container *ngIf="productForm.dirty">
-            <ng-container *ngFor="let error of productForm.get('productCategory')?.errors | keyvalue">
-                <ng-container *ngIf="error.value && this.productForm.get('productCategory')?.dirty">
-                    <div class="invalid-feedback d-block text-break">
-                        {{ getErrorMessage(error) }}
-                    </div>
-                </ng-container>
-            </ng-container>
-        </ng-container>
-    </div>
-    <div class="mt-2">
-        <button class="btn btn-success me-2">
-            {{ buttonNames[0] }}
-        </button>
-        <button class="btn btn-secondary" type="button" (click)="cancelClick()">
-            {{ buttonNames[1] }}
-        </button>
-    </div>
+  <div class="form-group">
+    <label for="product-name">
+      Nazwa
+    </label>
+    <input id="product-name" type="text" class="form-control" formControlName="productName" placeholder="Wpisz nazwę produktu" />
+    @if (productForm.dirty) {
+      @for (error of productForm.get('productName')?.errors | keyvalue; track error) {
+        @if (error.value && this.productForm.get('productName')?.dirty) {
+          <div class="invalid-feedback d-block text-break">
+            {{ getErrorMessage(error) }}
+          </div>
+        }
+      }
+    }
+  </div>
+  <div class="form-group">
+    <label for="product-description">
+      Opis
+    </label>
+    <textarea id="product-description" maxlength="5000" class="form-control" formControlName="productDescription" placeholder="Podaj opis" ></textarea>
+    @if (productForm.dirty) {
+      @for (error of productForm.get('productDescription')?.errors | keyvalue; track error) {
+        @if (error.value && this.productForm.get('productDescription')?.dirty) {
+          <div class="invalid-feedback d-block text-break">
+            {{ getErrorMessage(error) }}
+          </div>
+        }
+      }
+    }
+  </div>
+  <div class="form-group">
+    <label for="product-cost" >
+      Cena
+    </label>
+    <input id="product-cost"
+      class="form-control"
+      formControlName="productCost"
+      placeholder="Wpisz cenę produktu"
+      currencyFormatter [locale]="locale" [minimumFractionDigits]="minimumFractionDigits" [maximumFractionDigits]="maximumFractionDigits" />
+    @if (productForm.dirty) {
+      @for (error of productForm.get('productCost')?.errors | keyvalue; track error) {
+        @if (error.value && this.productForm.get('productCost')?.dirty) {
+          <div class="invalid-feedback d-block text-break">
+            {{ getErrorMessage(error) }}
+          </div>
+        }
+      }
+    }
+  </div>
+  <div class="form-group">
+    <label for="product-category">
+      Kategoria
+    </label>
+    <select id="product-category" class="form-control" [compareWith]="compareCategories" formControlName="productCategory" >
+      <option value="" disabled selected>Wybierz kategorię</option>
+      @for (category of categories; track category) {
+        <option [ngValue]="category">{{ category.name }}</option>
+      }
+    </select>
+    @if (productForm.dirty) {
+      @for (error of productForm.get('productCategory')?.errors | keyvalue; track error) {
+        @if (error.value && this.productForm.get('productCategory')?.dirty) {
+          <div class="invalid-feedback d-block text-break">
+            {{ getErrorMessage(error) }}
+          </div>
+        }
+      }
+    }
+  </div>
+  <div class="mt-2">
+    <button class="btn btn-success me-2">
+      {{ buttonNames[0] }}
+    </button>
+    <button class="btn btn-secondary" type="button" (click)="cancelClick()">
+      {{ buttonNames[1] }}
+    </button>
+  </div>
 </form>

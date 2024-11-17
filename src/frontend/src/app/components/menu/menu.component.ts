@@ -12,14 +12,14 @@ import * as LoginSelectors from 'src/app/stores/login/login.selectors';
 import { MoneyPipe } from '../../pipes/money-pipe';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
 import { RouterLink } from '@angular/router';
-import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-menu',
     templateUrl: './menu.component.html',
     styleUrls: ['./menu.component.scss'],
     standalone: true,
-    imports: [NgIf, RouterLink, SearchBarComponent, NgFor, AsyncPipe, MoneyPipe]
+    imports: [RouterLink, SearchBarComponent, AsyncPipe, MoneyPipe]
 })
 export class MenuComponent implements OnInit, OnDestroy {
   public user$ = this.loginStore.select(LoginSelectors.getUser);
