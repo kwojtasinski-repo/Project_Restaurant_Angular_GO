@@ -1,6 +1,5 @@
 import { LoginComponent } from './components/login/login.component';
 import { MenuComponent } from './components/menu/menu.component';
-import { Routes } from '@angular/router';
 import { AddProductsComponent } from './components/product/add-products/add-products.component';
 import { EditProductsComponent } from './components/product/edit-products/edit-products.component';
 import { ViewProductsComponent } from './components/product/view-products/view-products.component';
@@ -16,6 +15,7 @@ import authGuard from './guards/auth-guard';
 import adminGuard from './guards/admin-guard';
 import authorizedGuard from './guards/authorized-guard';
 import registerSuccessGuard from './guards/register-success-guard';
+import { Routes } from '@angular/router';
 
 const adminRoutes = [
     {
@@ -46,7 +46,7 @@ const adminRoutes = [
     }
 ];
 
-export const appRoutes: Routes = [
+export default [
     {
         path: '',
         canActivate: [authGuard],
@@ -96,4 +96,4 @@ export const appRoutes: Routes = [
         path: '**',
         redirectTo: 'menu' // think if page not found is needed
     },
-]
+] as Routes
