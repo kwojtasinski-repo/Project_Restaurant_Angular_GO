@@ -10,16 +10,18 @@
     </div>
   }
 
-  @if ((category$ | async) && (isLoading$ | async) === true) {
+  @let category = category$ | async;
+
+  @if ((isLoading$ | async) === true) {
     @if (error) {
       <div class="mt-2 mb-2 alert alert-danger">
         {{ error }}
       </div>
     }
   } @else {
-    @if ((category$ | async)) {
+    @if (category) {
       <app-category-form
-        [category]="(category$ | async)"
+        [category]="category"
         [buttonNames]="['Zatwierdź', 'Anuluj']"
         (categoryChanged)="onCategoryChange($event)"
         (submitValid)="onSubmit()"
