@@ -67,7 +67,7 @@ Unit tests can be run by this command in bash
 ## Technologies
 
 - GO 1.20
-- Angular 17
+- Angular 18
 - MariaDB
 - Go Gin
 - Golang-migrate
