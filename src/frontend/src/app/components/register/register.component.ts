@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { getEmail, getError, getPassword, getPasswordConfirm, getRegisterRequestState } from 'src/app/stores/register/register.selectors';
 import { RegisterState } from 'src/app/stores/register/register.state';
 import { SpinnerVersion } from '../spinner-button/spinner-version';
@@ -8,11 +8,16 @@ import { Subscription, debounceTime } from 'rxjs';
 import { PATTERN_ONE_UPPER_ONE_LOWER_ONE_SPECIAL_CHARACTER, checkMatchValidator, getValidationMessage } from 'src/app/validations/validations';
 import { Actions, ofType } from '@ngrx/effects';
 import * as RegisterActions from 'src/app/stores/register/register.actions';
+import { SpinnerButtonComponent } from '../spinner-button/spinner-button.component';
+import { RouterLink } from '@angular/router';
+import { NgIf, NgFor, AsyncPipe, KeyValuePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+    selector: 'app-register',
+    templateUrl: './register.component.html',
+    styleUrls: ['./register.component.scss'],
+    standalone: true,
+    imports: [NgIf, FormsModule, ReactiveFormsModule, NgFor, RouterLink, SpinnerButtonComponent, AsyncPipe, KeyValuePipe]
 })
 export class RegisterComponent implements OnInit, OnDestroy {
   public registerForm: FormGroup;

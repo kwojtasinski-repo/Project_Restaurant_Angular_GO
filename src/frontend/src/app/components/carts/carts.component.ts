@@ -4,11 +4,17 @@ import { Cart } from 'src/app/models/cart';
 import * as CartActions  from 'src/app/stores/cart/cart.actions';
 import { getCart, getFetchState, getFinalizeState } from 'src/app/stores/cart/cart.selectors';
 import { CartState } from 'src/app/stores/cart/cart.state';
+import { MoneyPipe } from '../../pipes/money-pipe';
+import { SpinnerButtonComponent } from '../spinner-button/spinner-button.component';
+import { RouterLink } from '@angular/router';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-carts',
-  templateUrl: './carts.component.html',
-  styleUrls: ['./carts.component.scss']
+    selector: 'app-carts',
+    templateUrl: './carts.component.html',
+    styleUrls: ['./carts.component.scss'],
+    standalone: true,
+    imports: [NgIf, NgFor, RouterLink, SpinnerButtonComponent, AsyncPipe, MoneyPipe]
 })
 export class CartsComponent implements OnInit, OnDestroy {
   public carts$ = this.cartStore.select(getCart);

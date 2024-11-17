@@ -5,11 +5,16 @@ import { AppState } from 'src/app/stores/app/app.state';
 import { getUser } from 'src/app/stores/login/login.selectors';
 import { LoginState } from 'src/app/stores/login/login.state';
 import { logoutRequest } from 'src/app/stores/login/login.actions';
+import { RouterLink } from '@angular/router';
+import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+    selector: 'app-header',
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.scss'],
+    standalone: true,
+    imports: [NgIf, CollapseModule, NgFor, RouterLink, AsyncPipe]
 })
 export class HeaderComponent implements OnInit {
   public routerLinks: any[] = [];

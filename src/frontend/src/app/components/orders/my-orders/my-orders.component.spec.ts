@@ -16,26 +16,24 @@ describe('MyOrdersComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ 
-        MyOrdersComponent, 
-        SearchBarComponent, 
-        MoneyPipe
-      ],
-      imports: [
+    imports: [
         NgxSpinnerModule,
         ReactiveFormsModule,
         FormsModule,
-        HttpClientModule
-      ],
-      providers: [
+        HttpClientModule,
+        MyOrdersComponent,
+        SearchBarComponent,
+        MoneyPipe
+    ],
+    providers: [
         provideRouter([]),
         provideMockStore({ initialState }),
         provideMockStore({ initialState }),
         {
-          provide: 'API_URL', useValue: ''
+            provide: 'API_URL', useValue: ''
         }
-      ]
-    })
+    ]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(MyOrdersComponent);

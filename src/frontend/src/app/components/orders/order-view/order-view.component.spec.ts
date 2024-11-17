@@ -12,17 +12,15 @@ describe('OrderViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ 
-        OrderViewComponent, 
-        MoneyPipe 
-      ],
-      imports: [
-      ],
-      providers: [
+    imports: [
+        OrderViewComponent,
+        MoneyPipe
+    ],
+    providers: [
         provideRouter([]),
         provideMockStore({ initialState }),
-      ]
-    })
+    ]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(OrderViewComponent);

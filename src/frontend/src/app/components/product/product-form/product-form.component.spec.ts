@@ -20,11 +20,11 @@ describe('ProductFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ProductFormComponent, CurrencyFormatterDirective ],
-      imports: [
+    imports: [
         ReactiveFormsModule,
-      ]
-    })
+        ProductFormComponent, CurrencyFormatterDirective,
+    ]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(ProductFormComponent);
@@ -55,11 +55,11 @@ describe('ProductFormComponent with init data', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ProductFormComponent, CurrencyFormatterDirective ],
-      imports: [
+    imports: [
         ReactiveFormsModule,
-      ]
-    })
+        ProductFormComponent, CurrencyFormatterDirective,
+    ]
+})
     .compileComponents();
 
     formater = new Intl.NumberFormat('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });

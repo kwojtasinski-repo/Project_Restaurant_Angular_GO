@@ -1,13 +1,16 @@
 import { Component, OnDestroy, Input, EventEmitter, Output, ChangeDetectorRef, AfterViewInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
 import { Category } from 'src/app/models/category';
 import { getValidationMessage } from 'src/app/validations/validations';
+import { NgIf, NgFor, KeyValuePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-category-form',
-  templateUrl: './category-form.component.html',
-  styleUrls: ['./category-form.component.scss']
+    selector: 'app-category-form',
+    templateUrl: './category-form.component.html',
+    styleUrls: ['./category-form.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, NgIf, NgFor, KeyValuePipe]
 })
 export class CategoryFormComponent implements OnDestroy, AfterViewInit {
   @Input()

@@ -6,8 +6,9 @@ import { Subscription, debounceTime, take } from 'rxjs';
 import { loginFormUpdate } from '../stores/login/login.actions';
 
 @Directive({
-    selector: '[loginForm]'
-  })
+    selector: '[loginForm]',
+    standalone: true
+})
 export class LoginFormDirective implements OnInit, OnDestroy {
     public formChange : Subscription = new Subscription();
 

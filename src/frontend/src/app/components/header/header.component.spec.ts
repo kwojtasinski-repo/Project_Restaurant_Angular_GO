@@ -10,11 +10,11 @@ describe('HeaderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HeaderComponent ],
-      providers: [
+    imports: [HeaderComponent],
+    providers: [
         provideMockStore({ initialState })
-      ]
-    })
+    ]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(HeaderComponent);

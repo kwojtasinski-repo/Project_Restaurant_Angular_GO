@@ -1,14 +1,18 @@
 import { Component, OnDestroy, Input, EventEmitter, Output, ChangeDetectorRef, AfterViewInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
 import { Category } from 'src/app/models/category';
 import { Product } from 'src/app/models/product';
 import { getValidationMessage } from 'src/app/validations/validations';
+import { CurrencyFormatterDirective } from '../../../directives/currency-formatter-directive';
+import { NgIf, NgFor, KeyValuePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-product-form',
-  templateUrl: './product-form.component.html',
-  styleUrls: ['./product-form.component.scss']
+    selector: 'app-product-form',
+    templateUrl: './product-form.component.html',
+    styleUrls: ['./product-form.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, NgIf, NgFor, CurrencyFormatterDirective, KeyValuePipe]
 })
 export class ProductFormComponent implements OnDestroy, AfterViewInit {
   @Input()

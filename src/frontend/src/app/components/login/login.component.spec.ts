@@ -17,18 +17,18 @@ describe('LoginComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LoginComponent, SpinnerButtonComponent ],
-      imports: [
+    imports: [
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
         RouterModule.forRoot([]),
-      ],
-      providers: [
+        LoginComponent, SpinnerButtonComponent,
+    ],
+    providers: [
         provideMockStore({ initialState }),
         provideMockActions(() => actions$),
-      ]
-    })
+    ]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(LoginComponent);

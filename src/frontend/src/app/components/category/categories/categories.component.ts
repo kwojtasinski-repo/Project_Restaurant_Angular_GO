@@ -4,11 +4,16 @@ import { CategoryService } from 'src/app/services/category.service';
 import { BehaviorSubject, EMPTY, Observable, catchError, finalize,
   map, shareReplay, take, tap } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { SearchBarComponent } from '../../search-bar/search-bar.component';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-categories',
-  templateUrl: './categories.component.html',
-  styleUrls: ['./categories.component.scss']
+    selector: 'app-categories',
+    templateUrl: './categories.component.html',
+    styleUrls: ['./categories.component.scss'],
+    standalone: true,
+    imports: [RouterLink, NgIf, SearchBarComponent, NgFor, AsyncPipe]
 })
 export class CategoriesComponent implements OnInit {
   public categories$: Observable<Category[]> = new BehaviorSubject([]);

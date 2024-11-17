@@ -3,11 +3,17 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { BehaviorSubject, EMPTY, Observable, catchError, finalize, map, shareReplay, take, tap } from 'rxjs';
 import { Order } from 'src/app/models/order';
 import { OrderService } from 'src/app/services/order.service';
+import { MoneyPipe } from '../../../pipes/money-pipe';
+import { RouterLink } from '@angular/router';
+import { SearchBarComponent } from '../../search-bar/search-bar.component';
+import { NgIf, NgFor, AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-my-orders',
-  templateUrl: './my-orders.component.html',
-  styleUrls: ['./my-orders.component.scss']
+    selector: 'app-my-orders',
+    templateUrl: './my-orders.component.html',
+    styleUrls: ['./my-orders.component.scss'],
+    standalone: true,
+    imports: [NgIf, SearchBarComponent, NgFor, RouterLink, AsyncPipe, MoneyPipe]
 })
 export class MyOrdersComponent implements OnInit {
   public orders$: Observable<Order[]> = new BehaviorSubject([]);

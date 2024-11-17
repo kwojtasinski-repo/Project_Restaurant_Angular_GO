@@ -26,22 +26,22 @@ describe('EditProductsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EditProductsComponent ],
-      imports: [
+    imports: [
         NgxSpinnerModule,
-        HttpClientModule
-      ],
-      providers: [
+        HttpClientModule,
+        EditProductsComponent
+    ],
+    providers: [
         provideRouter([]),
         provideMockStore({ initialState }),
         {
-          provide: 'API_URL', useValue: ''
+            provide: 'API_URL', useValue: ''
         },
         {
-          provide: ProductService, useValue: productService
+            provide: ProductService, useValue: productService
         }
-      ]
-    })
+    ]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(EditProductsComponent);
@@ -73,37 +73,35 @@ describe('EditProductsComponent when product is available', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [
+    imports: [
+        NgxSpinnerModule,
+        HttpClientModule,
+        ReactiveFormsModule,
         EditProductsComponent,
         ProductFormComponent,
         CurrencyFormatterDirective
-      ],
-      imports: [
-        NgxSpinnerModule,
-        HttpClientModule,
-        ReactiveFormsModule
-      ],
-      providers: [
+    ],
+    providers: [
         provideRouter([]),
         provideMockStore({ initialState }),
         {
-          provide: ProductService, useValue: productService
+            provide: ProductService, useValue: productService
         },
         {
-          provide: CategoryService, useValue: categoryService
+            provide: CategoryService, useValue: categoryService
         },
         {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: { 
-              paramMap:  convertToParamMap({
-                id: productId
-              }),
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    paramMap: convertToParamMap({
+                        id: productId
+                    }),
+                },
             },
-          },
         }
-      ]
-    })
+    ]
+})
     .compileComponents();
 
     formater = new Intl.NumberFormat('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });

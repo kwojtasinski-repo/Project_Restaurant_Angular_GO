@@ -1,13 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from './stores/app/app.state';
 import * as AppActions from './stores/app/app.actions';
+import { NgxSpinnerComponent } from 'ngx-spinner';
+import { FooterComponent } from './components/footer/footer.component';
+import { HeaderComponent } from './components/header/header.component';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
+    standalone: true,
+    imports: [HeaderComponent, RouterOutlet, FooterComponent, NgxSpinnerComponent]
 })
 export class AppComponent implements OnInit {
   private headerHiddenUrls: string[] = [];

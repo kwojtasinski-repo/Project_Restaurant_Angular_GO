@@ -14,18 +14,18 @@ describe('AddProductsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddProductsComponent, ProductFormComponent, CurrencyFormatterDirective ],
-      imports: [
+    imports: [
         ReactiveFormsModule,
-        HttpClientModule
-      ],
-      providers: [
+        HttpClientModule,
+        AddProductsComponent, ProductFormComponent, CurrencyFormatterDirective
+    ],
+    providers: [
         provideMockStore({ initialState }),
         {
-          provide: 'API_URL', useValue: ''
+            provide: 'API_URL', useValue: ''
         },
-      ]
-    })
+    ]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(AddProductsComponent);

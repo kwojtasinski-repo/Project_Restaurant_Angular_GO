@@ -12,14 +12,14 @@ describe('AddCategoryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddCategoryComponent, CategoryFormComponent ],
-      imports: [
-        ReactiveFormsModule
-      ],
-      providers: [
+    imports: [
+        ReactiveFormsModule,
+        AddCategoryComponent, CategoryFormComponent
+    ],
+    providers: [
         provideMockStore({ initialState })
-      ]
-    })
+    ]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(AddCategoryComponent);

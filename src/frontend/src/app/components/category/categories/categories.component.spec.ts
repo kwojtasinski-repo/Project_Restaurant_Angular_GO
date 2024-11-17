@@ -12,20 +12,20 @@ describe('CategoriesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CategoriesComponent, SearchBarComponent ],
-      imports: [
+    imports: [
         ReactiveFormsModule,
         FormsModule,
         HttpClientModule,
-        RouterLink
-      ],
-      providers: [
+        RouterLink,
+        CategoriesComponent, SearchBarComponent
+    ],
+    providers: [
         provideRouter([]),
         {
-          provide: 'API_URL', useValue: ''
+            provide: 'API_URL', useValue: ''
         }
-      ]
-    })
+    ]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(CategoriesComponent);

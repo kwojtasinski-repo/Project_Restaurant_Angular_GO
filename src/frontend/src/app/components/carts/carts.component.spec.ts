@@ -11,16 +11,14 @@ describe('CartsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ 
-        CartsComponent 
-      ],
-      imports: [
-        NgxSpinnerModule
-      ],
-      providers: [
+    imports: [
+        NgxSpinnerModule,
+        CartsComponent
+    ],
+    providers: [
         provideMockStore({ initialState })
-      ]
-    })
+    ]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(CartsComponent);

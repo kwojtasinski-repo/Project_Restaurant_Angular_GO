@@ -10,16 +10,14 @@ describe('RegisterSuccessComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ 
-        RegisterSuccessComponent,
-      ],
-      imports: [
-        RouterLink
-      ],
-      providers: [
+    imports: [
+        RouterLink,
+        RegisterSuccessComponent
+    ],
+    providers: [
         provideRouter([]),
-      ]
-    })
+    ]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(RegisterSuccessComponent);

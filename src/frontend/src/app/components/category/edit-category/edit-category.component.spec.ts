@@ -15,20 +15,20 @@ describe('EditCategoryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EditCategoryComponent, CategoryFormComponent ],
-      providers: [
+    providers: [
         provideRouter([]),
         provideMockStore({ initialState }),
         {
-          provide: 'API_URL', useValue: ''
+            provide: 'API_URL', useValue: ''
         }
-      ],
-      imports: [
+    ],
+    imports: [
         NgxSpinnerModule,
         ReactiveFormsModule,
-        HttpClientModule
-      ]
-    })
+        HttpClientModule,
+        EditCategoryComponent, CategoryFormComponent
+    ]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(EditCategoryComponent);

@@ -21,28 +21,26 @@ describe('MenuComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ 
-        MenuComponent, 
-        SearchBarComponent, 
-        MoneyPipe 
-      ],
-      imports: [
+    imports: [
         FormsModule,
         HttpClientModule,
-        RouterLink
-      ],
-      providers: [
+        RouterLink,
+        MenuComponent,
+        SearchBarComponent,
+        MoneyPipe
+    ],
+    providers: [
         provideRouter([]),
         provideMockStore({ initialState }),
         provideMockStore({ initialState: cartInitialState }),
         {
-          provide: 'API_URL', useValue: ''
+            provide: 'API_URL', useValue: ''
         },
         {
-          provide: ProductService, useValue: productService
+            provide: ProductService, useValue: productService
         }
-      ]
-    })
+    ]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(MenuComponent);

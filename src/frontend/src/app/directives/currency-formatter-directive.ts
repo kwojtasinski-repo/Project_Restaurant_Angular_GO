@@ -3,8 +3,9 @@ import { NgControl } from '@angular/forms';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
 
 @Directive({
-    selector: '[currencyFormatter]'
-  })
+    selector: '[currencyFormatter]',
+    standalone: true
+})
   export class CurrencyFormatterDirective implements OnDestroy, OnInit, AfterViewInit {
     @Input() locale: string = 'en-US';
     @Input() minimumFractionDigits: number = 0;

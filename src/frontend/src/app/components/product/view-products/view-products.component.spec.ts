@@ -20,36 +20,34 @@ describe('ViewProductsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ 
+    imports: [
+        NgxSpinnerModule,
+        HttpClientModule,
         ViewProductsComponent,
         MoneyPipe
-      ],
-      imports: [
-        NgxSpinnerModule,
-        HttpClientModule
-      ],
-      providers: [
+    ],
+    providers: [
         provideRouter([]),
         provideMockStore({ initialState }),
         {
-          provide: 'API_URL', useValue: ''
+            provide: 'API_URL', useValue: ''
         },
         {
-          provide: ProductService,
-          useValue: productService
+            provide: ProductService,
+            useValue: productService
         },
         {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: { 
-              paramMap:  convertToParamMap({
-                id: '1'
-              }),
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    paramMap: convertToParamMap({
+                        id: '1'
+                    }),
+                },
             },
-          },
         }
-      ]
-    })
+    ]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(ViewProductsComponent);
@@ -78,36 +76,34 @@ describe('ViewProductsComponent when product available', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
+    imports: [
+        NgxSpinnerModule,
+        HttpClientModule,
         ViewProductsComponent,
         MoneyPipe
-      ],
-      imports: [
-        NgxSpinnerModule,
-        HttpClientModule
-      ],
-      providers: [
+    ],
+    providers: [
         provideRouter([]),
         provideMockStore({ initialState }),
         {
-          provide: 'API_URL', useValue: ''
+            provide: 'API_URL', useValue: ''
         },
         {
-          provide: ProductService,
-          useValue: productService
+            provide: ProductService,
+            useValue: productService
         },
         {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: { 
-              paramMap:  convertToParamMap({
-                id: '1'
-              }),
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    paramMap: convertToParamMap({
+                        id: '1'
+                    }),
+                },
             },
-          },
         }
-      ]
-    })
+    ]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(ViewProductsComponent);

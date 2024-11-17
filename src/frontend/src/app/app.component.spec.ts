@@ -10,21 +10,19 @@ import { provideRouter, RouterLink, RouterModule } from '@angular/router';
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
+    imports: [
         NgxSpinnerModule,
         RouterLink,
-        RouterModule
-      ],
-      declarations: [
+        RouterModule,
         HeaderComponent,
-        AppComponent,
-        FooterComponent
-      ],
-      providers: [
+        FooterComponent,
+        AppComponent
+    ],
+    providers: [
         provideRouter([]),
         provideMockStore({ initialState }),
-      ]
-    }).compileComponents();
+    ]
+}).compileComponents();
   });
 
   it('should create the app', () => {

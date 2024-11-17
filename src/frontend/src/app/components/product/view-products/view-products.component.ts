@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { EMPTY, Observable, catchError, finalize, shareReplay, take, tap } from 'rxjs';
 import { Product } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
@@ -9,11 +9,15 @@ import { CartState } from 'src/app/stores/cart/cart.state';
 import { addProductToCart, clearErrors } from 'src/app/stores/cart/cart.actions';
 import { LoginState } from 'src/app/stores/login/login.state';
 import * as LoginSelectors from 'src/app/stores/login/login.selectors';
+import { MoneyPipe } from '../../../pipes/money-pipe';
+import { NgIf, NgTemplateOutlet, AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-view-products',
-  templateUrl: './view-products.component.html',
-  styleUrls: ['./view-products.component.scss']
+    selector: 'app-view-products',
+    templateUrl: './view-products.component.html',
+    styleUrls: ['./view-products.component.scss'],
+    standalone: true,
+    imports: [NgIf, NgTemplateOutlet, RouterLink, AsyncPipe, MoneyPipe]
 })
 export class ViewProductsComponent implements OnInit, OnDestroy {
   public product$: Observable<Product | undefined> | undefined;

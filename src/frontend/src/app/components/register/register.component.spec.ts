@@ -21,19 +21,17 @@ describe('RegisterComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ 
-        RegisterComponent,
-        SpinnerButtonComponent
-      ],
-      imports: [
+    imports: [
         ReactiveFormsModule,
         RouterModule.forRoot([]),
-      ],
-      providers: [
+        RegisterComponent,
+        SpinnerButtonComponent,
+    ],
+    providers: [
         provideMockStore({ initialState }),
         provideMockActions(() => actions)
-      ]
-    })
+    ]
+})
     .compileComponents();
 
     store = TestBed.inject(Store<RegisterState>);

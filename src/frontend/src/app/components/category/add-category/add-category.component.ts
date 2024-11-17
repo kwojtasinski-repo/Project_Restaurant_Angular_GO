@@ -6,11 +6,15 @@ import { Subject, debounceTime, map, takeUntil } from 'rxjs';
 import { getError } from 'src/app/stores/category/category.selectors';
 import * as CategoryActions from 'src/app/stores/category/category.actions';
 import { Category } from 'src/app/models/category';
+import { CategoryFormComponent } from '../category-form/category-form.component';
+import { NgIf, AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-add-category',
-  templateUrl: './add-category.component.html',
-  styleUrls: ['./add-category.component.scss']
+    selector: 'app-add-category',
+    templateUrl: './add-category.component.html',
+    styleUrls: ['./add-category.component.scss'],
+    standalone: true,
+    imports: [NgIf, CategoryFormComponent, AsyncPipe]
 })
 export class AddCategoryComponent implements OnInit, OnDestroy, AfterViewInit {
   public error$ = this.store.select(getError);

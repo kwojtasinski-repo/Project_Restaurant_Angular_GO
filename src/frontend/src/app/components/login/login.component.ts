@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
@@ -9,11 +9,17 @@ import { getError, loginRequestState } from 'src/app/stores/login/login.selector
 import { LoginState } from 'src/app/stores/login/login.state';
 import { getValidationMessage } from 'src/app/validations/validations';
 import { SpinnerVersion } from '../spinner-button/spinner-version';
+import { SpinnerButtonComponent } from '../spinner-button/spinner-button.component';
+import { RouterLink } from '@angular/router';
+import { LoginFormDirective } from '../../directives/login-form-directive';
+import { NgIf, NgFor, AsyncPipe, KeyValuePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss'],
+    standalone: true,
+    imports: [NgIf, FormsModule, LoginFormDirective, ReactiveFormsModule, NgFor, RouterLink, SpinnerButtonComponent, AsyncPipe, KeyValuePipe]
 })
 export class LoginComponent implements OnInit, OnDestroy {
   public loginForm: FormGroup;
