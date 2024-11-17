@@ -5,7 +5,7 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { initialState } from 'src/app/stores/category/category.reducers';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { CategoryFormComponent } from '../category-form/category-form.component';
 
@@ -15,18 +15,16 @@ describe('EditCategoryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+    imports: [NgxSpinnerModule,
+        ReactiveFormsModule,
+        EditCategoryComponent, CategoryFormComponent],
     providers: [
         provideRouter([]),
         provideMockStore({ initialState }),
         {
             provide: 'API_URL', useValue: ''
-        }
-    ],
-    imports: [
-        NgxSpinnerModule,
-        ReactiveFormsModule,
-        HttpClientModule,
-        EditCategoryComponent, CategoryFormComponent
+        },
+        provideHttpClient(withInterceptorsFromDi())
     ]
 })
     .compileComponents();

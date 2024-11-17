@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { take } from 'rxjs';
 
 import { AuthenticationService } from './authentication.service';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { completeObservable, errorObservable } from '../unit-test-fixtures/test-utils';
 import { User } from '../models/user';
 
@@ -12,15 +12,14 @@ describe('AuthenticationServiceService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientModule
-      ],
-      providers: [
+    imports: [],
+    providers: [
         {
-          provide: 'API_URL', useValue: ''
-        }
-      ]
-    });
+            provide: 'API_URL', useValue: ''
+        },
+        provideHttpClient(withInterceptorsFromDi())
+    ]
+});
     service = TestBed.inject(AuthenticationService);
     httpClient = TestBed.inject(HttpClient);
   });

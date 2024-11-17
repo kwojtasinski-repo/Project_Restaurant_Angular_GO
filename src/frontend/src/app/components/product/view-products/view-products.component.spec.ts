@@ -5,7 +5,7 @@ import { ViewProductsComponent } from './view-products.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { initialState } from 'src/app/stores/login/login.reducers';
 import { provideMockStore } from '@ngrx/store/testing';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ProductService } from 'src/app/services/product.service';
 import productService from 'src/app/unit-test-fixtures/in-memory-product.service';
 import { Product } from 'src/app/models/product';
@@ -20,12 +20,9 @@ describe('ViewProductsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
-        NgxSpinnerModule,
-        HttpClientModule,
+    imports: [NgxSpinnerModule,
         ViewProductsComponent,
-        MoneyPipe
-    ],
+        MoneyPipe],
     providers: [
         provideRouter([]),
         provideMockStore({ initialState }),
@@ -45,7 +42,8 @@ describe('ViewProductsComponent', () => {
                     }),
                 },
             },
-        }
+        },
+        provideHttpClient(withInterceptorsFromDi())
     ]
 })
     .compileComponents();
@@ -76,12 +74,9 @@ describe('ViewProductsComponent when product available', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
-        NgxSpinnerModule,
-        HttpClientModule,
+    imports: [NgxSpinnerModule,
         ViewProductsComponent,
-        MoneyPipe
-    ],
+        MoneyPipe],
     providers: [
         provideRouter([]),
         provideMockStore({ initialState }),
@@ -101,7 +96,8 @@ describe('ViewProductsComponent when product available', () => {
                     }),
                 },
             },
-        }
+        },
+        provideHttpClient(withInterceptorsFromDi())
     ]
 })
     .compileComponents();

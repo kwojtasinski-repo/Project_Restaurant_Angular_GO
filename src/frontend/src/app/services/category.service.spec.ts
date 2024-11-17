@@ -1,22 +1,21 @@
 import { TestBed } from '@angular/core/testing';
 
 import { CategoryService } from './category.service';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('CategoryService', () => {
   let service: CategoryService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientModule
-      ],
-      providers: [
+    imports: [],
+    providers: [
         {
-          provide: 'API_URL', useValue: ''
-        }
-      ]
-    });
+            provide: 'API_URL', useValue: ''
+        },
+        provideHttpClient(withInterceptorsFromDi())
+    ]
+});
     service = TestBed.inject(CategoryService);
   });
 

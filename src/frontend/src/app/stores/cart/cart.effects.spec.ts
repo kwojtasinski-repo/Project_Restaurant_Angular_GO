@@ -7,7 +7,7 @@ import { CartEffects } from './cart.effects';
 import { initialState } from './cart.reducers';
 import { initialState as initialLoginState } from '../login/login.reducers';
 import { getUser } from '../login/login.selectors';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { User } from 'src/app/models/user';
 import * as CartActions from './cart.actions';
 import { CartService } from 'src/app/services/cart.service';
@@ -29,19 +29,18 @@ describe('CartEffects', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
+    imports: [],
+    providers: [
         CartEffects,
         provideMockActions(() => actions$),
         provideMockStore({ initialState }),
         provideMockStore({ initialState: initialLoginState }),
         {
-          provide: 'API_URL', useValue: ''
-        }
-      ],
-      imports: [
-        HttpClientModule,
-      ]
-    });
+            provide: 'API_URL', useValue: ''
+        },
+        provideHttpClient(withInterceptorsFromDi())
+    ]
+});
 
     myCart = createCart();
     const store = TestBed.inject(MockStore);

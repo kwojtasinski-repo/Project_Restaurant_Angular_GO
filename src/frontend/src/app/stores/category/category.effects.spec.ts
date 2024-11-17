@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 import { CategoryEffects } from './category.effects';
 import { initialState } from './category.reducers';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('CategoryEffects', () => {
   let actions$: Observable<any>;
@@ -13,18 +13,17 @@ describe('CategoryEffects', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
+    imports: [],
+    providers: [
         CategoryEffects,
         provideMockActions(() => actions$),
         provideMockStore({ initialState }),
         {
-          provide: 'API_URL', useValue: ''
-        }
-      ],
-      imports: [
-        HttpClientModule
-      ]
-    });
+            provide: 'API_URL', useValue: ''
+        },
+        provideHttpClient(withInterceptorsFromDi())
+    ]
+});
 
     effects = TestBed.inject(CategoryEffects);
   });

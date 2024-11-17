@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 import { LoginEffects } from './login.effects';
 import { initialState } from './login.reducers';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('LoginEffects', () => {
   let actions$: Observable<any>;
@@ -13,18 +13,17 @@ describe('LoginEffects', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
+    imports: [],
+    providers: [
         LoginEffects,
         provideMockActions(() => actions$),
         provideMockStore({ initialState }),
         {
-          provide: 'API_URL', useValue: ''
-        }        
-      ],
-      imports: [
-        HttpClientModule
-      ]
-    });
+            provide: 'API_URL', useValue: ''
+        },
+        provideHttpClient(withInterceptorsFromDi())
+    ]
+});
 
     effects = TestBed.inject(LoginEffects);
   });

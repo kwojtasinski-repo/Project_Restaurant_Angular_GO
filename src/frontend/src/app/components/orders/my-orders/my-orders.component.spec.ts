@@ -7,7 +7,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { MoneyPipe } from 'src/app/pipes/money-pipe';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { initialState } from 'src/app/stores/order/order.reducers';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 
 describe('MyOrdersComponent', () => {
@@ -16,22 +16,20 @@ describe('MyOrdersComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
-        NgxSpinnerModule,
+    imports: [NgxSpinnerModule,
         ReactiveFormsModule,
         FormsModule,
-        HttpClientModule,
         MyOrdersComponent,
         SearchBarComponent,
-        MoneyPipe
-    ],
+        MoneyPipe],
     providers: [
         provideRouter([]),
         provideMockStore({ initialState }),
         provideMockStore({ initialState }),
         {
             provide: 'API_URL', useValue: ''
-        }
+        },
+        provideHttpClient(withInterceptorsFromDi())
     ]
 })
     .compileComponents();

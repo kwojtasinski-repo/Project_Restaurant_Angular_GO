@@ -7,7 +7,7 @@ import { OrderEffects } from './order.effects';
 import { initialState } from './order.reducers';
 import { initialState as initialLoginState } from '../login/login.reducers';
 import { getUser } from '../login/login.selectors';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('OrderEffects', () => {
   let actions$: Observable<any>;
@@ -15,32 +15,31 @@ describe('OrderEffects', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientModule
-      ],
-      providers: [
+    imports: [],
+    providers: [
         OrderEffects,
         provideMockActions(() => actions$),
         provideMockStore({ initialState }),
-        provideMockStore({ initialState: initialLoginState, 
-          selectors: [
-            {
-              selector: getUser,
-              value: {
-                id: 1,
-                email: 'string',
-                role: 'test',
-                deleted: null
-              }
-            }
-          ] 
+        provideMockStore({ initialState: initialLoginState,
+            selectors: [
+                {
+                    selector: getUser,
+                    value: {
+                        id: 1,
+                        email: 'string',
+                        role: 'test',
+                        deleted: null
+                    }
+                }
+            ]
         }),
         provideMockStore({ initialState }),
         {
-          provide: 'API_URL', useValue: ''
-        }
-      ]
-    });
+            provide: 'API_URL', useValue: ''
+        },
+        provideHttpClient(withInterceptorsFromDi())
+    ]
+});
 
     effects = TestBed.inject(OrderEffects);
   });

@@ -20,7 +20,7 @@ import { NgIf, AsyncPipe } from '@angular/common';
 })
 export class EditCategoryComponent implements OnInit, OnDestroy {
   public category$: Observable<Category | undefined> | undefined;
-  public isLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public isLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   public error$ = this.store.select(getError);
   public error: string | undefined;
 

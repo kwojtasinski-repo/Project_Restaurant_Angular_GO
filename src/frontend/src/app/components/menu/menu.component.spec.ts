@@ -7,7 +7,7 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
 import { FormsModule } from '@angular/forms';
 import { MoneyPipe } from 'src/app/pipes/money-pipe';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { take } from 'rxjs';
 import { ProductService } from 'src/app/services/product.service';
 import productService from 'src/app/unit-test-fixtures/in-memory-product.service';
@@ -21,14 +21,11 @@ describe('MenuComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
-        FormsModule,
-        HttpClientModule,
+    imports: [FormsModule,
         RouterLink,
         MenuComponent,
         SearchBarComponent,
-        MoneyPipe
-    ],
+        MoneyPipe],
     providers: [
         provideRouter([]),
         provideMockStore({ initialState }),
@@ -38,7 +35,8 @@ describe('MenuComponent', () => {
         },
         {
             provide: ProductService, useValue: productService
-        }
+        },
+        provideHttpClient(withInterceptorsFromDi())
     ]
 })
     .compileComponents();

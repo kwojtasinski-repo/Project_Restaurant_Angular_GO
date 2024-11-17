@@ -1,22 +1,21 @@
 import { TestBed } from '@angular/core/testing';
 
 import { CartService } from './cart.service';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('CartService', () => {
   let service: CartService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientModule
-      ],
-      providers: [
+    imports: [],
+    providers: [
         {
-          provide: 'API_URL', useValue: ''
-        }
-      ]
-    });
+            provide: 'API_URL', useValue: ''
+        },
+        provideHttpClient(withInterceptorsFromDi())
+    ]
+});
     service = TestBed.inject(CartService);
   });
 

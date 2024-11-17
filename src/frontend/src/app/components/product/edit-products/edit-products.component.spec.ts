@@ -4,7 +4,7 @@ import { EditProductsComponent } from './edit-products.component';
 import { initialState } from 'src/app/stores/product/product.reducers';
 import { provideMockStore } from '@ngrx/store/testing';
 import { NgxSpinnerModule } from 'ngx-spinner';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { stubbedCategories, stubbedProducts } from 'src/app/unit-test-fixtures/test-utils';
 import productService from 'src/app/unit-test-fixtures/in-memory-product.service';
 import { ProductService } from 'src/app/services/product.service';
@@ -26,11 +26,8 @@ describe('EditProductsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
-        NgxSpinnerModule,
-        HttpClientModule,
-        EditProductsComponent
-    ],
+    imports: [NgxSpinnerModule,
+        EditProductsComponent],
     providers: [
         provideRouter([]),
         provideMockStore({ initialState }),
@@ -39,7 +36,8 @@ describe('EditProductsComponent', () => {
         },
         {
             provide: ProductService, useValue: productService
-        }
+        },
+        provideHttpClient(withInterceptorsFromDi())
     ]
 })
     .compileComponents();
@@ -73,14 +71,11 @@ describe('EditProductsComponent when product is available', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-    imports: [
-        NgxSpinnerModule,
-        HttpClientModule,
+    imports: [NgxSpinnerModule,
         ReactiveFormsModule,
         EditProductsComponent,
         ProductFormComponent,
-        CurrencyFormatterDirective
-    ],
+        CurrencyFormatterDirective],
     providers: [
         provideRouter([]),
         provideMockStore({ initialState }),
@@ -99,7 +94,8 @@ describe('EditProductsComponent when product is available', () => {
                     }),
                 },
             },
-        }
+        },
+        provideHttpClient(withInterceptorsFromDi())
     ]
 })
     .compileComponents();

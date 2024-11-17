@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CategoriesComponent } from './categories.component';
 import { SearchBarComponent } from '../../search-bar/search-bar.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideRouter, RouterLink } from '@angular/router';
 
 describe('CategoriesComponent', () => {
@@ -12,18 +12,16 @@ describe('CategoriesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
-        ReactiveFormsModule,
+    imports: [ReactiveFormsModule,
         FormsModule,
-        HttpClientModule,
         RouterLink,
-        CategoriesComponent, SearchBarComponent
-    ],
+        CategoriesComponent, SearchBarComponent],
     providers: [
         provideRouter([]),
         {
             provide: 'API_URL', useValue: ''
-        }
+        },
+        provideHttpClient(withInterceptorsFromDi())
     ]
 })
     .compileComponents();

@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 import { ProductEffects } from './product.effects';
 import { initialState } from './product.reducers';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('ProductEffects', () => {
   let actions$: Observable<any>;
@@ -13,18 +13,17 @@ describe('ProductEffects', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [
+    imports: [],
+    providers: [
         ProductEffects,
         provideMockActions(() => actions$),
         provideMockStore({ initialState }),
         {
-          provide: 'API_URL', useValue: ''
-        }
-      ],
-      imports: [
-        HttpClientModule
-      ]
-    });
+            provide: 'API_URL', useValue: ''
+        },
+        provideHttpClient(withInterceptorsFromDi())
+    ]
+});
 
     effects = TestBed.inject(ProductEffects);
   });
