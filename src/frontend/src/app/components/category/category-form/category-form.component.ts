@@ -40,7 +40,7 @@ export class CategoryFormComponent implements OnDestroy, AfterViewInit {
   public submitValid = new EventEmitter<any>();
 
   @Output()
-  public cancel = new EventEmitter<any>();
+  public cancelClicked = new EventEmitter<any>();
 
   public categoryForm: FormGroup = new FormGroup({});
   private categoryFormValueChanged$ = new Subject();
@@ -76,7 +76,7 @@ export class CategoryFormComponent implements OnDestroy, AfterViewInit {
   }
 
   public cancelClick(): void {
-    this.cancel.emit();
+    this.cancelClicked.emit();
   }
 
   public ngOnDestroy(): void {

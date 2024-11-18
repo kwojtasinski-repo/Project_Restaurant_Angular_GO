@@ -25,7 +25,7 @@
         [buttonNames]="['Zatwierdź', 'Anuluj']"
         (categoryChanged)="onCategoryChange($event)"
         (submitValid)="onSubmit()"
-        (cancel)="cancelClick()">
+        (cancelClicked)="cancelClick()">
       </app-category-form>
     } @else {
       <div class="alert alert-danger">
