@@ -10,12 +10,14 @@
     </div>
   }
 
+  @let categoryFromBackend = category();
+
   @if (isLoading() === true) {
     <div>Loading...</div>
   } @else {
-    @if (category()) {
+    @if (categoryFromBackend) {
       <app-category-form
-        [category]="category()"
+        [category]="categoryFromBackend"
         [buttonNames]="{ SubmitButtonText: 'Zatwierdź', CancelButtonText: 'Anuluj' }"
         (categoryChanged)="onCategoryChange($event)"
         (submitValid)="onSubmit()"
