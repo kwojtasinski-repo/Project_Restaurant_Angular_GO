@@ -1,92 +1,97 @@
-import { Component, OnDestroy, Input, EventEmitter, Output, ChangeDetectorRef, AfterViewInit } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Subject, debounceTime, takeUntil } from 'rxjs';
+import { Component, Input, EventEmitter, Output, signal, computed, effect } from '@angular/core';
 import { Category } from 'src/app/models/category';
 import { getValidationMessage } from 'src/app/validations/validations';
-import { KeyValuePipe } from '@angular/common';
 
 @Component({
     selector: 'app-category-form',
     templateUrl: './category-form.component.html',
     styleUrls: ['./category-form.component.scss'],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, KeyValuePipe]
+    imports: []
 })
-export class CategoryFormComponent implements OnDestroy, AfterViewInit {
-  @Input()
-  public get category(): Category | null | undefined {
-    return this._category;
-  }
-
-  public set category(category: Category | null | undefined) {
-    this._category = category;
-    this.assignVariables();
-    this.categoryChanged.emit({
-        id: this._category?.id ?? '',
-        name: this._category?.name ?? '',
-        deleted: this._category?.deleted ?? false
-      })
-  }
-
-  private _category: Category | null | undefined;
+export class CategoryFormComponent {
+  private _category = signal<Category | null>(null);
 
   @Input()
-  public buttonNames: Array<string> = ['Dodaj', 'Anuluj'];
+  public set category(value: Category | null) {
+    this._category.set(value);
+    this.categoryName.set(value?.name ?? '');
+  }
+
+  public get category(): Category | null {
+    return this._category();
+  }
+
+  @Input()
+  public buttonNames: {
+    SubmitButtonText: string;
+    CancelButtonText: string;
+  } = {
+    SubmitButtonText: 'Dodaj',
+    CancelButtonText: 'Anuluj'
+  };
 
   @Output()
   public categoryChanged = new EventEmitter<Category>();
 
   @Output()
-  public submitValid = new EventEmitter<any>();
+  public submitValid = new EventEmitter<void>();
 
   @Output()
-  public cancelClicked = new EventEmitter<any>();
+  public cancelClicked = new EventEmitter<void>();
 
-  public categoryForm: FormGroup = new FormGroup({});
-  private categoryFormValueChanged$ = new Subject();
+  // Signals for form state
+  public categoryName = signal('');
+  public categoryNameDirty = signal(false);
+
+  public categoryNameErrors = computed(() => {
+    const value = this.categoryName();
+    const errors: { [key: string]: any } = {}; // Use `any` to store rich error data
   
-  constructor(private changeDetector: ChangeDetectorRef) {
-    this.assignVariables();
+    if (!value) {
+      errors['required'] = true;
+    } else {
+      if (value.length < 3) {
+        errors['minlength'] = { requiredLength: 3, actualLength: value.length };
+      }
+      if (value.length > 100) {
+        errors['maxlength'] = { requiredLength: 100, actualLength: value.length };
+      }
+    }
+  
+    return Object.keys(errors).length > 0 ? errors : null;
+  });
+  
+  constructor() {
+    // Emit changes when the category name updates
+    effect(() => {
+      this.categoryChanged.emit({
+        id: this.category?.id ?? '',
+        name: this.categoryName(),
+        deleted: this.category?.deleted ?? false,
+      });
+    });
   }
 
-  public ngAfterViewInit(): void {
-    this.assignVariables();
-    this.changeDetector.detectChanges();
-    this.categoryForm.valueChanges.pipe(debounceTime(10), takeUntil(this.categoryFormValueChanged$))
-      .subscribe((value) => this.categoryChanged.emit({
-          id: this._category?.id ?? '',
-          name: value.categoryName,
-          deleted: this._category?.deleted ?? false
-        })
-      );
+  public getErrorKeys(): string[] {
+    return Object.keys(this.categoryNameErrors() ?? {});
   }
 
   public onSubmit(): void {
-    if (this.categoryForm.invalid) {
-      Object.keys(this.categoryForm.controls).forEach(key => {
-        this.categoryForm.get(key)?.markAsDirty();
-      });
-      return;
+    this.categoryNameDirty.set(true);
+
+    if (this.categoryNameErrors()) {
+      return; // Form is invalid
     }
+
     this.submitValid.emit();
   }
 
-  public getErrorMessage(error: any): string | null {
-    return getValidationMessage(error);
+  public getErrorMessage(code: { key: string; value: any | null | undefined }): string | null {
+    return getValidationMessage(code);
   }
 
   public cancelClick(): void {
     this.cancelClicked.emit();
-  }
-
-  public ngOnDestroy(): void {
-    this.changeDetector.detach();
-    this.categoryFormValueChanged$.complete();
-  }
-
-  private assignVariables(): void {
-    this.categoryForm = new FormGroup({
-      categoryName: new FormControl(this._category?.name ?? '', Validators.compose([Validators.required, Validators.maxLength(100), Validators.minLength(3)])),
-    });
   }
 }

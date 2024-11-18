@@ -1,25 +1,33 @@
-<form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+<form (ngSubmit)="onSubmit()">
   <div class="form-group">
     <label for="category-name">
       Nazwa
     </label>
-    <input id="category-name" type="text" class="form-control" formControlName="categoryName" placeholder="Wpisz nazwę kategorii" />
-    @if (categoryForm.dirty) {
-      @for (error of categoryForm.get('categoryName')?.errors | keyvalue; track error) {
-        @if (error.value && this.categoryForm.get('categoryName')?.dirty) {
-          <div class="invalid-feedback d-block text-break">
-            {{ getErrorMessage(error) }}
-          </div>
+    <input
+      id="category-name"
+      type="text"
+      class="form-control"
+      [class.is-invalid]="categoryNameErrors() && categoryNameDirty()"
+      [value]="categoryName()"
+      (input)="categoryName.set($any($event.target).value)"
+      (blur)="categoryNameDirty.set(true)"
+      placeholder="Wpisz nazwę kategorii"
+    />
+    @if (categoryNameErrors() && categoryNameDirty()) {
+      @let errorKeys = getErrorKeys();
+      <div class="invalid-feedback d-block text-break">
+        @for (error of errorKeys; track error) {
+         <div>{{ getErrorMessage({ key: error, value: categoryNameErrors()?.[error] }) }}</div>
         }
-      }
+      </div>
     }
   </div>
   <div class="mt-2 mb-2">
     <button class="btn btn-success me-2">
-      Zatwierdź
+      {{ buttonNames.SubmitButtonText }}
     </button>
     <button class="btn btn-secondary" type="button" (click)="cancelClick()">
-      Anuluj
+      {{ buttonNames.CancelButtonText }}
     </button>
   </div>
 </form>

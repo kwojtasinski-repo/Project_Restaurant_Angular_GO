@@ -22,7 +22,7 @@
     @if (category) {
       <app-category-form
         [category]="category"
-        [buttonNames]="['Zatwierdź', 'Anuluj']"
+        [buttonNames]="{ SubmitButtonText: 'Zatwierdź', CancelButtonText: 'Anuluj' }"
         (categoryChanged)="onCategoryChange($event)"
         (submitValid)="onSubmit()"
         (cancelClicked)="cancelClick()">
