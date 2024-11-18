@@ -1,4 +1,5 @@
 import { Component, Input, EventEmitter, Output, signal, computed, effect } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Category } from 'src/app/models/category';
 import { getValidationMessage } from 'src/app/validations/validations';
 
@@ -7,7 +8,7 @@ import { getValidationMessage } from 'src/app/validations/validations';
     templateUrl: './category-form.component.html',
     styleUrls: ['./category-form.component.scss'],
     standalone: true,
-    imports: []
+    imports: [FormsModule]
 })
 export class CategoryFormComponent {
   private _category = signal<Category | null>(null);

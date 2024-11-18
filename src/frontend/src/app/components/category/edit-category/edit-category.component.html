@@ -2,26 +2,20 @@
   <h3>
     Edytuj kategorię
   </h3>
-  @if (error$ | async) {
+  @if (isError()) {
     <div class="mt-2 mb-2">
       <div class="alert alert-danger">
-        {{ error$ | async }}
+        {{ error() || storeError() }}
       </div>
     </div>
   }
 
-  @let category = category$ | async;
-
-  @if ((isLoading$ | async) === true) {
-    @if (error) {
-      <div class="mt-2 mb-2 alert alert-danger">
-        {{ error }}
-      </div>
-    }
+  @if (isLoading() === true) {
+    <div>Loading...</div>
   } @else {
-    @if (category) {
+    @if (category()) {
       <app-category-form
-        [category]="category"
+        [category]="category()"
         [buttonNames]="{ SubmitButtonText: 'Zatwierdź', CancelButtonText: 'Anuluj' }"
         (categoryChanged)="onCategoryChange($event)"
         (submitValid)="onSubmit()"
