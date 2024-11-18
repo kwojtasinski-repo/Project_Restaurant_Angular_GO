@@ -1,46 +1,29 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, computed, effect, OnDestroy, signal } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CategoryState } from 'src/app/stores/category/category.state';
-import { Subject, debounceTime, map, takeUntil } from 'rxjs';
 import { getError } from 'src/app/stores/category/category.selectors';
 import * as CategoryActions from 'src/app/stores/category/category.actions';
 import { Category } from 'src/app/models/category';
 import { CategoryFormComponent } from '../category-form/category-form.component';
-import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-add-category',
     templateUrl: './add-category.component.html',
     styleUrls: ['./add-category.component.scss'],
     standalone: true,
-    imports: [CategoryFormComponent, AsyncPipe]
+    imports: [CategoryFormComponent]
 })
-export class AddCategoryComponent implements OnInit, OnDestroy, AfterViewInit {
-  public error$ = this.store.select(getError);
-  public categoryForm: FormGroup = new FormGroup({});
-  private categoryFormValueChanged$ = new Subject();
+export class AddCategoryComponent implements OnDestroy {
+  public category = signal<Category | null>(null);
+  public isLoading = signal<boolean>(true);
 
-  constructor(private store: Store<CategoryState>) { }
+  public isError = computed(() => !!this.storeError());
+  public storeError = signal<string | null>(null);
 
-  public ngOnInit(): void {
-    this.categoryForm = new FormGroup({
-      categoryName: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(100), Validators.minLength(3)])),
+  constructor(private store: Store<CategoryState>) {
+    effect(() => {
+      this.store.select(getError).subscribe((err) => { if (err) { this.storeError.set(err)} });
     });
-  }
-
-  public ngAfterViewInit(): void {
-    this.categoryForm.valueChanges.pipe(
-      debounceTime(10),
-      takeUntil(this.categoryFormValueChanged$),
-      map((value) => this.store.dispatch(CategoryActions.categoryFormUpdate({
-        category: {
-          id: '',
-          name: value.categoryName,
-          deleted: false
-        }
-      })))
-    ).subscribe();
   }
 
   public onCategoryChange(category: Category): void {
@@ -53,12 +36,11 @@ export class AddCategoryComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store.dispatch(CategoryActions.categoryAddRequestBegin());
   }
 
-  public onCancel(): void {
+  public cancelClick(): void {
     this.store.dispatch(CategoryActions.categoryCancelOperation());
   }
 
   public ngOnDestroy(): void {
-    this.categoryFormValueChanged$.unsubscribe();
     this.store.dispatch(CategoryActions.clearErrors());
   }
 }

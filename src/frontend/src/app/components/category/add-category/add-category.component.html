@@ -2,16 +2,16 @@
   <h3>
     Dodaj kategorię
   </h3>
-  @if (error$ | async) {
+  @if (isError()) {
     <div class="mt-2 mb-2">
       <div class="alert alert-danger">
-        {{ error$ | async }}
+        {{ storeError() }}
       </div>
     </div>
   }
   <app-category-form
     (categoryChanged)="onCategoryChange($event)"
     (submitValid)="onSubmit()"
-    (cancelClicked)="onCancel()"
+    (cancelClicked)="cancelClick()"
   ></app-category-form>
 </div>
