@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorHandler, Injectable, Injector, NgZone } from '@angular/core';
 import { ErrorDialogService } from './services/error-dialog.service';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -13,11 +12,7 @@ export class GlobalErrorHandler implements ErrorHandler {
     const ngZone = this.injector.get(NgZone);
     const errorDialogService = this.injector.get(ErrorDialogService);
     this.injector.get(NgxSpinnerService).hide();
-debugger
-    // Check if it's an error from an HTTP response
-    if (!(error instanceof HttpErrorResponse)) {
-      error = error.rejection; // get the error object
-    }
+
     ngZone.run(() =>
       errorDialogService.openDialog(
         error?.message || 'Undefined client error',
