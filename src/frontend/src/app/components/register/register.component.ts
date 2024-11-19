@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { getEmail, getError, getPassword, getPasswordConfirm, getRegisterRequestState } from 'src/app/stores/register/register.selectors';
 import { RegisterState } from 'src/app/stores/register/register.state';
@@ -20,6 +20,9 @@ import { AsyncPipe, KeyValuePipe } from '@angular/common';
     imports: [FormsModule, ReactiveFormsModule, RouterLink, SpinnerButtonComponent, AsyncPipe, KeyValuePipe]
 })
 export class RegisterComponent implements OnInit, OnDestroy {
+  private store = inject<Store<RegisterState>>(Store);
+  private actions$ = inject(Actions);
+
   public registerForm: FormGroup;
   public error$ = this.store.select(getError);
   public loginRequestState$ = this.store.select(getRegisterRequestState);
@@ -29,7 +32,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   public confirmPassword$ = this.store.select(getPasswordConfirm);
   private loginError$: Subscription = new Subscription();
 
-  constructor(private store: Store<RegisterState>, private actions$: Actions) {
+  constructor() {
     this.registerForm = new FormGroup({
         emailAddress: new FormControl('', Validators.compose([Validators.required, Validators.email])),
         password: new FormControl('', Validators.compose([ 

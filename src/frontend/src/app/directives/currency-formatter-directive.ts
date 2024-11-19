@@ -1,4 +1,4 @@
-import { Directive, HostListener, OnDestroy, Self, Input, OnInit, AfterViewInit } from '@angular/core';
+import { Directive, HostListener, OnDestroy, Input, OnInit, AfterViewInit, inject } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
 
@@ -7,6 +7,8 @@ import { Subject, debounceTime, takeUntil } from 'rxjs';
     standalone: true
 })
   export class CurrencyFormatterDirective implements OnDestroy, OnInit, AfterViewInit {
+    private ngControl = inject(NgControl, { self: true });
+
     @Input() locale: string = 'en-US';
     @Input() minimumFractionDigits: number = 0;
     @Input() maximumFractionDigits: number = 2;
@@ -15,7 +17,7 @@ import { Subject, debounceTime, takeUntil } from 'rxjs';
     private destroy$ = new Subject();
     private comma: string = '.';
   
-    constructor(@Self() private ngControl: NgControl) {
+    constructor() {
       this.formatter = new Intl.NumberFormat(this.locale, { minimumFractionDigits: this.minimumFractionDigits, maximumFractionDigits: this.maximumFractionDigits });
     }
 

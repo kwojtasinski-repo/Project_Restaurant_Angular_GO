@@ -1,4 +1,4 @@
-import { Component, OnDestroy, Input, EventEmitter, Output, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { Component, OnDestroy, Input, EventEmitter, Output, ChangeDetectorRef, AfterViewInit, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
 import { Category } from 'src/app/models/category';
@@ -15,6 +15,8 @@ import { KeyValuePipe } from '@angular/common';
     imports: [FormsModule, ReactiveFormsModule, CurrencyFormatterDirective, KeyValuePipe]
 })
 export class ProductFormComponent implements OnDestroy, AfterViewInit {
+  private changeDetector = inject(ChangeDetectorRef);
+
   @Input()
   public get product(): Product | null | undefined {
     return this._product;
@@ -62,7 +64,7 @@ export class ProductFormComponent implements OnDestroy, AfterViewInit {
   private comma: string = '.';
   private productFormValueChanged$ = new Subject();
   
-  constructor(private changeDetector: ChangeDetectorRef) {
+  constructor() {
     this.assignVariables();
   }
 

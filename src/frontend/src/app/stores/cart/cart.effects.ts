@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of, catchError, exhaustMap, map, mergeMap, tap } from 'rxjs';
 import { CartState } from './cart.state';
@@ -11,6 +11,13 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class CartEffects {
+  private actions$ = inject(Actions);
+  private store = inject<Store<CartState>>(Store);
+  private cartService = inject(CartService);
+  private orderService = inject(OrderService);
+  private spinnerService = inject(NgxSpinnerService);
+  private router = inject(Router);
+
   fectchCart$ = createEffect(() =>
     this.actions$.pipe(
       ofType(CartActions.fetchCart),
@@ -118,11 +125,4 @@ export class CartEffects {
       tap((action) => this.router.navigate(['/orders/view/' + action.orderId]))
     ), { dispatch: false }
   );
-
-  constructor(private actions$: Actions, 
-    private store: Store<CartState>, 
-    private cartService: CartService, 
-    private orderService: OrderService,
-    private spinnerService: NgxSpinnerService, 
-    private router: Router) {}
 }

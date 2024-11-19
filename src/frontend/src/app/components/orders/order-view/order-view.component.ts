@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { OrderState } from 'src/app/stores/order/order.state';
 import { fetchOrder } from 'src/app/stores/order/order.actions';
@@ -22,11 +22,12 @@ import { NgIf, NgFor, AsyncPipe } from '@angular/common';
     ],
 })
 export class OrderViewComponent implements OnInit {
+  private store = inject<Store<OrderState>>(Store);
+  private route = inject(ActivatedRoute);
+
   public order$ = this.store.select(getOrder);
   public fetchState$ = this.store.select(getFetchState);
   private id = '';
-
-  constructor(private store: Store<OrderState>, private route: ActivatedRoute) { }
 
   public ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id') ?? '';

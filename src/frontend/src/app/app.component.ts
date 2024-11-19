@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from './stores/app/app.state';
@@ -15,9 +15,10 @@ import { HeaderComponent } from './components/header/header.component';
     imports: [HeaderComponent, RouterOutlet, FooterComponent, NgxSpinnerComponent]
 })
 export class AppComponent implements OnInit {
-  private headerHiddenUrls: string[] = [];
+  private router = inject(Router);
+  private appStore = inject<Store<AppState>>(Store);
 
-  constructor(private router: Router, private appStore: Store<AppState>) { }
+  private headerHiddenUrls: string[] = [];
 
   public ngOnInit(): void {
     for (const route of this.router.config) {

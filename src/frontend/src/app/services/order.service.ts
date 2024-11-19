@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Order } from '../models/order';
 import { Cart } from '../models/cart';
 import { Observable, map } from 'rxjs';
@@ -8,9 +8,10 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class OrderService {
-  private orderPath = 'api/orders';
+  private httpClient = inject(HttpClient);
+  private backendUrl = inject<string>('API_URL' as any);
 
-  constructor(private httpClient: HttpClient, @Inject('API_URL') private backendUrl: string) { }
+  private orderPath = 'api/orders';
 
   public getAll(): Observable<Order[]> {
     return this.httpClient.get<Order[]>(`${this.backendUrl}/${this.orderPath}`, { withCredentials: true })

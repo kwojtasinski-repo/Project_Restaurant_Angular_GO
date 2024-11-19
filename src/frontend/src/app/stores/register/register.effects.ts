@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import * as RegisterActions from './register.actions';
 import { catchError, exhaustMap, map, of, tap, withLatestFrom } from 'rxjs';
@@ -11,6 +11,12 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Injectable()
 export class RegisterEffects {
+  private actions$ = inject(Actions);
+  private store = inject<Store<RegisterState>>(Store);
+  private spinnerService = inject(NgxSpinnerService);
+  private authenticationService = inject(AuthenticationService);
+  private router = inject(Router);
+
   registerRequestBegin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(RegisterActions.registerRequestBegin),
@@ -53,12 +59,4 @@ export class RegisterEffects {
       tap(() => this.spinnerService.hide())
     ), { dispatch: false }
   );
-
-  constructor(
-    private actions$: Actions,
-    private store: Store<RegisterState>,
-    private spinnerService: NgxSpinnerService,
-    private authenticationService: AuthenticationService,
-    private router: Router
-  ) {}
 }

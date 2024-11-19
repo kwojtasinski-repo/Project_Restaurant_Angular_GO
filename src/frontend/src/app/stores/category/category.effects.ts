@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import * as CategoryActions from './category.actions';
 import { of, catchError, exhaustMap, map, withLatestFrom } from 'rxjs';
@@ -10,6 +10,11 @@ import { CategoryService } from 'src/app/services/category.service';
 
 @Injectable()
 export class CategoryEffects {
+  private actions$ = inject(Actions);
+  private store = inject<Store<CategoryState>>(Store);
+  private router = inject(Router);
+  private categoryService = inject(CategoryService);
+
   categoryAddRequestBegin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(CategoryActions.categoryAddRequestBegin),
@@ -77,11 +82,4 @@ export class CategoryEffects {
       })
     )
   );
-
-  constructor(
-    private actions$: Actions, 
-    private store: Store<CategoryState>, 
-    private router: Router, 
-    private categoryService: CategoryService
-  ) {}
 }

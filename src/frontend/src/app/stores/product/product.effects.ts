@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import * as ProductActions from './product.actions';
 import { of, catchError, exhaustMap, map, withLatestFrom } from 'rxjs';
@@ -10,6 +10,11 @@ import { Store } from '@ngrx/store';
 
 @Injectable()
 export class ProductEffects {
+  private actions$ = inject(Actions);
+  private store = inject<Store<ProductState>>(Store);
+  private router = inject(Router);
+  private productService = inject(ProductService);
+
   productAddRequestBegin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ProductActions.productAddRequestBegin),
@@ -89,11 +94,4 @@ export class ProductEffects {
       })
     )
   );
-
-  constructor(
-    private actions$: Actions, 
-    private store: Store<ProductState>, 
-    private router: Router, 
-    private productService: ProductService
-  ) {}
 }

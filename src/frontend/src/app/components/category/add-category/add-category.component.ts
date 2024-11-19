@@ -1,4 +1,4 @@
-import { Component, computed, effect, OnDestroy, signal } from '@angular/core';
+import { Component, computed, effect, OnDestroy, signal, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CategoryState } from 'src/app/stores/category/category.state';
 import { getError } from 'src/app/stores/category/category.selectors';
@@ -14,13 +14,15 @@ import { CategoryFormComponent } from '../category-form/category-form.component'
     imports: [CategoryFormComponent]
 })
 export class AddCategoryComponent implements OnDestroy {
+  private store = inject<Store<CategoryState>>(Store);
+
   public category = signal<Category | null>(null);
   public isLoading = signal<boolean>(true);
 
   public isError = computed(() => !!this.storeError());
   public storeError = signal<string | null>(null);
 
-  constructor(private store: Store<CategoryState>) {
+  constructor() {
     effect(() => {
       this.store.select(getError).subscribe((err) => { if (err) { this.storeError.set(err)} });
     });

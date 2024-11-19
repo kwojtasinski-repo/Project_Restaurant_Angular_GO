@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { getCurrentUrl, showHeader } from 'src/app/stores/app/app.selectors';
 import { AppState } from 'src/app/stores/app/app.state';
@@ -17,13 +17,14 @@ import { AsyncPipe } from '@angular/common';
     imports: [CollapseModule, RouterLink, AsyncPipe]
 })
 export class HeaderComponent implements OnInit {
+  private appStore = inject<Store<AppState>>(Store);
+  private loginStore = inject<Store<LoginState>>(Store);
+
   public routerLinks: any[] = [];
   public currentUrl$ = this.appStore.select(getCurrentUrl);
   public showHeader$ = this.appStore.select(showHeader);
   public user$ = this.loginStore.select(getUser);
   public isCollapsed = true;
-
-  constructor(private appStore: Store<AppState>, private loginStore: Store<LoginState>) { }
   
   public ngOnInit(): void {
     this.routerLinks = [

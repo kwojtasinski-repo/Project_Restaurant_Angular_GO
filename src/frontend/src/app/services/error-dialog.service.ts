@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
 
@@ -6,10 +6,10 @@ import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
   providedIn: 'root'
 })
 export class ErrorDialogService {
+  private modalService = inject(BsModalService);
+
   private opened = false;
   private modalRef: BsModalRef = new BsModalRef();
-
-  constructor(private modalService: BsModalService) { }
 
   public openDialog(message: string, status?: number): void {
     if (!this.opened) {

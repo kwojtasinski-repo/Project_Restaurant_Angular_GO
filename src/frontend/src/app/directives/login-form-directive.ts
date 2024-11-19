@@ -1,4 +1,4 @@
-import { Directive, OnDestroy, OnInit } from '@angular/core';
+import { Directive, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormGroupDirective } from '@angular/forms';
 import { LoginState } from '../stores/login/login.state';
 import { Store } from '@ngrx/store';
@@ -10,10 +10,10 @@ import { loginFormUpdate } from '../stores/login/login.actions';
     standalone: true
 })
 export class LoginFormDirective implements OnInit, OnDestroy {
-    public formChange : Subscription = new Subscription();
+    private formGroupDirective = inject(FormGroupDirective);
+    private store = inject<Store<LoginState>>(Store);
 
-    constructor(private formGroupDirective: FormGroupDirective,
-                private store: Store<LoginState>) { }
+    public formChange : Subscription = new Subscription();
     
     public ngOnInit() {
         // Update the form value based on the state

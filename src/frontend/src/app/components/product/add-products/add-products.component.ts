@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { ProductState } from 'src/app/stores/product/product.state';
 import { Store } from '@ngrx/store';
 import * as ProductActions from 'src/app/stores/product/product.actions';
@@ -17,12 +17,13 @@ import { AsyncPipe } from '@angular/common';
     standalone: true,
     imports: [ProductFormComponent, AsyncPipe]
 })
-export class AddProductsComponent implements OnInit, OnDestroy {  
+export class AddProductsComponent implements OnInit, OnDestroy {
+  private store = inject<Store<ProductState>>(Store);
+  private categoryService = inject(CategoryService);
+  
   public categories$: Observable<Category[]> = new BehaviorSubject([]);
   public error$ = this.store.select(getError);
   public error = '';
-
-  constructor(private store: Store<ProductState>, private categoryService: CategoryService) { }
 
   public ngOnInit(): void {
     this.categories$ = this.categoryService.getAll()

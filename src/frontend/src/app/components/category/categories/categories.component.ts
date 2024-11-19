@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Category } from 'src/app/models/category';
 import { CategoryService } from 'src/app/services/category.service';
 import { BehaviorSubject, EMPTY, Observable, catchError, finalize,
@@ -16,13 +16,14 @@ import { RouterLink } from '@angular/router';
     imports: [RouterLink, SearchBarComponent, AsyncPipe]
 })
 export class CategoriesComponent implements OnInit {
+  private categoryService = inject(CategoryService);
+  private spinnerService = inject(NgxSpinnerService);
+
   public categories$: Observable<Category[]> = new BehaviorSubject([]);
   public categoriesToShow$: Observable<Category[]> = new BehaviorSubject([]);
   public term: string = '';
   public isLoading: boolean = true;
   public error: string | undefined;
-
-  constructor(private categoryService: CategoryService, private spinnerService: NgxSpinnerService) { }
 
   public ngOnInit(): void {
     const getAll$ = this.categoryService.getAll()

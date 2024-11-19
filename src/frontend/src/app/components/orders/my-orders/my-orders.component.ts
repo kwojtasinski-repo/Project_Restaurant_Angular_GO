@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { BehaviorSubject, EMPTY, Observable, catchError, finalize, map, shareReplay, take, tap } from 'rxjs';
 import { Order } from 'src/app/models/order';
@@ -16,12 +16,13 @@ import { AsyncPipe } from '@angular/common';
     imports: [SearchBarComponent, RouterLink, AsyncPipe, MoneyPipe]
 })
 export class MyOrdersComponent implements OnInit {
+  private orderService = inject(OrderService);
+  private spinnerService = inject(NgxSpinnerService);
+
   public orders$: Observable<Order[]> = new BehaviorSubject([]);
   public ordersToShow$: Observable<Order[]> = new BehaviorSubject([]);
   public term: string = '';
   public error: string | undefined;
-  
-  constructor(private orderService: OrderService, private spinnerService: NgxSpinnerService) { }
   
   public ngOnInit(): void {
     this.orders$ = this.orderService.getMyOrders()

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
@@ -22,13 +22,16 @@ import { AsyncPipe, KeyValuePipe } from '@angular/common';
     imports: [FormsModule, LoginFormDirective, ReactiveFormsModule, RouterLink, SpinnerButtonComponent, AsyncPipe, KeyValuePipe]
 })
 export class LoginComponent implements OnInit, OnDestroy {
+  private store = inject<Store<LoginState>>(Store);
+  private actions$ = inject(Actions);
+
   public loginForm: FormGroup;
   public error$ = this.store.select(getError);
   public loginRequestState$ = this.store.select(loginRequestState);
   public spinnerVersion = SpinnerVersion.grow;
   private loginError$: Subscription = new Subscription();
 
-  constructor(private store: Store<LoginState>, private actions$: Actions) { 
+  constructor() { 
     this.loginForm = new FormGroup({
       emailAddress: new FormControl('', Validators.compose([Validators.required, Validators.email])),
       password: new FormControl('', Validators.required)

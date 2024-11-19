@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { EMPTY, Observable, catchError, finalize, shareReplay, take, tap } from 'rxjs';
 import { Product } from 'src/app/models/product';
@@ -20,13 +20,16 @@ import { NgTemplateOutlet, AsyncPipe } from '@angular/common';
     imports: [NgTemplateOutlet, RouterLink, AsyncPipe, MoneyPipe]
 })
 export class ViewProductsComponent implements OnInit, OnDestroy {
+  private productService = inject(ProductService);
+  private route = inject(ActivatedRoute);
+  private spinnerService = inject(NgxSpinnerService);
+  private loginStore = inject<Store<LoginState>>(Store);
+  private cartStore = inject<Store<CartState>>(Store);
+
   public product$: Observable<Product | undefined> | undefined;
   public isLoading = true;
   public user$ = this.loginStore.select(LoginSelectors.getUser);
   public error: string | undefined;
-
-  constructor(private productService: ProductService, private route: ActivatedRoute, private spinnerService: NgxSpinnerService,
-    private loginStore: Store<LoginState>, private cartStore: Store<CartState>) { }
 
   public ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id') ?? '';

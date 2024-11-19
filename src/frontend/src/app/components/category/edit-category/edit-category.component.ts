@@ -1,4 +1,4 @@
-import { Component, computed, effect, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, OnDestroy, OnInit, signal, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { getError } from 'src/app/stores/category/category.selectors';
 import { CategoryState } from 'src/app/stores/category/category.state';
@@ -18,6 +18,11 @@ import { CategoryFormComponent } from '../category-form/category-form.component'
     imports: [CategoryFormComponent]
 })
 export class EditCategoryComponent implements OnInit, OnDestroy {
+  private store = inject<Store<CategoryState>>(Store);
+  private categoryService = inject(CategoryService);
+  private route = inject(ActivatedRoute);
+  private spinnerService = inject(NgxSpinnerService);
+
   public category = signal<Category | null>(null);
   public error = signal<string | null>(null);
   public isLoading = signal<boolean>(true);
@@ -25,8 +30,7 @@ export class EditCategoryComponent implements OnInit, OnDestroy {
   public isError = computed(() => !!this.error() || !!this.storeError());
   public storeError = signal<string | null>(null);
 
-  constructor(private store: Store<CategoryState>, private categoryService: CategoryService, private route: ActivatedRoute, 
-    private spinnerService: NgxSpinnerService) {
+  constructor() {
       effect(() => {
         this.store.select(getError).subscribe((err) => { if (err) { this.storeError.set(err)} });
       });

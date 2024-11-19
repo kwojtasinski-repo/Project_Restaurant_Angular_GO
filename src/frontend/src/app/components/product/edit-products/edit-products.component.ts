@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, EMPTY, Observable, catchError, finalize, forkJoin, map, 
@@ -23,17 +23,17 @@ import { AsyncPipe } from '@angular/common';
     imports: [ProductFormComponent, AsyncPipe]
 })
 export class EditProductsComponent implements OnInit, OnDestroy {
+  private productService = inject(ProductService);
+  private route = inject(ActivatedRoute);
+  private store = inject<Store<ProductState>>(Store);
+  private categoryService = inject(CategoryService);
+  private spinnerService = inject(NgxSpinnerService);
+
   public product$: Observable<Product | undefined> | undefined;
   public categories$: Observable<Category[]> = new BehaviorSubject([]);
   public isLoading = true;
   public error$ = this.store.select(getError);
   public error: string | undefined;
-
-  constructor(private productService: ProductService,
-    private route: ActivatedRoute,
-    private store: Store<ProductState>,
-    private categoryService: CategoryService,
-    private spinnerService: NgxSpinnerService) { }
 
   public ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id') ?? '';

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of, catchError, map, mergeMap, tap } from 'rxjs';
 import * as OrderActions from './order.actions';
@@ -7,6 +7,10 @@ import { NgxSpinnerService } from 'ngx-spinner';
 
 @Injectable()
 export class OrderEffects {
+  private actions$ = inject(Actions);
+  private orderService = inject(OrderService);
+  private spinnerService = inject(NgxSpinnerService);
+
   fectchCart$ = createEffect(() =>
     this.actions$.pipe(
       ofType(OrderActions.fetchOrder),
@@ -39,10 +43,4 @@ export class OrderEffects {
         tap(() => this.spinnerService.hide())
     ), {dispatch: false}
   );
-
-  constructor(
-    private actions$: Actions,
-    private orderService: OrderService,
-    private spinnerService: NgxSpinnerService
-  ) {}
 }

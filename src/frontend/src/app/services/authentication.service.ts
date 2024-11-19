@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, concatMap } from 'rxjs';
 import { User } from '../models/user';
 import { HttpClient } from '@angular/common/http';
@@ -8,12 +8,13 @@ import { Credentials } from '../models/credentials';
   providedIn: 'root'
 })
 export class AuthenticationService {
+  private httpClient = inject(HttpClient);
+  private backendUrl = inject<string>('API_URL' as any);
+
   private signInPath = 'api/sign-in';
   private usersPath = 'api/users';
   private signOutPath = 'api/sign-out';
   private signUpPath = 'api/sign-up';
-
-  constructor(private httpClient: HttpClient, @Inject('API_URL') private backendUrl: string) { }
 
   public login(credentials: Credentials): Observable<User> {
     return this.httpClient.post<void>(`${this.backendUrl}/${this.signInPath}`, credentials, { withCredentials: true })

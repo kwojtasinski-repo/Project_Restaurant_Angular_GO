@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Product } from '../models/product';
 import { Observable, catchError, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -8,9 +8,10 @@ import { ProductSendDto } from '../models/product-send-dto';
   providedIn: 'root'
 })
 export class ProductService {
-  private productPath = 'api/products';
+  private httpClient = inject(HttpClient);
+  private backendUrl = inject<string>('API_URL' as any);
 
-  constructor(private httpClient: HttpClient, @Inject('API_URL') private backendUrl: string) { }
+  private productPath = 'api/products';
 
   public add(product: ProductSendDto): Observable<void> {
     return this.httpClient.post<void>(`${this.backendUrl}/${this.productPath}`, product, { withCredentials: true });

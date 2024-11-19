@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, exhaustMap, mergeMap, of, tap, map, withLatestFrom } from 'rxjs';
 import { Router } from '@angular/router';
@@ -11,6 +11,12 @@ import { NgxSpinnerService } from 'ngx-spinner';
 
 @Injectable()
 export class LoginEffects {
+  private actions$ = inject(Actions);
+  private router = inject(Router);
+  private store = inject<Store<LoginState>>(Store);
+  private authenticationService = inject(AuthenticationService);
+  private spinnerService = inject(NgxSpinnerService);
+
   reloginRequestSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType(LoginActions.reloginRequestSuccess),
@@ -87,12 +93,4 @@ export class LoginEffects {
       tap(() => this.router.navigate(['/login']))
     ), { dispatch: false }
   );
-
-  constructor(
-    private actions$: Actions, 
-    private router: Router, 
-    private store: Store<LoginState>, 
-    private authenticationService: AuthenticationService,
-    private spinnerService: NgxSpinnerService
-  ) {}
 }

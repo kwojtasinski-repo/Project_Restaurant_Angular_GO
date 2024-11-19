@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Product } from 'src/app/models/product';
 import { ProductService } from 'src/app/services/product.service';
 import { BehaviorSubject, EMPTY, Observable, catchError, finalize, map, shareReplay, take, tap } from 'rxjs';
@@ -22,15 +22,17 @@ import { AsyncPipe } from '@angular/common';
     imports: [RouterLink, SearchBarComponent, AsyncPipe, MoneyPipe]
 })
 export class MenuComponent implements OnInit, OnDestroy {
+  private productService = inject(ProductService);
+  private loginStore = inject<Store<LoginState>>(Store);
+  private cartStore = inject<Store<CartState>>(Store);
+  private spinnerService = inject(NgxSpinnerService);
+
   public user$ = this.loginStore.select(LoginSelectors.getUser);
   public products$: Observable<Product[]> = new BehaviorSubject([]);
   public productsToShow$: Observable<Product[]> = new BehaviorSubject([]);
   public term: string = '';
   public error: string | undefined;
   public cartError$ = this.cartStore.select(getError);
-
-  constructor(private productService: ProductService, private loginStore: Store<LoginState>, private cartStore: Store<CartState>,
-    private spinnerService: NgxSpinnerService) { }
   
   public ngOnInit(): void {
     this.products$ = this.productService.getAll()

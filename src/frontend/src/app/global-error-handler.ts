@@ -1,12 +1,11 @@
-import { ErrorHandler, Injectable, Injector, NgZone } from '@angular/core';
+import { ErrorHandler, Injectable, Injector, NgZone, inject } from '@angular/core';
 import { ErrorDialogService } from './services/error-dialog.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
-  constructor(
-    private injector: Injector,
-  ) {}
+  private injector = inject(Injector);
+
 
   handleError(error: any) {
     const ngZone = this.injector.get(NgZone);

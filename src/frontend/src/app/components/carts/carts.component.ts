@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Cart } from 'src/app/models/cart';
 import * as CartActions  from 'src/app/stores/cart/cart.actions';
@@ -17,11 +17,11 @@ import { AsyncPipe } from '@angular/common';
     imports: [RouterLink, SpinnerButtonComponent, AsyncPipe, MoneyPipe]
 })
 export class CartsComponent implements OnInit, OnDestroy {
+  private cartStore = inject<Store<CartState>>(Store);
+
   public carts$ = this.cartStore.select(getCart);
   public fetchState$ = this.cartStore.select(getFetchState);
   public finalizeState$ = this.cartStore.select(getFinalizeState);
-
-  constructor(private cartStore: Store<CartState>) { }
   
   public ngOnInit(): void {
     this.cartStore.dispatch(CartActions.fetchCart());
