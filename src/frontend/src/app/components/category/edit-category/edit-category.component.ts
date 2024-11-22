@@ -2,7 +2,7 @@ import { Component, computed, effect, OnDestroy, OnInit, signal, inject } from '
 import { Store } from '@ngrx/store';
 import { getError } from 'src/app/stores/category/category.selectors';
 import { CategoryState } from 'src/app/stores/category/category.state';
-import { take, tap, finalize, catchError, EMPTY, shareReplay } from 'rxjs';
+import { take, tap, finalize, catchError, EMPTY, shareReplay, Subject, takeUntil } from 'rxjs';
 import * as CategoryActions from 'src/app/stores/category/category.actions';
 import { Category } from 'src/app/models/category';
 import { CategoryService } from 'src/app/services/category.service';
@@ -22,19 +22,23 @@ export class EditCategoryComponent implements OnInit, OnDestroy {
   private categoryService = inject(CategoryService);
   private route = inject(ActivatedRoute);
   private spinnerService = inject(NgxSpinnerService);
+  private destroy$ = new Subject<void>();
 
   public category = signal<Category | null>(null);
   public error = signal<string | null>(null);
   public isLoading = signal<boolean>(true);
 
   public isError = computed(() => !!this.error() || !!this.storeError());
-  public storeError = signal<string | null>(null);
+  public storeError = signal<string | null>(null); 
+
 
   constructor() {
-      effect(() => {
-        this.store.select(getError).subscribe((err) => { if (err) { this.storeError.set(err)} });
-      });
-    }
+    effect(() => {
+      this.store.select(getError)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((err) => { if (err) { this.storeError.set(err)} });
+    });
+  }
 
   public ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id') ?? '';
@@ -81,5 +85,7 @@ export class EditCategoryComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
     this.store.dispatch(CategoryActions.clearErrors());
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

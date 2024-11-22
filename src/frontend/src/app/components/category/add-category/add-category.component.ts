@@ -5,6 +5,7 @@ import { getError } from 'src/app/stores/category/category.selectors';
 import * as CategoryActions from 'src/app/stores/category/category.actions';
 import { Category } from 'src/app/models/category';
 import { CategoryFormComponent } from '../category-form/category-form.component';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-add-category',
@@ -15,6 +16,7 @@ import { CategoryFormComponent } from '../category-form/category-form.component'
 })
 export class AddCategoryComponent implements OnDestroy {
   private store = inject<Store<CategoryState>>(Store);
+  private destroy$ = new Subject<void>();
 
   public category = signal<Category | null>(null);
   public isLoading = signal<boolean>(true);
@@ -24,7 +26,9 @@ export class AddCategoryComponent implements OnDestroy {
 
   constructor() {
     effect(() => {
-      this.store.select(getError).subscribe((err) => { if (err) { this.storeError.set(err)} });
+      this.store.select(getError)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((err) => { if (err) { this.storeError.set(err)} });
     });
   }
 
@@ -44,5 +48,7 @@ export class AddCategoryComponent implements OnDestroy {
 
   public ngOnDestroy(): void {
     this.store.dispatch(CategoryActions.clearErrors());
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
