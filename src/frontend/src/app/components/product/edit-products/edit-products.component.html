@@ -26,7 +26,7 @@
         [categories]="(categories$ | async) ?? []"
         (productChanged)="onProductChange($event)"
         (submitValid)="onSubmit()"
-        (cancel)="onCancel()">
+        (cancelClicked)="onCancel()">
       </app-product-form>
     } @else {
       <div class="alert alert-danger">

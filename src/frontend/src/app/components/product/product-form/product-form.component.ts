@@ -54,7 +54,7 @@ export class ProductFormComponent implements OnDestroy, AfterViewInit {
   public submitValid = new EventEmitter<any>();
 
   @Output()
-  public cancel = new EventEmitter<any>();
+  public cancelClicked = new EventEmitter<any>();
 
   public productForm: FormGroup = new FormGroup({});
   public locale: string = 'pl-PL';
@@ -102,7 +102,7 @@ export class ProductFormComponent implements OnDestroy, AfterViewInit {
   }
 
   public cancelClick(): void {
-    this.cancel.emit();
+    this.cancelClicked.emit();
   }
 
   public ngOnDestroy(): void {
