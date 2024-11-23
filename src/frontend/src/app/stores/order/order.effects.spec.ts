@@ -8,6 +8,7 @@ import { initialState } from './order.reducers';
 import { initialState as initialLoginState } from '../login/login.reducers';
 import { getUser } from '../login/login.selectors';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('OrderEffects', () => {
   let actions$: Observable<any>;
@@ -37,7 +38,8 @@ describe('OrderEffects', () => {
         {
             provide: 'API_URL', useValue: ''
         },
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
     ]
 });
 

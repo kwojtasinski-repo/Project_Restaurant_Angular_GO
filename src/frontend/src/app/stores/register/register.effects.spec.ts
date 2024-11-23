@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { RegisterEffects } from './register.effects';
 import { initialState } from './register.reducers';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('RegisterEffects', () => {
   let actions$: Observable<any>;
@@ -21,7 +22,8 @@ describe('RegisterEffects', () => {
         {
             provide: 'API_URL', useValue: ''
         },
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
     ]
 });
 

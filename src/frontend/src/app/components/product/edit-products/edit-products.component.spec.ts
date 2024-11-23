@@ -5,6 +5,7 @@ import { initialState } from 'src/app/stores/product/product.reducers';
 import { provideMockStore } from '@ngrx/store/testing';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { stubbedCategories, stubbedProducts } from 'src/app/unit-test-fixtures/test-utils';
 import { ProductService } from 'src/app/services/product.service';
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
@@ -37,7 +38,8 @@ describe('EditProductsComponent', () => {
         {
             provide: ProductService, useClass: InMemoryProductService
         },
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
     ]
 })
     .compileComponents();
@@ -100,7 +102,8 @@ describe('EditProductsComponent when product is available', () => {
         {
           provide: 'API_URL', useValue: ''
         },
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
     ]})
     .compileComponents();
 

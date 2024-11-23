@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { LoginEffects } from './login.effects';
 import { initialState } from './login.reducers';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('LoginEffects', () => {
   let actions$: Observable<any>;
@@ -21,7 +22,8 @@ describe('LoginEffects', () => {
         {
             provide: 'API_URL', useValue: ''
         },
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
     ]
 });
 

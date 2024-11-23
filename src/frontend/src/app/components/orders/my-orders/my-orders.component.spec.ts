@@ -8,6 +8,7 @@ import { MoneyPipe } from 'src/app/pipes/money-pipe';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { initialState } from 'src/app/stores/order/order.reducers';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 
 describe('MyOrdersComponent', () => {
@@ -29,7 +30,8 @@ describe('MyOrdersComponent', () => {
         {
             provide: 'API_URL', useValue: ''
         },
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
     ]
 })
     .compileComponents();

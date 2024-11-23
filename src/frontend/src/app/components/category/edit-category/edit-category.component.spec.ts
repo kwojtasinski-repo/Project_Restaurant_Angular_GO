@@ -6,6 +6,7 @@ import { initialState } from 'src/app/stores/category/category.reducers';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ReactiveFormsModule } from '@angular/forms';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { CategoryFormComponent } from '../category-form/category-form.component';
 
@@ -24,7 +25,8 @@ describe('EditCategoryComponent', () => {
         {
             provide: 'API_URL', useValue: ''
         },
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
     ]
 })
     .compileComponents();

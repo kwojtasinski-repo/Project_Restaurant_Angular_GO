@@ -7,6 +7,7 @@ import { ProductFormComponent } from '../product-form/product-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CurrencyFormatterDirective } from 'src/app/directives/currency-formatter-directive';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('AddProductsComponent', () => {
   let component: AddProductsComponent;
@@ -22,6 +23,7 @@ describe('AddProductsComponent', () => {
             provide: 'API_URL', useValue: ''
         },
         provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
     ]
 })
     .compileComponents();

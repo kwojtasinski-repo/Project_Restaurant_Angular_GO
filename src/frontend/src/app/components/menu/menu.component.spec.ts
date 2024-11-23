@@ -8,6 +8,7 @@ import { SearchBarComponent } from '../search-bar/search-bar.component';
 import { FormsModule } from '@angular/forms';
 import { MoneyPipe } from 'src/app/pipes/money-pipe';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { take } from 'rxjs';
 import { ProductService } from 'src/app/services/product.service';
 import { stubbedProducts } from 'src/app/unit-test-fixtures/test-utils';
@@ -37,7 +38,8 @@ describe('MenuComponent', () => {
             {
                 provide: ProductService, useClass: InMemoryProductService
             },
-            provideHttpClient(withInterceptorsFromDi())
+            provideHttpClient(withInterceptorsFromDi()),
+            provideHttpClientTesting()
         ]
     })
     .compileComponents();

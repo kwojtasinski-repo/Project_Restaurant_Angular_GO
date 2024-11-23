@@ -30,7 +30,6 @@ export class CategoriesComponent implements OnInit {
     );
   });
 
-
   public ngOnInit(): void {
     this.categoryService.getAll()
       .pipe(

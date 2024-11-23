@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { CartService } from './cart.service';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('CartService', () => {
   let service: CartService;
@@ -13,7 +14,8 @@ describe('CartService', () => {
         {
             provide: 'API_URL', useValue: ''
         },
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
     ]
 });
     service = TestBed.inject(CartService);

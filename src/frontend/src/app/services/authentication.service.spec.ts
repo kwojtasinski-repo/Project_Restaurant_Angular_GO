@@ -3,6 +3,7 @@ import { take } from 'rxjs';
 
 import { AuthenticationService } from './authentication.service';
 import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { completeObservable, errorObservable } from '../unit-test-fixtures/test-utils';
 import { User } from '../models/user';
 
@@ -17,7 +18,8 @@ describe('AuthenticationServiceService', () => {
         {
             provide: 'API_URL', useValue: ''
         },
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
     ]
 });
     service = TestBed.inject(AuthenticationService);

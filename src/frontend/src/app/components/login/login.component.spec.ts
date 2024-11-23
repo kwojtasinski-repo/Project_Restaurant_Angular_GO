@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { provideMockStore } from '@ngrx/store/testing';
 import { initialState } from 'src/app/stores/login/login.reducers';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Observable } from 'rxjs';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { SpinnerButtonComponent } from '../spinner-button/spinner-button.component';
@@ -25,6 +26,7 @@ describe('LoginComponent', () => {
         provideMockStore({ initialState }),
         provideMockActions(() => actions$),
         provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
     ]
 })
     .compileComponents();

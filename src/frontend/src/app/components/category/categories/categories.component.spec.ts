@@ -4,6 +4,7 @@ import { CategoriesComponent } from './categories.component';
 import { SearchBarComponent } from '../../search-bar/search-bar.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter, RouterLink } from '@angular/router';
 
 describe('CategoriesComponent', () => {
@@ -21,7 +22,8 @@ describe('CategoriesComponent', () => {
         {
             provide: 'API_URL', useValue: ''
         },
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
     ]
 })
     .compileComponents();

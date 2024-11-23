@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { CategoryEffects } from './category.effects';
 import { initialState } from './category.reducers';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('CategoryEffects', () => {
   let actions$: Observable<any>;
@@ -21,7 +22,8 @@ describe('CategoryEffects', () => {
         {
             provide: 'API_URL', useValue: ''
         },
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
     ]
 });
 

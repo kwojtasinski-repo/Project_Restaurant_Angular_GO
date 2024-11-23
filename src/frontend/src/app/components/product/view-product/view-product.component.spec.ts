@@ -6,6 +6,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { initialState } from 'src/app/stores/login/login.reducers';
 import { provideMockStore } from '@ngrx/store/testing';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ProductService } from 'src/app/services/product.service';
 import { Product } from 'src/app/models/product';
 import { ActivatedRoute, provideRouter } from '@angular/router';
@@ -44,7 +45,8 @@ describe('ViewProductComponent', () => {
                   },
               },
           },
-          provideHttpClient(withInterceptorsFromDi())
+          provideHttpClient(withInterceptorsFromDi()),
+          provideHttpClientTesting()
       ]
     }).compileComponents();
 
@@ -99,7 +101,8 @@ describe('ViewProductsComponent when product available', () => {
                 },
             },
         },
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
     ]}).compileComponents();
 
     productService = TestBed.inject(ProductService) as InMemoryProductService;
