@@ -5,14 +5,14 @@
         Witamy w aplikacji Restaurant. Wybierz produkty aby zamówić jedzenie
       </h1>
     </div>
-    @if (error) {
+    @if (error(); as error) {
       <div class="mt-2 mb-2 alert alert-danger">
         {{ error }}
       </div>
     }
-    @if (cartError$ | async) {
+    @if (cartError(); as cartError) {
       <div class="mt-2 mb-2 alert alert-danger">
-        {{ cartError$ | async }}
+        {{ cartError }}
       </div>
     }
     <div>
@@ -29,11 +29,11 @@
     </div>
   }
   <div class="p-4">
-    <app-search-bar [placeholder]="'Wyszukaj produktu'" [term]="term" (termChange)="search($event)"></app-search-bar>
+    <app-search-bar [placeholder]="'Wyszukaj produktu'" [(term)]="term"></app-search-bar>
   </div>
   <div class="d-flex justify-content-center ms-2">
     <div class="d-flex flex-wrap" style="align-items: stretch;">
-      @for (product of (productsToShow$ | async); track product) {
+      @for (product of productsToShow(); track product) {
         <div>
           <div class="mt-2 mb-2 me-2 ms-2">
             <div class="card" style="width: 18rem;">
