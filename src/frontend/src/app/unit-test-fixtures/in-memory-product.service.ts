@@ -2,11 +2,11 @@ import { Product } from '../models/product';
 import { ProductService } from '../services/product.service';
 import { Observable } from 'rxjs';
 import { completeObservable, errorObservable } from './test-utils';
-import { HttpClient } from '@angular/common/http';
-import { HttpXhrBackend } from '@angular/common/http';
 import { ProductSendDto } from '../models/product-send-dto';
+import { Injectable } from '@angular/core';
 
-class InMemoryProductService extends ProductService {
+@Injectable()
+export class InMemoryProductService extends ProductService {
     private products: Product[] = [];
 
     public override add(product: ProductSendDto): Observable<void> {
@@ -44,8 +44,3 @@ class InMemoryProductService extends ProductService {
         return completeObservable<Product | undefined>(product);
     }
 }
-
-const productService = new InMemoryProductService(new HttpClient(new HttpXhrBackend({
-    build: () => new XMLHttpRequest()
-})), '');
-export default productService;

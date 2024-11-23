@@ -1,11 +1,11 @@
 import { Observable } from 'rxjs';
 import { completeObservable, errorObservable } from './test-utils';
-import { HttpClient } from '@angular/common/http';
-import { HttpXhrBackend } from '@angular/common/http';
 import { CategoryService } from '../services/category.service';
 import { Category } from '../models/category';
+import { Injectable } from '@angular/core';
 
-class InMemoryCategoryService extends CategoryService {
+@Injectable()
+export class InMemoryCategoryService extends CategoryService {
     private categories: Category[] = [];
 
     public override add(category: Category): Observable<void> {
@@ -32,8 +32,3 @@ class InMemoryCategoryService extends CategoryService {
         return completeObservable<Category | undefined>(product);
     }
 }
-
-const categoryService = new InMemoryCategoryService(new HttpClient(new HttpXhrBackend({
-    build: () => new XMLHttpRequest()
-})), '');
-export default categoryService;

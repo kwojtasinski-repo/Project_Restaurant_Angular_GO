@@ -10,14 +10,15 @@ import { MoneyPipe } from 'src/app/pipes/money-pipe';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { take } from 'rxjs';
 import { ProductService } from 'src/app/services/product.service';
-import productService from 'src/app/unit-test-fixtures/in-memory-product.service';
 import { stubbedProducts } from 'src/app/unit-test-fixtures/test-utils';
 import { Product } from 'src/app/models/product';
 import { provideRouter, RouterLink } from '@angular/router';
+import { InMemoryProductService } from 'src/app/unit-test-fixtures/in-memory-product.service';
 
 describe('MenuComponent', () => {
   let component: MenuComponent;
   let fixture: ComponentFixture<MenuComponent>;
+  let productService: InMemoryProductService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -27,20 +28,21 @@ describe('MenuComponent', () => {
         SearchBarComponent,
         MoneyPipe],
     providers: [
-        provideRouter([]),
-        provideMockStore({ initialState }),
-        provideMockStore({ initialState: cartInitialState }),
-        {
-            provide: 'API_URL', useValue: ''
-        },
-        {
-            provide: ProductService, useValue: productService
-        },
-        provideHttpClient(withInterceptorsFromDi())
-    ]
-})
+            provideRouter([]),
+            provideMockStore({ initialState }),
+            provideMockStore({ initialState: cartInitialState }),
+            {
+                provide: 'API_URL', useValue: ''
+            },
+            {
+                provide: ProductService, useClass: InMemoryProductService
+            },
+            provideHttpClient(withInterceptorsFromDi())
+        ]
+    })
     .compileComponents();
 
+    productService = TestBed.inject(ProductService) as InMemoryProductService;
     fixture = TestBed.createComponent(MenuComponent);
     stubbedProducts().forEach(p => productService.add({
       id: p.id,

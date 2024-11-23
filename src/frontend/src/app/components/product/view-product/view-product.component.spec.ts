@@ -7,47 +7,48 @@ import { initialState } from 'src/app/stores/login/login.reducers';
 import { provideMockStore } from '@ngrx/store/testing';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ProductService } from 'src/app/services/product.service';
-import productService from 'src/app/unit-test-fixtures/in-memory-product.service';
 import { Product } from 'src/app/models/product';
 import { ActivatedRoute, provideRouter } from '@angular/router';
 import { convertToParamMap } from '@angular/router';
 import { MoneyPipe } from 'src/app/pipes/money-pipe';
 import { stubbedProducts } from 'src/app/unit-test-fixtures/test-utils';
+import { InMemoryProductService } from 'src/app/unit-test-fixtures/in-memory-product.service';
 
 describe('ViewProductComponent', () => {
   let component: ViewProductComponent;
   let fixture: ComponentFixture<ViewProductComponent>;
+  let productService: InMemoryProductService
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [NgxSpinnerModule,
-        ViewProductComponent,
-        MoneyPipe],
-    providers: [
-        provideRouter([]),
-        provideMockStore({ initialState }),
-        {
-            provide: 'API_URL', useValue: ''
-        },
-        {
-            provide: ProductService,
-            useValue: productService
-        },
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                snapshot: {
-                    paramMap: convertToParamMap({
-                        id: '1'
-                    }),
-                },
-            },
-        },
-        provideHttpClient(withInterceptorsFromDi())
-    ]
-})
-    .compileComponents();
+      imports: [NgxSpinnerModule,
+          ViewProductComponent,
+          MoneyPipe],
+      providers: [
+          provideRouter([]),
+          provideMockStore({ initialState }),
+          {
+              provide: 'API_URL', useValue: ''
+          },
+          {
+              provide: ProductService,
+              useClass: InMemoryProductService
+          },
+          {
+              provide: ActivatedRoute,
+              useValue: {
+                  snapshot: {
+                      paramMap: convertToParamMap({
+                          id: '1'
+                      }),
+                  },
+              },
+          },
+          provideHttpClient(withInterceptorsFromDi())
+      ]
+    }).compileComponents();
 
+    productService = TestBed.inject(ProductService) as InMemoryProductService;
     fixture = TestBed.createComponent(ViewProductComponent);
     component = fixture.componentInstance;
     spyOn(productService, 'get').and.returnValue(new Observable(o => { o.next(undefined); o.complete(); }));
@@ -71,6 +72,7 @@ describe('ViewProductComponent', () => {
 describe('ViewProductsComponent when product available', () => {
   let component: ViewProductComponent;
   let fixture: ComponentFixture<ViewProductComponent>;
+  let productService: InMemoryProductService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -85,7 +87,7 @@ describe('ViewProductsComponent when product available', () => {
         },
         {
             provide: ProductService,
-            useValue: productService
+            useClass: InMemoryProductService
         },
         {
             provide: ActivatedRoute,
@@ -98,12 +100,11 @@ describe('ViewProductsComponent when product available', () => {
             },
         },
         provideHttpClient(withInterceptorsFromDi())
-    ]
-})
-    .compileComponents();
+    ]}).compileComponents();
 
+    productService = TestBed.inject(ProductService) as InMemoryProductService;
     fixture = TestBed.createComponent(ViewProductComponent);
-    fillServiceWithProducts();
+    fillServiceWithProducts(productService);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -148,14 +149,15 @@ describe('ViewProductsComponent when product available', () => {
     expect(deleteInfo.innerHTML.length).toBeGreaterThan(0);
     expect(deleteInfo.innerHTML).toContain('Produkt jest nieużywany');
   });
+  
+  const fillServiceWithProducts = (productService: ProductService) => {
+    stubbedProducts().forEach(p => productService.add({
+      id: p.id,
+      name: p.name,
+      price: p.price,
+      description: p.description ?? '',
+      categoryId: p.category?.id ?? '',
+    }))
+  };
 });
 
-const fillServiceWithProducts = () => {
-  stubbedProducts().forEach(p => productService.add({
-    id: p.id,
-    name: p.name,
-    price: p.price,
-    description: p.description ?? '',
-    categoryId: p.category?.id ?? '',
-  }))
-};

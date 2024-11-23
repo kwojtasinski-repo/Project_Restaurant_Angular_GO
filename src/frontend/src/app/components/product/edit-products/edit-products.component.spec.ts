@@ -6,19 +6,19 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { stubbedCategories, stubbedProducts } from 'src/app/unit-test-fixtures/test-utils';
-import productService from 'src/app/unit-test-fixtures/in-memory-product.service';
 import { ProductService } from 'src/app/services/product.service';
 import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
 import { ProductFormComponent } from '../product-form/product-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CurrencyFormatterDirective } from 'src/app/directives/currency-formatter-directive';
 import { CategoryService } from 'src/app/services/category.service';
-import categoryService from 'src/app/unit-test-fixtures/in-memory-category.service';
+import { InMemoryCategoryService } from 'src/app/unit-test-fixtures/in-memory-category.service';
 import { take } from 'rxjs';
 import { Category } from 'src/app/models/category';
 import { ProductState } from 'src/app/stores/product/product.state';
 import { Store } from '@ngrx/store';
 import { Product } from 'src/app/models/product';
+import { InMemoryProductService } from 'src/app/unit-test-fixtures/in-memory-product.service';
 
 describe('EditProductsComponent', () => {
   let component: EditProductsComponent;
@@ -35,7 +35,7 @@ describe('EditProductsComponent', () => {
             provide: 'API_URL', useValue: ''
         },
         {
-            provide: ProductService, useValue: productService
+            provide: ProductService, useClass: InMemoryProductService
         },
         provideHttpClient(withInterceptorsFromDi())
     ]
@@ -67,6 +67,8 @@ describe('EditProductsComponent when product is available', () => {
   let fixture: ComponentFixture<EditProductsComponent>;
   let formater: Intl.NumberFormat;
   let store: Store<ProductState>;
+  let productService: InMemoryProductService;
+  let categoryService: InMemoryCategoryService;
   const productId = '1'
 
   beforeEach(() => {
@@ -80,10 +82,10 @@ describe('EditProductsComponent when product is available', () => {
         provideRouter([]),
         provideMockStore({ initialState }),
         {
-            provide: ProductService, useValue: productService
+            provide: ProductService, useClass: InMemoryProductService
         },
         {
-            provide: CategoryService, useValue: categoryService
+            provide: CategoryService, useClass: InMemoryCategoryService
         },
         {
             provide: ActivatedRoute,
@@ -95,16 +97,20 @@ describe('EditProductsComponent when product is available', () => {
                 },
             },
         },
+        {
+          provide: 'API_URL', useValue: ''
+        },
         provideHttpClient(withInterceptorsFromDi())
-    ]
-})
+    ]})
     .compileComponents();
 
     formater = new Intl.NumberFormat('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     fixture = TestBed.createComponent(EditProductsComponent);
     store = TestBed.inject(Store<ProductState>);
-    fillProductServiceWithValues();
-    fillCategoryServiceWithValues();
+    productService = TestBed.inject(ProductService) as InMemoryProductService;
+    categoryService = TestBed.inject(CategoryService) as InMemoryCategoryService;
+    fillProductServiceWithValues(productService);
+    fillCategoryServiceWithValues(categoryService);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -182,7 +188,7 @@ describe('EditProductsComponent when product is available', () => {
   });
 });
 
-const fillProductServiceWithValues = () => {
+const fillProductServiceWithValues = (productService: ProductService) => {
   stubbedProducts().forEach(p => productService.add({
     id: p.id,
     name: p.name,
@@ -192,6 +198,6 @@ const fillProductServiceWithValues = () => {
   }))
 };
 
-const fillCategoryServiceWithValues = () => {
+const fillCategoryServiceWithValues = (categoryService: CategoryService) => {
   stubbedCategories().forEach(c => categoryService.add(c));
 }
