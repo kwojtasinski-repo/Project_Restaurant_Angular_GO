@@ -2,7 +2,7 @@ import { LoginComponent } from './components/login/login.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { AddProductsComponent } from './components/product/add-products/add-products.component';
 import { EditProductsComponent } from './components/product/edit-products/edit-products.component';
-import { ViewProductsComponent } from './components/product/view-products/view-products.component';
+import { ViewProductComponent } from './components/product/view-product/view-product.component';
 import { CategoriesComponent } from './components/category/categories/categories.component';
 import { AddCategoryComponent } from './components/category/add-category/add-category.component';
 import { EditCategoryComponent } from './components/category/edit-category/edit-category.component';
@@ -57,7 +57,7 @@ export default [
             },
             {
                 path: 'products/view/:id',
-                component: ViewProductsComponent
+                component: ViewProductComponent
             },
             {
                 path: 'cart',

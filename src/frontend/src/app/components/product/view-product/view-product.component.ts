@@ -14,12 +14,12 @@ import { NgTemplateOutlet, AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-view-products',
-    templateUrl: './view-products.component.html',
-    styleUrls: ['./view-products.component.scss'],
+    templateUrl: './view-product.component.html',
+    styleUrls: ['./view-product.component.scss'],
     standalone: true,
     imports: [NgTemplateOutlet, RouterLink, AsyncPipe, MoneyPipe]
 })
-export class ViewProductsComponent implements OnInit, OnDestroy {
+export class ViewProductComponent implements OnInit, OnDestroy {
   private productService = inject(ProductService);
   private route = inject(ActivatedRoute);
   private spinnerService = inject(NgxSpinnerService);

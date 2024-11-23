@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Observable, take } from 'rxjs';
 
-import { ViewProductsComponent } from './view-products.component';
+import { ViewProductComponent } from './view-product.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { initialState } from 'src/app/stores/login/login.reducers';
 import { provideMockStore } from '@ngrx/store/testing';
@@ -14,14 +14,14 @@ import { convertToParamMap } from '@angular/router';
 import { MoneyPipe } from 'src/app/pipes/money-pipe';
 import { stubbedProducts } from 'src/app/unit-test-fixtures/test-utils';
 
-describe('ViewProductsComponent', () => {
-  let component: ViewProductsComponent;
-  let fixture: ComponentFixture<ViewProductsComponent>;
+describe('ViewProductComponent', () => {
+  let component: ViewProductComponent;
+  let fixture: ComponentFixture<ViewProductComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
     imports: [NgxSpinnerModule,
-        ViewProductsComponent,
+        ViewProductComponent,
         MoneyPipe],
     providers: [
         provideRouter([]),
@@ -48,7 +48,7 @@ describe('ViewProductsComponent', () => {
 })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ViewProductsComponent);
+    fixture = TestBed.createComponent(ViewProductComponent);
     component = fixture.componentInstance;
     spyOn(productService, 'get').and.returnValue(new Observable(o => { o.next(undefined); o.complete(); }));
     fixture.detectChanges();
@@ -69,13 +69,13 @@ describe('ViewProductsComponent', () => {
 });
 
 describe('ViewProductsComponent when product available', () => {
-  let component: ViewProductsComponent;
-  let fixture: ComponentFixture<ViewProductsComponent>;
+  let component: ViewProductComponent;
+  let fixture: ComponentFixture<ViewProductComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
     imports: [NgxSpinnerModule,
-        ViewProductsComponent,
+        ViewProductComponent,
         MoneyPipe],
     providers: [
         provideRouter([]),
@@ -102,7 +102,7 @@ describe('ViewProductsComponent when product available', () => {
 })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ViewProductsComponent);
+    fixture = TestBed.createComponent(ViewProductComponent);
     fillServiceWithProducts();
     component = fixture.componentInstance;
     fixture.detectChanges();
