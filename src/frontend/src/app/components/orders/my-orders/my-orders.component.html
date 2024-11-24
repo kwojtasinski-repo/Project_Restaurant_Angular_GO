@@ -1,5 +1,5 @@
 <div class="mt-2 orders-view">
-  @if (error) {
+  @if (error(); as error) {
     <div class="mt-2 mb-2">
       <div class="alert alert-danger">
         {{ error }}
@@ -7,7 +7,7 @@
     </div>
   }
   <div class="mt-2 mb-2">
-    <app-search-bar [placeholder]="'Wyszukaj zamówienia'" [term]="term" (termChange)="search($event)"></app-search-bar>
+    <app-search-bar [placeholder]="'Wyszukaj zamówienia'" [(term)]="term"></app-search-bar>
   </div>
   <table class="table">
     <thead class="table-dark">
@@ -20,7 +20,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (order of (ordersToShow$ | async); track order) {
+      @for (order of ordersToShow(); track order) {
         <tr>
           <td>{{ order.id }}</td>
           <td>{{ order.orderNumber }}</td>

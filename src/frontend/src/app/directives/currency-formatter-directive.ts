@@ -75,13 +75,8 @@ import { Subject, debounceTime, takeUntil } from 'rxjs';
     private validateDecimalValue(value: any) {
       const newValue = this.getNumberFromValue(value);
 
-      // Check to see if the value is a valid number or not
       if (Number.isNaN(Number(newValue))) {
-        // strip out last char as this would have made the value invalid
         const strippedValue = newValue.slice(0, newValue.length - 1);
-  
-        // if value is still invalid, then this would be copy/paste scenario
-        // and in such case we simply set the value to empty
         return Number.isNaN(Number(strippedValue)) ? '' : strippedValue;
       }
       return value;

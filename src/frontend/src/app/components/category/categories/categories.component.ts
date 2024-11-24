@@ -1,4 +1,4 @@
-import { Component, OnInit, WritableSignal, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, Signal, WritableSignal, computed, inject, signal } from '@angular/core';
 import { Category } from 'src/app/models/category';
 import { CategoryService } from 'src/app/services/category.service';
 import { EMPTY, catchError, finalize, tap } from 'rxjs';
@@ -23,7 +23,7 @@ export class CategoriesComponent implements OnInit {
   public error: WritableSignal<string | undefined> = signal<string | undefined>(undefined);
 
   // Derived signal for filtered categories
-  public categoriesToShow = computed(() => {
+  public categoriesToShow: Signal<Category[]> = computed(() => {
     const term = this.term();
     return this.categories().filter(c =>
       c.name.toLocaleLowerCase().startsWith(term.toLocaleLowerCase())
