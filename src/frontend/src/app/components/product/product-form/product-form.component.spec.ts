@@ -2,7 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProductFormComponent } from './product-form.component';
 import { changeInputValue, changeSelectIndex } from 'src/app/unit-test-fixtures/dom-utils';
-import { createProduct, stubbedCategories } from 'src/app/unit-test-fixtures/test-utils';
+import { createProduct } from 'src/app/unit-test-fixtures/test-utils';
+import { stubbedCategories } from 'src/app/unit-test-fixtures/categories-utils';
 import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
 
 describe('ProductFormComponent', () => {
