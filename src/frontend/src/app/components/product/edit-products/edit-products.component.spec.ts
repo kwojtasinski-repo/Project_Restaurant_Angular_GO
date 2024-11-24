@@ -13,7 +13,7 @@ import { Product } from 'src/app/models/product';
 import { fillProductServiceWithDefaultValues, InMemoryProductService } from 'src/app/unit-test-fixtures/in-memory-product.service';
 import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
 import { createActivatedRouteProvider } from 'src/app/unit-test-fixtures/router-utils';
-import { getProductCategorySelectList, getProductCostInput, getProductDescriptionInput, getProductNameInput } from 'src/app/unit-test-fixtures/product-form-utils';
+import { ProductForm } from '../product-form/product-form';
 
 describe('EditProductsComponent', () => {
   let component: EditProductsComponent;
@@ -55,6 +55,7 @@ describe('EditProductsComponent when product is available', () => {
   let productService: InMemoryProductService;
   let categoryService: InMemoryCategoryService;
   const productId = '1'
+  let productForm: ProductForm;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -80,6 +81,7 @@ describe('EditProductsComponent when product is available', () => {
     fillCategoryServiceWithDefaultValues(categoryService);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    productForm = new ProductForm(fixture.nativeElement);
   });
 
   it('should show product form', () => {
@@ -97,10 +99,10 @@ describe('EditProductsComponent when product is available', () => {
     categoryService.getAll().pipe(take(1)).subscribe(c => categories = c);
     component.categories$.subscribe(c => categoriesInComponent = c);
     component.product$?.subscribe(p => productInComponent = p);
-    const productName = getProductNameInput(fixture.nativeElement);
-    const productDescription = getProductDescriptionInput(fixture.nativeElement);
-    const productCost = getProductCostInput(fixture.nativeElement);
-    const productCategory = getProductCategorySelectList(fixture.nativeElement);
+    const productName = productForm.getProductNameInput();
+    const productDescription = productForm.getProductDescriptionInput();
+    const productCost = productForm.getProductCostInput();
+    const productCategory = productForm.getProductCategorySelectList();
 
     expect(productName).not.toBeUndefined();
     expect(productName).not.toBeNull();
@@ -124,31 +126,31 @@ describe('EditProductsComponent when product is available', () => {
     const price = 200;
     const productDescription = 'Description #Product New Value';
     const productCategory = categories[2];
-    getProductNameInput(fixture.nativeElement).value = productName;
-    getProductCostInput(fixture.nativeElement).value = formater.format(price);
-    getProductDescriptionInput(fixture.nativeElement).value = productDescription;
-    getProductCategorySelectList(fixture.nativeElement).selectedIndex = 2;
+    productForm.getProductNameInput().value = productName;
+    productForm.getProductCostInput().value = formater.format(price);
+    productForm.getProductDescriptionInput().value = productDescription;
+    productForm.getProductCategorySelectList().selectedIndex = 2;
 
     fixture.detectChanges();
 
-    expect(getProductNameInput(fixture.nativeElement).value).toBe('abc123');
-    expect(getProductCostInput(fixture.nativeElement).value).toBe(formater.format(price));
-    expect(getProductDescriptionInput(fixture.nativeElement).value).toBe(productDescription);
-    expect(categories[getProductCategorySelectList(fixture.nativeElement).selectedIndex].id).toBe(productCategory.id);
+    expect(productForm.getProductNameInput().value).toBe('abc123');
+    expect(productForm.getProductCostInput().value).toBe(formater.format(price));
+    expect(productForm.getProductDescriptionInput().value).toBe(productDescription);
+    expect(categories[productForm.getProductCategorySelectList().selectedIndex].id).toBe(productCategory.id);
   });
 
   it('should invoke method onSubmit while send form', () => {
     const productName = 'abc123';
     const price = 200;
     const productDescription = 'Description #Product New Value';
-    getProductNameInput(fixture.nativeElement).value = productName;
-    getProductCostInput(fixture.nativeElement).value = formater.format(price);
-    getProductDescriptionInput(fixture.nativeElement).value = productDescription;
-    getProductCategorySelectList(fixture.nativeElement).selectedIndex = 2;
+    productForm.getProductNameInput().value = productName;
+    productForm.getProductCostInput().value = formater.format(price);
+    productForm.getProductDescriptionInput().value = productDescription;
+    productForm.getProductCategorySelectList().selectedIndex = 2;
     const onSubmit = spyOn(fixture.componentInstance, 'onSubmit').and.callThrough();
     const onDispatch = spyOn(store, 'dispatch').and.callThrough();
 
-    fixture.nativeElement.querySelector('form').dispatchEvent(new Event('submit'));
+    productForm.getProductForm().dispatchEvent(new Event('submit'));
 
     expect(onSubmit).toHaveBeenCalled();
     expect(onDispatch).toHaveBeenCalled();

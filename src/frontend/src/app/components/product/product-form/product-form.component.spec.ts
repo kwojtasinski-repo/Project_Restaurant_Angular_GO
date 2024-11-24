@@ -1,11 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProductFormComponent } from './product-form.component';
-import { changeInputValue, changeSelectIndex } from 'src/app/unit-test-fixtures/dom-utils';
 import { createProduct } from 'src/app/unit-test-fixtures/products-utils';
 import { stubbedCategories } from 'src/app/unit-test-fixtures/categories-utils';
 import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
-import { getProductCategorySelectList, getProductCostInput, getProductDescriptionInput, getProductForm, getProductNameInput } from 'src/app/unit-test-fixtures/product-form-utils';
+import { ProductForm } from './product-form';
 
 describe('ProductFormComponent', () => {
   let component: ProductFormComponent;
@@ -54,6 +53,7 @@ describe('ProductFormComponent with init data', () => {
       ...categories
     ]
   }
+  let productForm: ProductForm; 
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -70,10 +70,11 @@ describe('ProductFormComponent with init data', () => {
     component.product = initialData.product;
     component.categories = initialData.categories;
     fixture.detectChanges();
+    productForm = new ProductForm(fixture.nativeElement);
   });
 
   it('should show form', () => {
-    const form = getProductForm(fixture.nativeElement);
+    const form = productForm.getProductForm();
 
     expect(form).not.toBeUndefined();
     expect(form).not.toBeNull();
@@ -81,10 +82,10 @@ describe('ProductFormComponent with init data', () => {
   });
 
   it('should set values on form', () => {
-    const name = getProductNameInput(fixture.nativeElement);
-    const description = getProductDescriptionInput(fixture.nativeElement);
-    const cost = getProductCostInput(fixture.nativeElement);
-    const category = getProductCategorySelectList(fixture.nativeElement);
+    const name = productForm.getProductNameInput();
+    const description = productForm.getProductDescriptionInput();
+    const cost = productForm.getProductCostInput();
+    const category = productForm.getProductCategorySelectList();
 
     expect(name).not.toBeUndefined();
     expect(name).not.toBeNull();
@@ -109,13 +110,13 @@ describe('ProductFormComponent with init data', () => {
     const newProductCost = 1200;
     const newCategoryIndex = 4;
     
-    changeForm(fixture.nativeElement, newProductName, newProductDescription, newProductCost, newCategoryIndex + 1);
+    productForm.changeProductForm(newProductName, newProductDescription, newProductCost, newCategoryIndex + 1);
     fixture.detectChanges();
     
-    const name = getProductNameInput(fixture.nativeElement);
-    const description = getProductDescriptionInput(fixture.nativeElement);
-    const cost = getProductCostInput(fixture.nativeElement);
-    const category = getProductCategorySelectList(fixture.nativeElement);
+    const name = productForm.getProductNameInput();
+    const description = productForm.getProductDescriptionInput();
+    const cost = productForm.getProductCostInput();
+    const category = productForm.getProductCategorySelectList();
     expect(name).not.toBeUndefined();
     expect(name).not.toBeNull();
     expect(name.value).toEqual(component.productForm?.get('productName')?.value);
@@ -136,10 +137,10 @@ describe('ProductFormComponent with init data', () => {
     const newProductCost = '';
     const newCategoryIndex = 0;
 
-    changeForm(fixture.nativeElement, newProductName, newProductDescription, newProductCost, newCategoryIndex);
+    productForm.changeProductForm(newProductName, newProductDescription, newProductCost, newCategoryIndex);
     fixture.detectChanges();    
     
-    const errors = Array.from(fixture.nativeElement.querySelectorAll('.invalid-feedback')) as any[];
+    const errors = productForm.getProductFormErrors();
     expect(errors).not.toBeUndefined();
     expect(errors).not.toBeNull();
     expect(errors.length).toBeGreaterThan(0);
@@ -152,10 +153,10 @@ describe('ProductFormComponent with init data', () => {
     const newProductCost = -200;
     const newCategoryIndex = 1;
 
-    changeForm(fixture.nativeElement, newProductName, newProductDescription, newProductCost, newCategoryIndex);
+    productForm.changeProductForm(newProductName, newProductDescription, newProductCost, newCategoryIndex);
     fixture.detectChanges();    
     
-    const errors = Array.from(fixture.nativeElement.querySelectorAll('.invalid-feedback')) as any[];
+    const errors = productForm.getProductFormErrors();
     expect(errors).not.toBeUndefined();
     expect(errors).not.toBeNull();
     expect(errors.length).toBeGreaterThan(0);
@@ -169,10 +170,10 @@ describe('ProductFormComponent with init data', () => {
     const newProductCost = 200;
     const newCategoryIndex = 1;
 
-    changeForm(fixture.nativeElement, newProductName, newProductDescription, newProductCost, newCategoryIndex);
+    productForm.changeProductForm(newProductName, newProductDescription, newProductCost, newCategoryIndex);
     fixture.detectChanges();    
     
-    const errors = Array.from(fixture.nativeElement.querySelectorAll('.invalid-feedback')) as any[];
+    const errors = productForm.getProductFormErrors();
     expect(errors).not.toBeUndefined();
     expect(errors).not.toBeNull();
     expect(errors.length).toBeGreaterThan(0);
@@ -180,13 +181,6 @@ describe('ProductFormComponent with init data', () => {
     expect(errors.some(e => e.innerHTML.includes('Pole nie powinno przekroczyć 5000 znaków'))).toBeTrue();
   });
 });
-
-function changeForm(form: any, productName: any, productDescription: any, productCost: any, selectedCategory: any) {
-  changeInputValue(form.querySelector('#product-name'), productName);
-  changeInputValue(form.querySelector('#product-description'), productDescription);
-  changeInputValue(form.querySelector('#product-cost'), productCost);
-  changeSelectIndex(form.querySelector('#product-category'), selectedCategory);
-}
 
 function createLongWord(size: number) {
   const word: string[] = [];
