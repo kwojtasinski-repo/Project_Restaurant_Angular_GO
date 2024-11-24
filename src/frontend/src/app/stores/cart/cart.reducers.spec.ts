@@ -2,7 +2,7 @@ import { RequestState } from 'src/app/models/request-state';
 import * as CartActions from './cart.actions';
 import { initialState, cartReducer } from './cart.reducers';
 import { CartState } from './cart.state';
-import { Cart } from 'src/app/models/cart';
+import { createCart } from 'src/app/unit-test-fixtures/carts-utils';
 
 describe('CartReducers', () => {
   it('fetch cart', () => {
@@ -23,16 +23,7 @@ describe('CartReducers', () => {
 
   it('fetch cart success', () => {
     // arrange
-    const cart = [{
-      id: '1',
-      product: {
-        id: '1',
-        name: 'name#1',
-        price: 100,
-        description: 'desc'
-      },
-      userId: 1
-    }] as Cart[];
+    const cart = createCart();
     const action = CartActions.fetchCartSuccess({ cart });
     const expectedState: CartState = {
       ...initialState,

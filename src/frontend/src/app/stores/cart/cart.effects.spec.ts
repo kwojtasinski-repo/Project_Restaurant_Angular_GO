@@ -5,7 +5,6 @@ import { Observable, of } from 'rxjs';
 
 import { CartEffects } from './cart.effects';
 import { getUser } from '../login/login.selectors';
-import { User } from 'src/app/models/user';
 import * as CartActions from './cart.actions';
 import { CartService } from 'src/app/services/cart.service';
 import { Cart } from 'src/app/models/cart';
@@ -13,6 +12,8 @@ import { stubbedProducts } from 'src/app/unit-test-fixtures/products-utils';
 import { completeObservable } from 'src/app/unit-test-fixtures/observable-utils';
 import { OrderService } from 'src/app/services/order.service';
 import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
+import { createCart } from 'src/app/unit-test-fixtures/carts-utils';
+import { createUser } from 'src/app/unit-test-fixtures/user-utils';
 
 describe('CartEffects', () => {
   let actions$: Observable<any>;
@@ -37,12 +38,7 @@ describe('CartEffects', () => {
 
     myCart = createCart();
     const store = TestBed.inject(MockStore);
-    store.overrideSelector(getUser, {
-      id: '1',
-      email: 'email@email',
-      role: 'test',
-      deleted: null
-    } as User);
+    store.overrideSelector(getUser, createUser());
     cartService = TestBed.inject(CartService);
     orderService = TestBed.inject(OrderService);
     getCartSpy = spyOn(cartService, 'getCart').and.returnValue(of(myCart));
@@ -236,50 +232,3 @@ describe('CartEffects', () => {
     });
   });
 });
-
-const createCart = () => {
-  return [
-    {
-      id: '1',
-      product: {
-        id: '1',
-        name: 'Product#1',
-        description: 'Desc',
-        price: 100
-      },
-      userId: 1
-    }, 
-    {
-      id: 2,
-      product: {
-        id: 1,
-        name: 'Product#1',
-        description: 'Desc',
-        price: 100,
-        category: {
-          id: 1,
-          name: 'Category',
-          deleted: false
-        },
-        deleted: false
-      },
-      userId: 1
-    },
-    {
-      id: 3,
-      product: {
-        id: 1,
-        name: 'Product#1',
-        description: 'Desc',
-        price: 100,
-        category: {
-          id: 1,
-          name: 'Category',
-          deleted: false
-        },
-        deleted: false
-      },
-      userId: 1
-    }
-  ] as Cart[];
-}
