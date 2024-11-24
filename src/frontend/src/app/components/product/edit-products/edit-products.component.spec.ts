@@ -1,20 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditProductsComponent } from './edit-products.component';
-import { stubbedProducts } from 'src/app/unit-test-fixtures/products-utils';
-import { stubbedCategories } from 'src/app/unit-test-fixtures/categories-utils';
 import { ProductService } from 'src/app/services/product.service';
 import { ProductFormComponent } from '../product-form/product-form.component';
 import { CategoryService } from 'src/app/services/category.service';
-import { InMemoryCategoryService } from 'src/app/unit-test-fixtures/in-memory-category.service';
+import { fillCategoryServiceWithDefaultValues, InMemoryCategoryService } from 'src/app/unit-test-fixtures/in-memory-category.service';
 import { take } from 'rxjs';
 import { Category } from 'src/app/models/category';
 import { ProductState } from 'src/app/stores/product/product.state';
 import { Store } from '@ngrx/store';
 import { Product } from 'src/app/models/product';
-import { InMemoryProductService } from 'src/app/unit-test-fixtures/in-memory-product.service';
+import { fillProductServiceWithDefaultValues, InMemoryProductService } from 'src/app/unit-test-fixtures/in-memory-product.service';
 import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
 import { createActivatedRouteProvider } from 'src/app/unit-test-fixtures/router-utils';
+import { getProductCategorySelectList, getProductCostInput, getProductDescriptionInput, getProductNameInput } from 'src/app/unit-test-fixtures/product-form-utils';
 
 describe('EditProductsComponent', () => {
   let component: EditProductsComponent;
@@ -40,7 +39,6 @@ describe('EditProductsComponent', () => {
   });
 
   it('should inform when product is not found', () => {
-    
     const notFoundInformation = fixture.nativeElement.querySelector('.alert.alert-danger > h5');
 
     expect(notFoundInformation).not.toBeUndefined();
@@ -78,8 +76,8 @@ describe('EditProductsComponent when product is available', () => {
     store = TestBed.inject(Store<ProductState>);
     productService = TestBed.inject(ProductService) as InMemoryProductService;
     categoryService = TestBed.inject(CategoryService) as InMemoryCategoryService;
-    fillProductServiceWithValues(productService);
-    fillCategoryServiceWithValues(categoryService);
+    fillProductServiceWithDefaultValues(productService);
+    fillCategoryServiceWithDefaultValues(categoryService);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -99,10 +97,10 @@ describe('EditProductsComponent when product is available', () => {
     categoryService.getAll().pipe(take(1)).subscribe(c => categories = c);
     component.categories$.subscribe(c => categoriesInComponent = c);
     component.product$?.subscribe(p => productInComponent = p);
-    const productName = fixture.nativeElement.querySelector('#product-name');
-    const productDescription = fixture.nativeElement.querySelector('#product-description');
-    const productCost = fixture.nativeElement.querySelector('#product-cost');
-    const productCategory = fixture.nativeElement.querySelector('#product-category');
+    const productName = getProductNameInput(fixture.nativeElement);
+    const productDescription = getProductDescriptionInput(fixture.nativeElement);
+    const productCost = getProductCostInput(fixture.nativeElement);
+    const productCategory = getProductCategorySelectList(fixture.nativeElement);
 
     expect(productName).not.toBeUndefined();
     expect(productName).not.toBeNull();
@@ -126,27 +124,27 @@ describe('EditProductsComponent when product is available', () => {
     const price = 200;
     const productDescription = 'Description #Product New Value';
     const productCategory = categories[2];
-    fixture.nativeElement.querySelector('#product-name').value = productName;
-    fixture.nativeElement.querySelector('#product-cost').value = formater.format(price);
-    fixture.nativeElement.querySelector('#product-description').value = productDescription;
-    fixture.nativeElement.querySelector('#product-category').selectedIndex = 2;
+    getProductNameInput(fixture.nativeElement).value = productName;
+    getProductCostInput(fixture.nativeElement).value = formater.format(price);
+    getProductDescriptionInput(fixture.nativeElement).value = productDescription;
+    getProductCategorySelectList(fixture.nativeElement).selectedIndex = 2;
 
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.querySelector('#product-name').value).toBe('abc123');
-    expect(fixture.nativeElement.querySelector('#product-cost').value).toBe(formater.format(price));
-    expect(fixture.nativeElement.querySelector('#product-description').value).toBe(productDescription);
-    expect(categories[fixture.nativeElement.querySelector('#product-category').selectedIndex].id).toBe(productCategory.id);
+    expect(getProductNameInput(fixture.nativeElement).value).toBe('abc123');
+    expect(getProductCostInput(fixture.nativeElement).value).toBe(formater.format(price));
+    expect(getProductDescriptionInput(fixture.nativeElement).value).toBe(productDescription);
+    expect(categories[getProductCategorySelectList(fixture.nativeElement).selectedIndex].id).toBe(productCategory.id);
   });
 
   it('should invoke method onSubmit while send form', () => {
     const productName = 'abc123';
     const price = 200;
     const productDescription = 'Description #Product New Value';
-    fixture.nativeElement.querySelector('#product-name').value = productName;
-    fixture.nativeElement.querySelector('#product-cost').value = formater.format(price);
-    fixture.nativeElement.querySelector('#product-description').value = productDescription;
-    fixture.nativeElement.querySelector('#product-category').selectedIndex = 2;
+    getProductNameInput(fixture.nativeElement).value = productName;
+    getProductCostInput(fixture.nativeElement).value = formater.format(price);
+    getProductDescriptionInput(fixture.nativeElement).value = productDescription;
+    getProductCategorySelectList(fixture.nativeElement).selectedIndex = 2;
     const onSubmit = spyOn(fixture.componentInstance, 'onSubmit').and.callThrough();
     const onDispatch = spyOn(store, 'dispatch').and.callThrough();
 
@@ -156,17 +154,3 @@ describe('EditProductsComponent when product is available', () => {
     expect(onDispatch).toHaveBeenCalled();
   });
 });
-
-const fillProductServiceWithValues = (productService: ProductService) => {
-  stubbedProducts().forEach(p => productService.add({
-    id: p.id,
-    name: p.name,
-    price: p.price,
-    description: p.description,
-    categoryId: p.category?.id ?? '1'
-  }))
-};
-
-const fillCategoryServiceWithValues = (categoryService: CategoryService) => {
-  stubbedCategories().forEach(c => categoryService.add(c));
-}

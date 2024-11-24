@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { completeObservable, errorObservable } from './observable-utils';
 import { ProductSendDto } from '../models/product-send-dto';
 import { Injectable } from '@angular/core';
+import { stubbedProducts } from './products-utils';
 
 @Injectable()
 export class InMemoryProductService extends ProductService {
@@ -44,3 +45,13 @@ export class InMemoryProductService extends ProductService {
         return completeObservable<Product | undefined>(product);
     }
 }
+
+export const fillProductServiceWithDefaultValues = (productService: ProductService) => {
+  stubbedProducts().forEach(p => productService.add({
+    id: p.id,
+    name: p.name,
+    price: p.price,
+    description: p.description,
+    categoryId: p.category?.id ?? '1'
+  }))
+};

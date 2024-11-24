@@ -5,6 +5,7 @@ import { changeInputValue, changeSelectIndex } from 'src/app/unit-test-fixtures/
 import { createProduct } from 'src/app/unit-test-fixtures/products-utils';
 import { stubbedCategories } from 'src/app/unit-test-fixtures/categories-utils';
 import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
+import { getProductCategorySelectList, getProductCostInput, getProductDescriptionInput, getProductForm, getProductNameInput } from 'src/app/unit-test-fixtures/product-form-utils';
 
 describe('ProductFormComponent', () => {
   let component: ProductFormComponent;
@@ -72,7 +73,7 @@ describe('ProductFormComponent with init data', () => {
   });
 
   it('should show form', () => {
-    const form = fixture.nativeElement.querySelector('form');
+    const form = getProductForm(fixture.nativeElement);
 
     expect(form).not.toBeUndefined();
     expect(form).not.toBeNull();
@@ -80,10 +81,10 @@ describe('ProductFormComponent with init data', () => {
   });
 
   it('should set values on form', () => {
-    const name = fixture.nativeElement.querySelector('#product-name');
-    const description = fixture.nativeElement.querySelector('#product-description');
-    const cost = fixture.nativeElement.querySelector('#product-cost');
-    const category = fixture.nativeElement.querySelector('#product-category');
+    const name = getProductNameInput(fixture.nativeElement);
+    const description = getProductDescriptionInput(fixture.nativeElement);
+    const cost = getProductCostInput(fixture.nativeElement);
+    const category = getProductCategorySelectList(fixture.nativeElement);
 
     expect(name).not.toBeUndefined();
     expect(name).not.toBeNull();
@@ -111,10 +112,10 @@ describe('ProductFormComponent with init data', () => {
     changeForm(fixture.nativeElement, newProductName, newProductDescription, newProductCost, newCategoryIndex + 1);
     fixture.detectChanges();
     
-    const name = fixture.nativeElement.querySelector('#product-name');
-    const description = fixture.nativeElement.querySelector('#product-description');
-    const cost = fixture.nativeElement.querySelector('#product-cost');
-    const category = fixture.nativeElement.querySelector('#product-category');
+    const name = getProductNameInput(fixture.nativeElement);
+    const description = getProductDescriptionInput(fixture.nativeElement);
+    const cost = getProductCostInput(fixture.nativeElement);
+    const category = getProductCategorySelectList(fixture.nativeElement);
     expect(name).not.toBeUndefined();
     expect(name).not.toBeNull();
     expect(name.value).toEqual(component.productForm?.get('productName')?.value);

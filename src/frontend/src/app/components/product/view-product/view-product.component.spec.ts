@@ -4,8 +4,7 @@ import { Observable, take } from 'rxjs';
 import { ViewProductComponent } from './view-product.component';
 import { ProductService } from 'src/app/services/product.service';
 import { Product } from 'src/app/models/product';
-import { stubbedProducts } from 'src/app/unit-test-fixtures/products-utils';
-import { InMemoryProductService } from 'src/app/unit-test-fixtures/in-memory-product.service';
+import { fillProductServiceWithDefaultValues, InMemoryProductService } from 'src/app/unit-test-fixtures/in-memory-product.service';
 import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
 import { createActivatedRouteProvider } from 'src/app/unit-test-fixtures/router-utils';
 
@@ -70,7 +69,7 @@ describe('ViewProductsComponent when product available', () => {
 
     productService = TestBed.inject(ProductService) as InMemoryProductService;
     fixture = TestBed.createComponent(ViewProductComponent);
-    fillServiceWithProducts(productService);
+    fillProductServiceWithDefaultValues(productService);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -115,15 +114,5 @@ describe('ViewProductsComponent when product available', () => {
     expect(deleteInfo.innerHTML.length).toBeGreaterThan(0);
     expect(deleteInfo.innerHTML).toContain('Produkt jest nieużywany');
   });
-  
-  const fillServiceWithProducts = (productService: ProductService) => {
-    stubbedProducts().forEach(p => productService.add({
-      id: p.id,
-      name: p.name,
-      price: p.price,
-      description: p.description ?? '',
-      categoryId: p.category?.id ?? '',
-    }))
-  };
 });
 

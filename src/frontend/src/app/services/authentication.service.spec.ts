@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { completeObservable, errorObservable } from '../unit-test-fixtures/observable-utils';
 import { User } from '../models/user';
 import { TestSharedModule } from '../unit-test-fixtures/test-share-module';
+import { createUser } from '../unit-test-fixtures/user-utils';
 
 describe('AuthenticationServiceService', () => {
   let service: AuthenticationService;
@@ -25,12 +26,7 @@ describe('AuthenticationServiceService', () => {
   });
 
   it('should login', () => {
-    const user = {
-      id: '1',
-      email: 'email@email.com',
-      role: 'user',
-      deleted: false
-    } as User;
+    const user = createUser();
     spyOn(httpClient, 'post').and.returnValue(completeObservable<void>());
     spyOn(httpClient, 'get').and.returnValue(completeObservable<User>(user));
 

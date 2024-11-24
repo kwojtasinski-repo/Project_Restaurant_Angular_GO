@@ -4,9 +4,8 @@ import { MenuComponent } from './menu.component';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
 import { take } from 'rxjs';
 import { ProductService } from 'src/app/services/product.service';
-import { stubbedProducts } from 'src/app/unit-test-fixtures/products-utils';
 import { Product } from 'src/app/models/product';
-import { InMemoryProductService } from 'src/app/unit-test-fixtures/in-memory-product.service';
+import { fillProductServiceWithDefaultValues, InMemoryProductService } from 'src/app/unit-test-fixtures/in-memory-product.service';
 import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
 
 describe('MenuComponent', () => {
@@ -26,13 +25,7 @@ describe('MenuComponent', () => {
 
     productService = TestBed.inject(ProductService) as InMemoryProductService;
     fixture = TestBed.createComponent(MenuComponent);
-    stubbedProducts().forEach(p => productService.add({
-      id: p.id,
-      name: p.name,
-      description: p.description,
-      price: p.price,
-      categoryId: p.category?.id ?? '0'
-    }));
+    fillProductServiceWithDefaultValues(productService);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

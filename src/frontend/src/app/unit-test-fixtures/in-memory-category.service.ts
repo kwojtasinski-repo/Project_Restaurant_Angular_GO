@@ -3,6 +3,7 @@ import { completeObservable, errorObservable } from './observable-utils';
 import { CategoryService } from '../services/category.service';
 import { Category } from '../models/category';
 import { Injectable } from '@angular/core';
+import { stubbedCategories } from './categories-utils';
 
 @Injectable()
 export class InMemoryCategoryService extends CategoryService {
@@ -31,4 +32,8 @@ export class InMemoryCategoryService extends CategoryService {
         const product = this.categories.find(p => p.id === id);
         return completeObservable<Category | undefined>(product);
     }
+}
+
+export const fillCategoryServiceWithDefaultValues = (categoryService: CategoryService) => {
+  stubbedCategories().forEach(c => categoryService.add(c));
 }

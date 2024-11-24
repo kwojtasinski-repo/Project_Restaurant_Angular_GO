@@ -61,7 +61,6 @@ describe('RegisterComponent', () => {
       'password': expectedPassword,
       'confirmPassword': expectedPassword
     });
-
     
     const emailInput = fixture.nativeElement.querySelector('#email-input');
     const passwordInput = fixture.nativeElement.querySelector('#password-input');

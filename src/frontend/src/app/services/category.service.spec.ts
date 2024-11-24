@@ -6,10 +6,10 @@ import { TestSharedModule } from '../unit-test-fixtures/test-share-module';
 describe('CategoryService', () => {
   let service: CategoryService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [TestSharedModule]
-    });
+    }).compileComponents();
     service = TestBed.inject(CategoryService);
   });
 
