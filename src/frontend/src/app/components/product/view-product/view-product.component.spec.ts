@@ -4,7 +4,7 @@ import { Observable, take } from 'rxjs';
 import { ViewProductComponent } from './view-product.component';
 import { ProductService } from 'src/app/services/product.service';
 import { Product } from 'src/app/models/product';
-import { stubbedProducts } from 'src/app/unit-test-fixtures/test-utils';
+import { stubbedProducts } from 'src/app/unit-test-fixtures/products-utils';
 import { InMemoryProductService } from 'src/app/unit-test-fixtures/in-memory-product.service';
 import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
 import { createActivatedRouteProvider } from 'src/app/unit-test-fixtures/router-utils';

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditProductsComponent } from './edit-products.component';
-import { stubbedProducts } from 'src/app/unit-test-fixtures/test-utils';
+import { stubbedProducts } from 'src/app/unit-test-fixtures/products-utils';
 import { stubbedCategories } from 'src/app/unit-test-fixtures/categories-utils';
 import { ProductService } from 'src/app/services/product.service';
 import { ProductFormComponent } from '../product-form/product-form.component';

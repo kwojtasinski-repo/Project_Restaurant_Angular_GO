@@ -4,7 +4,7 @@ import { MenuComponent } from './menu.component';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
 import { take } from 'rxjs';
 import { ProductService } from 'src/app/services/product.service';
-import { stubbedProducts } from 'src/app/unit-test-fixtures/test-utils';
+import { stubbedProducts } from 'src/app/unit-test-fixtures/products-utils';
 import { Product } from 'src/app/models/product';
 import { InMemoryProductService } from 'src/app/unit-test-fixtures/in-memory-product.service';
 import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';

@@ -1,5 +1,5 @@
 import { Category } from '../models/category';
-import { createProduct } from './test-utils';
+import { createProduct } from './products-utils';
 
 export const createCategory = (id: number | undefined = undefined, 
     name: string | undefined = undefined) => {
