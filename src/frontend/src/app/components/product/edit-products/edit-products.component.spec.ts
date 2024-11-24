@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditProductsComponent } from './edit-products.component';
 import { stubbedCategories, stubbedProducts } from 'src/app/unit-test-fixtures/test-utils';
 import { ProductService } from 'src/app/services/product.service';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { ProductFormComponent } from '../product-form/product-form.component';
 import { CategoryService } from 'src/app/services/category.service';
 import { InMemoryCategoryService } from 'src/app/unit-test-fixtures/in-memory-category.service';
@@ -14,6 +13,7 @@ import { Store } from '@ngrx/store';
 import { Product } from 'src/app/models/product';
 import { InMemoryProductService } from 'src/app/unit-test-fixtures/in-memory-product.service';
 import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
+import { createActivatedRouteProvider } from 'src/app/unit-test-fixtures/router-utils';
 
 describe('EditProductsComponent', () => {
   let component: EditProductsComponent;
@@ -65,16 +65,9 @@ describe('EditProductsComponent when product is available', () => {
         TestSharedModule
       ],
       providers: [
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                snapshot: {
-                    paramMap: convertToParamMap({
-                        id: productId
-                    }),
-                },
-            },
-        }
+        createActivatedRouteProvider({
+          id: productId
+        })
       ]
     })
     .compileComponents();

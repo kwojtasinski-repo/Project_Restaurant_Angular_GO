@@ -4,16 +4,16 @@ import { Observable, take } from 'rxjs';
 import { ViewProductComponent } from './view-product.component';
 import { ProductService } from 'src/app/services/product.service';
 import { Product } from 'src/app/models/product';
-import { ActivatedRoute } from '@angular/router';
-import { convertToParamMap } from '@angular/router';
 import { stubbedProducts } from 'src/app/unit-test-fixtures/test-utils';
 import { InMemoryProductService } from 'src/app/unit-test-fixtures/in-memory-product.service';
 import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
+import { createActivatedRouteProvider } from 'src/app/unit-test-fixtures/router-utils';
 
 describe('ViewProductComponent', () => {
   let component: ViewProductComponent;
   let fixture: ComponentFixture<ViewProductComponent>;
   let productService: InMemoryProductService
+  const productId: string = '1';
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -22,16 +22,9 @@ describe('ViewProductComponent', () => {
         TestSharedModule
       ],
       providers: [
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                snapshot: {
-                    paramMap: convertToParamMap({
-                        id: '1'
-                    }),
-                },
-            },
-        }
+        createActivatedRouteProvider({
+          id: productId
+        })
       ]
     }).compileComponents();
 
@@ -60,6 +53,7 @@ describe('ViewProductsComponent when product available', () => {
   let component: ViewProductComponent;
   let fixture: ComponentFixture<ViewProductComponent>;
   let productService: InMemoryProductService;
+  const productId: string = '1';
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -68,16 +62,9 @@ describe('ViewProductsComponent when product available', () => {
         TestSharedModule
       ],
       providers: [
-        {
-            provide: ActivatedRoute,
-            useValue: {
-                snapshot: {
-                    paramMap: convertToParamMap({
-                        id: '1'
-                    }),
-                },
-            },
-        }
+        createActivatedRouteProvider({
+          id: productId
+        })
       ]
     }).compileComponents();
 
@@ -106,7 +93,7 @@ describe('ViewProductsComponent when product available', () => {
     let productInComponent: Product | undefined;
     component.product$?.subscribe(p => productInComponent = p);
     let product: Product | undefined;
-    productService.get(productInComponent?.id ?? '1').pipe(take(1)).subscribe(p => product = p);
+    productService.get(productInComponent?.id ?? productId).pipe(take(1)).subscribe(p => product = p);
     product!.deleted = true;
     productService.update({
       id: product!.id,
