@@ -4,44 +4,35 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { Observable } from 'rxjs';
 
 import { OrderEffects } from './order.effects';
-import { initialState } from './order.reducers';
 import { initialState as initialLoginState } from '../login/login.reducers';
 import { getUser } from '../login/login.selectors';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
 
 describe('OrderEffects', () => {
   let actions$: Observable<any>;
   let effects: OrderEffects;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-    imports: [],
-    providers: [
-        OrderEffects,
-        provideMockActions(() => actions$),
-        provideMockStore({ initialState }),
-        provideMockStore({ initialState: initialLoginState,
-            selectors: [
-                {
-                    selector: getUser,
-                    value: {
-                        id: 1,
-                        email: 'string',
-                        role: 'test',
-                        deleted: null
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+        imports: [TestSharedModule],
+        providers: [
+            OrderEffects,
+            provideMockActions(() => actions$),
+            provideMockStore({ initialState: initialLoginState,
+                selectors: [
+                    {
+                        selector: getUser,
+                        value: {
+                            id: 1,
+                            email: 'string',
+                            role: 'test',
+                            deleted: null
+                        }
                     }
-                }
-            ]
-        }),
-        provideMockStore({ initialState }),
-        {
-            provide: 'API_URL', useValue: ''
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
-    ]
-});
+                ]
+            })
+        ]
+    }).compileComponents();
 
     effects = TestBed.inject(OrderEffects);
   });

@@ -1,20 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MenuComponent } from './menu.component';
-import { initialState } from 'src/app/stores/login/login.reducers';
-import { initialState as cartInitialState } from 'src/app/stores/cart/cart.reducers';
-import { provideMockStore } from '@ngrx/store/testing';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
-import { FormsModule } from '@angular/forms';
-import { MoneyPipe } from 'src/app/pipes/money-pipe';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { take } from 'rxjs';
 import { ProductService } from 'src/app/services/product.service';
 import { stubbedProducts } from 'src/app/unit-test-fixtures/test-utils';
 import { Product } from 'src/app/models/product';
-import { provideRouter, RouterLink } from '@angular/router';
 import { InMemoryProductService } from 'src/app/unit-test-fixtures/in-memory-product.service';
+import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
 
 describe('MenuComponent', () => {
   let component: MenuComponent;
@@ -23,24 +16,11 @@ describe('MenuComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [FormsModule,
-        RouterLink,
+      imports: [
         MenuComponent,
         SearchBarComponent,
-        MoneyPipe],
-    providers: [
-            provideRouter([]),
-            provideMockStore({ initialState }),
-            provideMockStore({ initialState: cartInitialState }),
-            {
-                provide: 'API_URL', useValue: ''
-            },
-            {
-                provide: ProductService, useClass: InMemoryProductService
-            },
-            provideHttpClient(withInterceptorsFromDi()),
-            provideHttpClientTesting()
-        ]
+        TestSharedModule
+      ]
     })
     .compileComponents();
 

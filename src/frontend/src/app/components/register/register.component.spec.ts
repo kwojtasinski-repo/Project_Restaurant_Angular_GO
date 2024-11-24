@@ -1,17 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { initialState } from 'src/app/stores/register/register.reducers';
-import { provideMockStore } from '@ngrx/store/testing';
 
 import { RegisterComponent } from './register.component';
-import { provideRouter } from '@angular/router';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Actions } from '@ngrx/effects';
 import { SpinnerButtonComponent } from '../spinner-button/spinner-button.component';
-import { ReactiveFormsModule } from '@angular/forms';
 import { RegisterState } from 'src/app/stores/register/register.state';
 import { Store } from '@ngrx/store';
 import { changeInputValue } from 'src/app/unit-test-fixtures/test-utils';
 import { registerRequestBegin } from 'src/app/stores/register/register.actions';
+import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
@@ -21,17 +18,15 @@ describe('RegisterComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
-        ReactiveFormsModule,
+      imports: [
         RegisterComponent,
         SpinnerButtonComponent,
-    ],
-    providers: [
-      provideRouter([]),
-      provideMockStore({ initialState }),
-      provideMockActions(() => actions)
-    ]
-})
+        TestSharedModule
+      ],
+      providers: [
+        provideMockActions(() => actions)
+      ]
+    })
     .compileComponents();
 
     store = TestBed.inject(Store<RegisterState>);

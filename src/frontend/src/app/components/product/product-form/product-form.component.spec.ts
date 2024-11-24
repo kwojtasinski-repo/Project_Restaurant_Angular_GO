@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProductFormComponent } from './product-form.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { CurrencyFormatterDirective } from 'src/app/directives/currency-formatter-directive';
 import { changeInputValue, changeSelectIndex, createProduct, stubbedCategories } from 'src/app/unit-test-fixtures/test-utils';
+import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
 
 describe('ProductFormComponent', () => {
   let component: ProductFormComponent;
@@ -20,11 +19,11 @@ describe('ProductFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
-        ReactiveFormsModule,
-        ProductFormComponent, CurrencyFormatterDirective,
-    ]
-})
+      imports: [
+        ProductFormComponent,
+        TestSharedModule
+      ]
+    })
     .compileComponents();
 
     fixture = TestBed.createComponent(ProductFormComponent);
@@ -55,11 +54,11 @@ describe('ProductFormComponent with init data', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
-        ReactiveFormsModule,
-        ProductFormComponent, CurrencyFormatterDirective,
-    ]
-})
+      imports: [
+        ProductFormComponent,
+        TestSharedModule
+      ]
+    })
     .compileComponents();
 
     formater = new Intl.NumberFormat('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });

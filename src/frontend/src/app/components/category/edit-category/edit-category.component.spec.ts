@@ -1,14 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditCategoryComponent } from './edit-category.component';
-import { provideMockStore } from '@ngrx/store/testing';
-import { initialState } from 'src/app/stores/category/category.reducers';
-import { NgxSpinnerModule } from 'ngx-spinner';
-import { ReactiveFormsModule } from '@angular/forms';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideRouter } from '@angular/router';
 import { CategoryFormComponent } from '../category-form/category-form.component';
+import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
 
 describe('EditCategoryComponent', () => {
   let component: EditCategoryComponent;
@@ -16,19 +10,12 @@ describe('EditCategoryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [NgxSpinnerModule,
-        ReactiveFormsModule,
-        EditCategoryComponent, CategoryFormComponent],
-    providers: [
-        provideRouter([]),
-        provideMockStore({ initialState }),
-        {
-            provide: 'API_URL', useValue: ''
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
-    ]
-})
+      imports: [
+        EditCategoryComponent,
+        CategoryFormComponent,
+        TestSharedModule
+      ]
+    })
     .compileComponents();
 
     fixture = TestBed.createComponent(EditCategoryComponent);

@@ -1,28 +1,19 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { provideMockStore } from '@ngrx/store/testing';
-import { initialState } from './stores/login/login.reducers';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { NgxSpinnerModule } from 'ngx-spinner';
-import { provideRouter, RouterLink, RouterOutlet } from '@angular/router';
+import { TestSharedModule } from './unit-test-fixtures/test-share-module';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
-        NgxSpinnerModule,
-        RouterLink,
-        RouterOutlet,
+      imports: [
         HeaderComponent,
         FooterComponent,
-        AppComponent
-    ],
-    providers: [
-        provideRouter([]),
-        provideMockStore({ initialState }),
-    ]
-}).compileComponents();
+        AppComponent,
+        TestSharedModule
+      ]
+    }).compileComponents();
   });
 
   it('should create the app', () => {

@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideMockStore } from '@ngrx/store/testing';
 
 import { HeaderComponent } from './header.component';
-import { initialState } from 'src/app/stores/app/app.reducers';
+import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -10,11 +9,8 @@ describe('HeaderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [HeaderComponent],
-    providers: [
-        provideMockStore({ initialState })
-    ]
-})
+      imports: [HeaderComponent, TestSharedModule]
+    })
     .compileComponents();
 
     fixture = TestBed.createComponent(HeaderComponent);

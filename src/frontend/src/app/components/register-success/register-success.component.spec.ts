@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RegisterSuccessComponent } from './register-success.component';
 import { By } from '@angular/platform-browser';
-import { provideRouter, RouterLink } from '@angular/router';
+import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
 
 describe('RegisterSuccessComponent', () => {
   let component: RegisterSuccessComponent;
@@ -10,14 +10,11 @@ describe('RegisterSuccessComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
-        RouterLink,
-        RegisterSuccessComponent
-    ],
-    providers: [
-        provideRouter([]),
-    ]
-})
+      imports: [
+        RegisterSuccessComponent,
+        TestSharedModule
+      ]
+    })
     .compileComponents();
 
     fixture = TestBed.createComponent(RegisterSuccessComponent);

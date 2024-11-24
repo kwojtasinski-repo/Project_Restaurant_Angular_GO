@@ -2,26 +2,20 @@ import { TestBed } from '@angular/core/testing';
 import { take } from 'rxjs';
 
 import { AuthenticationService } from './authentication.service';
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpClient } from '@angular/common/http';
 import { completeObservable, errorObservable } from '../unit-test-fixtures/test-utils';
 import { User } from '../models/user';
+import { TestSharedModule } from '../unit-test-fixtures/test-share-module';
 
 describe('AuthenticationServiceService', () => {
   let service: AuthenticationService;
   let httpClient: HttpClient
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-    imports: [],
-    providers: [
-        {
-            provide: 'API_URL', useValue: ''
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
-    ]
-});
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TestSharedModule]
+    }).compileComponents();
+
     service = TestBed.inject(AuthenticationService);
     httpClient = TestBed.inject(HttpClient);
   });

@@ -1,9 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CartsComponent } from './carts.component';
-import { provideMockStore } from '@ngrx/store/testing';
-import { initialState } from 'src/app/stores/cart/cart.reducers';
-import { NgxSpinnerModule } from 'ngx-spinner';
+import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
 
 describe('CartsComponent', () => {
   let component: CartsComponent;
@@ -11,14 +9,11 @@ describe('CartsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
-        NgxSpinnerModule,
-        CartsComponent
-    ],
-    providers: [
-        provideMockStore({ initialState })
-    ]
-})
+      imports: [
+        CartsComponent,
+        TestSharedModule
+      ]
+    })
     .compileComponents();
 
     fixture = TestBed.createComponent(CartsComponent);

@@ -1,15 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideMockStore } from '@ngrx/store/testing';
 
 import { MyOrdersComponent } from './my-orders.component';
 import { SearchBarComponent } from '../../search-bar/search-bar.component';
-import { NgxSpinnerModule } from 'ngx-spinner';
-import { MoneyPipe } from 'src/app/pipes/money-pipe';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { initialState } from 'src/app/stores/order/order.reducers';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideRouter } from '@angular/router';
+import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
 
 describe('MyOrdersComponent', () => {
   let component: MyOrdersComponent;
@@ -17,23 +10,12 @@ describe('MyOrdersComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [NgxSpinnerModule,
-        ReactiveFormsModule,
-        FormsModule,
+      imports: [
         MyOrdersComponent,
         SearchBarComponent,
-        MoneyPipe],
-    providers: [
-        provideRouter([]),
-        provideMockStore({ initialState }),
-        provideMockStore({ initialState }),
-        {
-            provide: 'API_URL', useValue: ''
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
-    ]
-})
+        TestSharedModule
+      ]        
+    })
     .compileComponents();
 
     fixture = TestBed.createComponent(MyOrdersComponent);

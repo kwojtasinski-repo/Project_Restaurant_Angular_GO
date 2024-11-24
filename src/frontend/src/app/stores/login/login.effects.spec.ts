@@ -1,31 +1,22 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { provideMockStore } from '@ngrx/store/testing';
 import { Observable } from 'rxjs';
 
 import { LoginEffects } from './login.effects';
-import { initialState } from './login.reducers';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
 
 describe('LoginEffects', () => {
   let actions$: Observable<any>;
   let effects: LoginEffects;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-    imports: [],
-    providers: [
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TestSharedModule],
+      providers: [
         LoginEffects,
-        provideMockActions(() => actions$),
-        provideMockStore({ initialState }),
-        {
-            provide: 'API_URL', useValue: ''
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
-    ]
-});
+        provideMockActions(() => actions$)
+      ]
+    }).compileComponents();
 
     effects = TestBed.inject(LoginEffects);
   });

@@ -1,17 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditProductsComponent } from './edit-products.component';
-import { initialState } from 'src/app/stores/product/product.reducers';
-import { provideMockStore } from '@ngrx/store/testing';
-import { NgxSpinnerModule } from 'ngx-spinner';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { stubbedCategories, stubbedProducts } from 'src/app/unit-test-fixtures/test-utils';
 import { ProductService } from 'src/app/services/product.service';
-import { ActivatedRoute, convertToParamMap, provideRouter } from '@angular/router';
+import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { ProductFormComponent } from '../product-form/product-form.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { CurrencyFormatterDirective } from 'src/app/directives/currency-formatter-directive';
 import { CategoryService } from 'src/app/services/category.service';
 import { InMemoryCategoryService } from 'src/app/unit-test-fixtures/in-memory-category.service';
 import { take } from 'rxjs';
@@ -20,6 +13,7 @@ import { ProductState } from 'src/app/stores/product/product.state';
 import { Store } from '@ngrx/store';
 import { Product } from 'src/app/models/product';
 import { InMemoryProductService } from 'src/app/unit-test-fixtures/in-memory-product.service';
+import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
 
 describe('EditProductsComponent', () => {
   let component: EditProductsComponent;
@@ -27,21 +21,11 @@ describe('EditProductsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [NgxSpinnerModule,
-        EditProductsComponent],
-    providers: [
-        provideRouter([]),
-        provideMockStore({ initialState }),
-        {
-            provide: 'API_URL', useValue: ''
-        },
-        {
-            provide: ProductService, useClass: InMemoryProductService
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
-    ]
-})
+      imports: [
+        EditProductsComponent,
+        TestSharedModule
+      ]
+    })
     .compileComponents();
 
     fixture = TestBed.createComponent(EditProductsComponent);
@@ -73,22 +57,14 @@ describe('EditProductsComponent when product is available', () => {
   let categoryService: InMemoryCategoryService;
   const productId = '1'
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-    imports: [NgxSpinnerModule,
-        ReactiveFormsModule,
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
         EditProductsComponent,
         ProductFormComponent,
-        CurrencyFormatterDirective],
-    providers: [
-        provideRouter([]),
-        provideMockStore({ initialState }),
-        {
-            provide: ProductService, useClass: InMemoryProductService
-        },
-        {
-            provide: CategoryService, useClass: InMemoryCategoryService
-        },
+        TestSharedModule
+      ],
+      providers: [
         {
             provide: ActivatedRoute,
             useValue: {
@@ -98,13 +74,9 @@ describe('EditProductsComponent when product is available', () => {
                     }),
                 },
             },
-        },
-        {
-          provide: 'API_URL', useValue: ''
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
-    ]})
+        }
+      ]
+    })
     .compileComponents();
 
     formater = new Intl.NumberFormat('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });

@@ -1,20 +1,17 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { provideMockStore, MockStore } from '@ngrx/store/testing';
+import { MockStore } from '@ngrx/store/testing';
 import { Observable, of } from 'rxjs';
 
 import { CartEffects } from './cart.effects';
-import { initialState } from './cart.reducers';
-import { initialState as initialLoginState } from '../login/login.reducers';
 import { getUser } from '../login/login.selectors';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { User } from 'src/app/models/user';
 import * as CartActions from './cart.actions';
 import { CartService } from 'src/app/services/cart.service';
 import { Cart } from 'src/app/models/cart';
 import { completeObservable, stubbedProducts } from 'src/app/unit-test-fixtures/test-utils';
 import { OrderService } from 'src/app/services/order.service';
+import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
 
 describe('CartEffects', () => {
   let actions$: Observable<any>;
@@ -28,21 +25,14 @@ describe('CartEffects', () => {
   let cartService: CartService;
   let orderService: OrderService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-    imports: [],
-    providers: [
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TestSharedModule],
+      providers: [
         CartEffects,
         provideMockActions(() => actions$),
-        provideMockStore({ initialState }),
-        provideMockStore({ initialState: initialLoginState }),
-        {
-            provide: 'API_URL', useValue: ''
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
-    ]
-});
+      ]
+    }).compileComponents();
 
     myCart = createCart();
     const store = TestBed.inject(MockStore);

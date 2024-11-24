@@ -2,10 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CategoriesComponent } from './categories.component';
 import { SearchBarComponent } from '../../search-bar/search-bar.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideRouter, RouterLink } from '@angular/router';
+import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
 
 describe('CategoriesComponent', () => {
   let component: CategoriesComponent;
@@ -13,19 +10,12 @@ describe('CategoriesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [ReactiveFormsModule,
-        FormsModule,
-        RouterLink,
-        CategoriesComponent, SearchBarComponent],
-    providers: [
-        provideRouter([]),
-        {
-            provide: 'API_URL', useValue: ''
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
-    ]
-})
+      imports: [
+        CategoriesComponent,
+        SearchBarComponent,
+        TestSharedModule
+      ]
+    })
     .compileComponents();
 
     fixture = TestBed.createComponent(CategoriesComponent);

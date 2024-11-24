@@ -1,10 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AddCategoryComponent } from './add-category.component';
-import { provideMockStore } from '@ngrx/store/testing';
-import { initialState } from 'src/app/stores/category/category.reducers';
-import { ReactiveFormsModule } from '@angular/forms';
 import { CategoryFormComponent } from '../category-form/category-form.component';
+import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
 
 describe('AddCategoryComponent', () => {
   let component: AddCategoryComponent;
@@ -12,14 +10,12 @@ describe('AddCategoryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [
-        ReactiveFormsModule,
-        AddCategoryComponent, CategoryFormComponent
-    ],
-    providers: [
-        provideMockStore({ initialState })
-    ]
-})
+      imports: [
+        AddCategoryComponent,
+        CategoryFormComponent,
+        TestSharedModule
+      ]
+    })
     .compileComponents();
 
     fixture = TestBed.createComponent(AddCategoryComponent);

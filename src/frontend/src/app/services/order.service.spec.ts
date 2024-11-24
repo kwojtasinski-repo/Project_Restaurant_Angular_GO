@@ -1,23 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 
 import { OrderService } from './order.service';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { TestSharedModule } from '../unit-test-fixtures/test-share-module';
 
 describe('OrderService', () => {
   let service: OrderService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-    imports: [],
-    providers: [
-        {
-            provide: 'API_URL', useValue: ''
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
-    ]
-});
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TestSharedModule]
+    }).compileComponents();
     service = TestBed.inject(OrderService);
   });
 

@@ -1,17 +1,17 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ErrorDialogService } from './error-dialog.service';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { TestSharedModule } from '../unit-test-fixtures/test-share-module';
 
 describe('ErrorDialogService', () => {
   let service: ErrorDialogService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        BsModalService
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [
+        TestSharedModule
       ]
-    });
+    }).compileComponents();
     service = TestBed.inject(ErrorDialogService);
   });
 

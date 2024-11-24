@@ -2,18 +2,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Observable, take } from 'rxjs';
 
 import { ViewProductComponent } from './view-product.component';
-import { NgxSpinnerModule } from 'ngx-spinner';
-import { initialState } from 'src/app/stores/login/login.reducers';
-import { provideMockStore } from '@ngrx/store/testing';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ProductService } from 'src/app/services/product.service';
 import { Product } from 'src/app/models/product';
-import { ActivatedRoute, provideRouter } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { convertToParamMap } from '@angular/router';
-import { MoneyPipe } from 'src/app/pipes/money-pipe';
 import { stubbedProducts } from 'src/app/unit-test-fixtures/test-utils';
 import { InMemoryProductService } from 'src/app/unit-test-fixtures/in-memory-product.service';
+import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
 
 describe('ViewProductComponent', () => {
   let component: ViewProductComponent;
@@ -22,31 +17,21 @@ describe('ViewProductComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NgxSpinnerModule,
-          ViewProductComponent,
-          MoneyPipe],
+      imports: [
+        ViewProductComponent,
+        TestSharedModule
+      ],
       providers: [
-          provideRouter([]),
-          provideMockStore({ initialState }),
-          {
-              provide: 'API_URL', useValue: ''
-          },
-          {
-              provide: ProductService,
-              useClass: InMemoryProductService
-          },
-          {
-              provide: ActivatedRoute,
-              useValue: {
-                  snapshot: {
-                      paramMap: convertToParamMap({
-                          id: '1'
-                      }),
-                  },
-              },
-          },
-          provideHttpClient(withInterceptorsFromDi()),
-          provideHttpClientTesting()
+        {
+            provide: ActivatedRoute,
+            useValue: {
+                snapshot: {
+                    paramMap: convertToParamMap({
+                        id: '1'
+                    }),
+                },
+            },
+        }
       ]
     }).compileComponents();
 
@@ -78,19 +63,11 @@ describe('ViewProductsComponent when product available', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [NgxSpinnerModule,
+      imports: [
         ViewProductComponent,
-        MoneyPipe],
-    providers: [
-        provideRouter([]),
-        provideMockStore({ initialState }),
-        {
-            provide: 'API_URL', useValue: ''
-        },
-        {
-            provide: ProductService,
-            useClass: InMemoryProductService
-        },
+        TestSharedModule
+      ],
+      providers: [
         {
             provide: ActivatedRoute,
             useValue: {
@@ -100,10 +77,9 @@ describe('ViewProductsComponent when product available', () => {
                     }),
                 },
             },
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting()
-    ]}).compileComponents();
+        }
+      ]
+    }).compileComponents();
 
     productService = TestBed.inject(ProductService) as InMemoryProductService;
     fixture = TestBed.createComponent(ViewProductComponent);
