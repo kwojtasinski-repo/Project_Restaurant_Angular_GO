@@ -6,7 +6,7 @@ import { Actions } from '@ngrx/effects';
 import { SpinnerButtonComponent } from '../spinner-button/spinner-button.component';
 import { RegisterState } from 'src/app/stores/register/register.state';
 import { Store } from '@ngrx/store';
-import { changeInputValue } from 'src/app/unit-test-fixtures/test-utils';
+import { changeInputValue } from 'src/app/unit-test-fixtures/dom-utils';
 import { registerRequestBegin } from 'src/app/stores/register/register.actions';
 import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
 
