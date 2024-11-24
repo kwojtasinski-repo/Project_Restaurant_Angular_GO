@@ -3,7 +3,7 @@ import { initialState } from 'src/app/stores/register/register.reducers';
 import { provideMockStore } from '@ngrx/store/testing';
 
 import { RegisterComponent } from './register.component';
-import { RouterModule } from '@angular/router';
+import { provideRouter } from '@angular/router';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Actions } from '@ngrx/effects';
 import { SpinnerButtonComponent } from '../spinner-button/spinner-button.component';
@@ -23,13 +23,13 @@ describe('RegisterComponent', () => {
     await TestBed.configureTestingModule({
     imports: [
         ReactiveFormsModule,
-        RouterModule.forRoot([]),
         RegisterComponent,
         SpinnerButtonComponent,
     ],
     providers: [
-        provideMockStore({ initialState }),
-        provideMockActions(() => actions)
+      provideRouter([]),
+      provideMockStore({ initialState }),
+      provideMockActions(() => actions)
     ]
 })
     .compileComponents();
