@@ -1,7 +1,7 @@
 import { Product } from '../models/product';
 import { ProductService } from '../services/product.service';
 import { Observable } from 'rxjs';
-import { completeObservable, errorObservable } from './test-utils';
+import { completeObservable, errorObservable } from './observable-utils';
 import { ProductSendDto } from '../models/product-send-dto';
 import { Injectable } from '@angular/core';
 

@@ -3,7 +3,7 @@ import { take } from 'rxjs';
 
 import { AuthenticationService } from './authentication.service';
 import { HttpClient } from '@angular/common/http';
-import { completeObservable, errorObservable } from '../unit-test-fixtures/test-utils';
+import { completeObservable, errorObservable } from '../unit-test-fixtures/observable-utils';
 import { User } from '../models/user';
 import { TestSharedModule } from '../unit-test-fixtures/test-share-module';
 

@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { completeObservable, errorObservable } from './test-utils';
+import { completeObservable, errorObservable } from './observable-utils';
 import { CategoryService } from '../services/category.service';
 import { Category } from '../models/category';
 import { Injectable } from '@angular/core';

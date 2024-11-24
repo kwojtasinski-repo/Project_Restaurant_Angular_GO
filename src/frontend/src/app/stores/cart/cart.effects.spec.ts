@@ -9,7 +9,8 @@ import { User } from 'src/app/models/user';
 import * as CartActions from './cart.actions';
 import { CartService } from 'src/app/services/cart.service';
 import { Cart } from 'src/app/models/cart';
-import { completeObservable, stubbedProducts } from 'src/app/unit-test-fixtures/test-utils';
+import { stubbedProducts } from 'src/app/unit-test-fixtures/test-utils';
+import { completeObservable } from 'src/app/unit-test-fixtures/observable-utils';
 import { OrderService } from 'src/app/services/order.service';
 import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
 

@@ -1,4 +1,3 @@
-import { Observable } from 'rxjs';
 import { Category } from '../models/category';
 import { Product } from '../models/product';
 
@@ -11,21 +10,6 @@ export const changeSelectIndex = (htmlInputElement: any, selectedIndex: any) => 
     htmlInputElement.selectedIndex = selectedIndex;
     htmlInputElement.dispatchEvent(new Event('change'));
 };
-
-export function completeObservable<T>(value: T | undefined = undefined): Observable<T> {
-    return new Observable<T>((o) => {
-        if (value) {               
-            o.next(value);
-        } else {
-            o.next();
-        }
-        o.complete();
-    });
-}
-
-export function errorObservable<T>(error: any): Observable<T> {
-    return new Observable<T>(o => o.error(error));
-}
 
 export const createProduct = (id: number | undefined = undefined, 
     name: string | undefined = undefined, 
