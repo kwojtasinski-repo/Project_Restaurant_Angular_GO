@@ -2,7 +2,7 @@ export function getValidationMessage(code: any): string | null {
     return mapCodeToMessage(code)
 }
 
-export const PATTERN_ONE_UPPER_ONE_LOWER_ONE_SPECIAL_CHARACTER = '^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])((?=.*\\W)|(?=.*_))^[^ ]+$';
+export const PATTERN_ONE_UPPER_ONE_LOWER_ONE_SPECIAL_CHARACTER = /^(?=.*\p{Ll})(?=.*\p{Lu})(?=.*\d)(?=.*[\p{P}\p{S}]).+$/u;
 
 function mapCodeToMessage(code: any): string | null {
     if (!code) {
@@ -26,8 +26,8 @@ function mapCodeToMessage(code: any): string | null {
             return `Pole nie powinno przekroczyć ${code.value.requiredLength} znak`;
         }
     } else if (code.key === 'pattern') {
-        if (code.value.requiredPattern === PATTERN_ONE_UPPER_ONE_LOWER_ONE_SPECIAL_CHARACTER) {
-            return 'Pole powinno zawierać małą i dużą literę oraz specjalny znak znak';
+        if (code.value.requiredPattern === PATTERN_ONE_UPPER_ONE_LOWER_ONE_SPECIAL_CHARACTER.toString()) {
+            return 'Pole powinno zawierać małą i dużą literę, jedną liczbę oraz znak specjalny';
         } else {
             return 'Niepoprawny format';
         }
