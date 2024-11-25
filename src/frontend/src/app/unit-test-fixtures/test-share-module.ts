@@ -20,6 +20,7 @@ import { initialState as cartInitialState } from 'src/app/stores/cart/cart.reduc
 import { initialState as categoryInitialState } from 'src/app/stores/category/category.reducers';
 import { initialState as productInitialState } from 'src/app/stores/product/product.reducers';
 import { initialState as orderInitialState } from 'src/app/stores/order/order.reducers';
+import { API_URL } from '../providers/api-url-provider';
 
 @NgModule({
     imports: [
@@ -34,7 +35,7 @@ import { initialState as orderInitialState } from 'src/app/stores/order/order.re
         BsModalService,
         provideRouter([]),
         {
-            provide: 'API_URL', useValue: ''
+            provide: API_URL, useValue: ''
         },
         {
             provide: ProductService,

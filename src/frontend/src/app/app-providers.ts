@@ -32,7 +32,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { GlobalErrorHandler } from './global-error-handler';
 import { ErrorHandler, importProvidersFrom } from '@angular/core';
 import { BsModalService, ModalModule } from 'ngx-bootstrap/modal';
-import { resolveApiUrl } from './providers/api-url-provider';
+import { API_URL, resolveApiUrl } from './providers/api-url-provider';
 
 export default [
   importProvidersFrom(BrowserModule, AppRoutingModule, CollapseModule.forRoot(), AlertModule.forRoot(), FormsModule, ReactiveFormsModule, StoreModule.forRoot({
@@ -53,9 +53,9 @@ export default [
     RegisterEffects
   ]), NgxSpinnerModule, ModalModule),
   {
-      provide: 'API_URL',
-      useFactory: resolveApiUrl,
-      multi: true
+    provide: API_URL,
+    useFactory: resolveApiUrl,
+    multi: true
   },
   BsModalService,
   {

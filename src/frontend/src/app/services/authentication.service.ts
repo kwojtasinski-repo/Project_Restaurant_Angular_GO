@@ -3,13 +3,14 @@ import { Observable, concatMap } from 'rxjs';
 import { User } from '../models/user';
 import { HttpClient } from '@angular/common/http';
 import { Credentials } from '../models/credentials';
+import { API_URL } from '../providers/api-url-provider';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
   private httpClient = inject(HttpClient);
-  private backendUrl = inject<string>('API_URL' as any);
+  private backendUrl = inject<string>(API_URL);
 
   private signInPath = 'api/sign-in';
   private usersPath = 'api/users';

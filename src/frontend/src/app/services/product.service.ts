@@ -3,13 +3,14 @@ import { Product } from '../models/product';
 import { Observable, catchError, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { ProductSendDto } from '../models/product-send-dto';
+import { API_URL } from '../providers/api-url-provider';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
   private httpClient = inject(HttpClient);
-  private backendUrl = inject<string>('API_URL' as any);
+  private backendUrl = inject<string>(API_URL);
 
   private productPath = 'api/products';
 

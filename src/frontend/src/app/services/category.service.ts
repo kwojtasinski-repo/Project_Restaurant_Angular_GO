@@ -2,13 +2,14 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Category } from '../models/category';
 import { HttpClient } from '@angular/common/http';
+import { API_URL } from '../providers/api-url-provider';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
   private httpClient = inject(HttpClient);
-  private backendUrl = inject<string>('API_URL' as any);
+  private backendUrl = inject<string>(API_URL);
 
   private categoryPath = 'api/categories';
 

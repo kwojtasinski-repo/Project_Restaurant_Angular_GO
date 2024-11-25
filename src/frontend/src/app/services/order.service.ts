@@ -3,13 +3,14 @@ import { Order } from '../models/order';
 import { Cart } from '../models/cart';
 import { Observable, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { API_URL } from '../providers/api-url-provider';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
   private httpClient = inject(HttpClient);
-  private backendUrl = inject<string>('API_URL' as any);
+  private backendUrl = inject<string>(API_URL);
 
   private orderPath = 'api/orders';
 
