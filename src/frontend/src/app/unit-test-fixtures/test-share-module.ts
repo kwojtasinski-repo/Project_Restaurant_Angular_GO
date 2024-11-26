@@ -14,7 +14,6 @@ import { CategoryService } from '../services/category.service';
 import { InMemoryCategoryService } from './in-memory-category.service';
 import { provideMockStore } from '@ngrx/store/testing';
 import { initialState as registerInitialState } from 'src/app/stores/register/register.reducers';
-import { initialState as appInitialState } from 'src/app/stores/app/app.reducers';
 import { initialState as loginInitialState } from 'src/app/stores/login/login.reducers';
 import { initialState as cartInitialState } from 'src/app/stores/cart/cart.reducers';
 import { initialState as categoryInitialState } from 'src/app/stores/category/category.reducers';
@@ -48,7 +47,6 @@ import { API_URL } from '../providers/api-url-provider';
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
         provideMockStore({ initialState: registerInitialState }),
-        provideMockStore({ initialState: appInitialState }),
         provideMockStore({ initialState: cartInitialState }),
         provideMockStore({ initialState: loginInitialState }),
         provideMockStore({ initialState: categoryInitialState }),
