@@ -1,13 +1,13 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, effect, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { getCurrentUrl, showHeader } from 'src/app/stores/app/app.selectors';
-import { AppState } from 'src/app/stores/app/app.state';
 import { getUser } from 'src/app/stores/login/login.selectors';
 import { LoginState } from 'src/app/stores/login/login.state';
 import { logoutRequest } from 'src/app/stores/login/login.actions';
 import { RouterLink } from '@angular/router';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { AsyncPipe } from '@angular/common';
+import { AppStore } from 'src/app/stores/app/app.store';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
     selector: 'app-header',
@@ -17,14 +17,21 @@ import { AsyncPipe } from '@angular/common';
     imports: [CollapseModule, RouterLink, AsyncPipe]
 })
 export class HeaderComponent implements OnInit {
-  private appStore = inject<Store<AppState>>(Store);
+  private appStore = inject(AppStore);
   private loginStore = inject<Store<LoginState>>(Store);
+  private normalizedPath$: BehaviorSubject<string> = new BehaviorSubject('');
 
   public routerLinks: any[] = [];
-  public currentUrl$ = this.appStore.select(getCurrentUrl);
-  public showHeader$ = this.appStore.select(showHeader);
+  public currentUrl = this.appStore.currentUrl;
+  public showHeader = this.appStore.showHeader;
   public user$ = this.loginStore.select(getUser);
   public isCollapsed = true;
+
+  public constructor() {
+    effect(() => {
+      this.normalizedPath$.next(this.normalizeUrl(this.currentUrl()) ?? '');
+    })
+  }
   
   public ngOnInit(): void {
     this.routerLinks = [
@@ -48,15 +55,19 @@ export class HeaderComponent implements OnInit {
     ]
   }
 
-  public normalizeUrl(url: string | null): string | null {
+  public isActiveRoute(path: string) {
+    return this.normalizedPath$.value.startsWith(path);
+  }
+
+  public logout(): void {
+    this.loginStore.dispatch(logoutRequest());
+  }
+
+  private normalizeUrl(url: string | null): string | null {
     if (!url) {
       return url;
     }
 
     return url.substring(1);
-  }
-
-  public logout(): void {
-    this.loginStore.dispatch(logoutRequest());
   }
 }

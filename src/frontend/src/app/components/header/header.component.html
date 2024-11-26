@@ -1,4 +1,4 @@
-@if (showHeader$ | async) {
+@if (showHeader()) {
   <nav class="navbar navbar-dark bg-dark navbar-expand-lg">
     <div class="me-4 ms-4 container-fluid">
       <button class="navbar-toggler" (click)="isCollapsed = !isCollapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -10,7 +10,7 @@
             @for (routerLink of routerLinks; track routerLink) {
               <li class="nav-item">
                 @if (!routerLink.userRole || (((user$ | async)?.role) === routerLink.userRole)) {
-                  <a [class]="normalizeUrl(currentUrl$ | async)?.startsWith(routerLink.path) ? 'nav-link active' : 'nav-link'" [routerLink]="routerLink.path">{{ routerLink.name }}</a>
+                  <a [class]="isActiveRoute(routerLink.path) ? 'nav-link active' : 'nav-link'" [routerLink]="routerLink.path">{{ routerLink.name }}</a>
                 }
               </li>
             }

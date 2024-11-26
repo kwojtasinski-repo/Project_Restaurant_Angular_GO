@@ -1,11 +1,9 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { AppState } from './stores/app/app.state';
-import * as AppActions from './stores/app/app.actions';
 import { NgxSpinnerComponent } from 'ngx-spinner';
 import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
+import { AppStore } from './stores/app/app.store';
 
 @Component({
     selector: 'app-root',
@@ -16,7 +14,7 @@ import { HeaderComponent } from './components/header/header.component';
 })
 export class AppComponent implements OnInit {
   private router = inject(Router);
-  private appStore = inject<Store<AppState>>(Store);
+  private appStore = inject(AppStore);
 
   private headerHiddenUrls: string[] = [];
 
@@ -35,11 +33,11 @@ export class AppComponent implements OnInit {
   }
 
   public onActivateRoute() {
-    this.appStore.dispatch(AppActions.setCurrentUrl({ currentUrl: this.router.url }));
+    this.appStore.setCurrentUrl(this.router.url);
     if (this.headerHiddenUrls.some(url => this.getUrlWithoutParams(this.router.url) === url)) {
-      this.appStore.dispatch(AppActions.disableHeader());
+      this.appStore.disableHeader();
     } else {
-      this.appStore.dispatch(AppActions.enableHeader());
+      this.appStore.enableHeader();
     }
   }
 
