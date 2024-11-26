@@ -5,7 +5,6 @@ import { OrderEffects } from './stores/order/order.effects';
 import { CartEffects } from './stores/cart/cart.effects';
 import { CategoryEffects } from './stores/category/category.effects';
 import { ProductEffects } from './stores/product/product.effects';
-import { AppEffects } from './stores/app/app.effects';
 import { LoginEffects } from './stores/login/login.effects';
 import { EffectsModule } from '@ngrx/effects';
 import { registerReducer } from './stores/register/register.reducers';
@@ -18,8 +17,6 @@ import { categoryReducer } from './stores/category/category.reducers';
 import { categoryStoreName } from './stores/category/category.store.names';
 import { productReducer } from './stores/product/product.reducers';
 import { productStoreName } from './stores/product/product.store.names';
-import { appReducer } from './stores/app/app.reducers';
-import { appStoreName } from './stores/app/app.store.names';
 import { loginReducer } from './stores/login/login.reducers';
 import { loginStoreName } from './stores/login/login.store.names';
 import { StoreModule } from '@ngrx/store';
@@ -37,7 +34,6 @@ import { API_URL, resolveApiUrl } from './providers/api-url-provider';
 export default [
   importProvidersFrom(BrowserModule, AppRoutingModule, CollapseModule.forRoot(), AlertModule.forRoot(), FormsModule, ReactiveFormsModule, StoreModule.forRoot({
     [loginStoreName]: loginReducer,
-    [appStoreName]: appReducer,
     [productStoreName]: productReducer,
     [categoryStoreName]: categoryReducer,
     [cartStoreName]: cartReducer,
@@ -45,7 +41,6 @@ export default [
     [registerStoreName]: registerReducer
   }), EffectsModule.forRoot([
     LoginEffects,
-    AppEffects,
     ProductEffects,
     CategoryEffects,
     CartEffects,
