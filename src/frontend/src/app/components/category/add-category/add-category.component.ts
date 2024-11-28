@@ -1,11 +1,7 @@
-import { Component, computed, effect, OnDestroy, signal, inject } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { CategoryState } from 'src/app/stores/category/category.state';
-import { getError } from 'src/app/stores/category/category.selectors';
-import * as CategoryActions from 'src/app/stores/category/category.actions';
+import { Component, computed, OnDestroy, signal, inject } from '@angular/core';
 import { Category } from 'src/app/models/category';
 import { CategoryFormComponent } from '../category-form/category-form.component';
-import { Subject, takeUntil } from 'rxjs';
+import { CategoryStore } from 'src/app/stores/category/category.store';
 
 @Component({
     selector: 'app-add-category',
@@ -15,40 +11,27 @@ import { Subject, takeUntil } from 'rxjs';
     imports: [CategoryFormComponent]
 })
 export class AddCategoryComponent implements OnDestroy {
-  private store = inject<Store<CategoryState>>(Store);
-  private destroy$ = new Subject<void>();
+  private store = inject(CategoryStore);
 
   public category = signal<Category | null>(null);
   public isLoading = signal<boolean>(true);
 
   public isError = computed(() => !!this.storeError());
-  public storeError = signal<string | null>(null);
-
-  constructor() {
-    effect(() => {
-      this.store.select(getError)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((err) => { if (err) { this.storeError.set(err)} });
-    });
-  }
+  public storeError = this.store.error;
 
   public onCategoryChange(category: Category): void {
-    this.store.dispatch(CategoryActions.categoryFormUpdate({
-      category
-    }));
+    this.store.updateCategoryForm(category);
   }
 
   public onSubmit(): void {
-    this.store.dispatch(CategoryActions.categoryAddRequestBegin());
+    this.store.addCategory();
   }
 
   public cancelClick(): void {
-    this.store.dispatch(CategoryActions.categoryCancelOperation());
+    this.store.cancelCategoryOperation();
   }
 
   public ngOnDestroy(): void {
-    this.store.dispatch(CategoryActions.clearErrors());
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.store.clearErrors();
   }
 }

@@ -1,6 +1,6 @@
 import { inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, EMPTY, exhaustMap, Observable } from 'rxjs';
+import { catchError, EMPTY, exhaustMap, Observable, take } from 'rxjs';
 import { Category } from 'src/app/models/category';
 import { CategoryService } from 'src/app/services/category.service';
 
@@ -22,34 +22,36 @@ export class CategoryStore {
     return this._error.asReadonly();
   }
 
-  public addCategory(): Observable<void> {
+  public addCategory(): void {
     const category = this._category();
     if (!category) {
       this._error.set('Kategoria nie może być pusta');
-      return EMPTY;
+      return;
     }
 
     this.clearErrors();
-    return this.categoryService.add(category)
+    this.categoryService.add(category)
       .pipe(
+        take(1),
         catchError((error, caught) => this.handleBackendErrors(error, caught)),
         exhaustMap(() => this.addCategorySuccess())
-      );
+      ).subscribe();
   }
 
-  public updateCategory(): Observable<void> {
+  public updateCategory(): void {
     const category = this._category();
     if (!category || !category.id) {
       this._error.set('Kategoria nie może być pusta');
-      return EMPTY;
+      return;
     }
 
     this.clearErrors();
-    return this.categoryService.update(category)
+    this.categoryService.update(category)
       .pipe(
+        take(1),
         catchError((error, caught) => this.handleBackendErrors(error, caught)),
         exhaustMap(() => this.updateCategorySuccess())
-      )
+      ).subscribe();
   }
 
   public updateCategoryForm(category: Category): void {
