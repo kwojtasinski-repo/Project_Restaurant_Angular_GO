@@ -93,7 +93,7 @@ export class CategoryStore {
       return EMPTY;
     }
     
-    this._error.set(err.error.errors);
+    this._error.set(err?.error?.errors);
     return EMPTY;
   }
 }
