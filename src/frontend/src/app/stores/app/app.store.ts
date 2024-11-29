@@ -18,19 +18,19 @@ export const AppStore = signalStore(
       patchState(store, (state) => ({
         ...state,
         showHeader: true
-      }))
+      }));
     },
     disableHeader(): void  {
       patchState(store, (state) => ({
         ...state,
         showHeader: false
-      }))
+      }));
     },
     setCurrentUrl(currentUrl: string): void {
       patchState(store, (state) => ({
         ...state,
         currentUrl
-      }))
+      }));
     }
   }))
 );
