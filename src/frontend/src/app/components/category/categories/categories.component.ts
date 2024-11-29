@@ -14,16 +14,16 @@ import { RouterLink } from '@angular/router';
     imports: [RouterLink, SearchBarComponent]
 })
 export class CategoriesComponent implements OnInit {
-  private categoryService = inject(CategoryService);
-  private spinnerService = inject(NgxSpinnerService);
+  private readonly categoryService = inject(CategoryService);
+  private readonly spinnerService = inject(NgxSpinnerService);
 
-  public categories: WritableSignal<Category[]> = signal([]);
-  public term: WritableSignal<string> = signal('');
-  public isLoading: WritableSignal<boolean> = signal(true);
-  public error: WritableSignal<string | undefined> = signal<string | undefined>(undefined);
+  public readonly categories: WritableSignal<Category[]> = signal([]);
+  public readonly term: WritableSignal<string> = signal('');
+  public readonly isLoading: WritableSignal<boolean> = signal(true);
+  public readonly error: WritableSignal<string | undefined> = signal<string | undefined>(undefined);
 
   // Derived signal for filtered categories
-  public categoriesToShow: Signal<Category[]> = computed(() => {
+  public readonly categoriesToShow: Signal<Category[]> = computed(() => {
     const term = this.term();
     return this.categories().filter(c =>
       c.name.toLocaleLowerCase().startsWith(term.toLocaleLowerCase())

@@ -15,17 +15,17 @@ import { CategoryStore } from 'src/app/stores/category/category.store';
     imports: [CategoryFormComponent]
 })
 export class EditCategoryComponent implements OnInit, OnDestroy {
-  private store = inject(CategoryStore);
-  private categoryService = inject(CategoryService);
-  private route = inject(ActivatedRoute);
-  private spinnerService = inject(NgxSpinnerService);
+  private readonly store = inject(CategoryStore);
+  private readonly categoryService = inject(CategoryService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly spinnerService = inject(NgxSpinnerService);
 
-  public category = signal<Category | null>(null);
-  public error = signal<string | null>(null);
-  public isLoading = signal<boolean>(true);
+  public readonly category = signal<Category | null>(null);
+  public readonly error = signal<string | null>(null);
+  public readonly isLoading = signal<boolean>(true);
 
-  public isError = computed(() => !!this.error() || !!this.storeError());
-  public storeError = this.store.error;
+  public readonly isError = computed(() => !!this.error() || !!this.storeError());
+  public readonly storeError = this.store.error;
 
   public ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id') ?? '';

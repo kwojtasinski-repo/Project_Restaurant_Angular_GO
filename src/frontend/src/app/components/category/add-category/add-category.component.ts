@@ -11,13 +11,13 @@ import { CategoryStore } from 'src/app/stores/category/category.store';
     imports: [CategoryFormComponent]
 })
 export class AddCategoryComponent implements OnDestroy {
-  private store = inject(CategoryStore);
+  private readonly store = inject(CategoryStore);
 
-  public category = signal<Category | null>(null);
-  public isLoading = signal<boolean>(true);
+  public readonly category = signal<Category | null>(null);
+  public readonly isLoading = signal<boolean>(true);
 
-  public isError = computed(() => !!this.storeError());
-  public storeError = this.store.error;
+  public readonly isError = computed(() => !!this.storeError());
+  public readonly storeError = this.store.error;
 
   public onCategoryChange(category: Category): void {
     this.store.updateCategoryForm(category);
