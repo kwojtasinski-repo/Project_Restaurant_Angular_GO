@@ -3,7 +3,6 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { RegisterEffects } from './stores/register/register.effects';
 import { OrderEffects } from './stores/order/order.effects';
 import { CartEffects } from './stores/cart/cart.effects';
-import { CategoryEffects } from './stores/category/category.effects';
 import { ProductEffects } from './stores/product/product.effects';
 import { LoginEffects } from './stores/login/login.effects';
 import { EffectsModule } from '@ngrx/effects';
@@ -13,8 +12,6 @@ import { orderReducer } from './stores/order/order.reducers';
 import { orderStoreName } from './stores/order/order.store.names';
 import { cartReducer } from './stores/cart/cart.reducers';
 import { cartStoreName } from './stores/cart/cart.store.names';
-import { categoryReducer } from './stores/category/category.reducers';
-import { categoryStoreName } from './stores/category/category.store.names';
 import { productReducer } from './stores/product/product.reducers';
 import { productStoreName } from './stores/product/product.store.names';
 import { loginReducer } from './stores/login/login.reducers';
@@ -35,14 +32,12 @@ export default [
   importProvidersFrom(BrowserModule, AppRoutingModule, CollapseModule.forRoot(), AlertModule.forRoot(), FormsModule, ReactiveFormsModule, StoreModule.forRoot({
     [loginStoreName]: loginReducer,
     [productStoreName]: productReducer,
-    [categoryStoreName]: categoryReducer,
     [cartStoreName]: cartReducer,
     [orderStoreName]: orderReducer,
     [registerStoreName]: registerReducer
   }), EffectsModule.forRoot([
     LoginEffects,
     ProductEffects,
-    CategoryEffects,
     CartEffects,
     OrderEffects,
     RegisterEffects

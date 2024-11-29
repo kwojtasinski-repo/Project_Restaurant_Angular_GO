@@ -16,7 +16,6 @@ import { provideMockStore } from '@ngrx/store/testing';
 import { initialState as registerInitialState } from 'src/app/stores/register/register.reducers';
 import { initialState as loginInitialState } from 'src/app/stores/login/login.reducers';
 import { initialState as cartInitialState } from 'src/app/stores/cart/cart.reducers';
-import { initialState as categoryInitialState } from 'src/app/stores/category/category.reducers';
 import { initialState as productInitialState } from 'src/app/stores/product/product.reducers';
 import { initialState as orderInitialState } from 'src/app/stores/order/order.reducers';
 import { API_URL } from '../providers/api-url-provider';
@@ -49,7 +48,6 @@ import { API_URL } from '../providers/api-url-provider';
         provideMockStore({ initialState: registerInitialState }),
         provideMockStore({ initialState: cartInitialState }),
         provideMockStore({ initialState: loginInitialState }),
-        provideMockStore({ initialState: categoryInitialState }),
         provideMockStore({ initialState: productInitialState }),
         provideMockStore({ initialState: orderInitialState }),
     ]
