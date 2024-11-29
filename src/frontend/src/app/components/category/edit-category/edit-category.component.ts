@@ -12,7 +12,8 @@ import { CategoryStore } from 'src/app/stores/category/category.store';
     templateUrl: './edit-category.component.html',
     styleUrls: ['./edit-category.component.scss'],
     standalone: true,
-    imports: [CategoryFormComponent]
+    imports: [CategoryFormComponent],
+    providers: [CategoryStore]
 })
 export class EditCategoryComponent implements OnInit, OnDestroy {
   private readonly store = inject(CategoryStore);

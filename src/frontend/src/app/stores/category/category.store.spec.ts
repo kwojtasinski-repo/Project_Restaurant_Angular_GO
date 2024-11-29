@@ -23,7 +23,7 @@ describe('CategoryStore', () => {
       });
   
       categoryService = TestBed.inject(CategoryService);
-      categoryStore = TestBed.inject(CategoryStore);
+      categoryStore = TestBed.runInInjectionContext(() => new CategoryStore());
     });
 
     describe('addCategory', () => {

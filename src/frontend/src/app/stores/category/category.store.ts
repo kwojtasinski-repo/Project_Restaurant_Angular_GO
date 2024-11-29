@@ -16,9 +16,7 @@ const initialState: CategoryState = {
   error: null
 };
 
-
 export const CategoryStore = signalStore(
-  { providedIn: 'root' },
   withState(initialState),
   withMethods((store, router = inject(Router), categoryService = inject(CategoryService)) => {
     const clearErrors = () => {

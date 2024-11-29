@@ -8,7 +8,8 @@ import { CategoryStore } from 'src/app/stores/category/category.store';
     templateUrl: './add-category.component.html',
     styleUrls: ['./add-category.component.scss'],
     standalone: true,
-    imports: [CategoryFormComponent]
+    imports: [CategoryFormComponent],
+    providers: [CategoryStore]
 })
 export class AddCategoryComponent implements OnDestroy {
   private readonly store = inject(CategoryStore);
