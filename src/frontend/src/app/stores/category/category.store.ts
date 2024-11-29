@@ -66,7 +66,7 @@ export const CategoryStore = signalStore(
       updateCategory: rxMethod<void> (
         exhaustMap(() => {
           const category = store.category();
-          if (!category) {
+          if (!category || !category.id) {
             patchState(store, { error: 'Kategoria nie może być pusta' });
             return EMPTY;
           }

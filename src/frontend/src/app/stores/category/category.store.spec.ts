@@ -8,7 +8,7 @@ import { TestSharedModule } from 'src/app/unit-test-fixtures/test-share-module';
 import { completeObservable } from 'src/app/unit-test-fixtures/observable-utils';
 
 describe('CategoryStore', () => {
-    let categoryStore: CategoryStore;
+    let categoryStore: any;
     let mockRouter: jasmine.SpyObj<Router>;
     let categoryService: CategoryService;
   
