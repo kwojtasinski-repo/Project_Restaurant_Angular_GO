@@ -13,8 +13,8 @@ import { AppStore } from './stores/app/app.store';
     imports: [HeaderComponent, RouterOutlet, FooterComponent, NgxSpinnerComponent]
 })
 export class AppComponent implements OnInit {
-  private router = inject(Router);
-  private appStore = inject(AppStore);
+  private readonly router = inject(Router);
+  private readonly applicationStore = inject(AppStore);
 
   private headerHiddenUrls: string[] = [];
 
@@ -33,11 +33,11 @@ export class AppComponent implements OnInit {
   }
 
   public onActivateRoute() {
-    this.appStore.setCurrentUrl(this.router.url);
+    this.applicationStore.setCurrentUrl(this.router.url);
     if (this.headerHiddenUrls.some(url => this.getUrlWithoutParams(this.router.url) === url)) {
-      this.appStore.disableHeader();
+      this.applicationStore.disableHeader();
     } else {
-      this.appStore.enableHeader();
+      this.applicationStore.enableHeader();
     }
   }
 

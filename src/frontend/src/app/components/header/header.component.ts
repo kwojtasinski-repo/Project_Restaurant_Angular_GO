@@ -17,13 +17,13 @@ import { BehaviorSubject } from 'rxjs';
     imports: [CollapseModule, RouterLink, AsyncPipe]
 })
 export class HeaderComponent implements OnInit {
-  private appStore = inject(AppStore);
-  private loginStore = inject<Store<LoginState>>(Store);
+  private readonly applicationStore = inject(AppStore);
+  private readonly loginStore = inject<Store<LoginState>>(Store);
   private normalizedPath$: BehaviorSubject<string> = new BehaviorSubject('');
 
   public routerLinks: any[] = [];
-  public currentUrl = this.appStore.currentUrl;
-  public showHeader = this.appStore.showHeader;
+  public currentUrl = this.applicationStore.currentUrl;
+  public showHeader = this.applicationStore.showHeader;
   public user$ = this.loginStore.select(getUser);
   public isCollapsed = true;
 
