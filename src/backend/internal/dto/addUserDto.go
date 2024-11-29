@@ -3,14 +3,18 @@ package dto
 import (
 	"errors"
 	"fmt"
-	"regexp"
 	"strings"
+
+	"github.com/dlclark/regexp2"
 )
 
 type AddUserDto struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
+
+var passwordPattern = `^(?=.*\p{Ll})(?=.*\p{Lu})(?=.*\d)(?=.*[\p{P}\p{S}]).+$`
+var passwordPatternCompiled = regexp2.MustCompile(passwordPattern, regexp2.RE2)
 
 func (user *AddUserDto) Validate() error {
 	var validationErrors strings.Builder
@@ -27,8 +31,8 @@ func (user *AddUserDto) Validate() error {
 		validationErrors.WriteString("'Password' cannot contain more than 64 characters. ")
 	}
 
-	if match, _ := regexp.MatchString("^(.[^a-z]{1,}|[^A-Z]{1,}|[^\\d]{1,}|[^\\W]{1,})$|[\\s]", user.Password); match {
-		validationErrors.WriteString("'Password' should contain upper case letters, lower case letters and numbers. ")
+	if match, _ := passwordPatternCompiled.MatchString(user.Password); !match {
+		validationErrors.WriteString("'Password' should contain upper case letters, lower case letters, number and special character. ")
 	}
 
 	if validationErrors.Len() > 0 {
