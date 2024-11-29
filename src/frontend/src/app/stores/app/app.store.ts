@@ -1,4 +1,5 @@
 import { Injectable, Signal, signal, WritableSignal } from '@angular/core';
+import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 
 @Injectable({
     providedIn: 'root'
@@ -27,3 +28,39 @@ export class AppStore {
     this._currentUrl.set(currentUrl);
   }
 }
+
+type ApplicationState = {
+  showHeader: boolean;
+  currentUrl: string;
+};
+
+const initialState: ApplicationState = {
+  showHeader: false,
+  currentUrl: ''
+};
+
+export const ApplicationStore = signalStore(
+  { providedIn: 'root' },
+  withState(initialState),
+  withMethods((store) => ({
+    enableHeader(): void {
+      patchState(store, (state) => ({
+        ...state,
+        showHeader: true
+      }))
+    },
+    disableHeader(): void  {
+      patchState(store, (state) => ({
+        ...state,
+        showHeader: false
+      }))
+    },
+    setCurrentUrl(currentUrl: string): void {
+      patchState(store, (state) => ({
+        ...state,
+        currentUrl
+      }))
+    }
+  }))
+);
+

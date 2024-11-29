@@ -18,7 +18,6 @@ describe('CategoryStore', () => {
       TestBed.configureTestingModule({
         imports: [TestSharedModule],
         providers: [
-          CategoryStore,
           { provide: Router, useValue: mockRouter }
         ],
       });
